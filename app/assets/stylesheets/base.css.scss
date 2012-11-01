@@ -1,5 +1,8 @@
 @import "colors/base_main_accent";
 
+$iconSpritePath:      url("glyphicons-halflings.png");
+$iconWhiteSpritePath: url("glyphicons-halflings-white.png");
+
 $textColor: $base-text-color;
 
 $bodyBackground: $base-color;
@@ -32,4 +35,8 @@ $eyecatchBackground: $heroUnitBackground;
 $eyecatchTextColor: $hero-unit-text-color;
 
 @import "bootstrap";
+body {
+  padding-top: 60px;
+  padding-bottom: 40px;
+}
 @import "bootstrap-responsive";

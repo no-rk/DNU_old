@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe TopController do
+describe HomeController do
 
   describe "GET 'index'" do
     it "returns http success" do

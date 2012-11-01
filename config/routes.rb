@@ -1,5 +1,7 @@
 DNU::Application.routes.draw do
-  get "top/index"
+  get "home/index"
+
+  devise_for :users
 
   # The priority is based upon order of creation:
   # first created -> highest priority.
@@ -50,7 +52,7 @@ DNU::Application.routes.draw do
 
   # You can have the root of your site routed with "root"
   # just remember to delete public/index.html.
-  root :to => 'top#index'
+  root :to => 'home#index'
 
   # See how all your routes lay out with "rake routes"
 
