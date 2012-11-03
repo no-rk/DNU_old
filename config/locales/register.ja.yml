@@ -1,0 +1,24 @@
+ja:
+  activerecord:
+    models:
+      register/character: キャラ宣言
+      register/make: キャラ作成
+      register/profile: プロフィール
+
+    attributes:
+      register/profile: &profile_attributes
+        age: 年齢
+        gender: 性別
+        introduction: 紹介
+        name: 名前
+        nickname: 愛称
+        race: 種族
+
+      register/character:
+        profile:
+          <<: *profile_attributes
+
+      register/make:
+        profile:
+          <<: *profile_attributes
+

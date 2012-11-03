@@ -1,0 +1,22 @@
+<%= form_for(@register_make) do |form_make| %>
+  <% if @register_make.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@register_make.errors.count, "error") %> prohibited this register_make from being saved:</h2>
+
+      <ul>
+      <% @register_make.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form_make.fields_for :profile do |form_profile| %><br />
+      <%= render :partial => 'register/characters/form_profile', :locals=>{:form_profile=>form_profile} %>
+    <% end %>
+  </div>
+  <div class="actions">
+    <%= form_make.submit %>
+  </div>
+<% end %>

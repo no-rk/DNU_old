@@ -1,15 +1,15 @@
 ja:
   activerecord:
     models:
-      user: "ユーザー登録"
+      user: ユーザー登録
     attributes:
       user:
-        login: "ENoかメールアドレス"
-        email: "メールアドレス"
-        password: "パスワード"
-        password_confirmation:  "パスワード（確認用）"
-        remember_me: "次回からパスワード入力を省く"
-        current_password: "現在のパスワード"
+        login: ENoかメールアドレス
+        email: メールアドレス
+        password: パスワード
+        password_confirmation:  パスワード（確認用）
+        remember_me: 次回からパスワード入力を省く
+        current_password: 現在のパスワード
 
   errors:
     messages:

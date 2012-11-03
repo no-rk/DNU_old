@@ -1,0 +1,46 @@
+<div class="navbar navbar-fixed-top">
+  <div class="navbar-inner">
+    <div class="container-fluid">
+      <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </a>
+      <a class="brand" href="<%= root_path %>">Dragon NUnavut</a>
+      <% if user_signed_in? %>
+        <ul class="nav nav-pills pull-right">
+          <li><a href="#">ENo.<%= current_user.id %></a></li>
+          <li><a href="<%= new_register_make_path %>" rel="tooltip" data-placement="bottom" title="各種登録"><i class="icon-book"></i></a></li>
+          <li><a href="<%= edit_user_registration_path %>" rel="tooltip" data-placement="bottom" title="ユーザー設定"><i class="icon-wrench"></i></a></li>
+          <li><%= link_to(destroy_user_session_path, method: :delete, :rel => "tooltip", 'data-placement' => "bottom", :title => "ログアウト") do %>
+            <i class="icon-off"></i>
+          <% end %></li>
+        </ul>
+      <% else %>
+        <%= form_for("user", :url => user_session_path, :html => {:class => "navbar-form pull-right"}) do |f| %>
+          <%= f.text_field :login, :class => "span2", :placeholder => "Eno or Email" %>
+          <%= f.password_field :password, :class => "span2", :placeholder => "Password" %>
+          <%= f.submit "ログイン", :class => "btn btn-success" %>
+        <% end %>
+      <% end %>
+      <div class="nav-collapse collapse">
+        <ul class="nav">
+          <li><a href="#about">ルール</a></li>
+          <li><a href="#contact">結果</a></li>
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">掲示板群<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><a href="#">交流</a></li>
+              <li><a href="#">取引</a></li>
+              <li><a href="#">質問</a></li>
+              <li class="divider"></li>
+              <li class="nav-header">不具合報告</li>
+              <li><a href="#">ルール不備</a></li>
+              <li><a href="#">仕様確認</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div><!--/.nav-collapse -->
+    </div>
+  </div>
+</div>

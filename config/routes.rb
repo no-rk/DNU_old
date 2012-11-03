@@ -1,5 +1,7 @@
 DNU::Application.routes.draw do
-  get "home/index"
+  namespace :register do resources :characters end
+
+  namespace :register do resources :makes end
 
   devise_for :users
 

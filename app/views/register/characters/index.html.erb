@@ -1,0 +1,24 @@
+<h1>Listing register_characters</h1>
+
+<table>
+  <tr>
+    <th>User</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @register_characters.each do |register_character| %>
+  <tr>
+    <td><%= register_character.profile.name %></td>
+    <td><%= register_character.profile.nickname %></td>
+    <td><%= link_to 'Show', register_character %></td>
+    <td><%= link_to 'Edit', edit_register_character_path(register_character) %></td>
+    <td><%= link_to 'Destroy', register_character, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Character', new_register_character_path %>

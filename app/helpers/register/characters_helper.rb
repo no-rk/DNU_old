@@ -1,0 +1,2 @@
+module Register::CharactersHelper
+end
