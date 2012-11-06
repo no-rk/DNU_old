@@ -10,7 +10,7 @@
       <% if user_signed_in? %>
         <ul class="nav nav-pills pull-right">
           <li><a href="#">ENo.<%= current_user.id %></a></li>
-          <li><a href="<%= new_register_make_path %>" rel="tooltip" data-placement="bottom" title="各種登録"><i class="icon-book"></i></a></li>
+          <li><a href="<%= register_index_path %>" rel="tooltip" data-placement="bottom" title="各種登録"><i class="icon-book"></i></a></li>
           <li><a href="<%= edit_user_registration_path %>" rel="tooltip" data-placement="bottom" title="ユーザー設定"><i class="icon-wrench"></i></a></li>
           <li><%= link_to(destroy_user_session_path, method: :delete, :rel => "tooltip", 'data-placement' => "bottom", :title => "ログアウト") do %>
             <i class="icon-off"></i>

@@ -1,0 +1,2 @@
+module Register::InitialsHelper
+end

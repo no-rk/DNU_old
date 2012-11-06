@@ -1,0 +1,17 @@
+profile:
+  name:
+    max: 20
+  nickname:
+    max: 10
+  race:
+    max: 20
+  gender:
+    max: 20
+  age:
+    max: 20
+  introduction:
+    max: 800
+make_check:
+  error: キャラ作成してください。
+makes:
+  create: キャラ作成されました。

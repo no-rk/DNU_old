@@ -1,0 +1,12 @@
+<%= form_for(@register_initial) do |form_initial| %>
+  <%= render :partial => 'register/error', :locals=>{:register_error=>@register_initial} %>
+
+  <div class="field">
+    <%= form_initial.fields_for :init_job do |form_init_job| %><br />
+      <%= render :partial => 'form_init_job', :locals=>{:form_init_job=>form_init_job} %>
+    <% end %>
+  </div>
+  <div class="actions">
+    <%= form_initial.submit :class => "btn btn-large btn-success" %>
+  </div>
+<% end %>

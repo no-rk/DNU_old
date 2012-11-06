@@ -1,6 +1,7 @@
 class User < ActiveRecord::Base
   has_many :makes,      :class_name => "Register::Make"
   has_many :characters, :class_name => "Register::Character"
+  has_many :initials,   :class_name => "Register::Initial"
 
   # Include default devise modules. Others available are:
   # :token_authenticatable, :confirmable,

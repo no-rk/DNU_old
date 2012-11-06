@@ -1,12 +1,15 @@
 ja:
   activerecord:
     models:
-      register/character: キャラ宣言
       register/make: キャラ作成
+      register/character: キャラクター
+      register/initial: 初期値
+
       register/profile: プロフィール
+      register/init_job: 初期職業
 
     attributes:
-      register/profile: &profile_attributes
+      register/profile:
         age: 年齢
         gender: 性別
         introduction: 紹介
@@ -14,11 +17,5 @@ ja:
         nickname: 愛称
         race: 種族
 
-      register/character:
-        profile:
-          <<: *profile_attributes
-
-      register/make:
-        profile:
-          <<: *profile_attributes
-
+      register/init_job:
+        name: 職業

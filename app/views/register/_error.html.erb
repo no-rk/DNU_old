@@ -1,0 +1,12 @@
+<% if register_error.errors.any? %>
+  <div class="alert alert-error">
+    <button type="button" class="close" data-dismiss="alert">（・×・）</button>
+    <strong><%= register_error.errors.count.to_s + " つのエラーにより " + register_error.class.model_name.human.downcase + " は保存されませんでした。" %></strong>
+
+    <ul>
+    <% register_error.errors.full_messages.each do |msg| %>
+      <li><%= msg %></li>
+    <% end %>
+    </ul>
+  </div>
+<% end %>

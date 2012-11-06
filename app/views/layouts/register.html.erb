@@ -12,21 +12,25 @@
     <%= render :partial => 'layouts/navbar_top' %>
 
     <div class="container-fluid">
-      <% if notice %>
+      <div class="row-fluid">
+        <% if notice %>
         <div class="alert alert-info">
           <button type="button" class="close" data-dismiss="alert">（・×・）</button>
           <strong>お知らせ</strong>　<%= notice %>
         </div>
-      <% end %>
-      <% if alert %>
+        <% end %>
+        <% if alert %>
         <div class="alert">
           <button type="button" class="close" data-dismiss="alert">（・×・）</button>
           <strong>注意</strong>　<%= alert %>
         </div>
-      <% end %>
-      <%= render :partial => 'layouts/nav_register' %>
-      <div class="span9">
-        <%= yield %>
+        <% end %>
+      </div>
+      <div class="row-fluid">
+        <%= render :partial => 'layouts/nav_register' %>
+        <div class="span9">
+          <%= yield %>
+        </div>
       </div>
     </div>
 

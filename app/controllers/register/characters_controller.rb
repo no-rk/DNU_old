@@ -1,5 +1,6 @@
 class Register::CharactersController < ApplicationController
   before_filter :authenticate_user!
+  before_filter :make_check
   layout "register"
   # GET /register/characters
   # GET /register/characters.json
@@ -26,8 +27,13 @@ class Register::CharactersController < ApplicationController
   # GET /register/characters/new
   # GET /register/characters/new.json
   def new
-    @register_character = Register::Character.new
-    @register_character.build_profile
+    @temp_character = current_user.characters.find(:last)
+    if @temp_character.nil?
+      @register_character = Register::Character.new 
+      @register_character.build_profile
+    else
+      @register_character = @temp_character.dup :include => :profile
+    end
 
     respond_to do |format|
       format.html # new.html.erb
@@ -38,14 +44,12 @@ class Register::CharactersController < ApplicationController
   # GET /register/characters/1/edit
   def edit
     @register_character = current_user.characters.find(params[:id])
-    @register_character.build_profile if @register_character.profile.nil?
   end
 
   # POST /register/characters
   # POST /register/characters.json
   def create
     @register_character = Register::Character.new(params[:register_character])
-    @register_character.build_profile if @register_character.profile.nil?
     @register_character.user = current_user
 
     respond_to do |format|
@@ -63,7 +67,6 @@ class Register::CharactersController < ApplicationController
   # PUT /register/characters/1.json
   def update
     @register_character = Register::Character.find(params[:id])
-    @register_character.build_profile if @register_character.profile.nil?
 
     respond_to do |format|
       if @register_character.update_attributes(params[:register_character])

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121105040920) do
+ActiveRecord::Schema.define(:version => 20121106034306) do
 
   create_table "register_characters", :force => true do |t|
     t.integer  "user_id"
@@ -20,6 +20,23 @@ ActiveRecord::Schema.define(:version => 20121105040920) do
   end
 
   add_index "register_characters", ["user_id"], :name => "index_register_characters_on_user_id"
+
+  create_table "register_init_jobs", :force => true do |t|
+    t.integer  "initial_id"
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "register_init_jobs", ["initial_id"], :name => "index_register_init_jobs_on_initial_id"
+
+  create_table "register_initials", :force => true do |t|
+    t.integer  "user_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "register_initials", ["user_id"], :name => "index_register_initials_on_user_id"
 
   create_table "register_makes", :force => true do |t|
     t.integer  "user_id"
@@ -30,20 +47,18 @@ ActiveRecord::Schema.define(:version => 20121105040920) do
   add_index "register_makes", ["user_id"], :name => "index_register_makes_on_user_id"
 
   create_table "register_profiles", :force => true do |t|
+    t.integer  "character_id"
     t.string   "name"
     t.string   "nickname"
     t.string   "race"
     t.string   "gender"
     t.string   "age"
     t.text     "introduction"
-    t.integer  "character_id"
-    t.string   "character_type"
-    t.datetime "created_at",     :null => false
-    t.datetime "updated_at",     :null => false
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
   end
 
   add_index "register_profiles", ["character_id"], :name => "index_register_profiles_on_character_id"
-  add_index "register_profiles", ["character_type"], :name => "index_register_profiles_on_character_type"
 
   create_table "users", :force => true do |t|
     t.string   "email",                  :default => "", :null => false

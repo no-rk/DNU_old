@@ -1,22 +1,17 @@
 <%= form_for(@register_make) do |form_make| %>
-  <% if @register_make.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@register_make.errors.count, "error") %> prohibited this register_make from being saved:</h2>
-
-      <ul>
-      <% @register_make.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
+  <%= render :partial => 'register/error', :locals=>{:register_error=>@register_make} %>
+  <%= render :partial => 'register/error', :locals=>{:register_error=>@register_character} %>
+  <%= render :partial => 'register/error', :locals=>{:register_error=>@register_initial} %>
 
   <div class="field">
-    <%= form_make.fields_for :profile do |form_profile| %><br />
+    <%= fields_for(@register_character.profile) do |form_profile| %><br />
       <%= render :partial => 'register/characters/form_profile', :locals=>{:form_profile=>form_profile} %>
+    <% end %>
+    <%= fields_for(@register_initial.init_job) do |form_init_job| %><br />
+      <%= render :partial => 'register/initials/form_init_job', :locals=>{:form_init_job=>form_init_job} %>
     <% end %>
   </div>
   <div class="actions">
-    <%= form_make.submit %>
+    <%= form_make.submit :class => "btn btn-large btn-success" %>
   </div>
 <% end %>

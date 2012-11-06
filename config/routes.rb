@@ -1,7 +1,11 @@
 DNU::Application.routes.draw do
+  namespace :register do resources :initials end
+
   namespace :register do resources :characters end
 
-  namespace :register do resources :makes end
+  namespace :register do resources :makes, :only => [ :new, :create ] end
+
+  resources :register, :only => [ :index ]
 
   devise_for :users
 

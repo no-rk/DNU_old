@@ -1,9 +1,19 @@
 <div class="span3">
   <div class="well sidebar-nav">
     <ul class="nav nav-list">
-      <li class="nav-header">Sidebar</li>
-      <li><a href="<%= new_register_make_path %>">キャラ作成</a></li>
-      <li><a href="<%= new_register_character_path %>">キャラ宣言</a></li>
+      <li class="nav-header">ENo.<%= current_user.id %></li>
+      <li><a href="<%= register_index_path %>">宣言トップ</a></li>
+      <li class="nav-header">行動設定</li>
+      <li><a href="#">基本行動</a></li>
+      <li><a href="#">取引行動</a></li>
+      <li><a href="#">生産行動</a></li>
+      <li class="nav-header">戦闘設定</li>
+      <li><a href="#">通常戦</a></li>
+      <li><a href="#">手合わせ</a></li>
+      <li class="nav-header">設定</li>
+      <li><a href="<%= new_register_character_path %>">キャラクター</a></li>
+      <li class="nav-header">初心者救済</li>
+      <li><a href="<%= new_register_initial_path %>">初期値</a></li>
     </ul>
   </div><!--/.well -->
 </div><!--/span-->

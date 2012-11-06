@@ -1,15 +1,5 @@
 <%= form_for(@register_character) do |form_character| %>
-  <% if @register_character.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@register_character.errors.count, "error") %> prohibited this register_character from being saved:</h2>
-
-      <ul>
-      <% @register_character.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
+  <%= render :partial => 'register/error', :locals=>{:register_error=>@register_character} %>
 
   <div class="field">
     <%= form_character.fields_for :profile do |form_profile| %><br />
@@ -17,6 +7,6 @@
     <% end %>
   </div>
   <div class="actions">
-    <%= form_character.submit %>
+    <%= form_character.submit :class => "btn btn-large btn-success" %>
   </div>
 <% end %>

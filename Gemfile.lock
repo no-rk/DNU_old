@@ -39,6 +39,8 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.4.0)
+    deep_cloneable (1.4.1)
+      rails
     devise (2.1.2)
       bcrypt-ruby (~> 3.0)
       orm_adapter (~> 0.1)
@@ -96,6 +98,8 @@ GEM
       activesupport (= 3.2.8)
       bundler (~> 1.0)
       railties (= 3.2.8)
+    rails_config (0.3.1)
+      activesupport (>= 3.0)
     railties (3.2.8)
       actionpack (= 3.2.8)
       activesupport (= 3.2.8)
@@ -150,11 +154,13 @@ PLATFORMS
 DEPENDENCIES
   bootstrap-sass
   coffee-rails (~> 3.2.1)
+  deep_cloneable (~> 1.4.1)
   devise
   i18n_generators
   jquery-rails
   mysql2
   rails (= 3.2.8)
+  rails_config
   rspec-rails
   sass-rails (~> 3.2.3)
   uglifier (>= 1.0.3)
