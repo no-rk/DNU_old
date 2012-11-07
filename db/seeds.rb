@@ -1,6 +1,19 @@
 #ジョブ
 jobs = YAML.load_file("#{Rails.root}/db/game_data/job.yml")
-jobs.each{|job|
+jobs.each do |job|
   p job
-  GameData::Job.create(job)
-}
+  job_model = GameData::Job.new(job)
+  p job["bonus"]
+  #job_model.bonus = GameData::Bonus.new(job["bonus"])
+  job_model.save!
+end
+
+#ステータス
+statuses = YAML.load_file("#{Rails.root}/db/game_data/status.yml")
+statuses.each do |status|
+  p status
+  status_model = GameData::Status.new(status)
+  p status["bonus"]
+  #status_model.bonus = GameData::Bonus.new(status["bonus"])
+  status_model.save!
+end

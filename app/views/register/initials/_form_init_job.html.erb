@@ -1,2 +1,2 @@
 <%= form_init_job.label :name %>
-<%= form_init_job.collection_select :name, GameData::Job.all, :name, :name %>
+<%= form_init_job.collection_select :job_id, GameData::Job.all, :id, :name %>
