@@ -2,9 +2,7 @@
   <%= render :partial => 'register/error', :locals=>{:register_error=>@register_character} %>
 
   <div class="field">
-    <%= form_character.fields_for :profile do |form_profile| %><br />
-      <%= render :partial => 'form_profile', :locals=>{:form_profile=>form_profile} %>
-    <% end %>
+    <%= render :partial => 'form_profile', :locals=>{:form_character=>form_character} %>
   </div>
   <div class="actions">
     <%= form_character.submit :class => "btn btn-large btn-success" %>

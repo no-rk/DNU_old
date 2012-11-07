@@ -23,14 +23,12 @@ class Register::MakesController < ApplicationController
     @register_make = Register::Make.new(params[:register_make])
     @register_make.user = current_user
 
-    #characterテーブルにprofile保存する
-    @register_character = Register::Character.new
-    @register_character.profile = Register::Profile.new(params[:register_profile])
+    #characterテーブルに保存する
+    @register_character = Register::Character.new(params[:register_character])
     @register_character.user    = current_user
 
-    #initialテーブルにinit_job保存する
-    @register_initial = Register::Initial.new
-    @register_initial.init_job = Register::InitJob.new(params[:register_init_job])
+    #initialテーブルに保存する
+    @register_initial = Register::Initial.new(params[:register_initial])
     @register_initial.user    = current_user
 
     respond_to do |format|
@@ -41,7 +39,7 @@ class Register::MakesController < ApplicationController
             rise
           end
         end
-        format.html { redirect_to register_index_path, notice: Settings.makes.create }
+        format.html { redirect_to register_index_path, notice: I18n.t("create", :scope => "register.makes") }
         format.json { render json: @register_make, status: :created, location: @register_make }
       rescue
         format.html { render action: "new" }

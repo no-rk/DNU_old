@@ -11,9 +11,3 @@ profile:
     max: 20
   introduction:
     max: 800
-make_check:
-  error: キャラ作成してください。
-makes:
-  create: キャラ作成されました。
-message:
-  required_entry: 入力必須

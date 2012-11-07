@@ -1,2 +1,4 @@
-<%= form_init_job.label :name %>
-<%= form_init_job.collection_select :job_id, GameData::Job.all, :id, :name %>
+<%= form_initial.fields_for :init_job do |form_init_job| %><br />
+  <%= form_init_job.label :job_id %>
+  <%= form_init_job.collection_select :job_id, GameData::Job.all, :id, :name %>
+<% end %>

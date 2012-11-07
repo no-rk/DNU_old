@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121107024944) do
+ActiveRecord::Schema.define(:version => 20121107060218) do
 
   create_table "game_data_jobs", :force => true do |t|
     t.string   "name"
@@ -44,6 +44,17 @@ ActiveRecord::Schema.define(:version => 20121107024944) do
 
   add_index "register_init_jobs", ["initial_id"], :name => "index_register_init_jobs_on_initial_id"
   add_index "register_init_jobs", ["job_id"], :name => "index_register_init_jobs_on_job_id"
+
+  create_table "register_init_statuses", :force => true do |t|
+    t.integer  "initial_id"
+    t.integer  "status_id"
+    t.integer  "count"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "register_init_statuses", ["initial_id"], :name => "index_register_init_statuses_on_initial_id"
+  add_index "register_init_statuses", ["status_id"], :name => "index_register_init_statuses_on_status_id"
 
   create_table "register_initials", :force => true do |t|
     t.integer  "user_id"

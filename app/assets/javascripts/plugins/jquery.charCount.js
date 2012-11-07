@@ -22,7 +22,7 @@
 			counterElement: 'span',
 			cssWarning: 'badge-warning',
 			cssExceeded: 'badge-important',
-			counterText: ''
+			counterText: '残り'
 		};
 
 		var options = $.extend(defaults, options); 
@@ -45,7 +45,7 @@
 				} else {
 					$(obj).next().removeClass(options.cssExceeded);
 				}
-				$(obj).next().html(options.counterText + count + '/' + maxChars);
+				$(obj).next().html(options.counterText + available + "文字");
 			};
 
 			calculate(this);

@@ -18,4 +18,15 @@ ja:
         race: 種族
 
       register/init_job:
-        name: 職業
+        job_id: 職業
+
+  register:
+    makes:
+      create: キャラ作成されました。
+    characters:
+      create: キャラクター保存されました。
+    initials:
+      create: 初期値保存されました。
+    message:
+      make_check: キャラを作成してください。
+      required_entry: ※入力必須

@@ -32,7 +32,7 @@ class Register::InitialsController < ApplicationController
       @register_initial = Register::Initial.new 
       @register_initial.build_init_job
     else
-      @register_initial = @temp_initial.dup :include => :init_job
+      @register_initial = @temp_initial.dup :include => [ :init_job, :init_statuses ]
     end
 
     respond_to do |format|
@@ -54,7 +54,7 @@ class Register::InitialsController < ApplicationController
 
     respond_to do |format|
       if @register_initial.save
-        format.html { redirect_to @register_initial, notice: 'initial was successfully created.' }
+        format.html { redirect_to @register_initial, notice: I18n.t("create", :scope => "register.initials") }
         format.json { render json: @register_initial, status: :created, location: @register_initial }
       else
         format.html { render action: "new" }

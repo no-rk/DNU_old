@@ -54,7 +54,7 @@ class Register::CharactersController < ApplicationController
 
     respond_to do |format|
       if @register_character.save
-        format.html { redirect_to @register_character, notice: 'Character was successfully created.' }
+        format.html { redirect_to @register_character, notice: I18n.t("create", :scope => "register.characters") }
         format.json { render json: @register_character, status: :created, location: @register_character }
       else
         format.html { render action: "new" }

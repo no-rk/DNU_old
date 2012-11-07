@@ -6,7 +6,7 @@ module ApplicationHelper
   end
   def presence_tag(model,field)
     if presence?(model,field)
-      return Settings.message.required_entry
+      return I18n.t("required_entry", :scope => "register.message")
     end
   end
   def presence?(model,field)
