@@ -5,7 +5,9 @@ DNU::Application.routes.draw do
 
   namespace :register do resources :makes, :only => [ :new, :create ] end
 
-  resources :register, :only => [ :index ]
+  get 'register' => 'register#index', :as => 'register_index'
+
+  get 'ajax/:model(/:id)' => 'ajax#search', :as => 'ajax_search'
 
   devise_for :users
 

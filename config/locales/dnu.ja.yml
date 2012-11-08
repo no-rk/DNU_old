@@ -1,6 +1,9 @@
 ja:
   activerecord:
-    models:
+    models: &test
+      game_data/status: 能力値
+      game_data/job: 職業
+
       register/make: キャラ作成
       register/character: キャラクター
       register/initial: 初期値
@@ -8,7 +11,12 @@ ja:
       register/profile: プロフィール
       register/init_job: 初期職業
 
+    error: *test
+
     attributes:
+      register/initial:
+        job: 職業
+        status: 鍛錬
       register/profile:
         age: 年齢
         gender: 性別
@@ -20,6 +28,9 @@ ja:
       register/init_job:
         job_id: 職業
 
+      register/init_status:
+        status_id: 鍛錬
+
   register:
     makes:
       create: キャラ作成されました。
@@ -30,3 +41,10 @@ ja:
     message:
       make_check: キャラを作成してください。
       required_entry: ※入力必須
+      required_select: ※選択必須
+
+  ajax:
+    message:
+      model: Error
+      name: Not Found
+      caption: 説明がありません。

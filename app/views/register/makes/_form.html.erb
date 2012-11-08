@@ -4,10 +4,10 @@
   <%= render :partial => 'register/error', :locals=>{:register_error=>@register_initial} %>
 
   <div class="field">
-    <%= fields_for(@register_character) do |form_character| %><br />
+    <%= fields_for(@register_character) do |form_character| %>
       <%= render :partial => 'register/characters/form_profile', :locals=>{:form_character=>form_character} %>
     <% end %>
-    <%= fields_for(@register_initial) do |form_initial| %><br />
+    <%= fields_for(@register_initial) do |form_initial| %>
       <%= render :partial => 'register/initials/form_init_job'     , :locals=>{:form_initial=>form_initial} %>
       <%= render :partial => 'register/initials/form_init_statuses', :locals=>{:form_initial=>form_initial} %>
     <% end %>

@@ -1,4 +1,5 @@
 #ジョブ
+ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_jobs")
 jobs = YAML.load_file("#{Rails.root}/db/game_data/job.yml")
 jobs.each do |job|
   p job
@@ -9,6 +10,7 @@ jobs.each do |job|
 end
 
 #ステータス
+ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_statuses")
 statuses = YAML.load_file("#{Rails.root}/db/game_data/status.yml")
 statuses.each do |status|
   p status
