@@ -1,13 +1,18 @@
 <br />
 <%= form_initial.label :status %>
-<% GameData::Status.count.times{@register_initial.init_statuses.build} if @register_initial.init_statuses.empty? %>
-<% count = 1 %>
+<% statuses = GameData::Status.all.map{|t| {:id => t.id, :name => t.name} } %>
+<% statuses.count.times{@register_initial.init_statuses.build} if @register_initial.init_statuses.empty? %>
+<% i = 0 %>
 <%= form_initial.fields_for :init_statuses do |form_init_statuses| %>
-  <%= GameData::Status.find(count).name %>
-  <%= link_to ajax_search_path(:status,count) , :remote => true, :'data-type' => :json, :rel => "popover", :'data-trigger' => "manual" do %>
+  <%= statuses[i][:name] %>
+  <%= link_to ajax_search_path(:status,statuses[i][:id]) , :remote => true, :'data-type' => :json, :rel => "popover", :'data-trigger' => "manual" do %>
   <i class="icon-search"></i>
   <% end %>
-  <%= form_init_statuses.hidden_field :status_id, :value => count %>
-  <%= form_init_statuses.select :count, {0=>0,1=>1,2=>2,3=>3,4=>4,5=>5},{}, :class => "span2" %>
-<% count += 1 %>
+  <%= form_init_statuses.hidden_field :status_id, :value => statuses[i][:id] %>
+  <% if @read_only %>
+    <%= @register_initial.init_statuses[i].count %>
+  <% else %>
+    <%= form_init_statuses.select :count, {0=>0,1=>1,2=>2,3=>3,4=>4,5=>5},{}, :class => "span2" %>
+  <% end %>
+<% i += 1 %>
 <% end %>

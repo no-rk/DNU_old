@@ -1,11 +1,13 @@
 <%= form_for(@register_initial) do |form_initial| %>
   <%= render :partial => 'register/error', :locals=>{:register_error=>@register_initial} %>
 
-  <div class="field">
-    <%= render :partial => 'form_init_job'     , :locals=>{:form_initial=>form_initial} %>
-    <%= render :partial => 'form_init_statuses', :locals=>{:form_initial=>form_initial} %>
-  </div>
+  <%= render :partial => 'form_init_job'     , :locals=>{:form_initial=>form_initial} %>
+  <%= render :partial => 'form_init_statuses', :locals=>{:form_initial=>form_initial} %>
+
+  <% unless @read_only %>
   <div class="actions">
+    <button data-remote="true" class="btn btn-large btn-warning">確認する</button>
     <%= form_initial.submit :class => "btn btn-large btn-success" %>
   </div>
+  <% end %>
 <% end %>

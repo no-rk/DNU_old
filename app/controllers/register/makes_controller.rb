@@ -31,17 +31,20 @@ class Register::MakesController < ApplicationController
     @register_initial = Register::Initial.new(params[:register_initial])
     @register_initial.user    = current_user
 
+    @read_only = true if request.xhr?
+
     respond_to do |format|
       begin
         ActiveRecord::Base.transaction do
           #全て成功しなかった場合は例外発生
-          unless @register_make.save & @register_character.save & @register_initial.save
-            rise
-          end
+          rise unless @register_make.save & @register_character.save & @register_initial.save
+          #Ajaxの場合は例外発生させて保存しない
+          rise if request.xhr?
         end
         format.html { redirect_to register_index_path, notice: I18n.t("create", :scope => "register.makes") }
         format.json { render json: @register_make, status: :created, location: @register_make }
       rescue
+        format.html { render :partial => 'form' } if @read_only
         format.html { render action: "new" }
         format.json { render json: @register_make.errors, status: :unprocessable_entity }
       end

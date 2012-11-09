@@ -11,3 +11,8 @@ profile:
     max: 20
   introduction:
     max: 800
+
+init_status:
+  count:
+    each: 5
+    total: 15

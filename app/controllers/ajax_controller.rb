@@ -8,7 +8,9 @@ class AjaxController < ApplicationController
       else
         @ajax = "GameData::#{params[:model].capitalize}".split("::").inject(Object){ |oldclass, name| oldclass.const_get(name) }.all
       end
-      @ajax[:model] = @ajax.class.model_name.human.downcase
+      model = @ajax.class.model_name.human.downcase
+      @ajax = @ajax.attributes
+      @ajax.store(:model,model)
     rescue
       @ajax = {
         "model"   => I18n.t("model"  , :scope => "ajax.message"),

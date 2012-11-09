@@ -52,11 +52,20 @@ class Register::CharactersController < ApplicationController
     @register_character = Register::Character.new(params[:register_character])
     @register_character.user = current_user
 
+    @read_only = true if request.xhr?
+
     respond_to do |format|
-      if @register_character.save
+      begin
+        ActiveRecord::Base.transaction do
+          #成功しなかった場合は例外発生
+          @register_character.save!
+          #Ajaxの場合は例外発生させて保存しない
+          rise if request.xhr?
+        end
         format.html { redirect_to @register_character, notice: I18n.t("create", :scope => "register.characters") }
         format.json { render json: @register_character, status: :created, location: @register_character }
-      else
+      rescue
+        format.html { render :partial => 'form' } if @read_only
         format.html { render action: "new" }
         format.json { render json: @register_character.errors, status: :unprocessable_entity }
       end

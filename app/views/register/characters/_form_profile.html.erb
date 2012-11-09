@@ -1,19 +1,39 @@
 <%= form_character.fields_for :profile do |form_profile| %><br />
-  <%= form_profile.label :name %>
-  <%= form_profile.text_field :name, :maxlength => Settings.profile.name.max, :placeholder => presence_tag(@register_character.profile,:name) %>
+  <% if @read_only %>
+    <%= form_profile.label :name if @register_character.profile.name.present? || presence_tag(@register_character.profile,:name) %>
+    <%= @register_character.profile.name %><%= presence_tag(@register_character.profile,:name) %>
 
-  <%= form_profile.label :nickname %>
-  <%= form_profile.text_field :nickname, :maxlength => Settings.profile.nickname.max, :placeholder => presence_tag(@register_character.profile,:nickname) %>
+    <%= form_profile.label :nickname if @register_character.profile.nickname.present? || presence_tag(@register_character.profile,:nickname) %>
+    <%= @register_character.profile.nickname %><%= presence_tag(@register_character.profile,:nickname) %>
 
-  <%= form_profile.label :race %>
-  <%= form_profile.text_field :race, :maxlength => Settings.profile.race.max, :placeholder => presence_tag(@register_character.profile,:race) %>
+    <%= form_profile.label :race if @register_character.profile.race.present? || presence_tag(@register_character.profile,:race) %>
+    <%= @register_character.profile.race %><%= presence_tag(@register_character.profile,:race) %>
 
-  <%= form_profile.label :gender %>
-  <%= form_profile.text_field :gender, :maxlength => Settings.profile.gender.max, :placeholder => presence_tag(@register_character.profile,:gender) %>
+    <%= form_profile.label :gender if @register_character.profile.gender.present? || presence_tag(@register_character.profile,:gender) %>
+    <%= @register_character.profile.gender %><%= presence_tag(@register_character.profile,:gender) %>
 
-  <%= form_profile.label :age %>
-  <%= form_profile.text_field :age, :maxlength => Settings.profile.age.max, :placeholder => presence_tag(@register_character.profile,:age) %>
+    <%= form_profile.label :age if @register_character.profile.age.present? || presence_tag(@register_character.profile,:age) %>
+    <%= @register_character.profile.age %><%= presence_tag(@register_character.profile,:age) %>
 
-  <%= form_profile.label :introduction %>
-  <%= form_profile.text_area :introduction, :maxlength => Settings.profile.introduction.max, :placeholder => presence_tag(@register_character.profile,:introduction) %>
+    <%= form_profile.label :introduction if @register_character.profile.introduction.present? || presence_tag(@register_character.profile,:introduction) %>
+    <%= @register_character.profile.introduction %><%= presence_tag(@register_character.profile,:introduction) %>
+  <% else %>
+    <%= form_profile.label :name %>
+    <%= form_profile.text_field :name, :maxlength => Settings.profile.name.max, :placeholder => presence_tag(@register_character.profile,:name) %>
+
+    <%= form_profile.label :nickname %>
+    <%= form_profile.text_field :nickname, :maxlength => Settings.profile.nickname.max, :placeholder => presence_tag(@register_character.profile,:nickname) %>
+
+    <%= form_profile.label :race %>
+    <%= form_profile.text_field :race, :maxlength => Settings.profile.race.max, :placeholder => presence_tag(@register_character.profile,:race) %>
+
+    <%= form_profile.label :gender %>
+    <%= form_profile.text_field :gender, :maxlength => Settings.profile.gender.max, :placeholder => presence_tag(@register_character.profile,:gender) %>
+
+    <%= form_profile.label :age %>
+    <%= form_profile.text_field :age, :maxlength => Settings.profile.age.max, :placeholder => presence_tag(@register_character.profile,:age) %>
+
+    <%= form_profile.label :introduction %>
+    <%= form_profile.text_area :introduction, :maxlength => Settings.profile.introduction.max, :placeholder => presence_tag(@register_character.profile,:introduction) %>
+  <% end %>
 <% end %>

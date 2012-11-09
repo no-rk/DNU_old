@@ -10,6 +10,7 @@ ja:
 
       register/profile: プロフィール
       register/init_job: 初期職業
+      register/init_status: 初期ステータス
 
     error: *test
 
@@ -38,6 +39,8 @@ ja:
       create: キャラクター保存されました。
     initials:
       create: 初期値保存されました。
+      status:
+        total: 合計が%{total}になるようにしてください。現在%{now}
     message:
       make_check: キャラを作成してください。
       required_entry: ※入力必須

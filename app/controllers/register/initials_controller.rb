@@ -52,11 +52,20 @@ class Register::InitialsController < ApplicationController
     @register_initial = Register::Initial.new(params[:register_initial])
     @register_initial.user = current_user
 
+    @read_only = true if request.xhr?
+
     respond_to do |format|
-      if @register_initial.save
+      begin
+        ActiveRecord::Base.transaction do
+          #成功しなかった場合は例外発生
+          @register_initial.save!
+          #Ajaxの場合は例外発生させて保存しない
+          rise if request.xhr?
+        end
         format.html { redirect_to @register_initial, notice: I18n.t("create", :scope => "register.initials") }
         format.json { render json: @register_initial, status: :created, location: @register_initial }
-      else
+      rescue
+        format.html { render :partial => 'form' } if @read_only
         format.html { render action: "new" }
         format.json { render json: @register_initial.errors, status: :unprocessable_entity }
       end
