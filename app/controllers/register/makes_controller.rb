@@ -46,6 +46,10 @@ class Register::MakesController < ApplicationController
       rescue
         format.html { render :partial => 'form' } if @read_only
         format.html { render action: "new" }
+        format.json { render json: {
+          "change" => changed?(@register_make) || changed?(@register_character) || changed?(@register_initial),
+          "error" => @register_make.errors.count + @register_character.errors.count + @register_initial.errors.count
+        } } if @read_only
         format.json { render json: @register_make.errors, status: :unprocessable_entity }
       end
     end

@@ -32,7 +32,8 @@ class Register::InitialsController < ApplicationController
       @register_initial = Register::Initial.new 
       @register_initial.build_init_job
     else
-      @register_initial = @temp_initial.dup :include => [ :init_job, :init_statuses ]
+      @register_initial = clone_record(@temp_initial)
+      @register_initial.build_init_job if @register_initial.init_job.nil?
     end
 
     respond_to do |format|
@@ -67,6 +68,7 @@ class Register::InitialsController < ApplicationController
       rescue
         format.html { render :partial => 'form' } if @read_only
         format.html { render action: "new" }
+        format.json { render json: { "change" => changed?(@register_initial), "error" => @register_initial.errors.count } } if @read_only
         format.json { render json: @register_initial.errors, status: :unprocessable_entity }
       end
     end

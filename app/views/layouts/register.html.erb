@@ -7,7 +7,7 @@
     <%= stylesheet_link_tag "application" %>
     <%= csrf_meta_tags %>
   </head>
-  <body class="<%= controller.controller_name %>_body <%= controller.controller_name %>_<%= controller.action_name %>_body">
+  <body class="register <%= controller.controller_name %>_body <%= controller.controller_name %>_<%= controller.action_name %>_body">
 
     <%= render :partial => 'layouts/navbar_top' %>
 
@@ -33,6 +33,8 @@
         </div>
       </div>
     </div>
+
+    <div class="navbar navbar-fixed-bottom"><span class="pull-right"></></div>
 
     <%= javascript_include_tag "application" %>
 

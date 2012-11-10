@@ -32,7 +32,8 @@ class Register::CharactersController < ApplicationController
       @register_character = Register::Character.new 
       @register_character.build_profile
     else
-      @register_character = @temp_character.dup :include => :profile
+      @register_character = clone_record(@temp_character)
+      @register_character.build_profile if @register_character.profile.nil?
     end
 
     respond_to do |format|
@@ -67,6 +68,7 @@ class Register::CharactersController < ApplicationController
       rescue
         format.html { render :partial => 'form' } if @read_only
         format.html { render action: "new" }
+        format.json { render json: { "change" => changed?(@register_character), "error" => @register_character.errors.count } } if @read_only
         format.json { render json: @register_character.errors, status: :unprocessable_entity }
       end
     end
