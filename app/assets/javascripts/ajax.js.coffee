@@ -81,7 +81,7 @@ $ ->
     form.removeData("type")
     console.log('button[data-remote] click.rails')
   #フォーム差分チェック
-  $('body.register').delegate 'form :input', 'change.rails', (event) ->
+  $('body.register').delegate 'form:not(.no_diff) :input', 'change.rails', (event) ->
     #親要素のフォームを取得
     form = $(this).parents('form:first')
     #一時的にフォームをAjaxにする
@@ -97,7 +97,7 @@ $ ->
     form.removeData("remote")
     form.removeAttr("data-type")
     form.removeData("type")
-    console.log('form :input change.rails')
+    console.log('form:not(.no_diff) :input change.rails')
   #フォーム
   $('body.register').delegate 'form', 'ajax:success', (event, data, status, xhr) ->
     #親要素のajax:successイベントが実行されないように伝播を止める

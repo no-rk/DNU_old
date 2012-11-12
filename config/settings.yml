@@ -16,3 +16,33 @@ init_status:
   count:
     each: 5
     total: 15
+
+register:
+  history:
+    options:
+      -
+        - 行動設定
+        -
+          -
+            - 基本行動
+            - mains
+          -
+            - 取引行動
+            - trades
+          -
+            - 生産行動
+            - products
+      -
+        - 設定
+        -
+          -
+            - キャラクター
+            - characters
+      -
+        - 初心者救済
+        -
+          -
+            - 初期値
+            - initials
+    per: 3
+

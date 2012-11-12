@@ -40,8 +40,10 @@ ja:
       create: キャラ作成されました。
     characters:
       create: キャラクター保存されました。
+      update: キャラクター更新されました。
     initials:
       create: 初期値保存されました。
+      update: 初期値更新されました。
       status:
         total: 合計が%{total}になるようにしてください。現在%{now}
     message:
@@ -54,3 +56,11 @@ ja:
       model: Error
       name: Not Found
       caption: 説明がありません。
+
+  views:
+    pagination:
+      first: "&laquo; 最新"
+      last: "最古&raquo;"
+      previous: "&lsaquo; 前"
+      next: "次 &rsaquo;"
+      truncate: "..."

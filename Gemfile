@@ -47,3 +47,4 @@ gem 'devise'
 gem 'i18n_generators'
 gem 'rails_config'
 gem "deep_cloneable", "~> 1.4.1"
+gem "kaminari"

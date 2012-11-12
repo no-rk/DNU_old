@@ -1,21 +1,10 @@
-<%= form_for(@register_main) do |f| %>
-  <% if @register_main.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@register_main.errors.count, "error") %> prohibited this register_main from being saved:</h2>
+<%= form_for(@register_main) do |form_main| %>
+  <%= render :partial => 'register/error', :locals=>{:register_error=>@register_main} %>
 
-      <ul>
-      <% @register_main.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
-
-  <div class="field">
-    <%= f.label :user %><br />
-    <%= f.text_field :user %>
-  </div>
+  <% unless @read_only %>
   <div class="actions">
-    <%= f.submit %>
+    <button data-remote="true" class="btn btn-large btn-warning">確認する</button>
+    <%= form_main.submit :class => "btn btn-large btn-success" %>
   </div>
+  <% end %>
 <% end %>

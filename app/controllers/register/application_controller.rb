@@ -8,8 +8,12 @@ class Register::ApplicationController < ApplicationController
   def index
     names = self.class.controller_name
 
-    registers = eval "current_user.#{names}"
+    registers = eval "current_user.#{names}.scoped.order('updated_at DESC').page(params[:page]).per(Settings.register.history.per)"
+
+    Time.zone = 'Asia/Tokyo'
     self.instance_variable_set("@register_#{names}",registers)
+    @read_only = true
+    @update_time = true
 
     respond_to do |format|
       format.html # index.html.erb
@@ -24,7 +28,10 @@ class Register::ApplicationController < ApplicationController
     name  = names.singularize
 
     register = eval "current_user.#{names}.find(params[:id])"
+
+    Time.zone = 'Asia/Tokyo'
     self.instance_variable_set("@register_#{name}",register)
+    @read_only = true
 
     respond_to do |format|
       format.html # show.html.erb
@@ -39,7 +46,7 @@ class Register::ApplicationController < ApplicationController
     name  = names.singularize
     has_ones = eval "Register::#{name.classify}.nested_attributes_options.map{|key,value| key if key.to_s == key.to_s.singularize}.compact"
 
-    temp = eval "current_user.#{names}.find(:last)"
+    temp = eval "current_user.#{names}.find(:first, :order => 'updated_at DESC')"
     register = eval "temp.nil? ? Register::#{name.classify}.new : clone_record(temp)"
     has_ones.each{|has_one| eval "register.build_#{has_one} if register.#{has_one}.nil?" }
 
@@ -83,7 +90,7 @@ class Register::ApplicationController < ApplicationController
         format.html { redirect_to register, notice: I18n.t("create", :scope => "register.#{names}") }
         format.json { render json: register, status: :created, location: register }
       rescue
-        format.html { render :partial => 'form' } if @read_only
+        format.html { render :partial => 'form', :locals=>{eval(":register_#{name}")=>register} } if @read_only
         format.html { render action: "new" }
         format.json { render json: { "change" => changed?(register), "error" => register.errors.count } } if @read_only
         format.json { render json: register.errors, status: :unprocessable_entity }
@@ -98,15 +105,25 @@ class Register::ApplicationController < ApplicationController
     name  = names.singularize
 
     register = eval "Register::#{name.classify}.find(params[:id])"
+    register.touch
 
     self.instance_variable_set("@register_#{name}",register)
+    @read_only = true if request.xhr?
 
     respond_to do |format|
-      if register.update_attributes(params["register_#{name}"])
-        format.html { redirect_to register, notice: "#{name} was successfully updated." }
+      begin
+        ActiveRecord::Base.transaction do
+          #成功しなかった場合は例外発生
+          register.update_attributes!(params["register_#{name}"])
+          #Ajaxの場合は例外発生させて保存しない
+          rise if request.xhr?
+        end
+        format.html { redirect_to register, notice: I18n.t("update", :scope => "register.#{names}") }
         format.json { head :no_content }
-      else
+      rescue
+        format.html { render :partial => 'form', :locals=>{eval(":register_#{name}")=>register} } if @read_only
         format.html { render action: "edit" }
+        format.json { render json: { "change" => changed?(register), "error" => register.errors.count } } if @read_only
         format.json { render json: register.errors, status: :unprocessable_entity }
       end
     end
@@ -135,7 +152,7 @@ class Register::ApplicationController < ApplicationController
     return record.dup(:include=>nested_attr)
   end
   def changed?(record)
-    last_record = eval "current_user.#{record.class.model_name.split('::').last.pluralize.downcase}.find(:last)"
+    last_record = eval "current_user.#{record.class.model_name.split('::').last.pluralize.downcase}.find(:first, :order => 'updated_at DESC')"
 
     if last_record.nil?
       return false

@@ -1,23 +1,9 @@
-<h1>Listing register_initials</h1>
-
-<table>
-  <tr>
-    <th>User</th>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
+<h1><%= @register_initials.first.class.model_name.human.downcase %></h1>
 
 <% @register_initials.each do |register_initial| %>
-  <tr>
-    <td><%= register_initial.user %></td>
-    <td><%= link_to 'Show', register_initial %></td>
-    <td><%= link_to 'Edit', edit_register_initial_path(register_initial) %></td>
-    <td><%= link_to 'Destroy', register_initial, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
+  <div class="alert">
+  <%= render :partial => 'form', :locals=>{:register_initial=>register_initial} %>
+  </div>
 <% end %>
-</table>
 
-<br />
-
-<%= link_to 'New Initial', new_register_initial_path %>
+<%= paginate @register_initials %>

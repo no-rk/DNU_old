@@ -12,6 +12,7 @@ DNU::Application.routes.draw do
   namespace :register do resources :makes, :only => [ :new, :create ] end
 
   get 'register' => 'register#index', :as => 'register_index'
+  post 'history' => 'register#history', :as => 'register_history'
 
   get 'ajax/:model(/:id)' => 'ajax#search', :as => 'ajax_search'
 

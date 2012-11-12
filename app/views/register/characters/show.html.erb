@@ -1,8 +1,5 @@
-<p>
-  <b>User:</b>
-  <%= @register_character.updated_at %>
-</p>
+<h1><%= @register_character.class.model_name.human.downcase %></h1>
 
+<%= render :partial => 'form', :locals=>{:register_character=>@register_character} %>
 
-<%= link_to 'Edit', edit_register_character_path(@register_character) %> |
 <%= link_to 'Back', register_characters_path %>

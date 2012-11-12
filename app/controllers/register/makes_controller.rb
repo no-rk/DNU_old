@@ -44,7 +44,7 @@ class Register::MakesController < Register::ApplicationController
         format.html { redirect_to register_index_path, notice: I18n.t("create", :scope => "register.makes") }
         format.json { render json: @register_make, status: :created, location: @register_make }
       rescue
-        format.html { render :partial => 'form' } if @read_only
+        format.html { render :partial => 'form', :locals=>{:register_make=>@register_make,:register_character=>@register_character,:register_initial=>@register_initial} } if @read_only
         format.html { render action: "new" }
         format.json { render json: {
           "change" => changed?(@register_make) || changed?(@register_character) || changed?(@register_initial),

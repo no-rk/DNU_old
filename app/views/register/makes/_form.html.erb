@@ -1,14 +1,17 @@
-<%= form_for(@register_make) do |form_make| %>
-  <%= render :partial => 'register/error', :locals=>{:register_error=>@register_make} %>
-  <%= render :partial => 'register/error', :locals=>{:register_error=>@register_character} %>
-  <%= render :partial => 'register/error', :locals=>{:register_error=>@register_initial} %>
+<% statuses = GameData::Status.all.map{|t| {:id => t.id, :name => t.name} } if statuses.nil? %>
+<% jobs = GameData::Job.all.inject({}){|j,t| j[t.id]=t.name; j } if jobs.nil? %>
 
-  <%= fields_for(@register_character) do |form_character| %>
-    <%= render :partial => 'register/characters/form_profile', :locals=>{:form_character=>form_character} %>
+<%= form_for(register_make) do |form_make| %>
+  <%= render :partial => 'register/error', :locals=>{:register_error=>register_make} %>
+  <%= render :partial => 'register/error', :locals=>{:register_error=>register_character} %>
+  <%= render :partial => 'register/error', :locals=>{:register_error=>register_initial} %>
+
+  <%= fields_for(register_character) do |form_character| %>
+    <%= render :partial => 'register/characters/form_profile', :locals=>{:register_character=>register_character,:form_character=>form_character} %>
   <% end %>
-  <%= fields_for(@register_initial) do |form_initial| %>
-    <%= render :partial => 'register/initials/form_init_job'     , :locals=>{:form_initial=>form_initial} %>
-    <%= render :partial => 'register/initials/form_init_statuses', :locals=>{:form_initial=>form_initial} %>
+  <%= fields_for(register_initial) do |form_initial| %>
+    <%= render :partial => 'register/initials/form_init_job'     , :locals=>{:register_initial=>register_initial,:form_initial=>form_initial,:jobs=>jobs} %>
+    <%= render :partial => 'register/initials/form_init_statuses', :locals=>{:register_initial=>register_initial,:form_initial=>form_initial,:statuses=>statuses} %>
   <% end %>
 
   <% unless @read_only %>
