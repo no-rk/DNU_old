@@ -4,9 +4,9 @@
       <li class="nav-header">ENo.<%= current_user.id %></li>
       <li class="<%= active_current(register_index_path) %>"><a href="<%= register_index_path %>">宣言トップ</a></li>
       <li class="nav-header">行動設定</li>
-      <li><a href="#">基本行動</a></li>
-      <li><a href="#">取引行動</a></li>
-      <li><a href="#">生産行動</a></li>
+      <li class="<%= active_current(new_register_main_path) %>"><a href="<%= new_register_main_path %>">基本行動</a></li>
+      <li class="<%= active_current(new_register_trade_path) %>"><a href="<%= new_register_trade_path %>">取引行動</a></li>
+      <li class="<%= active_current(new_register_product_path) %>"><a href="<%= new_register_product_path %>">生産行動</a></li>
       <li class="nav-header">戦闘設定</li>
       <li><a href="#">通常戦</a></li>
       <li><a href="#">手合わせ</a></li>

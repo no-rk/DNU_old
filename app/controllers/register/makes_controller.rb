@@ -1,15 +1,15 @@
-class Register::MakesController < ApplicationController
-  before_filter :authenticate_user!
-  before_filter :make_check!
-  layout "register"
+class Register::MakesController < Register::ApplicationController
   # GET /register/makes/new
   # GET /register/makes/new.json
   def new
     @register_make    = Register::Make.new
+
     @register_character = Register::Character.new
     @register_character.build_profile
+
     @register_initial = Register::Initial.new
     @register_initial.build_init_job
+    
 
     respond_to do |format|
       format.html # new.html.erb
@@ -52,6 +52,14 @@ class Register::MakesController < ApplicationController
         } } if @read_only
         format.json { render json: @register_make.errors, status: :unprocessable_entity }
       end
+    end
+  end
+
+  private
+  def make_check
+    unless current_user.makes.count == 0
+      redirect_to register_index_path
+      return false
     end
   end
 end

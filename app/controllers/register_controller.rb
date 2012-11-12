@@ -1,7 +1,4 @@
-class RegisterController < ApplicationController
-  before_filter :authenticate_user!
-  before_filter :make_check
-  layout "register"
+class RegisterController < Register::ApplicationController
   # GET /register
   def index
   end

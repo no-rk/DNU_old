@@ -1,0 +1,23 @@
+<h1>Listing register_trades</h1>
+
+<table>
+  <tr>
+    <th>User</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @register_trades.each do |register_trade| %>
+  <tr>
+    <td><%= register_trade.user %></td>
+    <td><%= link_to 'Show', register_trade %></td>
+    <td><%= link_to 'Edit', edit_register_trade_path(register_trade) %></td>
+    <td><%= link_to 'Destroy', register_trade, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Trade', new_register_trade_path %>

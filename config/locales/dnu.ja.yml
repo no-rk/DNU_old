@@ -4,9 +4,12 @@ ja:
       game_data/status: 能力値
       game_data/job: 職業
 
-      register/make: キャラ作成
+      register/main: 基本行動
+      register/trade: 取引行動
+      register/product: 生産行動
       register/character: キャラクター
       register/initial: 初期値
+      register/make: キャラ作成
 
       register/profile: プロフィール
       register/init_job: 初期職業

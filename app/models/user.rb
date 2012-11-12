@@ -1,7 +1,10 @@
 class User < ActiveRecord::Base
-  has_many :makes,      :class_name => "Register::Make"
+  has_many :mains,      :class_name => "Register::Main"
+  has_many :trades,     :class_name => "Register::Trade"
+  has_many :products,   :class_name => "Register::Product"
   has_many :characters, :class_name => "Register::Character"
   has_many :initials,   :class_name => "Register::Initial"
+  has_many :makes,      :class_name => "Register::Make"
 
   # Include default devise modules. Others available are:
   # :token_authenticatable, :confirmable,

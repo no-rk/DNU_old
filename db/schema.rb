@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121107060218) do
+ActiveRecord::Schema.define(:version => 20121112041343) do
 
   create_table "game_data_jobs", :force => true do |t|
     t.string   "name"
@@ -64,6 +64,14 @@ ActiveRecord::Schema.define(:version => 20121107060218) do
 
   add_index "register_initials", ["user_id"], :name => "index_register_initials_on_user_id"
 
+  create_table "register_mains", :force => true do |t|
+    t.integer  "user_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "register_mains", ["user_id"], :name => "index_register_mains_on_user_id"
+
   create_table "register_makes", :force => true do |t|
     t.integer  "user_id"
     t.datetime "created_at", :null => false
@@ -71,6 +79,14 @@ ActiveRecord::Schema.define(:version => 20121107060218) do
   end
 
   add_index "register_makes", ["user_id"], :name => "index_register_makes_on_user_id"
+
+  create_table "register_products", :force => true do |t|
+    t.integer  "user_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "register_products", ["user_id"], :name => "index_register_products_on_user_id"
 
   create_table "register_profiles", :force => true do |t|
     t.integer  "character_id"
@@ -85,6 +101,14 @@ ActiveRecord::Schema.define(:version => 20121107060218) do
   end
 
   add_index "register_profiles", ["character_id"], :name => "index_register_profiles_on_character_id"
+
+  create_table "register_trades", :force => true do |t|
+    t.integer  "user_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "register_trades", ["user_id"], :name => "index_register_trades_on_user_id"
 
   create_table "users", :force => true do |t|
     t.string   "email",                  :default => "", :null => false

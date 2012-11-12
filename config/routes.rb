@@ -1,4 +1,10 @@
 DNU::Application.routes.draw do
+  namespace :register do resources :products end
+
+  namespace :register do resources :trades end
+
+  namespace :register do resources :mains end
+
   namespace :register do resources :initials end
 
   namespace :register do resources :characters end

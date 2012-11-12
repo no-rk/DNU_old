@@ -1,0 +1,2 @@
+module Register::ProductsHelper
+end
