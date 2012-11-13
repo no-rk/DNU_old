@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121113091838) do
+ActiveRecord::Schema.define(:version => 20121113122429) do
 
   create_table "game_data_abilities", :force => true do |t|
     t.string   "name"
@@ -65,6 +65,26 @@ ActiveRecord::Schema.define(:version => 20121113091838) do
   end
 
   add_index "register_characters", ["user_id"], :name => "index_register_characters_on_user_id"
+
+  create_table "register_init_arts", :force => true do |t|
+    t.integer  "initial_id"
+    t.integer  "art_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "register_init_arts", ["art_id"], :name => "index_register_init_arts_on_art_id"
+  add_index "register_init_arts", ["initial_id"], :name => "index_register_init_arts_on_initial_id"
+
+  create_table "register_init_guardians", :force => true do |t|
+    t.integer  "initial_id"
+    t.integer  "guardian_id"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
+
+  add_index "register_init_guardians", ["guardian_id"], :name => "index_register_init_guardians_on_guardian_id"
+  add_index "register_init_guardians", ["initial_id"], :name => "index_register_init_guardians_on_initial_id"
 
   create_table "register_init_jobs", :force => true do |t|
     t.integer  "initial_id"

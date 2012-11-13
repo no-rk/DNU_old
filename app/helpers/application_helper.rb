@@ -12,6 +12,11 @@ module ApplicationHelper
       return I18n.t("required_entry", :scope => "register.message")
     end
   end
+  def presence_select(model,field)
+    if presence?(model,field)
+      return I18n.t("required_select", :scope => "register.message")
+    end
+  end
   def presence?(model,field)
     model.class.validators.select { |e|
       e.is_a? ActiveModel::Validations::PresenceValidator

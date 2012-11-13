@@ -1,12 +1,10 @@
-<br />
 <% statuses.count.times{register_initial.init_statuses.build} if register_initial.init_statuses.empty? %>
 <% i = 0 %>
 <%= form_initial.label :status %>
 <%= content_tag(:div, :'data-check-total' => (Settings.init_status.count.total unless @read_only)) do %>
   <%= form_initial.fields_for :init_statuses do |form_init_statuses| %>
-    
     <%= statuses[i][:name] %>
-    <%= link_to ajax_search_path(:status,statuses[i][:id]) , :remote => true, :'data-type' => :json, :rel => "popover", :'data-trigger' => "manual" do %>
+    <%= link_to ajax_search_path(:statuses,statuses[i][:id]) , :remote => true, :'data-type' => :json, :rel => "popover", :'data-trigger' => "manual" do %>
     <i class="icon-search"></i>
     <% end %>
     <%= form_init_statuses.hidden_field :status_id, :value => statuses[i][:id] %>

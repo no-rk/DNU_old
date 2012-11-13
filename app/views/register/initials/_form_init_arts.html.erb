@@ -1,0 +1,21 @@
+<% arts.count.times{register_initial.init_arts.build} if register_initial.init_arts.empty? %>
+<% i = 0 %>
+<%= form_initial.label :art %>
+<%= form_initial.fields_for :init_arts do |form_init_arts| %>
+  <%= arts[i][:name] %>
+  <%= link_to ajax_search_path(:art_types,arts[i][:id]) , :remote => true, :'data-type' => :json, :rel => "popover", :'data-trigger' => "manual" do %>
+  <i class="icon-search"></i>
+  <% end %><br />
+
+  <% if @read_only %>
+    <%= arts[i][:attributes][register_initial.init_arts[i][:art_id]] %>
+  <% else %>
+    <%= form_init_arts.select :art_id ,arts[i][:attributes].invert , {:prompt => presence_select(register_initial.init_arts.first,:art_id)}, :'data-url' => ajax_search_path(:arts), :'data-remote' => true, :'data-type' => :json, :class => "span3" %>
+  <% end %>
+
+  <%= link_to ajax_search_path(:arts) , :remote => true, :'data-type' => :json, :'data-params' => "id=#{register_initial.init_arts[i][:art_id]}", :rel => "popover", :'data-trigger' => "manual" do %>
+  <i class="icon-search"></i>
+  <% end %>
+  <br />
+<% i += 1 %>
+<% end %>

@@ -9,7 +9,7 @@ class Register::MakesController < Register::ApplicationController
 
     @register_initial = Register::Initial.new
     @register_initial.build_init_job
-    
+    @register_initial.build_init_guardian
 
     respond_to do |format|
       format.html # new.html.erb

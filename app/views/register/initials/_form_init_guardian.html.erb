@@ -1,0 +1,13 @@
+<%= form_initial.fields_for :init_guardian do |form_init_guardian| %><br />
+  <%= form_init_guardian.label :guardian_id %>
+
+  <% if @read_only %>
+    <%= guardians[register_initial.init_guardian[:guardian_id]] if register_initial.init_guardian[:guardian_id] %>
+  <% else %>
+    <%= form_init_guardian.select :guardian_id, guardians.invert, {:prompt => presence_select(register_initial.init_guardian,:guardian_id)}, :'data-url' => ajax_search_path(:guardians), :'data-remote' => true, :'data-type' => :json, :class => "span3" %>
+  <% end %>
+
+  <%= link_to ajax_search_path(:guardians) , :remote => true, :'data-type' => :json, :'data-params' => "id=#{register_initial.init_guardian[:guardian_id]}", :rel => "popover", :'data-trigger' => "manual" do %>
+  <i class="icon-search"></i>
+  <% end %>
+<% end %>

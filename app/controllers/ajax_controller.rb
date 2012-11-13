@@ -4,9 +4,9 @@ class AjaxController < ApplicationController
   def search
     begin
       if params[:id]
-        @ajax = "GameData::#{params[:model].capitalize}".split("::").inject(Object){ |oldclass, name| oldclass.const_get(name) }.find(params[:id])
+        @ajax = "GameData::#{params[:model].classify}".split("::").inject(Object){ |oldclass, name| oldclass.const_get(name) }.find(params[:id])
       else
-        @ajax = "GameData::#{params[:model].capitalize}".split("::").inject(Object){ |oldclass, name| oldclass.const_get(name) }.all
+        @ajax = "GameData::#{params[:model].classify}".split("::").inject(Object){ |oldclass, name| oldclass.const_get(name) }.all
       end
       model = @ajax.class.model_name.human.downcase
       @ajax = @ajax.attributes
