@@ -1,25 +1,23 @@
-<div class="span3">
-  <div class="well sidebar-nav">
-    <ul class="nav nav-list">
-      <li class="nav-header">ENo.<%= current_user.id %></li>
-      <li class="<%= active_current(register_index_path) %>"><a href="<%= register_index_path %>">宣言トップ</a></li>
-      <li class="nav-header">行動設定</li>
-      <li class="<%= active_current(new_register_main_path) %>"><a href="<%= new_register_main_path %>">基本行動</a></li>
-      <li class="<%= active_current(new_register_trade_path) %>"><a href="<%= new_register_trade_path %>">取引行動</a></li>
-      <li class="<%= active_current(new_register_product_path) %>"><a href="<%= new_register_product_path %>">生産行動</a></li>
-      <li class="nav-header">戦闘設定</li>
-      <li><a href="#">通常戦</a></li>
-      <li><a href="#">手合わせ</a></li>
-      <li class="nav-header">設定</li>
-      <li class="<%= active_current(new_register_character_path) %>"><a href="<%= new_register_character_path %>">キャラクター</a></li>
-      <li class="nav-header">初心者救済</li>
-      <li class="<%= active_current(new_register_initial_path) %>"><a href="<%= new_register_initial_path %>">初期値</a></li>
-      <li class="nav-header">履歴一覧</li>
-      <li>
-      <%= form_tag(register_history_path, :class => "no_diff select_submit") do %>
-        <%= select_tag 'history[type]', grouped_options_for_select(Settings.register.history.options, :selected => select_current), :include_blank => true %>
-      <% end %>
-      </li>
-    </ul>
-  </div><!--/.well -->
-</div><!--/span-->
+<div class="well sidebar-nav">
+  <ul class="nav nav-list">
+    <li class="nav-header">ENo.<%= current_user.id %></li>
+    <li class="<%= active_current(register_index_path) %>"><a href="<%= register_index_path %>">宣言トップ</a></li>
+    <li class="nav-header">行動設定</li>
+    <li class="<%= active_current(new_register_main_path) %>"><a href="<%= new_register_main_path %>">基本行動</a></li>
+    <li class="<%= active_current(new_register_trade_path) %>"><a href="<%= new_register_trade_path %>">取引行動</a></li>
+    <li class="<%= active_current(new_register_product_path) %>"><a href="<%= new_register_product_path %>">生産行動</a></li>
+    <li class="nav-header">戦闘設定</li>
+    <li><a href="#">通常戦</a></li>
+    <li><a href="#">手合わせ</a></li>
+    <li class="nav-header">設定</li>
+    <li class="<%= active_current(new_register_character_path) %>"><a href="<%= new_register_character_path %>">キャラクター</a></li>
+    <li class="nav-header">初心者救済</li>
+    <li class="<%= active_current(new_register_initial_path) %>"><a href="<%= new_register_initial_path %>">初期値</a></li>
+    <li class="nav-header">履歴一覧</li>
+    <li>
+    <%= form_tag(register_history_path, :class => "no_diff select_submit") do %>
+      <%= select_tag 'history[type]', grouped_options_for_select(Settings.register.history.options, :selected => select_current), :include_blank => true, :class => "span12" %>
+    <% end %>
+    </li>
+  </ul>
+</div><!--/.well -->

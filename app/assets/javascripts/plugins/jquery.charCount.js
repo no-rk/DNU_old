@@ -28,24 +28,25 @@
 		var options = $.extend(defaults, options); 
 		
 		this.each(function() {
-			$(this).after('<'+ options.counterElement +' class="' + options.css + '">'+ options.counterText +'</'+ options.counterElement +'>');
+			$(this).prev('label').append('　<'+ options.counterElement +' class="' + options.css + '">'+ options.counterText +'</'+ options.counterElement +'>');
 			var maxChars = $(this).attr("maxlength");
 			var warningChars = Math.floor(maxChars/10);
 
 			function calculate(obj){
 				var count = $(obj).val().length;
 				var available = maxChars - count;
+				var counterElement = $(obj).prev('label').children(options.counterElement);
 				if(available <= warningChars && available > 0){
-					$(obj).next().addClass(options.cssWarning);
+					counterElement.addClass(options.cssWarning);
 				} else {
-					$(obj).next().removeClass(options.cssWarning);
+					counterElement.removeClass(options.cssWarning);
 				}
 				if(available <= 0){
-					$(obj).next().addClass(options.cssExceeded);
+					counterElement.addClass(options.cssExceeded);
 				} else {
-					$(obj).next().removeClass(options.cssExceeded);
+					counterElement.removeClass(options.cssExceeded);
 				}
-				$(obj).next().html(options.counterText + available + "文字");
+				counterElement.html(options.counterText + available + "文字");
 			};
 
 			calculate(this);

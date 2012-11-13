@@ -113,6 +113,8 @@ $ ->
       #登録内容に変更があったら
       $('span.pull-right').addClass("badge badge-important").append("変更された。") if data.change
       #登録内容にエラーがあれば
-      $('span.pull-right').addClass("badge badge-important").append("エラーが" + data.error + "つある。") if data.error != 0
+      $('span.pull-right').addClass("badge badge-important").append("エラーが" + data.errors.length + "つ。") if data.errors.length
+      for error in data.errors
+        $('span.pull-right').append("<br />" + error)
       console.log(data)
     console.log('form ajax:success')

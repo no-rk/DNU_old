@@ -92,7 +92,7 @@ class Register::ApplicationController < ApplicationController
       rescue
         format.html { render :partial => 'form', :locals=>{eval(":register_#{name}")=>register} } if @read_only
         format.html { render action: "new" }
-        format.json { render json: { "change" => changed?(register), "error" => register.errors.count } } if @read_only
+        format.json { render json: { "change" => changed?(register), "errors" => register.errors.full_messages } } if @read_only
         format.json { render json: register.errors, status: :unprocessable_entity }
       end
     end

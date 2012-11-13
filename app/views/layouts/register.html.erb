@@ -27,10 +27,12 @@
         <% end %>
       </div>
       <div class="row-fluid">
-        <%= render :partial => 'layouts/nav_register' %>
+        <div class="span3">
+          <%= render :partial => 'layouts/nav_register' %>
+        </div><!--/span-->
         <div class="span9">
           <%= yield %>
-        </div>
+        </div><!--/span-->
       </div>
     </div>
 
