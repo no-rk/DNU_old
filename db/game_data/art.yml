@@ -1,0 +1,137 @@
+- name: 武器
+  caption: |-
+    説明なし。
+  attributes:
+    - name: 剣
+      caption: |-
+        射程が<b>1</b>で、戦闘時に<b>HIT/AT</b>が増加します。<br>
+        また、通常攻撃が<b>物理攻撃</b>になります。
+    - name: 槍
+      caption: |-
+        射程が<b>2</b>で、戦闘時に<b>CRI/HIT</b>が増加します。<br>
+        また、通常攻撃が<b>物理攻撃</b>になります。
+    - name: 斧
+      caption: |-
+        射程が<b>1</b>で、戦闘時に<b>AT</b>が増加します。<br>
+        また、通常攻撃が<b>物理攻撃</b>になります。
+    - name: 弓
+      caption: |-
+        射程が<b>3</b>で、戦闘時に<b>HIT</b>が増加します。<br>
+        また、通常攻撃が<b>物理攻撃</b>になります。
+    - name: 銃
+      caption: |-
+        射程が<b>3</b>で、戦闘時に<b>CRI</b>が増加します。<br>
+        また、通常攻撃が<b>物理攻撃</b>になります。
+    - name: 刀
+      caption: |-
+        射程が<b>1</b>で、戦闘時に<b>AT/CRI</b>が増加します。<br>
+        また、通常攻撃が<b>物理攻撃</b>になります。
+    - name: 素手
+      caption: |-
+        射程が<b>1</b>で、戦闘時に<b>SPD/AT</b>が増加します。<br>
+        また、通常攻撃が<b>物理攻撃</b>になります。
+    - name: 本
+      caption: |-
+        射程が<b>2</b>で、戦闘時に<b>DF/MDF</b>が増加します。<br>
+        また、通常攻撃が<b>魔法攻撃</b>になります。
+    - name: 魔石
+      caption: |-
+        射程が<b>3</b>で、戦闘時に<b>MAT/MMP</b>が増加します。<br>
+        また、通常攻撃が<b>魔法攻撃</b>になります。
+    - name: 杖
+      caption: |-
+        射程が<b>1</b>で、戦闘時に<b>AT/MAT</b>が増加します。<br>
+
+- name: 頭
+  caption: |-
+    説明なし。
+  attributes:
+    - name: 兜
+      caption: |-
+        受ける物理ダメージが減少します。<br>
+        また、<b>DF</b>が増加します。
+    - name: 帽子
+      caption: |-
+        受ける物理ダメージが減少します。<br>
+        また、<b>MSP</b>が増加します。
+    - name: 耳
+      caption: |-
+        受ける物理ダメージが減少します。<br>
+        また、<b>SPD</b>が増加します。
+
+- name: 腕
+  caption: |-
+    説明なし。
+  attributes:
+    - name: 盾
+      caption: |-
+        受ける魔法ダメージが減少します。<br>
+        また、<b>MEVA</b>が増加します。<br>
+    - name: 小手
+      caption: |-
+        受ける魔法ダメージが減少します。<br>
+        また、<b>AT</b>が増加します。<br>
+    - name: 腕輪
+      caption: |-
+        受ける魔法ダメージが減少します。<br>
+        また、<b>MAT</b>が増加します。<br>
+
+- name: 身体
+  caption: |-
+    説明なし。
+  attributes:
+    - name: 鎧
+      caption: |-
+        受ける物理ダメージが減少します。<br>
+        また、<b>DF</b>が増加します。
+    - name: ローブ
+      caption: |-
+        受ける物理ダメージが減少します。<br>
+        また、<b>MDF</b>が増加します。
+    - name: 服
+      caption: |-
+        受ける物理ダメージが減少します。<br>
+        また、<b>EVA</b>が増加します。
+
+- name: 装飾
+  caption: |-
+    説明なし。
+  attributes:
+    - name: レンズ
+      caption: |-
+        受ける魔法ダメージが減少します。<br>
+        また、<b>HIT/MHIT</b>が増加します。
+    - name: ピアス
+      caption: |-
+        受ける魔法ダメージが減少します。<br>
+        また、<b>CRI</b>が増加します。
+    - name: オーブ
+      caption: |-
+        受ける魔法ダメージが減少します。<br>
+        また、<b>MHP</b>が増加します。
+
+- name: 竜魂
+  caption: |-
+    「<b>竜魂</b>」は技能に分類されますが、装備品としての存在はありません。<br>
+    竜魂は来島時にあなたが選択した竜に対応する属性、及び特性を持つ技能となり、最初から習得されています。<br>
+    竜魂の特性は来島時に選択されたものから変更は出来ませんが、<br>
+    属性はゲーム内で入手できるアイテムを使用することで何度でも変更出来ます。<br>
+  attributes:
+    - name: 火魂
+      caption: |-
+        <b><font color="#cc3333">火属性攻撃はこの色で表されます。</font></b>
+    - name: 水魂
+      caption: |-
+        <b><font color="#3366ff">水属性攻撃はこの色で表されます。</font></b>
+    - name: 風魂
+      caption: |-
+        <b><font color="#66cc66">風属性攻撃はこの色で表されます。</font></b>
+    - name: 地魂
+      caption: |-
+        <b><font color="#cc9966">地属性攻撃はこの色で表されます。</font></b>
+    - name: 光魂
+      caption: |-
+        <b><font color="#cccc00">光属性攻撃はこの色で表されます。</font></b>
+    - name: 闇魂
+      caption: |-
+        <b><font color="#cc33cc">闇属性攻撃はこの色で表されます。</font></b>

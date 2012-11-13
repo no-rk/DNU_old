@@ -11,7 +11,38 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121112041343) do
+ActiveRecord::Schema.define(:version => 20121113091838) do
+
+  create_table "game_data_abilities", :force => true do |t|
+    t.string   "name"
+    t.text     "caption"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "game_data_art_types", :force => true do |t|
+    t.string   "name"
+    t.text     "caption"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "game_data_arts", :force => true do |t|
+    t.integer  "art_type_id"
+    t.string   "name"
+    t.text     "caption"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
+
+  add_index "game_data_arts", ["art_type_id"], :name => "index_game_data_arts_on_art_type_id"
+
+  create_table "game_data_guardians", :force => true do |t|
+    t.string   "name"
+    t.text     "caption"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
 
   create_table "game_data_jobs", :force => true do |t|
     t.string   "name"
