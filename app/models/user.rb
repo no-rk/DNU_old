@@ -6,6 +6,8 @@ class User < ActiveRecord::Base
   has_many :initials,   :class_name => "Register::Initial"
   has_many :makes,      :class_name => "Register::Make"
 
+  acts_as_messageable
+
   # Include default devise modules. Others available are:
   # :token_authenticatable, :confirmable,
   # :timeoutable and :omniauthable
