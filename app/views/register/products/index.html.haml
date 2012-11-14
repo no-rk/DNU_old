@@ -1,0 +1,15 @@
+%h1 Listing register_products
+%table
+  %tr
+    %th User
+    %th
+    %th
+    %th
+  - @register_products.each do |register_product|
+    %tr
+      %td= register_product.user
+      %td= link_to 'Show', register_product
+      %td= link_to 'Edit', edit_register_product_path(register_product)
+      %td= link_to 'Destroy', register_product, method: :delete, data: { confirm: 'Are you sure?' }
+%br/
+= link_to 'New Product', new_register_product_path

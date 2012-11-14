@@ -41,8 +41,11 @@ gem 'jquery-rails'
 group :development, :test do
   gem 'rspec-rails'
   gem 'thin'
+  gem 'erb2haml'
 end
 
+gem "haml"
+gem "haml-rails"
 gem 'devise'
 gem 'i18n_generators'
 gem 'rails_config'

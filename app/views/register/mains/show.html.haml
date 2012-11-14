@@ -1,0 +1,7 @@
+%p#notice= notice
+%p
+  %b User:
+  = @register_main.user
+= link_to 'Edit', edit_register_main_path(@register_main)
+|
+\#{link_to 'Back', register_mains_path}

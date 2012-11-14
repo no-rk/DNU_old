@@ -1,0 +1,5 @@
+%h1= @register_characters.first.class.model_name.human.downcase
+- @register_characters.each do |register_character|
+  .alert
+    = render :partial => 'form', :locals=>{:register_character=>register_character}
+= paginate @register_characters

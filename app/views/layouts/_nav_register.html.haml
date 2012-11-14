@@ -1,0 +1,29 @@
+.well.sidebar-nav
+  %ul.nav.nav-list
+    %li.nav-header
+      ENo.#{current_user.id}
+    %li{:class => active_current(register_index_path)}
+      %a{:href => register_index_path} 宣言トップ
+    %li.nav-header 行動設定
+    %li{:class => active_current(new_register_main_path)}
+      %a{:href => new_register_main_path} 基本行動
+    %li{:class => active_current(new_register_trade_path)}
+      %a{:href => new_register_trade_path} 取引行動
+    %li{:class => active_current(new_register_product_path)}
+      %a{:href => new_register_product_path} 生産行動
+    %li.nav-header 戦闘設定
+    %li
+      %a{:href => "#"} 通常戦
+    %li
+      %a{:href => "#"} 手合わせ
+    %li.nav-header 設定
+    %li{:class => active_current(new_register_character_path)}
+      %a{:href => new_register_character_path} キャラクター
+    %li.nav-header 初心者救済
+    %li{:class => active_current(new_register_initial_path)}
+      %a{:href => new_register_initial_path} 初期値
+    %li.nav-header 履歴一覧
+    %li
+      = form_tag(register_history_path, :class => "no_diff select_submit") do
+        = select_tag 'history[type]', grouped_options_for_select(Settings.register.history.options, :selected => select_current), :include_blank => true, :class => "span12"
+/ /.well

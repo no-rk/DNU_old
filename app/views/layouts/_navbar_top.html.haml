@@ -1,0 +1,54 @@
+.navbar.navbar-fixed-top
+  .navbar-inner
+    .container-fluid
+      %a.btn.btn-navbar{"data-target" => ".nav-collapse", "data-toggle" => "collapse"}
+        %span.icon-bar
+        %span.icon-bar
+        %span.icon-bar
+      %a.brand{:href => root_path} Dragon NUnavut
+      - if user_signed_in?
+        %ul.nav.nav-pills.pull-right
+          %li
+            %a{:href => "#"}
+              ENo.#{current_user.id}
+          %li
+            %a{"data-placement" => "bottom", :href => register_index_path, :rel => "tooltip", :title => "各種登録"}
+              %i.icon-book
+          %li
+            %a{"data-placement" => "bottom", :href => edit_user_registration_path, :rel => "tooltip", :title => "ユーザー設定"}
+              %i.icon-wrench
+          %li
+            = link_to(destroy_user_session_path, method: :delete, :rel => "tooltip", 'data-placement' => "bottom", :title => "ログアウト") do
+              %i.icon-off
+      - else
+        = form_for("user", :url => user_session_path, :html => {:class => "navbar-form pull-right"}) do |f|
+          = f.text_field :login, :class => "span2", :placeholder => "Eno or Email"
+          = f.password_field :password, :class => "span2", :placeholder => "Password"
+          = f.submit "ログイン", :class => "btn btn-success"
+      .nav-collapse.collapse
+        %ul.nav
+          %li
+            %a{:href => "#about"} ルール
+          %li
+            %a{:href => "#contact"} 結果
+          %li.dropdown
+            %a.dropdown-toggle{"data-toggle" => "dropdown", :href => "#"}
+              掲示板群
+              %b.caret
+            %ul.dropdown-menu
+              %li
+                %a{:href => "#"} 交流
+              %li
+                %a{:href => "#"} 取引
+              %li
+                %a{:href => "#"} 質問
+              %li.divider
+              %li.nav-header 不具合報告
+              %li
+                %a{:href => "#"} ルール不備
+              %li
+                %a{:href => "#"} 仕様確認
+          %li.hide{"data-ajax-loading" => "true"}
+            %a{:href => "#"}
+              %i.ajax-loading
+      / /.nav-collapse

@@ -2,6 +2,14 @@
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://jashkenas.github.com/coffee-script/
 $ ->
+  #ローディング表示
+  $("*[data-ajax-loading]").bind("ajaxSend", ->
+    $(this).show()
+  ).bind("ajaxComplete", ->
+    setTimeout ->
+      $("*[data-ajax-loading]").hide()
+    ,500
+  )
   #リンクヘルプ
   $('body.register,.rule').delegate 'a[data-remote]', 'ajax:success', (event, data, status, xhr) ->
     #親要素のajax:successイベントが実行されないように伝播を止める
@@ -109,12 +117,12 @@ $ ->
       $(this).next('div').prepend('<button type="button" class="close" data-dismiss="alert">（・×・）</button><br />')
     #データタイプがjsonだったら
     else
-      $('span.pull-right').removeClass("badge badge-important").empty()
+      $('*[data-errors]').removeClass("badge badge-important").empty().css({ position: "fixed", bottom: 0, right: 0 })
       #登録内容に変更があったら
-      $('span.pull-right').addClass("badge badge-important").append("変更された。") if data.change
+      $('*[data-errors]').addClass("badge badge-important").append("変更された。") if data.change
       #登録内容にエラーがあれば
-      $('span.pull-right').addClass("badge badge-important").append("エラーが" + data.errors.length + "つ。") if data.errors.length
+      $('*[data-errors]').addClass("badge badge-important").append("エラーが" + data.errors.length + "つ。") if data.errors.length
       for error in data.errors
-        $('span.pull-right').append("<br />" + error)
+        $('*[data-errors]').append("<br />" + error)
       console.log(data)
     console.log('form ajax:success')

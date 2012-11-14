@@ -3,6 +3,9 @@
 // You can use Sass (SCSS) here: http://sass-lang.com/
 $CleditorToolbarPath:      url('toolbar.gif');
 $CleditorButtonsPath: url('buttons.gif');
+$AjaxLoadingPath: url('loading.gif');
+$AjaxLoadingWidth: 28px;
+$AjaxLoadingHeight: 14px;
 
 .cleditorMain {border:1px solid #999; padding:0 1px 1px; background-color:white}
 .cleditorMain iframe {border:none; margin:0; padding:0}
@@ -28,3 +31,15 @@ $CleditorButtonsPath: url('buttons.gif');
 .cleditorPrompt input,
 .cleditorPrompt textarea {font:8.5pt Arial,Verdana;}
 .cleditorMsg {background-color:#FDFCEE; width:150px; padding:4px; font-size:8.5pt}
+
+.ajax-loading {
+  display: inline-block;
+  width: $AjaxLoadingWidth;
+  height: $AjaxLoadingHeight;
+  *margin-right: .3em;
+  line-height: $AjaxLoadingHeight;
+  vertical-align: text-top;
+  background-image: $AjaxLoadingPath;
+  background-position: 0px 0px;
+  background-repeat: no-repeat;
+}

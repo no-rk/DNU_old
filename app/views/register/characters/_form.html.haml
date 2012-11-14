@@ -1,0 +1,13 @@
+= form_for(register_character) do |form_character|
+  = register_character.updated_at
+  = link_to 'Show', register_character if controller.action_name=="index"
+  = link_to 'Edit', edit_register_character_path(register_character) if controller.action_name=="show"
+  = render :partial => 'register/error', :locals=>{:register_error=>register_character}
+  = render :partial => 'form_profile', :locals=>{:register_character=>register_character,:form_character=>form_character}
+  - unless @read_only
+    .actions
+      %button.btn.btn-large.btn-warning{"data-remote" => "true"} 確認する
+      = form_character.submit :class => "btn btn-large btn-success"
+  - if @update_time
+    .actions
+      = form_character.submit :class => "btn btn-large btn-warning"

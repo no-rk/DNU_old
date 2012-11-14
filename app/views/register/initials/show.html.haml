@@ -1,0 +1,3 @@
+%h1= @register_initial.class.model_name.human.downcase
+= render :partial => 'form', :locals=>{:register_initial=>@register_initial}
+= link_to 'Back', register_initials_path

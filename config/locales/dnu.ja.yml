@@ -23,10 +23,10 @@ ja:
 
     attributes:
       register/initial:
-        job: 職業
+        job: 初期職業
         guardian: 守護竜
-        status: 鍛錬
-        art: 初期技能
+        status: 初期能力
+        art: 初期装備
       register/profile:
         age: 年齢
         gender: 性別
@@ -36,16 +36,10 @@ ja:
         race: 種族
 
       register/init_job:
-        job_id: 職業
+        job_id: 初期職業
 
       register/init_guardian:
         guardian_id: 守護竜
-
-      register/init_status:
-        status_id: 鍛錬
-
-      register/init_art:
-        art_id: 初期技能
 
   register:
     makes:

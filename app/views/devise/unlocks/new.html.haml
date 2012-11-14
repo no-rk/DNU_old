@@ -1,0 +1,8 @@
+%h2 凍結されたら
+= form_for(resource, :as => resource_name, :url => unlock_path(resource_name), :html => { :method => :post }) do |f|
+  = devise_error_messages!
+  %label= f.label :email
+  = f.email_field :email
+  %br/
+  = f.submit "凍結解除メール再送信", :class => "btn btn-large btn-warning"
+= render "devise/shared/links"

@@ -1,0 +1,15 @@
+%h2 ユーザー設定
+= form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :method => :put }) do |f|
+  = devise_error_messages!
+  %label= f.label :email
+  = f.email_field :email
+  %label
+    = f.label :password
+    %i （変更しない場合は空欄）
+  = f.password_field :password, :autocomplete => "off"
+  %label= f.label :password_confirmation
+  = f.password_field :password_confirmation
+  %label= f.label :current_password
+  = f.password_field :current_password
+  %br/
+  = f.submit "更新", :class => "btn btn-large btn-warning"

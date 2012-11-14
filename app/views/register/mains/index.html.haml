@@ -1,0 +1,15 @@
+%h1 Listing register_mains
+%table
+  %tr
+    %th User
+    %th
+    %th
+    %th
+  - @register_mains.each do |register_main|
+    %tr
+      %td= register_main.user
+      %td= link_to 'Show', register_main
+      %td= link_to 'Edit', edit_register_main_path(register_main)
+      %td= link_to 'Destroy', register_main, method: :delete, data: { confirm: 'Are you sure?' }
+%br/
+= link_to 'New Main', new_register_main_path

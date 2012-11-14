@@ -1,9 +1,0 @@
-<h1><%= @register_initials.first.class.model_name.human.downcase %></h1>
-
-<% @register_initials.each do |register_initial| %>
-  <div class="alert">
-  <%= render :partial => 'form', :locals=>{:register_initial=>register_initial} %>
-  </div>
-<% end %>
-
-<%= paginate @register_initials %>

@@ -1,0 +1,7 @@
+- if register_error.errors.any?
+  .alert.alert-error
+    %button.close{"data-dismiss" => "alert", :type => "button"} （・×・）
+    %strong= register_error.errors.count.to_s + " つのエラーにより " + register_error.class.model_name.human.downcase + " は保存されませんでした。"
+    %ul
+      - register_error.errors.full_messages.each do |msg|
+        %li= msg

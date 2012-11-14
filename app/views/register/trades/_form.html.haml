@@ -1,0 +1,6 @@
+= form_for(@register_trade) do |form_trade|
+  = render :partial => 'register/error', :locals=>{:register_error=>@register_trade}
+  - unless @read_only
+    .actions
+      %button.btn.btn-large.btn-warning{"data-remote" => "true"} 確認する
+      = form_trade.submit :class => "btn btn-large btn-success"
