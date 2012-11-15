@@ -46,6 +46,8 @@ end
 
 gem "haml"
 gem "haml-rails"
+gem 'simple_form'
+gem 'country_select'
 gem 'devise'
 gem 'mailboxer'
 gem "kaminari"

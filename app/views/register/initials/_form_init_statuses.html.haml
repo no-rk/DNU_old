@@ -1,16 +1,15 @@
 - statuses.count.times{register_initial.init_statuses.build} if register_initial.init_statuses.empty?
 - i = 0
 = form_initial.label :status
-= content_tag(:div, :'data-check-total' => (Settings.init_status.count.total unless @read_only)) do
-  = form_initial.fields_for :init_statuses do |form_init_statuses|
-    = statuses[i][:name]
-    = form_init_statuses.hidden_field :status_id, :value => statuses[i][:id]
-    = link_to ajax_search_path(:statuses,statuses[i][:id]) , :remote => true, :'data-type' => :json, :rel => "popover", :'data-trigger' => "manual" do
-      %i.icon-search
+.row-fluid{:'data-check-total' => (Settings.init_status.count.total unless @read_only)}
+  = form_initial.simple_fields_for :init_statuses do |form_init_statuses|
+    = form_init_statuses.input :status_id, :as => :hidden, :input_html => { :value => statuses[i][:id] }
     - if @read_only
+      = statuses[i][:name]
       = register_initial.init_statuses[i][:count]
       = form_init_statuses.hidden_field :count, :value => register_initial.init_statuses[i][:count]
+      = raw "<br>" if i%3==2
     - else
-      = form_init_statuses.select :count, Array.new(Settings.init_status.count.each+1){|i| i }.inject({}){|h,v|h[v]=v;h},{}, :class => "span2"
-    = raw("<br />") if i%3==2
+      .span3
+        = form_init_statuses.input :count, :wrapper_html => { :class => 'form-inline' }, :label => statuses[i][:name], :label_html => {:'data-help-path'=>ajax_search_path(:statuses), :'data-params'=>"id=#{statuses[i][:id]}"}, :collection => Array.new(Settings.init_status.count.each+1){|i| i }.inject({}){|h,v|h[v]=v;h}, :include_blank => false, :input_html => { :class => "span12" }
     - i += 1

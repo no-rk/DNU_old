@@ -42,6 +42,7 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.4.0)
+    country_select (1.0.1)
     daemons (1.1.9)
     deep_cloneable (1.4.1)
       rails
@@ -156,6 +157,9 @@ GEM
       sass (>= 3.1.10)
       tilt (~> 1.3)
     sexp_processor (4.1.2)
+    simple_form (2.0.4)
+      actionpack (~> 3.0)
+      activemodel (~> 3.0)
     sprockets (2.1.3)
       hike (~> 1.2)
       rack (~> 1.0)
@@ -186,6 +190,7 @@ PLATFORMS
 DEPENDENCIES
   bootstrap-sass
   coffee-rails (~> 3.2.1)
+  country_select
   deep_cloneable (~> 1.4.1)
   devise
   erb2haml
@@ -200,5 +205,6 @@ DEPENDENCIES
   rails_config
   rspec-rails
   sass-rails (~> 3.2.3)
+  simple_form
   thin
   uglifier (>= 1.0.3)

@@ -28,14 +28,14 @@
 		var options = $.extend(defaults, options); 
 		
 		this.each(function() {
-			$(this).prev('label').append('　<'+ options.counterElement +' class="' + options.css + '">'+ options.counterText +'</'+ options.counterElement +'>');
+			$(this).after('<'+ options.counterElement +' class="' + options.css + '">'+ options.counterText +'</'+ options.counterElement +'>');
 			var maxChars = $(this).attr("maxlength");
 			var warningChars = Math.floor(maxChars/10);
 
 			function calculate(obj){
 				var count = $(obj).val().length;
 				var available = maxChars - count;
-				var counterElement = $(obj).prev('label').children(options.counterElement);
+				var counterElement = $(obj).next();
 				if(available <= warningChars && available > 0){
 					counterElement.addClass(options.cssWarning);
 				} else {

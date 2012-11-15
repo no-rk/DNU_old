@@ -4,7 +4,7 @@
 $ ->
   $(':text[maxlength]').charCount()
   $('textarea[maxlength]').cleditor()
-  #ボタン確認
+  #セレクトでサブミット
   $('body.register').delegate 'form.select_submit select', 'change.rails', (event) ->
     #親要素のフォームを取得
     form = $(this).parents('form:first')
@@ -17,7 +17,7 @@ $ ->
     calculate = (obj) ->
       count = 0
       counterText = '残り'
-      $(obj).children('select').each ->
+      $(obj).find('select').each ->
         count += $(this).val()-0
       available = maxValue - count
       if available == 0

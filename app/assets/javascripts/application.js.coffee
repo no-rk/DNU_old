@@ -17,4 +17,3 @@
 #= require_tree .
 $ ->
   $('a[rel*=tooltip]').tooltip()
-  $('a[rel*=popover]').popover()

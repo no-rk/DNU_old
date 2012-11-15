@@ -2,6 +2,34 @@
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://jashkenas.github.com/coffee-script/
 $ ->
+  $.fn.helpLink = () ->
+    this.each ->
+      help = $('<a>')
+      help.attr(
+        "href": $(this).data("help-path")
+        "data-remote": true
+        "data-params": $(this).data('params')
+        "data-trigge": "manual"
+        "data-type": "json"
+        "rel": "popover"
+      ).html('<i class="icon-search"></i>')
+      help.hide() unless $(this).data('params')
+      help.popover()
+      $(this).after(help)
+
+  $.fn.noAjax = ->
+    this.each ->
+      #もうAjaxしないようにする
+      $(this).removeAttr("data-remote")
+      $(this).removeData("remote")
+      #ポップオーバーをトグルするためだけのリンクにする
+      $(this).unbind("click").bind "click", (event) ->
+        #リンク先に移動したりサブミットするなどの機能を失わせる
+        event.preventDefault()
+        $(this).popover('toggle')
+        console.log("a click")
+      console.log("no ajax")
+
   #ローディング表示
   $("*[data-ajax-loading]").bind("ajaxSend", ->
     $(this).show()
@@ -10,13 +38,13 @@ $ ->
       $("*[data-ajax-loading]").hide()
     ,500
   )
+
+  #ヘルプリンク追加
+  $('*[data-help-path]').helpLink()
   #リンクヘルプ
   $('body.register,.rule').delegate 'a[data-remote]', 'ajax:success', (event, data, status, xhr) ->
     #親要素のajax:successイベントが実行されないように伝播を止める
     event.stopPropagation()
-    #もうAjaxしないようにする
-    $(this).removeAttr("data-remote")
-    $(this).removeData("remote")
     #ポップオーバーで表示されるデータ書き換える
     $(this).attr({
       "data-original-title": data.model + "::" + data.name
@@ -26,12 +54,8 @@ $ ->
       "original-title": data.model + "::" + data.name
       "content": data.caption
     })
-    #ポップオーバーをトグルするためだけのリンクにする
-    $(this).unbind("click").bind "click", (event) ->
-      #リンク先に移動したりサブミットするなどの機能を失わせる
-      event.preventDefault()
-      $(this).popover('toggle')
-      console.log("a click")
+    #もうAjaxしないようにする
+    $(this).noAjax()
     #クリックイベントはjquery_ujs.jsで止められているのでココで再発火しておく
     $(this).click()
     console.log('a[data-remote] ajax:success')
@@ -40,10 +64,19 @@ $ ->
   $('body.register').delegate 'select[data-remote]', 'ajax:before', (event) ->
     #親要素のajax:beforeイベントが実行されないように伝播を止める
     event.stopPropagation()
-    #Ajaxに渡すパラメータを選択された値に応じて設定する
-    $(this).attr("data-params","id=" + $(this).val())
-    $(this).data("params","id=" + $(this).val())
-    console.log('select[data-remote] ajax:before')
+    next = $(this).next('a')
+    if $(this).val()
+      #Ajaxに渡すパラメータを選択された値に応じて設定する
+      $(this).attr("data-params","id=" + $(this).val())
+      $(this).data("params","id=" + $(this).val())
+      console.log('select[data-remote] ajax:before')
+    else
+      #値がないのでAjaxキャンセル
+      next = $(this).next('a')
+      next.popover("hide")
+      next.hide()
+      console.log('select[data-remote] ajax:before cancel')
+      false
   $('body.register').delegate 'select[data-remote]', 'ajax:success', (event, data, status, xhr) ->
     #親要素のajax:successイベントが実行されないように伝播を止める
     event.stopPropagation()
@@ -52,9 +85,7 @@ $ ->
     $(this).removeData("params")
     #セレクト要素の次にあるリンクヘルプを取得
     next = $(this).next('a')
-    #Ajaxに渡すパラメータを設定する
-    next.attr("data-params","id=" + data.id)
-    next.data("params","id=" + data.id)
+    next.show()
     #ポップオーバーで表示されるデータ書き換える
     next.attr({
       "data-original-title": data.model + "::" + data.name
@@ -64,6 +95,8 @@ $ ->
       "original-title": data.model + "::" + data.name
       "content": data.caption
     })
+    #もうAjaxしないようにする
+    next.noAjax() if next.data("remote")
     #ポップオーバー表示されてるときは再表示して内容更新
     next.popover("show") if next.data("popover").$tip? && next.data("popover").$tip.hasClass("in")
     console.log('select[data-remote] ajax:success')
@@ -112,8 +145,11 @@ $ ->
     event.stopPropagation()
     #データタイプがhtmlだったら
     if($.type(data) == "string")
+      html = $(data)
+      html.find('*[data-help-path]').helpLink()
+      html.find('a[rel*=tooltip]').tooltip()
       $(this).after('<div class="alert"></div>')
-      $(this).next('div').html(data)
+      $(this).next('div').html(html)
       $(this).next('div').prepend('<button type="button" class="close" data-dismiss="alert">（・×・）</button><br />')
     #データタイプがjsonだったら
     else

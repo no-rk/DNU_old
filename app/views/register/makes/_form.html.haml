@@ -2,13 +2,13 @@
 - guardians = GameData::Guardian.all.inject({}){|j,t| j[t.id]=t.name; j } if guardians.nil?
 - statuses  = GameData::Status.all.map{|t| {:id => t.id, :name => t.name} } if statuses.nil?
 - arts      = GameData::ArtType.all.map{|t| {:id => t.id, :name => t.name, :attributes => GameData::ArtType.find(t.id).arts.all.inject({}){|h,u| h[u.id]=u.name;h } } if t.name != "竜魂" }.compact if arts.nil?
-= form_for(register_make) do |form_make|
+= simple_form_for(register_make) do |form_make|
   = render :partial => 'register/error', :locals=>{:register_error=>register_make}
   = render :partial => 'register/error', :locals=>{:register_error=>register_character}
   = render :partial => 'register/error', :locals=>{:register_error=>register_initial}
-  = fields_for(register_character) do |form_character|
+  = simple_fields_for(register_character) do |form_character|
     = render :partial => 'register/characters/form_profile', :locals=>{:register_character=>register_character,:form_character=>form_character}
-  = fields_for(register_initial) do |form_initial|
+  = simple_fields_for(register_initial) do |form_initial|
     = render :partial => 'register/initials/form_init_job',      :locals=>{:register_initial=>register_initial,:form_initial=>form_initial,:jobs=>jobs}
     = render :partial => 'register/initials/form_init_guardian', :locals=>{:register_initial=>register_initial,:form_initial=>form_initial,:guardians=>guardians}
     = render :partial => 'register/initials/form_init_statuses', :locals=>{:register_initial=>register_initial,:form_initial=>form_initial,:statuses=>statuses}

@@ -1,10 +1,8 @@
-= form_initial.fields_for :init_job do |form_init_job|
-  %br/
-  = form_init_job.label :job_id
+= form_initial.simple_fields_for :init_job do |form_init_job|
+  %br
   - if @read_only
-    = jobs[register_initial.init_job[:job_id]]
-    = form_init_job.hidden_field :job_id, :value => register_initial.init_job[:job_id]
+    = form_init_job.label :job_id if register_initial.init_job[:job_id]
+    %span{ :'data-help-path' => ajax_search_path(:jobs), :'data-params' => ("id=#{register_initial.init_job[:job_id]}" if register_initial.init_job[:job_id]) }= jobs[register_initial.init_job[:job_id]]
+    = form_init_job.input :job_id, :as => :hidden, :input_html => { :value => register_initial.init_job[:job_id] }
   - else
-    = form_init_job.select :job_id, jobs.invert, {:prompt => presence_select(register_initial.init_job,:job_id)}, :'data-url' => ajax_search_path(:jobs), :'data-remote' => true, :'data-type' => :json, :class => "span3"
-  = link_to ajax_search_path(:jobs) , :remote => true, :'data-type' => :json, :'data-params' => "id=#{register_initial.init_job[:job_id]}", :rel => "popover", :'data-trigger' => "manual" do
-    %i.icon-search
+    = form_init_job.input :job_id, :collection => jobs.invert, :input_html => { :'data-url' => ajax_search_path(:jobs), :'data-remote' => true, :'data-params' => ("id=#{register_initial.init_job[:job_id]}" if register_initial.init_job[:job_id]), :'data-type' => :json, :'data-help-path' => ajax_search_path(:jobs), :class => "span3" }

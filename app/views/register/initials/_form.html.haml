@@ -2,7 +2,7 @@
 - guardians = GameData::Guardian.all.inject({}){|j,t| j[t.id]=t.name; j } if guardians.nil?
 - statuses  = GameData::Status.all.map{|t| {:id => t.id, :name => t.name} } if statuses.nil?
 - arts      = GameData::ArtType.all.map{|t| {:id => t.id, :name => t.name, :attributes => GameData::ArtType.find(t.id).arts.all.inject({}){|h,u| h[u.id]=u.name;h } } if t.name != "竜魂" }.compact if arts.nil?
-= form_for(register_initial) do |form_initial|
+= simple_form_for(register_initial) do |form_initial|
   = register_initial.updated_at
   = link_to 'Show', register_initial if controller.action_name=="index"
   = link_to 'Edit', edit_register_initial_path(register_initial) if controller.action_name=="show"

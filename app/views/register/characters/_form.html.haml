@@ -1,4 +1,4 @@
-= form_for(register_character) do |form_character|
+= simple_form_for(register_character) do |form_character|
   = register_character.updated_at
   = link_to 'Show', register_character if controller.action_name=="index"
   = link_to 'Edit', edit_register_character_path(register_character) if controller.action_name=="show"
