@@ -63,6 +63,10 @@ ja:
       name: Not Found
       caption: 説明がありません。
 
+  form:
+    message:
+      blank: 「未入力」
+
   views:
     pagination:
       first: "&laquo; 最新"

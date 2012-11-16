@@ -1,8 +1,3 @@
-= form_initial.simple_fields_for :init_guardian do |form_init_guardian|
+= form_initial.simple_fields_for :init_guardian, :defaults => { :as => (:plain if @read_only) } do |form_init_guardian|
   %br
-  - if @read_only
-    = form_init_guardian.label :guardian_id if register_initial.init_guardian[:guardian_id]
-    %span{ :'data-help-path' => ajax_search_path(:guardians), :'data-params' => ("id=#{register_initial.init_guardian[:guardian_id]}" if register_initial.init_guardian[:guardian_id]) }= guardians[register_initial.init_guardian[:guardian_id]]
-    = form_init_guardian.input :guardian_id, :as => :hidden, :input_html => { :value => register_initial.init_guardian[:guardian_id] }
-  - else
-    = form_init_guardian.input :guardian_id, :collection => guardians.invert, :input_html => { :'data-url' => ajax_search_path(:guardians), :'data-remote' => true, :'data-params' => ("id=#{register_initial.init_guardian[:guardian_id]}" if register_initial.init_guardian[:guardian_id]), :'data-type' => :json, :'data-help-path' => ajax_search_path(:guardians), :class => "span3" }
+  = form_init_guardian.input :guardian_id, :collection => guardians.invert, :input_html => { :'data-url' => ajax_search_path(:guardians), :'data-remote' => true, :'data-params' => ("id=#{register_initial.init_guardian[:guardian_id]}" if register_initial.init_guardian[:guardian_id]), :'data-type' => :json, :'data-help-path' => ajax_search_path(:guardians), :class => "span3" }

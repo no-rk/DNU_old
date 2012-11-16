@@ -1,8 +1,3 @@
-= form_initial.simple_fields_for :init_job do |form_init_job|
+= form_initial.simple_fields_for :init_job, :defaults => { :as => (:plain if @read_only) } do |form_init_job|
   %br
-  - if @read_only
-    = form_init_job.label :job_id if register_initial.init_job[:job_id]
-    %span{ :'data-help-path' => ajax_search_path(:jobs), :'data-params' => ("id=#{register_initial.init_job[:job_id]}" if register_initial.init_job[:job_id]) }= jobs[register_initial.init_job[:job_id]]
-    = form_init_job.input :job_id, :as => :hidden, :input_html => { :value => register_initial.init_job[:job_id] }
-  - else
-    = form_init_job.input :job_id, :collection => jobs.invert, :input_html => { :'data-url' => ajax_search_path(:jobs), :'data-remote' => true, :'data-params' => ("id=#{register_initial.init_job[:job_id]}" if register_initial.init_job[:job_id]), :'data-type' => :json, :'data-help-path' => ajax_search_path(:jobs), :class => "span3" }
+  = form_init_job.input :job_id, :collection => jobs.invert, :input_html => { :'data-url' => ajax_search_path(:jobs), :'data-remote' => true, :'data-params' => ("id=#{register_initial.init_job[:job_id]}" if register_initial.init_job[:job_id]), :'data-type' => :json, :'data-help-path' => ajax_search_path(:jobs), :class => "span3" }
