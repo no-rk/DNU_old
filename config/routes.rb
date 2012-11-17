@@ -1,13 +1,14 @@
 DNU::Application.routes.draw do
-  namespace :register do resources :products end
+  devise_for :users
 
-  namespace :register do resources :trades end
+  namespace :communication do resources :messages, :only => [ :index, :new, :create, :update ] end
+  namespace :communication do resources :conversations end
 
   namespace :register do resources :mains end
-
-  namespace :register do resources :initials end
-
+  namespace :register do resources :trades end
+  namespace :register do resources :products end
   namespace :register do resources :characters end
+  namespace :register do resources :initials end
 
   namespace :register do resources :makes, :only => [ :new, :create ] end
 
@@ -15,8 +16,6 @@ DNU::Application.routes.draw do
   post 'history' => 'register#history', :as => 'register_history'
 
   get 'ajax/:model(/:id)' => 'ajax#search', :as => 'ajax_search'
-
-  devise_for :users
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

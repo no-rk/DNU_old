@@ -1,0 +1,26 @@
+- unless notifications.blank?
+  %table.table.table-hover
+    %thead
+      %tr
+        %td From
+        %td 件名
+        %td 本文
+        %td To
+        %td 時間
+    %tbody
+      - notifications.each do |notification|
+        - if current_user.id==notification.notified_object.id
+          %tr.info
+            %td ENo.#{notification.notified_object.id} #{notification.notified_object.characters.find(:first, :order => 'updated_at DESC').profile.nickname}
+            %td #{notification.subject}
+            %td #{notification.body}
+            %td!= notification.receipts.find(:all,:conditions=>["receiver_id != ?",notification.notified_object_id]).map{|r| "ENo." + r.receiver_id.to_s + (I18n.t("unread", :scope => "communication") if r.is_unread?).to_s }.compact.join(',')
+            %td #{notification.updated_at}
+        - else
+          %tr.success
+            %td ENo.#{notification.notified_object.id} #{notification.notified_object.characters.find(:first, :order => 'updated_at DESC').profile.nickname}
+            %td #{notification.subject} #{I18n.t("unread", :scope => "communication").html_safe if notification.receipts.find_by_receiver_id(current_user.id).is_unread?}
+            %td #{notification.body}
+            %td!= notification.receipts.find(:all,:conditions=>["receiver_id NOT IN(?,?)", current_user.id, notification.notified_object_id]).map{|r| "ENo." + r.receiver_id.to_s + (I18n.t("unread", :scope => "communication") if r.is_unread?).to_s }.compact.join(',')
+            %td #{notification.updated_at}
+  = paginate notifications if notifications.respond_to?(:current_page)

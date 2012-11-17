@@ -42,6 +42,7 @@ group :development, :test do
   gem 'rspec-rails'
   gem 'thin'
   gem 'erb2haml'
+  gem 'sextant'
 end
 
 gem "haml"

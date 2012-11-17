@@ -41,6 +41,12 @@ ja:
       register/init_guardian:
         guardian_id: 守護竜
 
+  communication:
+    unread: |-
+      <a href="#" rel="tooltip" data-original-title="未読">
+      <i class="icon-warning-sign"></i>
+      </a>
+
   register:
     makes:
       create: キャラ作成されました。
