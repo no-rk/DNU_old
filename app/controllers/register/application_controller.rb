@@ -8,9 +8,8 @@ class Register::ApplicationController < ApplicationController
   def index
     names = self.class.controller_name
 
-    registers = eval "current_user.#{names}.scoped.order('updated_at DESC').page(params[:page]).per(Settings.register.history.per)"
+    registers = eval "current_user.#{names}.scoped.page(params[:page]).per(Settings.register.history.per)"
 
-    Time.zone = 'Asia/Tokyo'
     self.instance_variable_set("@register_#{names}",registers)
     @read_only = true
     @update_time = true
@@ -29,7 +28,6 @@ class Register::ApplicationController < ApplicationController
 
     register = eval "current_user.#{names}.find(params[:id])"
 
-    Time.zone = 'Asia/Tokyo'
     self.instance_variable_set("@register_#{name}",register)
     @read_only = true
 
@@ -46,7 +44,7 @@ class Register::ApplicationController < ApplicationController
     name  = names.singularize
     has_ones = eval "Register::#{names.classify}.nested_attributes_options.map{|key,value| key if key.to_s != key.to_s.pluralize}.compact"
 
-    temp = eval "current_user.#{names}.find(:first, :order => 'updated_at DESC')"
+    temp = eval "current_user.#{name}"
     register = eval "temp.nil? ? Register::#{names.classify}.new : clone_record(temp)"
     has_ones.each{|has_one| eval "register.build_#{has_one} if register.#{has_one}.nil?" }
 
@@ -155,7 +153,7 @@ class Register::ApplicationController < ApplicationController
     return record.dup(:include=>nested_attr)
   end
   def changed?(record)
-    last_record = eval "current_user.#{record.class.model_name.split('::').last.pluralize.downcase}.find(:first, :order => 'updated_at DESC')"
+    last_record = eval "current_user.#{record.class.model_name.split('::').last.downcase}"
 
     if last_record.nil?
       return false

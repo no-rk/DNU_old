@@ -1,6 +1,6 @@
-= simple_form_for :message, :url => communication_messages_path, :html => { :class => "no_diff" } do |form_message|
-  = form_message.input :recipients, :label => "送信先", :as => :id
-  = form_message.input :subject,    :label => "件名"  , :as => :string, :maxlength => 20
-  = form_message.input :body,       :label => "本文"  , :as => :string,   :maxlength => 140
+= simple_form_for communication, :html => { :class => "no_diff" } do |form_message|
+  = form_message.input :recipients, :as => :id
+  = form_message.input :subject
+  = form_message.input :body
   .actions
     = form_message.submit :class => "btn btn-large btn-success"

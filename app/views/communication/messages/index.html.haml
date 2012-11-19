@@ -1,2 +1,2 @@
 = render 'notifications', { :notifications => notifications.page(params[:page]).per(10) }
-= render 'form'
+= link_to "伝言する。", new_communication_message_path, :class => "btn btn-warning"

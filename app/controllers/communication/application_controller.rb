@@ -1,4 +1,5 @@
 class Communication::ApplicationController < ApplicationController
+  helper_method :communication
   before_filter :authenticate_user!
   before_filter :make_check
   layout "register"
@@ -28,37 +29,29 @@ class Communication::ApplicationController < ApplicationController
     names = self.class.controller_name
     name  = names.singularize
 
-    begin
-      @recipients = User.find(params[name][:recipients].split(','))
-    rescue
-      @recipients = nil
-    end
+    if communication.valid?
+      begin
+        @recipients = User.where(:id => params["communication_#{name}"][:recipients].split(',') )
+      rescue
+        @recipients = nil
+      end
 
-    #‚±‚Ìˆ—‚ğƒRƒ“ƒgƒ[ƒ‰[–ˆ‚É•Ï‰»‚³‚¹‚é
-    @receipts = send_communications(@recipients, params[name][:subject], params[name][:body]) if @recipients
+      #ã“ã®å‡¦ç†ã‚’ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ãƒ¼æ¯ã«å¤‰åŒ–ã•ã›ã‚‹
+      @receipts = send_communications(@recipients, params["communication_#{name}"][:subject], params["communication_#{name}"][:body]) if @recipients
 
-    if Notification.successful_delivery?(@receipts)
-      current_user.mark_as_read(mailbox.notifications)
-      redirect_to register_index_path, notice: "seikou"
+      if Notification.successful_delivery?(@receipts)
+        redirect_to register_index_path, notice: "seikou"
+      else
+        redirect_to register_index_path, alert: "error"
+      end
     else
-      redirect_to register_index_path, alert: "error"
+      render action: "new"
     end
   end
 
   # PUT /communication/controller_name/1
   # PUT /communication/controller_name/1.json
   def update
-    names = self.class.controller_name
-    name  = names.singularize
-
-    @conversation = current_user.mailbox.conversations.find_by_id(params[:id])
-    @receipt = current_user.reply_to_conversation(@conversation, params[name][:body], params[name][:subject])
-
-    if @receipt.conversation
-      redirect_to eval("communication_#{name}_path(#{params[name][:conversation]})"), notice: "seikou"
-    else
-      redirect_to eval("communication_#{name}_path(#{params[name][:conversation]})"), alert: "sippai"
-    end
   end
 
   # DELETE /communication/controller_name/1
@@ -69,5 +62,11 @@ class Communication::ApplicationController < ApplicationController
   private
   def send_communications(recipients, subject, body)
     raise NotImplementedError
+  end
+  def communication
+    names = self.class.controller_name
+    name  = names.singularize
+
+    @communication ||= eval ("Communication::#{names.classify}.new(params[:communication_#{name}])")
   end
 end

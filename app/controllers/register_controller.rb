@@ -1,4 +1,5 @@
 class RegisterController < ApplicationController
+  helper_method :communication_message
   before_filter :authenticate_user!
   before_filter :make_check
   layout "register"
@@ -16,5 +17,11 @@ class RegisterController < ApplicationController
       format.html { redirect_to eval("register_#{history_type}_path") } # search.html.erb
       format.json { redirect_to root_path }
     end
+  end
+
+  private
+  def communication_message
+    names = self.class.controller_name
+    Communication::Message.new
   end
 end

@@ -1,10 +1,16 @@
 class User < ActiveRecord::Base
-  has_many :mains,      :class_name => "Register::Main"
-  has_many :trades,     :class_name => "Register::Trade"
-  has_many :products,   :class_name => "Register::Product"
-  has_many :characters, :class_name => "Register::Character"
-  has_many :initials,   :class_name => "Register::Initial"
-  has_many :makes,      :class_name => "Register::Make"
+  has_one  :main      , :order => "updated_at DESC", :class_name => "Register::Main"
+  has_many :mains     , :order => "updated_at DESC", :class_name => "Register::Main"
+  has_one  :trade     , :order => "updated_at DESC", :class_name => "Register::Trade"
+  has_many :trades    , :order => "updated_at DESC", :class_name => "Register::Trade"
+  has_one  :product   , :order => "updated_at DESC", :class_name => "Register::Product"
+  has_many :products  , :order => "updated_at DESC", :class_name => "Register::Product"
+  has_one  :character , :order => "updated_at DESC", :class_name => "Register::Character"
+  has_many :characters, :order => "updated_at DESC", :class_name => "Register::Character"
+  has_one  :initial   , :order => "updated_at DESC", :class_name => "Register::Initial"
+  has_many :initials  , :order => "updated_at DESC", :class_name => "Register::Initial"
+  has_one  :make      , :order => "updated_at DESC", :class_name => "Register::Make"
+  has_many :makes     , :order => "updated_at DESC", :class_name => "Register::Make"
 
   acts_as_messageable
 
