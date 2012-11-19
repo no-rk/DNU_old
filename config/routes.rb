@@ -8,6 +8,7 @@ DNU::Application.routes.draw do
   namespace :register do resources :trades end
   namespace :register do resources :products end
   namespace :register do resources :characters end
+  namespace :register do resources :images end
   namespace :register do resources :initials end
 
   namespace :register do resources :makes, :only => [ :new, :create ] end

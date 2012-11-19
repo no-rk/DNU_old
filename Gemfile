@@ -51,6 +51,7 @@ gem 'simple_form'
 gem 'country_select'
 gem 'devise'
 gem 'mailboxer'
+gem 'carrierwave'
 gem "kaminari"
 gem "rails3-active_form", "~> 2.0.0"
 gem 'i18n_generators'

@@ -1,0 +1,5 @@
+%h1= @register_image.class.model_name.human.downcase
+= render :partial => 'form', :locals=>{:register_image=>@register_image}
+= link_to 'Show', @register_image
+|
+= link_to 'Back', register_images_path

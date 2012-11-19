@@ -194,6 +194,7 @@ PLATFORMS
 
 DEPENDENCIES
   bootstrap-sass
+  carrierwave
   coffee-rails (~> 3.2.1)
   country_select
   deep_cloneable (~> 1.4.1)

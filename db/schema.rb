@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121114120514) do
+ActiveRecord::Schema.define(:version => 20121119092255) do
 
   create_table "conversations", :force => true do |t|
     t.string   "subject",    :default => ""
@@ -103,6 +103,28 @@ ActiveRecord::Schema.define(:version => 20121114120514) do
   end
 
   add_index "register_characters", ["user_id"], :name => "index_register_characters_on_user_id"
+
+  create_table "register_icons", :force => true do |t|
+    t.integer  "character_id"
+    t.integer  "upload_icon_id"
+    t.string   "url"
+    t.integer  "number"
+    t.string   "name"
+    t.text     "caption"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+  end
+
+  add_index "register_icons", ["character_id"], :name => "index_register_icons_on_character_id"
+  add_index "register_icons", ["upload_icon_id"], :name => "index_register_icons_on_upload_icon_id"
+
+  create_table "register_images", :force => true do |t|
+    t.integer  "user_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "register_images", ["user_id"], :name => "index_register_images_on_user_id"
 
   create_table "register_init_arts", :force => true do |t|
     t.integer  "initial_id"
@@ -198,6 +220,17 @@ ActiveRecord::Schema.define(:version => 20121114120514) do
   end
 
   add_index "register_trades", ["user_id"], :name => "index_register_trades_on_user_id"
+
+  create_table "register_upload_icons", :force => true do |t|
+    t.integer  "image_id"
+    t.string   "icon"
+    t.string   "name"
+    t.text     "caption"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "register_upload_icons", ["image_id"], :name => "index_register_upload_icons_on_image_id"
 
   create_table "users", :force => true do |t|
     t.string   "email",                  :default => "", :null => false

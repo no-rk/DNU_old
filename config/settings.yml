@@ -33,16 +33,13 @@ register:
             - 生産行動
             - products
       -
-        - 設定
+        - 戦闘設定
         -
           -
-            - キャラクター
-            - characters
-      -
-        - 初心者救済
-        -
+            - 通常戦
+            - mains
           -
-            - 初期値
-            - initials
+            - 手合わせ
+            - trades
     per: 3
 

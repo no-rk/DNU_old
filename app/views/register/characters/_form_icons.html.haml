@@ -1,0 +1,11 @@
+- 3.times{register_character.icons.build} if register_character.icons.empty?
+- i = 1
+%br
+= form_character.simple_fields_for :icons, :defaults => { :as => (:plain if @read_only) } do |form_icons|
+  アイコンNo.#{i}#{"（デフォルト）" if i==1}
+  = form_icons.input :number, :as => :hidden, :input_html => { :value => i }
+  = form_icons.input :upload_icon_id, :collection => icons.invert
+  = form_icons.input :url
+  = form_icons.input :name
+  = form_icons.input :caption
+  - i += 1

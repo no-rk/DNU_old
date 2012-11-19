@@ -7,6 +7,8 @@ class User < ActiveRecord::Base
   has_many :products  , :order => "updated_at DESC", :class_name => "Register::Product"
   has_one  :character , :order => "updated_at DESC", :class_name => "Register::Character"
   has_many :characters, :order => "updated_at DESC", :class_name => "Register::Character"
+  has_one  :image     , :order => "updated_at DESC", :class_name => "Register::Image"
+  has_many :images    , :order => "updated_at DESC", :class_name => "Register::Image"
   has_one  :initial   , :order => "updated_at DESC", :class_name => "Register::Initial"
   has_many :initials  , :order => "updated_at DESC", :class_name => "Register::Initial"
   has_one  :make      , :order => "updated_at DESC", :class_name => "Register::Make"

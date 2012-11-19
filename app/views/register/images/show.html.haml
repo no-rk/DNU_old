@@ -1,0 +1,9 @@
+%p#notice= notice
+
+%p
+  %b User:
+  = @register_image.user
+
+= link_to 'Edit', edit_register_image_path(@register_image)
+\|
+= link_to 'Back', register_images_path
