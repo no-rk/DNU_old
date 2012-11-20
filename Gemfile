@@ -51,6 +51,7 @@ gem 'simple_form'
 gem 'country_select'
 gem 'devise'
 gem 'mailboxer'
+gem "rmagick", "~> 2.13.1"
 gem 'carrierwave'
 gem "kaminari"
 gem "rails3-active_form", "~> 2.0.0"

@@ -2,7 +2,7 @@
 
 class IconUploader < ImageUploader
   # Create different versions of your uploaded files:
-  #version :thumb do
-  #  process :scale => [60, 60]
-  #end
+  version :icon do
+    process :resize_to_fill => [60,60]
+  end
 end

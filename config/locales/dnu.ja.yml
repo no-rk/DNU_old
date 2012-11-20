@@ -11,10 +11,12 @@ ja:
       register/trade: 取引行動
       register/product: 生産行動
       register/character: キャラクター
+      register/image: アップロード画像
       register/initial: 初期値
       register/make: キャラ作成
 
       register/profile: プロフィール
+      register/upload_icon: アップロードアイコン
       register/init_job: 初期職業
       register/init_status: 初期ステータス
       register/init_art: 初期技能
@@ -27,15 +29,25 @@ ja:
         name: 名前
         nickname: 愛称
         race: 種族
-
+      register/icon: &icon
+        upload_icon_id: アップロードアイコン
+        url: アイコンURL
+        name: 名前
+        caption: 説明
       register/character/profile: *profile
+      register/character/icons: *icon
+
+      register/upload_icon: &upload_icon
+        icon: アイコン
+        name: 名前
+        caption: 説明
+        _destroy: 削除
+      register/image/upload_icons: *upload_icon
 
       register/init_job: &init_job
         job_id: 初期職業
-
       register/init_guardian: &init_guardian
         guardian_id: 守護竜
-
       register/initial:
         status: 初期能力
         art: 初期技能

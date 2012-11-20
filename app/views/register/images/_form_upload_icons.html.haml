@@ -1,10 +1,9 @@
-- 3.times{register_image.upload_icons.build} if register_image.upload_icons.empty?
-- i = 1
 %br
 = form_image.simple_fields_for :upload_icons, :defaults => { :as => (:plain if @read_only) } do |form_upload_icons|
   = form_upload_icons.input :icon
   - if form_upload_icons.object.icon?
-    = image_tag form_upload_icons.object.icon_url.to_s
+    = image_tag form_upload_icons.object.icon_url(:icon).to_s
+    = form_upload_icons.input :_destroy, :as => :boolean, :hint => "関連項目も削除されます。"
+    = (form_upload_icons.input :icon_cache, :as => :hidden, :input_html => { :value => form_upload_icons.object.icon_cache }) if form_upload_icons.object.icon_cache
   = form_upload_icons.input :name
   = form_upload_icons.input :caption
-  - i += 1

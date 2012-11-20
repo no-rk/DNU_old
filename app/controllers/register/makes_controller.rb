@@ -5,11 +5,10 @@ class Register::MakesController < Register::ApplicationController
     @register_make    = Register::Make.new
 
     @register_character = Register::Character.new
-    @register_character.build_profile
+    @register_character.build_character
 
     @register_initial = Register::Initial.new
-    @register_initial.build_init_job
-    @register_initial.build_init_guardian
+    @register_initial.build_initial
 
     respond_to do |format|
       format.html # new.html.erb

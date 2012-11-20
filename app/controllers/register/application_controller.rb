@@ -42,11 +42,10 @@ class Register::ApplicationController < ApplicationController
   def new
     names = self.class.controller_name
     name  = names.singularize
-    has_ones = eval "Register::#{names.classify}.nested_attributes_options.map{|key,value| key if key.to_s != key.to_s.pluralize}.compact"
 
     temp = eval "current_user.#{name}"
     register = eval "temp.nil? ? Register::#{names.classify}.new : clone_record(temp)"
-    has_ones.each{|has_one| eval "register.build_#{has_one} if register.#{has_one}.nil?" }
+    eval "register.build_#{name}"
 
     self.instance_variable_set("@register_#{name}",register)
 
@@ -60,10 +59,9 @@ class Register::ApplicationController < ApplicationController
   def edit
     names = self.class.controller_name
     name  = names.singularize
-    has_ones = eval "Register::#{names.classify}.nested_attributes_options.map{|key,value| key if key.to_s != key.to_s.pluralize}.compact"
 
     register = eval "current_user.#{names}.find(params[:id])"
-    has_ones.each{|has_one| eval "register.build_#{has_one} if register.#{has_one}.nil?" }
+    eval "register.build_#{name}"
 
     self.instance_variable_set("@register_#{name}",register)
   end

@@ -14,6 +14,11 @@ class Register::Initial < ActiveRecord::Base
 
   after_validation :check_total_value
 
+  def build_initial
+    self.build_init_job if self.init_job.nil?
+    self.build_init_guardian if self.init_guardian.nil?
+  end
+
   private
   def check_total_value
     total_value = self.init_statuses.inject(0){|sum,init_status| sum + init_status.count}
