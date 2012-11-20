@@ -1,9 +1,3 @@
-%p#notice= notice
-
-%p
-  %b User:
-  = @register_image.user
-
-= link_to 'Edit', edit_register_image_path(@register_image)
-\|
-= link_to 'Back', register_images_path
+%h1= @register_image.class.model_name.human.downcase
+= render 'form', { :register_image => @register_image }
+= link_to 'Back', new_register_image_path

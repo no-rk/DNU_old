@@ -1,5 +1,0 @@
-%h1= @register_initials.first.class.model_name.human.downcase
-- @register_initials.each do |register_initial|
-  .alert
-    = render :partial => 'form', :locals=>{:register_initial=>register_initial}
-= paginate @register_initials

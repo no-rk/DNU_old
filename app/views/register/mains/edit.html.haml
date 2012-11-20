@@ -1,5 +1,6 @@
-%h1 Editing register_main
-= render 'form'
+%h1= @register_main.class.model_name.human.downcase
+= render 'form', { :register_main => @register_main }
+
 = link_to 'Show', @register_main
 |
-\#{link_to 'Back', register_mains_path}
+= link_to 'Back', register_mains_path

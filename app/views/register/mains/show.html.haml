@@ -1,7 +1,6 @@
-%p#notice= notice
-%p
-  %b User:
-  = @register_main.user
-= link_to 'Edit', edit_register_main_path(@register_main)
+%h1= @register_main.class.model_name.human.downcase
+= render 'form', { :register_main => @register_main }
+
+= link_to 'Edit', edit_register_main_path
 |
-\#{link_to 'Back', register_mains_path}
+= link_to 'Back', register_mains_path

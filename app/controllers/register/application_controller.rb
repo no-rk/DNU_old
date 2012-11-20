@@ -14,9 +14,16 @@ class Register::ApplicationController < ApplicationController
     @read_only = true
     @update_time = true
 
-    respond_to do |format|
-      format.html # index.html.erb
-      format.json { render json: registers }
+    if registers.blank?
+      respond_to do |format|
+        format.html { redirect_to register_index_path, alert: I18n.t("index", :scope => "register.#{names}") }
+        format.json { render json: registers }
+      end
+    else
+      respond_to do |format|
+        format.html # index.html.erb
+        format.json { render json: registers }
+      end
     end
   end
 
@@ -121,7 +128,7 @@ class Register::ApplicationController < ApplicationController
         format.json { head :no_content }
       rescue
         format.html { render :partial => 'form', :locals=>{eval(":register_#{name}")=>register} } if @read_only
-        format.html { render action: "edit" }
+        format.html { render action: edit_action }
         format.json { render json: { "change" => changed?(register), "errors" => register.errors.full_messages } } if @read_only
         format.json { render json: register.errors, status: :unprocessable_entity }
       end
@@ -160,5 +167,8 @@ class Register::ApplicationController < ApplicationController
     nested_attr = record.nested_attributes_options.map{|key,value| key}
     return true if clone_record(record).to_json(:include=>nested_attr) != clone_record(last_record).to_json(:include=>nested_attr)
     false
+  end
+  def edit_action
+    "edit"
   end
 end

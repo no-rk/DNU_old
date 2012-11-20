@@ -37,9 +37,12 @@ register:
         -
           -
             - 通常戦
-            - mains
+            - battles
           -
             - 手合わせ
-            - trades
+            - duels
+          -
+            - 闘技大会
+            - competitions
     per: 3
 

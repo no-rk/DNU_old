@@ -1,0 +1,6 @@
+%h1= @register_duel.class.model_name.human.downcase
+= render 'form', { :register_duel => @register_duel }
+
+= link_to 'Edit', edit_register_duel_path
+|
+= link_to 'Back', register_duels_path

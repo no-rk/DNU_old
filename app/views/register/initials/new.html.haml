@@ -1,2 +1,2 @@
 %h1= @register_initial.class.model_name.human.downcase
-= render :partial => 'form', :locals=>{:register_initial=>@register_initial}
+= render 'form', { :register_initial => @register_initial }

@@ -1,18 +1,27 @@
 class User < ActiveRecord::Base
-  has_one  :main      , :order => "updated_at DESC", :class_name => "Register::Main"
-  has_many :mains     , :order => "updated_at DESC", :class_name => "Register::Main"
-  has_one  :trade     , :order => "updated_at DESC", :class_name => "Register::Trade"
-  has_many :trades    , :order => "updated_at DESC", :class_name => "Register::Trade"
-  has_one  :product   , :order => "updated_at DESC", :class_name => "Register::Product"
-  has_many :products  , :order => "updated_at DESC", :class_name => "Register::Product"
-  has_one  :character , :order => "updated_at DESC", :class_name => "Register::Character"
-  has_many :characters, :order => "updated_at DESC", :class_name => "Register::Character"
-  has_one  :image     , :order => "updated_at DESC", :class_name => "Register::Image"
-  has_many :images    , :order => "updated_at DESC", :class_name => "Register::Image"
-  has_one  :initial   , :order => "updated_at DESC", :class_name => "Register::Initial"
-  has_many :initials  , :order => "updated_at DESC", :class_name => "Register::Initial"
-  has_one  :make      , :order => "updated_at DESC", :class_name => "Register::Make"
-  has_many :makes     , :order => "updated_at DESC", :class_name => "Register::Make"
+  has_one  :main        , :order => "updated_at DESC", :class_name => "Register::Main"
+  has_many :mains       , :order => "updated_at DESC", :class_name => "Register::Main"
+  has_one  :trade       , :order => "updated_at DESC", :class_name => "Register::Trade"
+  has_many :trades      , :order => "updated_at DESC", :class_name => "Register::Trade"
+  has_one  :product     , :order => "updated_at DESC", :class_name => "Register::Product"
+  has_many :products    , :order => "updated_at DESC", :class_name => "Register::Product"
+
+  has_one  :battle      , :order => "updated_at DESC", :class_name => "Register::Battle"
+  has_many :battles     , :order => "updated_at DESC", :class_name => "Register::Battle"
+  has_one  :duel        , :order => "updated_at DESC", :class_name => "Register::Duel"
+  has_many :duels       , :order => "updated_at DESC", :class_name => "Register::Duel"
+  has_one  :competition , :order => "updated_at DESC", :class_name => "Register::Competition"
+  has_many :competitions, :order => "updated_at DESC", :class_name => "Register::Competition"
+
+  has_one  :character   , :order => "updated_at DESC", :class_name => "Register::Character"
+  has_many :characters  , :order => "updated_at DESC", :class_name => "Register::Character"
+  has_one  :image       , :order => "updated_at DESC", :class_name => "Register::Image"
+  has_many :images      , :order => "updated_at DESC", :class_name => "Register::Image"
+  has_one  :initial     , :order => "updated_at DESC", :class_name => "Register::Initial"
+  has_many :initials    , :order => "updated_at DESC", :class_name => "Register::Initial"
+
+  has_one  :make        , :order => "updated_at DESC", :class_name => "Register::Make"
+  has_many :makes       , :order => "updated_at DESC", :class_name => "Register::Make"
 
   acts_as_messageable
 

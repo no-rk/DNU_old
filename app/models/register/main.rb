@@ -1,4 +1,6 @@
 class Register::Main < ActiveRecord::Base
   belongs_to :user
-  # attr_accessible :title, :body
+
+  def build_main
+  end
 end

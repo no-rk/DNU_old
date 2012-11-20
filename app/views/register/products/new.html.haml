@@ -1,3 +1,2 @@
 %h1= @register_product.class.model_name.human.downcase
-= render 'form'
-= link_to 'Back', register_products_path
+= render 'form', { :register_product => @register_product }

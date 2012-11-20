@@ -3,4 +3,7 @@ class Register::ImagesController < Register::ApplicationController
   def clone_record(record)
     record
   end
+  def edit_action
+    "new"
+  end
 end

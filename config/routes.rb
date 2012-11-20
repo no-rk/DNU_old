@@ -7,9 +7,14 @@ DNU::Application.routes.draw do
   namespace :register do resources :mains end
   namespace :register do resources :trades end
   namespace :register do resources :products end
-  namespace :register do resources :characters end
-  namespace :register do resources :images end
-  namespace :register do resources :initials end
+
+  namespace :register do resources :battles end
+  namespace :register do resources :duels end
+  namespace :register do resources :competitions end
+
+  namespace :register do resources :characters, :only => [ :show, :new, :create, :update ] end
+  namespace :register do resources :images    , :only => [ :show, :new, :create, :update ] end
+  namespace :register do resources :initials  , :only => [ :show, :new, :create, :update ] end
 
   namespace :register do resources :makes, :only => [ :new, :create ] end
 

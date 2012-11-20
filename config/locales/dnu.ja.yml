@@ -10,6 +10,11 @@ ja:
       register/main: 基本行動
       register/trade: 取引行動
       register/product: 生産行動
+
+      register/battle: 通常戦
+      register/duel: 手合わせ
+      register/competition: 闘技大会
+
       register/character: キャラクター
       register/image: アップロード画像
       register/initial: 初期値
@@ -70,20 +75,47 @@ ja:
       </a>
 
   register:
-    makes:
-      create: キャラ作成されました。
+    message:
+      make_check: キャラを作成してください。
+      required_entry: ※入力必須
+      required_select: ※選択必須
+    mains:
+      index: 基本行動履歴ありません。
+      create: 基本行動保存されました。
+      update: 基本行動更新されました。
+    trades:
+      index: 取引行動履歴ありません。
+      create: 取引行動保存されました。
+      update: 取引行動更新されました。
+    products:
+      index: 生産行動履歴ありません。
+      create: 生産行動保存されました。
+      update: 生産行動更新されました。
+    battles:
+      index: 通常戦履歴ありません。
+      create: 通常戦保存されました。
+      update: 通常戦更新されました。
+    duels:
+      index: 手合わせ履歴ありません。
+      create: 手合わせ保存されました。
+      update: 手合わせ更新されました。
+    competitions:
+      index: 闘技大会履歴ありません。
+      create: 闘技大会保存されました。
+      update: 闘技大会更新されました。
     characters:
       create: キャラクター保存されました。
       update: キャラクター更新されました。
+    images:
+      create: アップロード画像保存されました。
+      update: アップロード画像更新されました。
     initials:
       create: 初期値保存されました。
       update: 初期値更新されました。
       status:
         total: 合計が%{total}になるようにしてください。現在%{now}
-    message:
-      make_check: キャラを作成してください。
-      required_entry: ※入力必須
-      required_select: ※選択必須
+    makes:
+      create: キャラ作成されました。
 
   ajax:
     message:

@@ -1,7 +1,5 @@
 = simple_form_for(register_image, :html => { :class => :no_diff}) do |form_image|
   = register_image.updated_at
-  = link_to 'Show', register_image if controller.action_name=="index"
-  = link_to 'Edit', edit_register_image_path(register_image) if controller.action_name=="show"
   = render :partial => 'register/error', :locals=>{:register_error=>register_image}
   = render :partial => 'form_upload_icons'  , :locals=>{:register_image=>register_image,:form_image=>form_image}
   - unless @read_only

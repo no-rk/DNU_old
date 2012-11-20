@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121119092255) do
+ActiveRecord::Schema.define(:version => 20121120112448) do
 
   create_table "conversations", :force => true do |t|
     t.string   "subject",    :default => ""
@@ -96,6 +96,14 @@ ActiveRecord::Schema.define(:version => 20121119092255) do
 
   add_index "receipts", ["notification_id"], :name => "index_receipts_on_notification_id"
 
+  create_table "register_battles", :force => true do |t|
+    t.integer  "user_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "register_battles", ["user_id"], :name => "index_register_battles_on_user_id"
+
   create_table "register_characters", :force => true do |t|
     t.integer  "user_id"
     t.datetime "created_at", :null => false
@@ -103,6 +111,22 @@ ActiveRecord::Schema.define(:version => 20121119092255) do
   end
 
   add_index "register_characters", ["user_id"], :name => "index_register_characters_on_user_id"
+
+  create_table "register_competitions", :force => true do |t|
+    t.integer  "user_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "register_competitions", ["user_id"], :name => "index_register_competitions_on_user_id"
+
+  create_table "register_duels", :force => true do |t|
+    t.integer  "user_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "register_duels", ["user_id"], :name => "index_register_duels_on_user_id"
 
   create_table "register_icons", :force => true do |t|
     t.integer  "character_id"

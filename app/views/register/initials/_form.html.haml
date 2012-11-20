@@ -4,8 +4,6 @@
 - arts      = GameData::ArtType.all.map{|t| {:id => t.id, :name => t.name, :attributes => GameData::ArtType.find(t.id).arts.all.inject({}){|h,u| h[u.id]=u.name;h } } if t.name != "竜魂" }.compact if arts.nil?
 = simple_form_for(register_initial) do |form_initial|
   = register_initial.updated_at
-  = link_to 'Show', register_initial if controller.action_name=="index"
-  = link_to 'Edit', edit_register_initial_path(register_initial) if controller.action_name=="show"
   = render :partial => 'register/error', :locals=>{:register_error=>register_initial}
   = render :partial => 'form_init_job',      :locals=>{:register_initial=>register_initial,:form_initial=>form_initial,:jobs=>jobs}
   = render :partial => 'form_init_guardian', :locals=>{:register_initial=>register_initial,:form_initial=>form_initial,:guardians=>guardians}

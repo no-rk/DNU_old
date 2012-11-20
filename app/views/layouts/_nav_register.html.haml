@@ -12,10 +12,12 @@
     %li{:class => active_current(new_register_product_path)}
       %a{:href => new_register_product_path} 生産行動
     %li.nav-header 戦闘設定
-    %li
-      %a{:href => "#"} 通常戦
-    %li
-      %a{:href => "#"} 手合わせ
+    %li{:class => active_current(new_register_battle_path)}
+      %a{:href => new_register_battle_path} 通常戦
+    %li{:class => active_current(new_register_duel_path)}
+      %a{:href => new_register_duel_path} 手合わせ
+    %li{:class => active_current(new_register_competition_path)}
+      %a{:href => new_register_competition_path} 闘技大会
     %li.nav-header 設定
     %li{:class => active_current(new_register_character_path)}
       %a{:href => new_register_character_path} キャラクター

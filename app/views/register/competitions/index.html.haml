@@ -1,0 +1,6 @@
+%h1= @register_competitions.first.class.model_name.human.downcase
+- @register_competitions.each do |register_competition|
+  .alert
+    = render 'form', { :register_competition => register_competition }
+    = link_to 'Show', register_competition
+= paginate @register_competitions

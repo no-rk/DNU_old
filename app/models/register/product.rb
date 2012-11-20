@@ -1,4 +1,6 @@
 class Register::Product < ActiveRecord::Base
   belongs_to :user
-  # attr_accessible :title, :body
+
+  def build_product
+  end
 end
