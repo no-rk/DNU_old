@@ -72,9 +72,14 @@ ja:
           <a href="#" rel="tooltip" data-original-title="「設定＞キャラクター」などでアイコンを設定する際の識別名。">
           <i class="icon-question-sign"></i>
           </a>
+        user_tag: |-
+          タグ
+          <a href="#" rel="tooltip" data-original-title="タグを入力するとギャラリーで公開されます。コンマ区切りで複数指定可能。">
+          <i class="icon-question-sign"></i>
+          </a>
         caption: |-
           説明
-          <a href="#" rel="tooltip" data-original-title="ギャラリーに表示される予定の説明文。">
+          <a href="#" rel="tooltip" data-original-title="ギャラリーに表示される説明文。">
           <i class="icon-question-sign"></i>
           </a>
         _destroy: |-

@@ -51,6 +51,7 @@ gem 'simple_form'
 gem 'country_select'
 gem 'devise'
 gem 'mailboxer'
+gem "acts-as-taggable-on", "~> 2.3.3"
 gem "rmagick", "~> 2.13.1"
 gem 'carrierwave'
 gem "kaminari"

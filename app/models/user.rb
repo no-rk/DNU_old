@@ -23,6 +23,7 @@ class User < ActiveRecord::Base
   has_one  :make        , :order => "updated_at DESC", :class_name => "Register::Make"
   has_many :makes       , :order => "updated_at DESC", :class_name => "Register::Make"
 
+  acts_as_tagger
   acts_as_messageable
 
   # Include default devise modules. Others available are:

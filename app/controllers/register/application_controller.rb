@@ -93,6 +93,7 @@ class Register::ApplicationController < ApplicationController
         format.json { render json: { "change" => changed?(register), "errors" => register.errors.full_messages } }
       else
         if register.save
+          save_success(register)
           format.html { redirect_to register, notice: I18n.t("create", :scope => "register.message", :model_name => eval("Register::#{names.classify}.model_name.human")) }
           format.json { render json: register, status: :created, location: register }
         else
@@ -124,6 +125,7 @@ class Register::ApplicationController < ApplicationController
         format.json { render json: { "change" => changed?(register), "errors" => register.errors.full_messages } }
       else
         if register.save
+          save_success(register)
           format.html { redirect_to register, notice: I18n.t("update", :scope => "register.message", :model_name => eval("Register::#{names.classify}.model_name.human")) }
           format.json { head :no_content }
         else
@@ -169,5 +171,7 @@ class Register::ApplicationController < ApplicationController
   end
   def edit_action
     "edit"
+  end
+  def save_success(register)
   end
 end

@@ -6,4 +6,9 @@ class Register::ImagesController < Register::ApplicationController
   def edit_action
     "new"
   end
+  def save_success(register)
+    register.upload_icons.each do |upload_icon|
+      current_user.tag(upload_icon, :with => upload_icon.user_tag, :on => :tags) unless upload_icon.user_tag.blank?
+    end
+  end
 end
