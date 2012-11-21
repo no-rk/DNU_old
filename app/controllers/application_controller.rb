@@ -8,7 +8,7 @@ class ApplicationController < ActionController::Base
     @mailbox ||= current_user.mailbox
   end
   def notifications(options = {})
-    @notifications ||= mailbox.notifications(options)
+    mailbox.notifications(options)
   end
   def conversations
     @conversations ||= mailbox.conversations

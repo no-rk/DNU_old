@@ -19,30 +19,5 @@ init_status:
 
 register:
   history:
-    options:
-      -
-        - 行動設定
-        -
-          -
-            - 基本行動
-            - mains
-          -
-            - 取引行動
-            - trades
-          -
-            - 生産行動
-            - products
-      -
-        - 戦闘設定
-        -
-          -
-            - 通常戦
-            - battles
-          -
-            - 手合わせ
-            - duels
-          -
-            - 闘技大会
-            - competitions
     per: 3
 

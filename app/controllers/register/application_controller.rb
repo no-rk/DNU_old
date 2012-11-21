@@ -16,7 +16,7 @@ class Register::ApplicationController < ApplicationController
 
     if registers.blank?
       respond_to do |format|
-        format.html { redirect_to register_index_path, alert: I18n.t("index", :scope => "register.#{names}") }
+        format.html { redirect_to register_index_path, alert: I18n.t("index", :scope => "register.message", :model_name => eval("Register::#{names.classify}.model_name.human")) }
         format.json { render json: registers }
       end
     else
@@ -86,20 +86,19 @@ class Register::ApplicationController < ApplicationController
     @read_only = true if request.xhr?
 
     respond_to do |format|
-      begin
-        ActiveRecord::Base.transaction do
-          #成功しなかった場合は例外発生
-          register.save!
-          #Ajaxの場合は例外発生させて保存しない
-          rise if request.xhr?
+      #Ajaxの場合はバリデートのみ行う
+      if @read_only
+        register.valid?
+        format.html { render :partial => 'form', :locals=>{eval(":register_#{name}")=>register} }
+        format.json { render json: { "change" => changed?(register), "errors" => register.errors.full_messages } }
+      else
+        if register.save
+          format.html { redirect_to register, notice: I18n.t("create", :scope => "register.message", :model_name => eval("Register::#{names.classify}.model_name.human")) }
+          format.json { render json: register, status: :created, location: register }
+        else
+          format.html { render action: "new" }
+          format.json { render json: register.errors, status: :unprocessable_entity }
         end
-        format.html { redirect_to register, notice: I18n.t("create", :scope => "register.#{names}") }
-        format.json { render json: register, status: :created, location: register }
-      rescue
-        format.html { render :partial => 'form', :locals=>{eval(":register_#{name}")=>register} } if @read_only
-        format.html { render action: "new" }
-        format.json { render json: { "change" => changed?(register), "errors" => register.errors.full_messages } } if @read_only
-        format.json { render json: register.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -111,26 +110,26 @@ class Register::ApplicationController < ApplicationController
     name  = names.singularize
 
     register = eval "Register::#{names.classify}.find(params[:id])"
+    register.assign_attributes(params["register_#{name}"])
     register.touch
 
     self.instance_variable_set("@register_#{name}",register)
     @read_only = true if request.xhr?
 
     respond_to do |format|
-      begin
-        ActiveRecord::Base.transaction do
-          #成功しなかった場合は例外発生
-          register.update_attributes!(params["register_#{name}"])
-          #Ajaxの場合は例外発生させて保存しない
-          rise if request.xhr?
+      #Ajaxの場合はバリデートのみ行う
+      if @read_only
+        register.valid?
+        format.html { render :partial => 'form', :locals=>{eval(":register_#{name}")=>register} }
+        format.json { render json: { "change" => changed?(register), "errors" => register.errors.full_messages } }
+      else
+        if register.save
+          format.html { redirect_to register, notice: I18n.t("update", :scope => "register.message", :model_name => eval("Register::#{names.classify}.model_name.human")) }
+          format.json { head :no_content }
+        else
+          format.html { render action: edit_action }
+          format.json { render json: register.errors, status: :unprocessable_entity }
         end
-        format.html { redirect_to register, notice: I18n.t("update", :scope => "register.#{names}") }
-        format.json { head :no_content }
-      rescue
-        format.html { render :partial => 'form', :locals=>{eval(":register_#{name}")=>register} } if @read_only
-        format.html { render action: edit_action }
-        format.json { render json: { "change" => changed?(register), "errors" => register.errors.full_messages } } if @read_only
-        format.json { render json: register.errors, status: :unprocessable_entity }
       end
     end
   end

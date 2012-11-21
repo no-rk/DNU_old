@@ -2,11 +2,11 @@
   %table.table.table-hover
     %thead
       %tr
-        %td From
-        %td 件名
-        %td 本文
-        %td To
-        %td 時間
+        %td= I18n.t("notification.from", :scope => "communication").html_safe
+        %td= I18n.t("notification.subject", :scope => "communication").html_safe
+        %td= I18n.t("notification.body", :scope => "communication").html_safe
+        %td= I18n.t("notification.to", :scope => "communication").html_safe
+        %td= I18n.t("notification.time", :scope => "communication").html_safe
     %tbody
       - notifications.each do |notification|
         - sender_id = notification.notified_object.id

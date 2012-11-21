@@ -7,5 +7,5 @@ class Register::UploadIcon < ActiveRecord::Base
   validates :name   , :presence => true, :length => { :maximum => 20 }
   validates :caption, :length => { :maximum => 400 }
 
-  attr_accessible :icon, :name, :caption, :remove_icon, :icon_cache
+  attr_accessible :icon, :name, :caption, :icon_cache, :remote_icon_url
 end
