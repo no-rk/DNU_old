@@ -12,6 +12,11 @@ class Register::UploadIcon < ActiveRecord::Base
   attr_accessor :user_tag
   attr_accessible :icon, :name, :caption, :icon_cache, :remote_icon_url, :user_tag
   
+  scope :where_public, lambda{
+    taggings = ActsAsTaggableOn::Tagging.arel_table
+    where(taggings[:tagger_type].eq("User")).includes(:tag_taggings)
+  }
+  
   def user_tag
     @user_tag ||= (self.owner_tag_list_on(self.image.user, :tags) if self.image.respond_to?(:user))
   end

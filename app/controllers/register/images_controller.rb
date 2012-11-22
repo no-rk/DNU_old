@@ -8,7 +8,7 @@ class Register::ImagesController < Register::ApplicationController
   end
   def save_success(register)
     register.upload_icons.each do |upload_icon|
-      current_user.tag(upload_icon, :with => upload_icon.user_tag, :on => :tags) unless upload_icon.user_tag.blank?
+      current_user.tag(upload_icon, :with => upload_icon.user_tag, :on => :tags)
     end
   end
 end

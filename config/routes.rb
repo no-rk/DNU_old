@@ -21,7 +21,8 @@ DNU::Application.routes.draw do
   get 'register' => 'register#index', :as => 'register_index'
   post 'history' => 'register#history', :as => 'register_history'
 
-  get 'ajax/:model(/:id)' => 'ajax#search', :as => 'ajax_search'
+  get 'ajax_help/:model(/:id)' => 'ajax#help', :as => 'ajax_help'
+  get 'ajax_img/:model(/:id)' => 'ajax#img', :as => 'ajax_img'
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

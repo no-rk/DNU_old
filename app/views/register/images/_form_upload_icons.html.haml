@@ -3,7 +3,7 @@
   = form_upload_icons.input :icon
   = form_upload_icons.input :remote_icon_url
   - if form_upload_icons.object.icon?
-    = image_tag form_upload_icons.object.icon_url(:icon).to_s
+    = image_tag form_upload_icons.object.icon_url(:icon).to_s, :class => "img-polaroid icon"
     = (form_upload_icons.input :_destroy, :as => :boolean) unless @read_only
     = (form_upload_icons.input :icon_cache, :as => :hidden, :input_html => { :value => form_upload_icons.object.icon_cache }) if form_upload_icons.object.icon_cache
   = form_upload_icons.input :name

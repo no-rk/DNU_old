@@ -9,8 +9,9 @@ $ ->
         "href": $(this).data("help-path")
         "data-remote": true
         "data-params": $(this).data('params')
-        "data-trigge": "manual"
         "data-type": "json"
+        "data-html": true
+        "data-trigge": "manual"
         "rel": "popover"
       ).html('<i class="icon-search"></i>')
       help.hide() unless $(this).data('params')
@@ -26,7 +27,10 @@ $ ->
       $(this).unbind("click").bind "click", (event) ->
         #リンク先に移動したりサブミットするなどの機能を失わせる
         event.preventDefault()
-        $(this).popover('toggle')
+        if $(this).data("popover").$tip? && $(this).data("popover").$tip.hasClass("in")
+          $(this).popover('hide')
+        else
+          $(this).popover('show')
         console.log("a click")
       console.log("no ajax")
 
@@ -46,13 +50,14 @@ $ ->
     #親要素のajax:successイベントが実行されないように伝播を止める
     event.stopPropagation()
     #ポップオーバーで表示されるデータ書き換える
+    img = if data.img_path? then '<img src="' + data.img_path + '" class="img-polaroid icon">' else ""
     $(this).attr({
       "data-original-title": data.model + "::" + data.name
-      "data-content": data.caption
+      "data-content": img + data.caption
     })
     $(this).data({
       "original-title": data.model + "::" + data.name
-      "content": data.caption
+      "content": img + data.caption
     })
     #もうAjaxしないようにする
     $(this).noAjax()
@@ -87,13 +92,14 @@ $ ->
     next = $(this).next('a')
     next.show()
     #ポップオーバーで表示されるデータ書き換える
+    img = if data.img_path? then '<img src="' + data.img_path + '" class="img-polaroid icon">' else ""
     next.attr({
       "data-original-title": data.model + "::" + data.name
-      "data-content": data.caption
+      "data-content": img + data.caption
     })
     next.data({
       "original-title": data.model + "::" + data.name
-      "content": data.caption
+      "content": img + data.caption
     })
     #もうAjaxしないようにする
     next.noAjax() if next.data("remote")
