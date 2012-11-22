@@ -1,0 +1,16 @@
+%table.table.table-hover
+  %tbody
+    %tr
+      %td タグ
+      %td!= img.all_tags_list_on(:tags).map{|t| link_to(t,gallerys_path(model_from(img),t))}.join(',')
+    %tr
+      %td 名前
+      %td= link_to img.name, gallery_path(model_from(img),img.id)
+    %tr
+      %td(colspan=2)= image_tag img.icon_url(model_from(img)).to_s, :class => "img-polaroid icon"
+    %tr
+      %td 説明
+      %td #{img.caption}
+    %tr
+      %td 公開者
+      %td ENo.#{img.image.user.id} #{img.image.user.character.profile.name}

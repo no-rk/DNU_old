@@ -1,0 +1,10 @@
+= link_to "全て", gallerys_path(:all)
+|
+= link_to "アイコン", gallerys_path(:icon)
+%br
+.box
+  %br
+  = render 'img', { :img => @img }
+= simple_form_for :form_tag do |f|
+  = f.input :tag_list, :label => "タグ編集", :input_html => { :value => @img.tag_list }
+  = f.submit :class => "btn btn-large btn-success"

@@ -18,11 +18,15 @@ DNU::Application.routes.draw do
 
   namespace :register do resources :makes, :only => [ :new, :create ] end
 
-  get 'register' => 'register#index', :as => 'register_index'
+  get 'register' => 'register#index'  , :as => 'register_index'
   post 'history' => 'register#history', :as => 'register_history'
 
+  get  "gallery/:model(/:tag/tag)"   => 'gallery#index' , :as => 'gallerys'
+  get  "gallery/:model/:id"          => 'gallery#show'  , :as => 'gallery'
+  post "gallery/:model/:id"          => 'gallery#update'
+
   get 'ajax_help/:model(/:id)' => 'ajax#help', :as => 'ajax_help'
-  get 'ajax_img/:model(/:id)' => 'ajax#img', :as => 'ajax_img'
+  get 'ajax_img/:model(/:id)'  => 'ajax#img' , :as => 'ajax_img'
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

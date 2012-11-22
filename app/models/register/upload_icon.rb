@@ -14,7 +14,7 @@ class Register::UploadIcon < ActiveRecord::Base
   
   scope :where_public, lambda{
     taggings = ActsAsTaggableOn::Tagging.arel_table
-    where(taggings[:tagger_type].eq("User")).includes(:tag_taggings)
+    where(taggings[:tagger_type].eq("User")).includes(:tag_taggings,:image=>[:user=>[:character=>:profile]])
   }
   
   def user_tag

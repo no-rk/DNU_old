@@ -1,0 +1,7 @@
+ギャラリー
+%br
+= link_to "全て", gallerys_path(:all)
+|
+= link_to "アイコン", gallerys_path(:icon)
+%br
+= render 'gallery', { :imgs => @imgs }
