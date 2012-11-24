@@ -1,13 +1,14 @@
+- model = model_from(img)
 %table.table.table-hover
   %tbody
     %tr
       %td タグ
-      %td!= img.all_tags_list_on(:tags).map{|t| link_to(t,gallerys_path(model_from(img),t))}.join(',')
+      %td!= img.all_tags_list_on(:tags).map{|t| link_to(t,gallerys_path(model,t))}.join(',')
     %tr
       %td 名前
-      %td= link_to img.name, gallery_path(model_from(img),img.id)
+      %td= link_to img.name, gallery_path(model,img.id)
     %tr
-      %td(colspan=2)= image_tag img.icon_url(model_from(img)).to_s, :class => "img-polaroid icon"
+      %td(colspan=2)= image_tag img.try("#{model}_url",model).to_s, :class => "img-polaroid #{model}"
     %tr
       %td 説明
       %td #{img.caption}

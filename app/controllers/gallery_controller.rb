@@ -28,12 +28,15 @@ class GalleryController < ApplicationController
   # PUT /gallery/:model/:id.json
   def update
     @img = eval "Register::Upload#{model.classify}.find_by_id(params[:id])"
-    @img.tag_list = params[:form_tag][:tag_list]
+    @img.tag_list = tag_list
     @img.save
     redirect_to gallery_path
   end
   
   private
+  def tag_list
+    @tag_list ||= params[:form_tag][:tag_list]
+  end
   def model
     @model ||= params[:model]
   end
@@ -41,6 +44,6 @@ class GalleryController < ApplicationController
     @tag ||= params[:tag]
   end
   def model_from(img)
-    @model_from ||= img.class.name.underscore.split("_").last
+    img.class.name.underscore.split("_").last
   end
 end

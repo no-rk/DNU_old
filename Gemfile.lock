@@ -157,6 +157,8 @@ GEM
       rspec-mocks (~> 2.12.0)
     ruby_parser (3.0.2)
       sexp_processor (~> 4.1)
+    sanitize (2.0.3)
+      nokogiri (>= 1.4.4, < 1.6)
     sass (3.2.3)
     sass-rails (3.2.5)
       railties (~> 3.2.0)
@@ -217,6 +219,7 @@ DEPENDENCIES
   rails_config
   rmagick (~> 2.13.1)
   rspec-rails
+  sanitize (~> 2.0.3)
   sass-rails (~> 3.2.3)
   sextant
   simple_form
