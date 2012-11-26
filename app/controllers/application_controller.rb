@@ -2,6 +2,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery
   helper_method :name_by_id, :nickname_by_id
   helper_method :mailbox, :notifications, :conversations
+  helper_method :icons
 
   private
   def mailbox
@@ -34,5 +35,8 @@ class ApplicationController < ActionController::Base
     rescue
       "no id"
     end
+  end
+  def icons
+    @icons ||= current_user.icons
   end
 end

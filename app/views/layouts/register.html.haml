@@ -29,3 +29,6 @@
         / /span
     %div{"data-errors" => "true"}
     = javascript_include_tag "application"
+    - if defined? icons
+      :javascript
+        DNU.ICONS = #{icons.to_json};

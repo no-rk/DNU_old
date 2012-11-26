@@ -47,4 +47,7 @@ class User < ActiveRecord::Base
       where(conditions).first
     end
   end
+  def icons
+    self.character.icons.select([:number,:url,:upload_icon_id]).includes(:upload_icon).inject({}){|h,v| h[v.number]=v.url.blank? ? v.upload_icon.icon_url(:icon) : v.url;h}
+  end
 end

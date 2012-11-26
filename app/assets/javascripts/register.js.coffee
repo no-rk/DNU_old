@@ -4,75 +4,50 @@
 $ ->
   #メニュー書き換え
   $.cleditor.defaultOptions.controls =
-    "bold italic underline strikethrough ruby removeformat | " +
+    "bold italic underline strikethrough size color removeformat | ruby icon | " +
     "undo redo | cut copy paste pastetext | source"
+  $.cleditor.buttons.bold.title          = "太字"
+  $.cleditor.buttons.italic.title        = "斜体"
+  $.cleditor.buttons.underline.title     = "下線"
+  $.cleditor.buttons.strikethrough.title = "打消"
+  $.cleditor.buttons.removeformat.title  = "タグ消去"
+  $.cleditor.buttons.size.title          = "フォントサイズ"
+  $.cleditor.buttons.color.title         = "フォントカラー"
+  $.cleditor.buttons.undo.title          = "元に戻す"
+  $.cleditor.buttons.redo.title          = "やり直し"
   #iframeのBodyStyle
-  $.cleditor.defaultOptions.bodyStyle = "cursor:text"
+  $.cleditor.defaultOptions.docCSSFile = $("link[type='text/css']").attr("href")
+  $.cleditor.defaultOptions.bodyStyle = "cursor:text;background-color:#FFF;"
 
-  # 古い動作を保存しておく
-  oldAreaCallback = $.cleditor.defaultOptions.updateTextArea
-  oldFrameCallback = $.cleditor.defaultOptions.updateFrame
-  #テキストエリアを書き換えるとき
+  #htmlを特殊タグに書き換える
   $.cleditor.defaultOptions.updateTextArea = (html) ->
-    #古い動作してから
-    if oldAreaCallback
-      html = oldAreaCallback(html)
-    #htmlを特殊タグに書き換える
-    return $.cleditor.convertHTMLtoSPode html
-  #iframeを書き換えるとき
-  $.cleditor.defaultOptions.updateFrame = (code) ->
-    #古い動作してから
-    if oldFrameCallback
-      code = oldFrameCallback(code)
-    #特殊タグをhtmlに書き換える
-    return $.cleditor.convertSPodeToHTML code
-  #htmlを特殊タグに置換
-  $.cleditor.convertHTMLtoSPode = (html) ->
-    $.each [
-      [/[\r|\n]/g, ""]
-      [/<br.*?>/gi, "\n"]
-      [/<b>(.*?)<\/b>/gi, "[b]$1[/b]"]
-      [/<strong>(.*?)<\/strong>/gi, "[b]$1[/b]"]
-      [/<i>(.*?)<\/i>/gi, "[i]$1[/i]"]
-      [/<em>(.*?)<\/em>/gi, "[i]$1[/i]"]
-      [/<u>(.*?)<\/u>/gi, "[u]$1[/u]"]
-      [/<ins>(.*?)<\/ins>/gi, "[u]$1[/u]"]
-      [/<strike>(.*?)<\/strike>/gi, "[s]$1[/s]"]
-      [/<del>(.*?)<\/del>/gi, "[s]$1[/s]"]
-      [/<a.*?href="(.*?)".*?>(.*?)<\/a>/gi, "[url=$1]$2[/url]"]
-      [/<img.*?src="(.*?)".*?>/gi, "[img]$1[/img]"]
-      [/<ul>/gi, "[list]"]
-      [/<\/ul>/gi, "[/list]"]
-      [/<ol>/gi, "[list=1]"]
-      [/<\/ol>/gi, "[/list]"]
-      [/<li>/gi, "[*]"]
-      [/<\/li>/gi, "[/*]"]
-      [/<.*?>(.*?)<\/.*?>/g, "$1"]
-    ], (index, item) ->
-      html = html.replace(item[0], item[1])
+    console.log("html_to")
+    console.log(html)
+    $.ajaxSetup({async: false})
+    $.post DNU.AJAX_HTML_TO_URL,{
+      "html": html
+    }, (data) ->
+      html = data.code
+    ,"json"
+    $.ajaxSetup({async: true})
+    console.log(html)
     return html
-  #特殊タグをhtmlに置換
-  $.cleditor.convertSPodeToHTML = (code) ->
-    $.each [
-      [/\r/g, ""]
-      [/\n/g, "<br />"]
-      [/\[b\](.*?)\[\/b\]/gi, "<b>$1</b>"]
-      [/\[i\](.*?)\[\/i\]/gi, "<i>$1</i>"]
-      [/\[u\](.*?)\[\/u\]/gi, "<u>$1</u>"]
-      [/\[s\](.*?)\[\/s\]/gi, "<strike>$1</strike>"]
-      [/\[url=(.*?)\](.*?)\[\/url\]/gi, "<a href=\"$1\">$2</a>"]
-      [/\[img\](.*?)\[\/img\]/gi, "<img src=\"$1\">"]
-      [/\[list\](.*?)\[\/list\]/gi, "<ul>$1</ul>"]
-      [/\[list=1\](.*?)\[\/list\]/gi, "<ol>$1</ol>"]
-      [/\[list\]/gi, "<ul>"]
-      [/\[list=1\]/gi, "<ol>"]
-      [/\[\*\](.*?)\[\/\*\]/g, "<li>$1</li>"]
-      [/\[\*\]/g, "<li>"]
-    ], (index, item) ->
-      code = code.replace(item[0], item[1])
+
+  #特殊タグをhtmlに書き換える
+  $.cleditor.defaultOptions.updateFrame = (code) ->
+    console.log("to_html")
+    console.log(code)
+    $.ajaxSetup({async: false})
+    $.post DNU.AJAX_TO_HTML_URL,{
+      "code": code
+    }, (data) ->
+      code = data.html
+    ,"json"
+    $.ajaxSetup({async: true})
+    console.log(code)
     return code
 
-  #ボタン動作定義
+  #ルビボタン動作定義
   rubyButtonClick = (e, data) ->
     editor = data.editor
     buttonDiv = e.target
@@ -90,11 +65,11 @@ $ ->
       $text.val("")
       editor.hidePopups()
       editor.focus()
-  #ボタン内容定義
+  #ルビボタン内容定義
   $.cleditor.buttons.ruby = {
     stripIndex: 5
     name: "ruby"
-    title: "ルビ振る"
+    title: "ルビ"
     command: "inserthtml"
     popupName: "ruby"
     popupClass: "cleditorPrompt"
@@ -102,6 +77,32 @@ $ ->
     buttonClick: rubyButtonClick
   }
 
+  #アイコンボタン内容定義
+  $content = $('<div>')
+  if DNU.ICONS
+    count = 0
+    $.each DNU.ICONS, (idx, icon) ->
+      $('<div>').data("icon-no": idx).css({
+        width: DNU.ICON_WIDTH
+        height: DNU.ICON_HEIGHT
+        backgroundImage: 'url(' + icon + ')'
+        cursor: "pointer"
+      }).css("float", "left").appendTo($content)
+      console.log(idx+":"+icon)
+      count++
+    DNU.ICON_COUNT = count if DNU.ICON_COUNT > count
+  $.cleditor.buttons.icon = {
+    stripIndex: 23
+    name: "icon"
+    title: "アイコン"
+    command: "inserthtml"
+    popupName: "icon"
+    popupContent: $content.css("width":DNU.ICON_WIDTH*DNU.ICON_COUNT)
+    popupClick: (e,data) ->
+      icon_no = $(e.target).data("icon-no")
+      data.value = '<img no="' + icon_no + '" src="' + DNU.ICONS[icon_no] + '" class="icon">'
+  }
+  #初期化
   $(':text[maxlength]').charCount()
   $('textarea[maxlength]').cleditor()
   #セレクトでサブミット

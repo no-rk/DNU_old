@@ -14,6 +14,7 @@
 #= require jquery_ujs
 #= require bootstrap
 #= require_tree ./plugins
+#= require variable
 #= require_self
 #= require_tree .
 $ ->

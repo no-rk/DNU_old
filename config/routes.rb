@@ -25,8 +25,10 @@ DNU::Application.routes.draw do
   get  "gallery/:model/:id"          => 'gallery#show'  , :as => 'gallery'
   post "gallery/:model/:id"          => 'gallery#update'
 
-  get 'ajax_help/:model(/:id)' => 'ajax#help', :as => 'ajax_help'
-  get 'ajax_img/:model(/:id)'  => 'ajax#img' , :as => 'ajax_img'
+  get  'ajax_help/:model(/:id)' => 'ajax#help'   , :as => 'ajax_help'
+  get  'ajax_img/:model(/:id)'  => 'ajax#img'    , :as => 'ajax_img'
+  post 'ajax_html_to'           => 'ajax#html_to', :as => 'ajax_html_to'
+  post 'ajax_to_html'           => 'ajax#to_html', :as => 'ajax_to_html'
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

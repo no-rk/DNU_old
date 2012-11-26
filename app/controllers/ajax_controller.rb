@@ -52,4 +52,61 @@ class AjaxController < ApplicationController
       format.json { render json: @ajax }
     end
   end
+
+  # POST /ajax_html_to
+  # POST /ajax_html_to.json
+  def html_to
+    html = params[:html]
+
+    @ajax = Hash.new
+    if html.blank?
+      @ajax[:code] = ""
+    else
+      @ajax[:code] = html
+      doc = Nokogiri.HTML(@ajax[:code])
+      doc.css('p,div').each do |br|
+        br.swap(Nokogiri::HTML::fragment('<br>' + br.inner_html))
+      end
+      logger.debug(doc)
+      @ajax[:code] = doc.to_html
+      @ajax[:code] = ::Sanitize.clean(@ajax[:code],:elements=>['b','i','u','strike','s','ruby','rb','rt','img','br'],:attributes=>{'img'=>['no']})
+      @ajax[:code].gsub!(/[\r\n]+/,"")
+      @ajax[:code].gsub!(/<br.*?>/,"\n")
+      @ajax[:code].sub!(/^\n/,"")
+    end
+
+    respond_to do |format|
+      format.html { redirect_to root_path } # search.html.erb
+      format.json { render json: @ajax }
+    end
+  end
+
+  # POST /ajax_to_html
+  # POST /ajax_to_html.json
+  def to_html
+    code = params[:code]
+
+    @ajax = Hash.new
+    if code.blank?
+      @ajax[:html] = ""
+    else
+      @ajax[:html] = code
+      @ajax[:html].gsub!(/[\r\n]+/,'<br>')
+      doc = Nokogiri.HTML(@ajax[:html])
+      doc.css('img').each do |img|
+        img.set_attribute('src',current_user.icons[img.attribute('no').value.to_i]) unless current_user.icons[img.attribute('no').value.to_i].nil?
+        img.set_attribute('class','icon')
+      end
+      @ajax[:html] = doc.to_html
+      @ajax[:html] = ::Sanitize.clean(@ajax[:html],:elements=>['b','i','u','strike','s','ruby','rb','rt','img','br'],:attributes=>{'img'=>['no','src','class']})
+      @ajax[:html].gsub!(/[\r\n]+/,"")
+      @ajax[:html].sub!(/^<br.*?>/,"")
+    end
+
+
+    respond_to do |format|
+      format.html { redirect_to root_path } # search.html.erb
+      format.json { render json: @ajax }
+    end
+  end
 end
