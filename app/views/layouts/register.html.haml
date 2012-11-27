@@ -23,12 +23,10 @@
       .row-fluid
         .span3
           = render :partial => 'layouts/nav_register'
-        / /span
         .span9
           = yield
-        / /span
     %div{"data-errors" => "true"}
     = javascript_include_tag "application"
-    - if defined? icons
+    - if icons
       :javascript
         DNU.ICONS = #{icons.to_json};

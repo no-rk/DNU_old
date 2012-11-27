@@ -13,20 +13,16 @@
         - if notice
           .alert.alert-info
             %button.close{"data-dismiss" => "alert", :type => "button"} （・×・）
-            = succeed "\u{3000}" do
-              %strong お知らせ
+            %strong お知らせ
             = notice
         - if alert
           .alert
             %button.close{"data-dismiss" => "alert", :type => "button"} （・×・）
-            = succeed "\u{3000}" do
-              %strong 注意
+            %strong 注意
             = alert
-      / .row-fluid
       .row-fluid
-        = render :partial => 'layouts/nav_side'
+        .span3
+          = render :partial => 'layouts/nav_side'
         .span9
           = yield
-      / .row-fluid
-    / .container-fluid
     = javascript_include_tag "application"

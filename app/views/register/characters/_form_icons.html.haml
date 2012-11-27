@@ -1,5 +1,5 @@
 %br
-= form_character.simple_fields_for :icons, :defaults => { :as => (:plain if @read_only) } do |form_icons|
+= form_character.simple_fields_for :icons, :defaults => { :as => (:plain if @read_only), :user => current_user } do |form_icons|
   - no = form_icons.object[:number]
   アイコンNo.#{no}#{"（デフォルト）" if no==1}
   = form_icons.input :number, :as => :hidden, :input_html => { :value => no }

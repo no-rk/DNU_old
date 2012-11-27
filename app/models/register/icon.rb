@@ -7,4 +7,7 @@ class Register::Icon < ActiveRecord::Base
   validates :caption, :length => { :maximum => 400 }
 
   attr_accessible :upload_icon_id, :url, :number, :name, :caption
+
+  clean_before_validation :name, :url
+  sanitize_before_validation :caption
 end

@@ -73,17 +73,24 @@ $ ->
     command: "inserthtml"
     popupName: "ruby"
     popupClass: "cleditorPrompt"
-    popupContent: '表示はブラウザに依存するので使うときは注意。<br><input type="text"><input type="button" value="Submit">'
+    popupContent: '<input type="text"><input type="button" value="Submit"><br>表示はブラウザに依存するので使うときは注意。'
     buttonClick: rubyButtonClick
   }
 
+  #アイコンボタン動作定義
+  iconButtonClick = (e, data) ->
+    editor = data.editor
+    buttonDiv = e.target
+    unless DNU.ICONS
+      editor.showMessage("アイコンがありません。", buttonDiv)
+      return false
   #アイコンボタン内容定義
   $content = $('<div>')
   if DNU.ICONS
     count = 0
     $.each DNU.ICONS, (idx, icon) ->
       $('<div>').data("icon-no": idx).css({
-        width: DNU.ICON_WIDTH
+        width:  DNU.ICON_WIDTH
         height: DNU.ICON_HEIGHT
         backgroundImage: 'url(' + icon + ')'
         cursor: "pointer"
@@ -97,11 +104,13 @@ $ ->
     title: "アイコン"
     command: "inserthtml"
     popupName: "icon"
-    popupContent: $content.css("width":DNU.ICON_WIDTH*DNU.ICON_COUNT)
+    popupContent: $content.css("width": DNU.ICON_WIDTH*DNU.ICON_COUNT)
+    buttonClick: iconButtonClick
     popupClick: (e,data) ->
       icon_no = $(e.target).data("icon-no")
       data.value = '<img no="' + icon_no + '" src="' + DNU.ICONS[icon_no] + '" class="icon">'
   }
+
   #初期化
   $(':text[maxlength]').charCount()
   $('textarea[maxlength]').cleditor()

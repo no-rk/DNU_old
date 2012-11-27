@@ -18,4 +18,6 @@
 #= require_self
 #= require_tree .
 $ ->
+  $('body').delegate 'a[href=#]', 'click', (event) ->
+    event.preventDefault()
   $('a[rel*=tooltip]').tooltip()

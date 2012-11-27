@@ -16,7 +16,7 @@ class Communication::MessagesController < Communication::ApplicationController
     subject = "dengon" if subject.blank?
     #自分にも送る
     recipients.push(current_user) unless recipients.blank?
-    receipts = Notification.notify_all(recipients, subject, body, current_user)
+    receipts = Notification.notify_all(recipients, subject, body, current_user, false)
     #自分宛は既読にする。
     current_user.mark_as_read(current_user.mailbox.notifications(:unread => true).find_by_notified_object_id(current_user.id))
     receipts

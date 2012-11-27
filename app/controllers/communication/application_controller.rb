@@ -36,8 +36,11 @@ class Communication::ApplicationController < ApplicationController
         @recipients = nil
       end
 
+      #サニタイズ
+      subject = ::Sanitize.clean(params["communication_#{name}"][:subject])
+      body    = DNU::Sanitize.code_to_code(params["communication_#{name}"][:body])
       #この処理をコントローラー毎に変化させる
-      @receipts = send_communications(@recipients, params["communication_#{name}"][:subject], params["communication_#{name}"][:body]) if @recipients
+      @receipts = send_communications(@recipients, subject, body) if @recipients
 
       if Notification.successful_delivery?(@receipts)
         redirect_to register_index_path, notice: "seikou"

@@ -10,4 +10,7 @@ class Register::Profile < ActiveRecord::Base
   validates_length_of :introduction, :maximum => Settings.profile.introduction.max
 
   attr_accessible :age, :gender, :introduction, :name, :nickname, :race
+
+  clean_before_validation :name, :nickname, :race, :gender, :age
+  sanitize_before_validation :introduction
 end

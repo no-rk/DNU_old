@@ -48,7 +48,7 @@ class Register::MakesController < Register::ApplicationController
           begin
             ActiveRecord::Base.transaction do
               #全て成功しなかった場合は例外発生
-              rise unless @register_make.save & @register_character.save & @register_initial.save
+              raise unless @register_make.save & @register_character.save & @register_initial.save
             end
             format.html { redirect_to register_index_path, notice: I18n.t("create", :scope => "register.message", :model_name => Register::Character.model_name.human) }
             format.json { render json: @register_make, status: :created, location: @register_make }

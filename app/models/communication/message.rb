@@ -1,4 +1,3 @@
-require "active_form"
 class Communication::Message < ActiveForm
   validates :recipients, :presence => true
   validates :subject, :length => { :maximum => 20 }

@@ -3,7 +3,7 @@
   %tbody
     %tr
       %td タグ
-      %td!= img.all_tags_list_on(:tags).map{|t| link_to(t,gallerys_path(model,t))}.join(',')
+      %td= img.all_tags_list_on(:tags).map{|t| link_to(t,gallerys_path(model,t))}.join(',').html_safe
     %tr
       %td 名前
       %td= link_to img.name, gallery_path(model,img.id)
