@@ -6,7 +6,7 @@ class Register::UploadIcon < ActiveRecord::Base
   belongs_to :image
 
   validates :icon   , :presence => true
-  validates :name   , :presence => true, :length => { :maximum => 20 }
+  validates :name   , :length => { :maximum => 20  }, :presence => true
   validates :caption, :length => { :maximum => 400 }
 
   attr_accessor :user_tag

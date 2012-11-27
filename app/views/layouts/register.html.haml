@@ -27,6 +27,6 @@
           = yield
     %div{"data-errors" => "true"}
     = javascript_include_tag "application"
-    - if icons
+    - unless icons.blank?
       :javascript
         DNU.ICONS = #{icons.to_json};

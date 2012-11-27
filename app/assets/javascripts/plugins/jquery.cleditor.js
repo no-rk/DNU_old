@@ -1125,6 +1125,7 @@
     if (code != $area.val()) {
       $area.val(code);
       $(editor).triggerHandler(CHANGE);
+      $($area).trigger(CHANGE);
     }
 
   }

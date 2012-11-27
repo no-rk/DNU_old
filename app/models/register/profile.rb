@@ -1,15 +1,14 @@
 class Register::Profile < ActiveRecord::Base
   belongs_to :character
 
-  validates_presence_of :name, :nickname
-  validates_length_of :name, :maximum => Settings.profile.name.max
-  validates_length_of :nickname, :maximum => Settings.profile.nickname.max
-  validates_length_of :race, :maximum => Settings.profile.race.max
-  validates_length_of :gender, :maximum => Settings.profile.gender.max
-  validates_length_of :age, :maximum => Settings.profile.age.max
-  validates_length_of :introduction, :maximum => Settings.profile.introduction.max
+  validates :name        , :length => { :maximum => Settings.profile.name.max         }, :presence => true
+  validates :nickname    , :length => { :maximum => Settings.profile.nickname.max     }, :presence => true
+  validates :race        , :length => { :maximum => Settings.profile.race.max         }
+  validates :gender      , :length => { :maximum => Settings.profile.gender.max       }
+  validates :age         , :length => { :maximum => Settings.profile.age.max          }
+  validates :introduction, :length => { :maximum => Settings.profile.introduction.max }
 
-  attr_accessible :age, :gender, :introduction, :name, :nickname, :race
+  attr_accessible :name, :nickname, :race, :gender, :age, :introduction
 
   clean_before_validation :name, :nickname, :race, :gender, :age
   sanitize_before_validation :introduction

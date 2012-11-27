@@ -22,20 +22,26 @@
 			counterElement: 'span',
 			cssWarning: 'badge-warning',
 			cssExceeded: 'badge-important',
-			counterText: '残り'
+			counterText: '残り',
+			text: false
 		};
 
 		var options = $.extend(defaults, options); 
 		
 		this.each(function() {
-			$(this).after('<'+ options.counterElement +' class="' + options.css + '">'+ options.counterText +'</'+ options.counterElement +'>');
+			$(this).closest('.controls').prev().append('<'+ options.counterElement +' class="' + options.css + '">'+ options.counterText +'</'+ options.counterElement +'>');
 			var maxChars = $(this).attr("maxlength");
 			var warningChars = Math.floor(maxChars/10);
 
 			function calculate(obj){
-				var count = $(obj).val().length;
+				var count;
+				if(options.text){
+					count = $('<div>' + $(obj).val() + '</div>').text().length
+				} else {
+					count = $(obj).val().length;
+				}
 				var available = maxChars - count;
-				var counterElement = $(obj).next();
+				var counterElement = $(obj).closest('.controls').prev().find(options.counterElement);
 				if(available <= warningChars && available > 0){
 					counterElement.addClass(options.cssWarning);
 				} else {

@@ -21,30 +21,32 @@ $ ->
 
   #htmlを特殊タグに書き換える
   $.cleditor.defaultOptions.updateTextArea = (html) ->
-    console.log("html_to")
-    console.log(html)
-    $.ajaxSetup({async: false})
-    $.post DNU.AJAX_HTML_TO_URL,{
-      "html": html
-    }, (data) ->
-      html = data.code
-    ,"json"
-    $.ajaxSetup({async: true})
-    console.log(html)
+    if html
+      console.log("html_to")
+      console.log(html)
+      $.ajaxSetup({async: false})
+      $.post DNU.AJAX_HTML_TO_URL,{
+        "html": html
+      }, (data) ->
+        html = data.code
+      ,"json"
+      $.ajaxSetup({async: true})
+      console.log(html)
     return html
 
   #特殊タグをhtmlに書き換える
   $.cleditor.defaultOptions.updateFrame = (code) ->
-    console.log("to_html")
-    console.log(code)
-    $.ajaxSetup({async: false})
-    $.post DNU.AJAX_TO_HTML_URL,{
-      "code": code
-    }, (data) ->
-      code = data.html
-    ,"json"
-    $.ajaxSetup({async: true})
-    console.log(code)
+    if code
+      console.log("to_html")
+      console.log(code)
+      $.ajaxSetup({async: false})
+      $.post DNU.AJAX_TO_HTML_URL,{
+        "code": code
+      }, (data) ->
+        code = data.html
+      ,"json"
+      $.ajaxSetup({async: true})
+      console.log(code)
     return code
 
   #ルビボタン動作定義
@@ -112,8 +114,9 @@ $ ->
   }
 
   #初期化
-  $(':text[maxlength]').charCount()
   $('textarea[maxlength]').cleditor()
+  $(':text[maxlength]').charCount()
+  $('textarea[maxlength]').charCount({text: true})
   #セレクトでサブミット
   $('body.register').delegate 'form.select_submit select', 'change.rails', (event) ->
     #親要素のフォームを取得
