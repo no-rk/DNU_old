@@ -4,7 +4,7 @@ class Register::Icon < ActiveRecord::Base
 
   validates :number        , :numericality => { :only_integer => true }, :presence => true
   validates :name          , :length => { :maximum => 20  }
-  validates :caption       , :length => { :maximum => 400 }
+  validates :caption       , :length => { :maximum => 400, :tokenizer => DNU::Sanitize.counter }
 
   attr_accessible :number, :upload_icon_id, :url, :name, :caption
 

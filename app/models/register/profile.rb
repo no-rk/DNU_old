@@ -6,7 +6,7 @@ class Register::Profile < ActiveRecord::Base
   validates :race        , :length => { :maximum => Settings.profile.race.max         }
   validates :gender      , :length => { :maximum => Settings.profile.gender.max       }
   validates :age         , :length => { :maximum => Settings.profile.age.max          }
-  validates :introduction, :length => { :maximum => Settings.profile.introduction.max }
+  validates :introduction, :length => { :maximum => Settings.profile.introduction.max, :tokenizer => DNU::Sanitize.counter }
 
   attr_accessible :name, :nickname, :race, :gender, :age, :introduction
 

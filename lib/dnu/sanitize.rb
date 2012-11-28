@@ -78,6 +78,10 @@ module DNU
       code
     end
 
+    def self.counter
+      lambda{ |value| ::Sanitize.clean(value).gsub(/[\r\n]/,"").split(//) }
+    end
+
     def code_to_html(code)
       html = code.to_s.dup
       unless html.blank?

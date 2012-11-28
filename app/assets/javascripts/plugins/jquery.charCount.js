@@ -30,13 +30,13 @@
 		
 		this.each(function() {
 			$(this).closest('.controls').prev().append('<'+ options.counterElement +' class="' + options.css + '">'+ options.counterText +'</'+ options.counterElement +'>');
-			var maxChars = $(this).attr("maxlength");
+			var maxChars = $(this).data("maxlength");
 			var warningChars = Math.floor(maxChars/10);
 
 			function calculate(obj){
 				var count;
 				if(options.text){
-					count = $('<div>' + $(obj).val() + '</div>').text().length
+					count = $('<div>' + $(obj).val() + '</div>').text().replace(/[\r\n]/g,"").length
 				} else {
 					count = $(obj).val().length;
 				}

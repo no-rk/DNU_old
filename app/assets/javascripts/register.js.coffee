@@ -114,9 +114,9 @@ $ ->
   }
 
   #初期化
-  $('textarea[maxlength]').cleditor()
-  $(':text[maxlength]').charCount()
-  $('textarea[maxlength]').charCount({text: true})
+  $(':text[data-maxlength]').charCount()
+  $('textarea[data-maxlength]').cleditor()
+  $('textarea[data-maxlength]').charCount({text: true})
   #セレクトでサブミット
   $('body.register').delegate 'form.select_submit select', 'change.rails', (event) ->
     #親要素のフォームを取得

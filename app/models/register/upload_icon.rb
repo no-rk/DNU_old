@@ -7,7 +7,7 @@ class Register::UploadIcon < ActiveRecord::Base
 
   validates :icon   , :presence => true
   validates :name   , :length => { :maximum => 20  }, :presence => true
-  validates :caption, :length => { :maximum => 400 }
+  validates :caption, :length => { :maximum => 400, :tokenizer => DNU::Sanitize.counter }
 
   attr_accessor :user_tag
   attr_accessible :icon, :name, :caption, :icon_cache, :remote_icon_url, :user_tag
