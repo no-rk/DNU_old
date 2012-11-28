@@ -113,6 +113,11 @@ ja:
         body: 本文
 
   communication:
+    message:
+      subject: 伝言
+      success: 伝言を送信しました。
+      failure: 送信に失敗しました。
+      nonexistent: 送信相手が居ません。
     unread: |-
       <a href="#" rel="tooltip" data-original-title="未読">
       <i class="icon-warning-sign"></i>

@@ -12,9 +12,7 @@ module DNU
         class_eval %(
           private
           def #{before_validation_col}
-            logger.debug self.#{col}
             self.#{col} = DNU::Sanitize.code_to_code(self.#{col})
-            logger.debug self.#{col}
           end
         )
       end
@@ -32,9 +30,7 @@ module DNU
         class_eval %(
           private
           def #{before_validation_col}
-            logger.debug self.#{col}
             self.#{col} = ::Sanitize.clean(self.#{col})
-            logger.debug self.#{col}
           end
         )
       end
@@ -106,4 +102,8 @@ end
 
 if defined?(ActiveRecord::Base)
   ActiveRecord::Base.extend DNU::Sanitizer
+end
+
+if defined?(ActiveForm)
+  ActiveForm.extend DNU::Sanitizer
 end

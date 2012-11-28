@@ -29,25 +29,12 @@ class Communication::ApplicationController < ApplicationController
     names = self.class.controller_name
     name  = names.singularize
 
-    if communication.valid?
-      begin
-        @recipients = User.where(:id => params["communication_#{name}"][:recipients].split(',') )
-      rescue
-        @recipients = nil
-      end
+    communication.user = current_user
 
-      #サニタイズ
-      subject = ::Sanitize.clean(params["communication_#{name}"][:subject])
-      body    = DNU::Sanitize.code_to_code(params["communication_#{name}"][:body])
-      #この処理をコントローラー毎に変化させる
-      @receipts = send_communications(@recipients, subject, body) if @recipients
-
-      if Notification.successful_delivery?(@receipts)
-        redirect_to register_index_path, notice: "seikou"
-      else
-        redirect_to register_index_path, alert: "error"
-      end
+    if communication.save
+      redirect_to register_index_path, notice: I18n.t("success", :scope => "communication.#{name}")
     else
+      flash[:alert] = communication.flash_alert
       render action: "new"
     end
   end
@@ -63,9 +50,6 @@ class Communication::ApplicationController < ApplicationController
   end
 
   private
-  def send_communications(recipients, subject, body)
-    raise NotImplementedError
-  end
   def communication
     names = self.class.controller_name
     name  = names.singularize
