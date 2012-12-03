@@ -1,6 +1,8 @@
 = link_to "一覧", communication_messages_path, :class => "btn btn-success"
 = render 'communication/messages/notifications', { :notifications => notifications.limit(5) }
-= (link_to "全て既読にする", communication_message_path(0), :method => "put", :class => "btn btn-warning") if notifications(:unread => true).present?
+- if notifications(:unread => true).present?
+  = link_to "全て既読にする", communication_message_path(0), :method => "put", :class => "btn btn-warning"
+  - flash.now[:notice] = I18n.t("unread", :scope => "communication.message")
 %br
 %br
 = render 'communication/messages/form', { :communication => communication_message }

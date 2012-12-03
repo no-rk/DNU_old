@@ -118,6 +118,9 @@ ja:
       success: 伝言を送信しました。
       failure: 送信に失敗しました。
       nonexistent: 送信相手が居ません。
+      read: 全ての伝言を既読にしました。
+      miss: 伝言を既読にできませんでした。
+      unread: 未読の伝言があります。
     unread: |-
       <a href="#" rel="tooltip" data-original-title="未読">
       <i class="icon-warning-sign"></i>
@@ -191,3 +194,20 @@ ja:
       previous: "&lsaquo; 前"
       next: "次 &rsaquo;"
       truncate: "..."
+
+  DNU:
+    Fight:
+      Scene:
+        Before: "%{Scene}前"
+        After: "%{Scene}後"
+        Battle: *battle
+        Duel: *duel
+        Competition: *competition
+        PrePhase: 非接触フェイズ
+        Phase: フェイズ
+        Turn: ターン
+        Act: 行動
+        AddAct: 追加行動
+        Physical: 物理攻撃
+        PhysicalSuccess: 物理攻撃被弾
+        PhysicalFailure: 物理攻撃回避

@@ -38,6 +38,7 @@ GEM
     carrierwave (0.7.1)
       activemodel (>= 3.2.0)
       activesupport (>= 3.2.0)
+    choice (0.1.6)
     coffee-rails (3.2.2)
       coffee-script (>= 2.2.0)
       railties (~> 3.2.0)
@@ -127,6 +128,11 @@ GEM
       activesupport (= 3.2.8)
       bundler (~> 1.0)
       railties (= 3.2.8)
+    rails-erd (1.0.0)
+      activerecord (>= 3.0)
+      activesupport (>= 3.0)
+      choice (~> 0.1.6)
+      ruby-graphviz (~> 1.0.4)
     rails3-active_form (2.0.0)
       activemodel (>= 3.0.0)
       activesupport (>= 3.0.0)
@@ -155,6 +161,7 @@ GEM
       rspec-core (~> 2.12.0)
       rspec-expectations (~> 2.12.0)
       rspec-mocks (~> 2.12.0)
+    ruby-graphviz (1.0.8)
     ruby_parser (3.0.2)
       sexp_processor (~> 4.1)
     sanitize (2.0.3)
@@ -215,6 +222,7 @@ DEPENDENCIES
   mailboxer
   mysql2
   rails (= 3.2.8)
+  rails-erd
   rails3-active_form (~> 2.0.0)
   rails_config
   rmagick (~> 2.13.1)

@@ -21,6 +21,6 @@ class Register::UploadIcon < ActiveRecord::Base
     @user_tag ||= (self.owner_tag_list_on(self.image.user, :tags) if self.image.respond_to?(:user))
   end
   
-  clean_before_validation :name, :user_tag
+  clean_before_validation :name
   sanitize_before_validation :caption
 end

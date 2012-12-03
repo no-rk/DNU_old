@@ -43,6 +43,7 @@ group :development, :test do
   gem 'thin'
   gem 'erb2haml'
   gem 'sextant'
+  gem "rails-erd"
 end
 
 gem "haml"
