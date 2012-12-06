@@ -18,14 +18,15 @@ module DNU
           self.uniq{ |child| child.team }.map{ |child| child.team }.extend Target
         end
         def random(*num)
-          [self.sample(*num)].flatten.extend Target
+          return self.sample if num.first.nil?
+          self.sample(num).extend Target
         end
-        def method_missing(action, *args)
-          p "target"
-          p self
-          p action
-          p args
-        end
+        #def method_missing(action, *args)
+        #  p "target"
+        #  p self
+        #  p action
+        #  p args
+        #end
       end
       class Character < Array
         include Target

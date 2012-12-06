@@ -6,7 +6,6 @@ module DNU
         def initialize(val)
           @initial = val
           @value   = val
-          @history = []
         end
         def change_to(val)
           @value = val

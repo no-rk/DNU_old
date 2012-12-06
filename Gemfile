@@ -61,3 +61,4 @@ gem 'i18n_generators'
 gem 'rails_config'
 gem "deep_cloneable", "~> 1.4.1"
 gem "sanitize", "~> 2.0.3"
+gem "treetop", "~> 1.4.12"

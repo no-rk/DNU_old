@@ -2,9 +2,12 @@ module DNU
   module Fight
     module Scene
       class Act < Base
+        
+        # 行動可能であれば効果を生成
         def initial_children
-          [Physical.new(self.character)]
+          [Effect.new(@character,{:parent => self, :active => @active})]
         end
+        
       end
     end
   end
