@@ -12,6 +12,8 @@ require_dependency "dnu/fight/scene/node/add_act"
 require_dependency "dnu/fight/scene/node/effect"
 require_dependency "dnu/fight/scene/node/cemetery"
 
+require_dependency "dnu/fight/scene/effect/effect_parser"
+require_dependency "dnu/fight/scene/effect/effect_transform"
 require_dependency "dnu/fight/scene/effect/base_effect"
 require_dependency "dnu/fight/scene/effect/physical"
 require_dependency "dnu/fight/scene/effect/physical"

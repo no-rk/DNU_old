@@ -57,7 +57,7 @@ module DNU
         def play
           p "#{self.class.human_name}#{self.index}"
           self.before
-          self.play_children
+          self.play_children if self.play_children?
           self.after
           self.chain
         end
@@ -89,10 +89,20 @@ module DNU
         def sort
         end
         
+        #
+        def play_children?
+          true
+        end
+        
+        #
+        def play?
+          true
+        end
+        
         # 
         def play_children
           self.each do |child|
-            child.play
+            child.play if child.play?
           end
         end
         
