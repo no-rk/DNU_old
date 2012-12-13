@@ -1,13 +1,10 @@
 module DNU
   module Fight
     module Scene
-      class Cemetery < Base
+      class Cemetery < BaseScene
         
-        # HPが0以下のキャラクターにフラグつける
         def play_children
-          @character.each do |chara|
-            chara.dead = true if chara.HP.value <= 0
-          end
+          p self.class.human_name
         end
         
       end

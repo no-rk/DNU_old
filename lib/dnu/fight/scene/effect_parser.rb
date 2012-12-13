@@ -28,7 +28,7 @@ class EffectParser < Parslet::Parser
   }
   
   rule(:separator) {
-    spaces? >> match('[|:/｜：／・]') >> spaces?
+    spaces? >> match('[-|:/－｜：／・]') >> spaces?
   }
   
   rule(:dot) {
@@ -107,7 +107,7 @@ class EffectParser < Parslet::Parser
   }
   
   rule(:passive) {
-    scope >> sub_scope.maybe >> target.maybe
+    (scope >> sub_scope.maybe >> target.maybe).as(:passive)
   }
   
   # effect
@@ -124,7 +124,7 @@ class EffectParser < Parslet::Parser
     (num_1_to_9 >> num_0_to_9.repeat(1)) | num_0_to_9
   }
   
-  rule(:coeff) {
+  rule(:decimal) {
     (
       (natural_number >> dot >> num_0_to_9.repeat(1)) | natural_number
     )
@@ -144,13 +144,19 @@ class EffectParser < Parslet::Parser
   }
   
   rule(:effect_coeff) {
-    status_name >> multiply >> coeff.as(:coeff_A) >> (plus >> coeff.as(:coeff_B)).maybe
+    status_name >> multiply >> decimal.as(:coeff_A) >> (plus >> natural_number.as(:coeff_B)).maybe
+  }
+  
+  rule(:effect_hit) {
+    (natural_number >> percent).as(:min_hit) >> (separator >> (natural_number >> percent).as(:max_hit)).maybe
   }
   
   rule(:effect) {
-    effect_name >> bra >> (effect_coeff | coeff.as(:coeff_B)) >> ket |
-    attack_effect_name >> bra >> (effect_coeff | coeff.as(:coeff_A)) >> ket |
-    const >> attack_effect_name >> bra >> coeff.as(:coeff_B) >>ket
+    (
+      effect_name >> bra >> (effect_coeff | natural_number.as(:coeff_B)) >> ket |
+      attack_effect_name >> bra >> (effect_coeff | decimal.as(:coeff_A)) >> (separator >> effect_hit).maybe >> ket |
+      const >> attack_effect_name >> bra >> natural_number.as(:coeff_B) >> (separator >> effect_hit).maybe >>ket
+    ).as(:effect)
   }
   
   # effect_condition
@@ -182,7 +188,7 @@ class EffectParser < Parslet::Parser
   rule(:condition) {
     just_before >> condition_state >> boolean.as(:condition_boolean) |
     condition_state >> boolean.as(:condition_boolean) >> str('回数') >> natural_number.as(:condition_integer) >> condition_ijyouika.maybe |
-    condition_target >> (status_name | disease_name >> str('深度')) >> (natural_number.as(:condition_coeff_A) >> percent | natural_number.as(:condition_coeff_B)) >> condition_ijyouika.maybe
+    condition_target >> (status_name | disease_name >> str('深度')) >> ((natural_number >> percent).as(:condition_coeff_A) | natural_number.as(:condition_coeff_B)) >> condition_ijyouika.maybe
   }
   
   rule(:op_and) {
@@ -207,31 +213,42 @@ class EffectParser < Parslet::Parser
   rule(:single_process) {
     effect |
     bra >> (processes | process) >> ket |
-    effect_condition.as(:if) >> process.as(:then) >> (separator >> process.as(:else)).maybe |
-    effect_condition.as(:if) >> bra >> (processes | process).as(:then) >> ket >> (separator >> process.as(:else)).maybe
+    (
+      effect_condition.as(:condition) >> process.as(:then) >> (separator >> process.as(:else)).maybe |
+      effect_condition.as(:condition) >> bra >> (processes | process).as(:then) >> ket >> (separator >> process.as(:else)).maybe
+    ).as(:if)
   }
   
   rule(:multi_process) {
-    single_process.as(:repeat) >> multiply >> natural_number.as(:times)
+    (
+      single_process.as(:do) >> multiply >> natural_number.as(:times)
+    ).as(:repeat)
   }
   
   rule(:process) {
-    (multi_process | single_process).as(:do_each_effect) >> separator >> (conditions | condition | str('回避停止') | str('命中停止')).as(:while) |
+    (
+      (multi_process | single_process).as(:do) >> separator >> (conditions | condition | str('回避停止') | str('命中停止')).as(:while)
+    ).as(:each_effect) |
     multi_process | single_process | root_process
   }
   
   rule(:processes) {
-    process.as(:left) >> plus >> (processes | process).as(:right) |
-    process.as(:left) >> arrow.as(:arrow) >> effect_condition.absent? >> (processes | process).as(:right)
+    (
+      process >> ((plus | arrow.as(:arrow) >> effect_condition.absent?) >> process).repeat(1)
+    ).as(:sequence)
   }
   
   rule(:root_process) {
-    passive >> separator >> process.as(:root) |
-    passive >> bra >> (processes | process).as(:root) >> ket
+    (
+      passive >> separator >> process.as(:do) |
+      passive >> bra >> (processes | process).as(:do) >> ket
+    ).as(:root)
   }
   
   rule(:root_processes) {
-    (root_process >> newline.maybe).repeat(1)
+    (
+      (root_process >> newline.maybe).repeat(1)
+    ).as(:sequence)
   }
   
   # root

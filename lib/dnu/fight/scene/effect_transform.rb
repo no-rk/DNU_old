@@ -25,25 +25,30 @@ class EffectTransform < Parslet::Transform
     { :or  => [left,right] }
   }
   
-  rule(:left => subtree(:left), :arrow => simple(:arrow), :right => subtree(:right)) {
-    [
-      left,
-      {
-        :if => {
+  rule(:arrow => simple(:arrow), :effect => subtree(:effect)) {
+    {
+      :if => {
+        :condition => {
           :just_before       => '直前',
           :condition_state   => '攻撃',
           :condition_boolean => '成功'
         },
-        :then => right
+        :then => { :effect => effect }
       }
-    ].flatten
+    }
   }
   
-  rule(:left => subtree(:left), :right => subtree(:right)) {
-    [
-      left,
-      right
-    ].flatten
+  rule(:arrow => simple(:arrow), :root => subtree(:root)) {
+    {
+      :if => {
+        :condition => {
+          :just_before       => '直前',
+          :condition_state   => '攻撃',
+          :condition_boolean => '成功'
+        },
+        :then => { :root => root }
+      }
+    }
   }
   
 end

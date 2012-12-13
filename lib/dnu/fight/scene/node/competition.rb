@@ -1,7 +1,8 @@
 module DNU
   module Fight
     module Scene
-      class Competition < BaseFight
+      class Competition < BaseScene
+        
       end
     end
   end

@@ -208,8 +208,12 @@ ja:
         Turn: ターン
         Act: 行動
         AddAct: 追加行動
-        Effect: 効果
+        Effects: 効果
         Cemetery: 墓地埋葬
+        Undefined: 未実装
         Physical: 物理攻撃
         PhysicalSuccess: 物理攻撃被弾
         PhysicalFailure: 物理攻撃回避
+        Magical: 魔法攻撃
+        MagicalSuccess: 魔法攻撃被弾
+        MagicalFailure: 魔法攻撃回避

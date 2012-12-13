@@ -1,7 +1,7 @@
 module DNU
   module Fight
     module Scene
-      class Physical < BaseScene
+      class Magical < BaseScene
         
         def play_children
           p self.class.human_name
