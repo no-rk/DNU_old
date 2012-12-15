@@ -3,8 +3,7 @@ module DNU
     module Scene
       class Sequence < BaseScene
         
-        def initialize(character, tree = @@default_tree, parent = nil)
-          super
+        def when_initialize
           @sequence = []
         end
         
@@ -12,12 +11,12 @@ module DNU
           @index < @tree.size
         end
         
-        def next_scene
+        def before_each_scene
           @children = @sequence[@index]
         end
         
         def create_children
-          @sequence[@index] = @children ||= create_from_hash(@tree[@index])
+          @sequence[@index] = ( @children ||= create_from_hash(@tree[@index]) )
         end
         
         def before

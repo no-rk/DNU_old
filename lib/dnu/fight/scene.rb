@@ -20,6 +20,7 @@ require_dependency "dnu/fight/scene/node/add_act"
 require_dependency "dnu/fight/scene/node/effects"
 require_dependency "dnu/fight/scene/node/cemetery"
 
+require_dependency "dnu/fight/scene/effect/base_effect"
 require_dependency "dnu/fight/scene/effect/physical"
 require_dependency "dnu/fight/scene/effect/magical"
 require_dependency "dnu/fight/scene/effect/undefined"

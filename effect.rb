@@ -18,13 +18,18 @@ def transform
   @transform ||= EffectTransform.new
 end
 
+def character
+  @character ||= DNU::Fight::State::Character.new
+end
+
 def duel
-  DNU::Fight::Scene::Duel.new(DNU::Fight::State::Character.new)
+  DNU::Fight::Scene::Duel.new(character)
 end
 
 def reload!
   load '/home/nork/rails/DNU/lib/dnu.rb'
   @parser    = nil
   @transform = nil
+  @character = nil
   "reload dnu"
 end

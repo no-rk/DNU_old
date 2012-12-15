@@ -25,7 +25,7 @@ class EffectTransform < Parslet::Transform
     { :or  => [left,right] }
   }
   
-  rule(:arrow => simple(:arrow), :effect => subtree(:effect)) {
+  rule(:arrow => simple(:arrow), :arrow_process => subtree(:arrow_process)) {
     {
       :if => {
         :condition => {
@@ -33,20 +33,21 @@ class EffectTransform < Parslet::Transform
           :condition_state   => '攻撃',
           :condition_boolean => '成功'
         },
-        :then => { :effect => effect }
+        :then => arrow_process
       }
     }
   }
   
-  rule(:arrow => simple(:arrow), :root => subtree(:root)) {
+  rule(:root => { :passive => subtree(:passive), :do => { :repeat => subtree(:repeat) } }) {
     {
-      :if => {
-        :condition => {
-          :just_before       => '直前',
-          :condition_state   => '攻撃',
-          :condition_boolean => '成功'
+      :repeat => {
+        :do => {
+          :root => {
+            :passive => passive,
+            :do => repeat[:do]
+          }
         },
-        :then => { :root => root }
+        :times => repeat[:times]
       }
     }
   }

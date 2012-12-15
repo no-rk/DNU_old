@@ -76,7 +76,7 @@ class EffectParser < Parslet::Parser
   }
   
   rule(:multi_scope) {
-    str('敵') | str('味')
+    str('敵') | str('味') | str('敵味') | str('味敵')
   }
   
   rule(:single_sub_scope) {
@@ -210,45 +210,54 @@ class EffectParser < Parslet::Parser
   
   # root_processes
   
-  rule(:single_process) {
-    effect |
-    bra >> (processes | process) >> ket |
-    (
-      effect_condition.as(:condition) >> process.as(:then) >> (separator >> process.as(:else)).maybe |
-      effect_condition.as(:condition) >> bra >> (processes | process).as(:then) >> ket >> (separator >> process.as(:else)).maybe
-    ).as(:if)
-  }
-  
-  rule(:multi_process) {
-    (
-      single_process.as(:do) >> multiply >> natural_number.as(:times)
-    ).as(:repeat)
-  }
-  
   rule(:process) {
-    (
-      (multi_process | single_process).as(:do) >> separator >> (conditions | condition | str('回避停止') | str('命中停止')).as(:while)
-    ).as(:each_effect) |
-    multi_process | single_process | root_process
+    if_process | root_process | processes | effect
   }
   
-  rule(:processes) {
+  rule(:process_wrap) {
     (
-      process >> ((plus | arrow.as(:arrow) >> effect_condition.absent?) >> process).repeat(1)
-    ).as(:sequence)
+      (process | process_wrap).as(:do) >> times_wrap
+    ).as(:repeat) |
+    (
+      (process | process_wrap).as(:do) >> while_wrap
+    ).as(:each_effect) |
+    (process | process_wrap)
+  }
+  
+  rule(:times_wrap) {
+    multiply >> natural_number.as(:times)
+  }
+  
+  rule(:while_wrap) {
+    separator >> (conditions | condition | str('回避停止') | str('命中停止')).as(:while)
+  }
+  
+  rule(:if_process) {
+    (
+      effect_condition.as(:condition) >> process_wrap.as(:then) >> (separator >> process_wrap.as(:else)).maybe
+    ).as(:if)
   }
   
   rule(:root_process) {
     (
-      passive >> separator >> process.as(:do) |
-      passive >> bra >> (processes | process).as(:do) >> ket
+      passive >> separator.maybe >> process_wrap.as(:do)
     ).as(:root)
+  }
+  
+  rule(:processes) {
+    bra >> (
+      (
+        process_wrap >> (plus >> process_wrap | arrow.as(:arrow) >> effect_condition.absent? >> process_wrap.as(:arrow_process)).repeat(1)
+      ).as(:sequence) |
+      process_wrap
+    ) >> ket
   }
   
   rule(:root_processes) {
     (
-      (root_process >> newline.maybe).repeat(1)
-    ).as(:sequence)
+      (passive.present? >> process_wrap >> newline.maybe).repeat(2)
+    ).as(:sequence) |
+    passive.present? >> process_wrap >> newline.maybe
   }
   
   # root
