@@ -41,7 +41,7 @@ module DNU
           random
         end
         def ラ
-          proc{ random }
+          lambda{ random }
         end
         def method_missing(action, *args)
           self

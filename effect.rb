@@ -26,6 +26,13 @@ def duel
   DNU::Fight::Scene::Duel.new(character)
 end
 
+def skill(text)
+  tree = transform.apply(parser.parse(text))
+  parent = Struct.new(:active,:passive,:label).new
+  parent.active = character.random
+  DNU::Fight::Scene::Effects.new(character, tree, parent)
+end
+
 def reload!
   load '/home/nork/rails/DNU/lib/dnu.rb'
   @parser    = nil

@@ -1,4 +1,3 @@
-# encoding: UTF-8
 module DNU
   module Fight
     module Scene
@@ -6,28 +5,22 @@ module DNU
         
         def when_initialize
           @root = []
+          @root_passive = nil
+        end
+        
+        def create_passive
+          scope = @character.try(@tree[:passive][:scope].to_s, @parent.active)
+          @root_passive = scope.respond_to?(@tree[:passive][:target].to_s) ? scope.try(@tree[:passive][:target].to_s) : scope
         end
         
         def has_next_scene?
-          scope = @character.try(@tree[:passive][:scope].to_s, @parent.active)
-          @passive = scope.respond_to?(@tree[:passive][:target].to_s) ? scope.try(@tree[:passive][:target].to_s) : scope
-          if @passive.respond_to?(:count)
-            (@passive - @root).present?
-          else
-            super
-          end
+          ([@root_passive || create_passive].flatten - @root).present?
         end
         
         def before_each_scene
-          scope = @character.try(@tree[:passive][:scope].to_s, @active)
-          @passive = scope.respond_to?(@tree[:passive][:target].to_s) ? scope.try(@tree[:passive][:target].to_s) : scope
-          if @passive.respond_to?(:count)
-            @passive = (@passive - @root).sample
-          end
-        end
-        
-        def after_each_scene
-          @root << @passive
+          @root << ([@root_passive].flatten - @root).sample
+          @passive = @root.last
+          @passive = @passive.respond_to?(:call) ? @passive.call : @passive
         end
         
         def after_all_scene
