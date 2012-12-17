@@ -1,10 +1,15 @@
 module DNU
   module Fight
     module Scene
-      class Cemetery < BaseScene
+      class Nothing < BaseScene
         
         def play_children
-          p human_name
+        end
+        
+        def before
+        end
+        
+        def after
         end
         
       end

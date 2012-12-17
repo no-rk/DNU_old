@@ -41,9 +41,18 @@ module DNU
           @@debug_log.push(msg)
         end
         
+        def self_name
+          self.class.name.split("::").last
+        end
+        
         # シーン名
-        def self.human_name
-          I18n.t(self.name.split("::").last, :scope => "DNU.Fight.Scene")
+        def scene_name
+          self_name
+        end
+        
+        # シーン名（日本語）
+        def human_name
+          I18n.t(scene_name, :scope => "DNU.Fight.Scene")
         end
         
         def when_initialize
@@ -63,6 +72,9 @@ module DNU
         
         def has_next_scene?
           @index == 0
+        end
+        
+        def before_all_scene
         end
         
         def before_each_scene
@@ -93,6 +105,7 @@ module DNU
         end
         
         def each
+          before_all_scene
           while has_next_scene?
             yield next_scene
             end_scene
@@ -101,11 +114,18 @@ module DNU
         end
         
         def child_name(tree)
-          tree.keys.first.try(:to_sym) || :undefined
+          tree.keys.first.try(:to_sym)
         end
         
         def create_from_hash(tree)
-          eval("#{child_name(tree).to_s.camelize}.new(@character,tree[child_name(tree)] , self)")
+          begin
+            eval("#{child_name(tree).to_s.camelize}.new(@character,tree[child_name(tree)], self)")
+          rescue
+            p "#{scene_name}の子要素#{child_name(tree)}\{:#{
+            tree[child_name(tree)].respond_to?(:keys) ? tree[child_name(tree)].keys.join(',:') : tree[child_name(tree)]
+            }\}は未実装"
+            Nothing.new(@character, tree[child_name(tree)], self)
+          end
         end
         
         def before_create_children
@@ -121,12 +141,12 @@ module DNU
         end
         
         def before
-          p "#{@active.name}の#{self.class.human_name}" unless @active.nil?
-          p I18n.t("Before", :scope => "DNU.Fight.Scene", :Scene => "#{self.class.human_name}") + "(object_id:#{self.object_id})"
+          p "#{@active.name}の#{[human_name].flatten.join}" unless @active.nil?
+          p I18n.t("Before", :scope => "DNU.Fight.Scene", :Scene => "#{[human_name].flatten.join}")# + "(object_id:#{self.object_id})"
         end
         
         def after
-          p I18n.t("After" , :scope => "DNU.Fight.Scene", :Scene => "#{self.class.human_name}") + "(object_id:#{self.object_id})"
+          p I18n.t("After" , :scope => "DNU.Fight.Scene", :Scene => "#{[human_name].flatten.join}")# + "(object_id:#{self.object_id})"
         end
         
         def play

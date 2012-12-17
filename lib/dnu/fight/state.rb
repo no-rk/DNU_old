@@ -8,6 +8,8 @@ require_dependency "dnu/fight/state/character/puppet"
 
 require_dependency "dnu/fight/state/value/base_value"
 require_dependency "dnu/fight/state/value/team"
+require_dependency "dnu/fight/state/value/mhp"
+require_dependency "dnu/fight/state/value/mmp"
 require_dependency "dnu/fight/state/value/hp"
 require_dependency "dnu/fight/state/value/mp"
 require_dependency "dnu/fight/state/value/at"

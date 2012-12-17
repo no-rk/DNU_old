@@ -48,16 +48,12 @@ class EffectParser < Parslet::Parser
   }
   
   rule(:arrow) {
-    spaces? >> match('[→⇒]') >> spaces?
+    spaces? >> (
+      match('[→⇒]') |
+      match('[=＝]') >> match('[>＞]')
+    ) >> spaces?
   }
-  
-  # passive
-  
-  rule(:target_condition) {
-    (
-      str('高') | str('低')
-    ).as(:target_condition)
-  }
+  # name rule
   
   rule(:status_name) {
     (
@@ -75,6 +71,20 @@ class EffectParser < Parslet::Parser
     (
       str('猛毒') | str('麻痺') | str('睡眠') | str('泥浸') | str('水濡') | str('炎纏') | str('鎌鼬') | str('光身') | str('暗幕') | str('混濁') | str('全状態異常')
     ).as(:disease_name)
+  }
+  
+  rule(:element_name) {
+    (
+      str('無') | str('火') | str('水') | str('地') | str('風') | str('光') | str('闇') | str('ラ')
+    ).as(:element) >> str('属性')
+  }
+  
+  # passive
+  
+  rule(:target_condition) {
+    (
+      str('高') | str('低')
+    ).as(:target_condition)
   }
   
   rule(:single_scope) {
@@ -118,10 +128,6 @@ class EffectParser < Parslet::Parser
   
   # effect
   
-  rule(:const) {
-    str('固定')
-  }
-  
   rule(:positive_integer) {
     num_1_to_9 >> num_0_to_9.repeat(1) | num_0_to_9
   }
@@ -138,33 +144,86 @@ class EffectParser < Parslet::Parser
     ).as(:number)
   }
   
-  rule(:attack_effect_name) {
-    (
-      str('物理攻撃') | str('魔法攻撃')
-    ).as(:effect_name)
+  rule(:effect_coeff) {
+    status_name >> multiply >> decimal.as(:coeff_A) >> (plus >> natural_number.as(:coeff_B)).maybe
   }
   
   rule(:effect_name) {
     (
       status_name >> (str('増加') | str('減少') | str('上昇') | str('低下')).as(:effect_detail) |
-      (str('HP') | str('MP')).as(:status_name) >> str('回復').as(:effect_detail) |
       disease_name >> (str('追加') | str('軽減')).as(:effect_detail)
     ).as(:effect_name)
   }
   
-  rule(:effect_coeff) {
-    status_name >> multiply >> decimal.as(:coeff_A) >> (plus >> natural_number.as(:coeff_B)).maybe
+  rule(:const) {
+    str('固定')
+  }
+  
+  rule(:physical_attack) {
+    str('物理攻撃')
+  }
+  
+  rule(:magical_attack) {
+    str('魔法攻撃')
   }
   
   rule(:effect_hit) {
     (natural_number >> percent).as(:min_hit) >> (separator >> (natural_number >> percent).as(:max_hit)).maybe
   }
   
+  rule(:physical) {
+             element_name.maybe >> physical_attack >> bra >> ((effect_coeff | decimal.as(:coeff_A)) >> (separator >> effect_hit).maybe).as(:physical).as(:attack_type) >> ket |
+    const >> element_name.maybe >> physical_attack >> bra >> (         natural_number.as(:coeff_B)  >> (separator >> effect_hit).maybe).as(:physical).as(:attack_type) >> ket
+  }
+  
+  rule(:magical) {
+             element_name.maybe >> magical_attack >> bra >> ((effect_coeff | decimal.as(:coeff_A)) >> (separator >> effect_hit).maybe).as(:magical).as(:attack_type) >> ket |
+    const >> element_name.maybe >> magical_attack >> bra >> (         natural_number.as(:coeff_B)  >> (separator >> effect_hit).maybe).as(:magical).as(:attack_type) >> ket
+  }
+  
+  rule(:attack) {
+    (
+      physical |
+      magical
+    ).as(:attack)
+  }
+  
+  rule(:heal) {
+    (
+      (str('HP') | str('MP')).as(:status_name) >> str('回復') >> bra >> (effect_coeff | natural_number.as(:coeff_B)).as(:heal_value) >> ket
+    ).as(:heal)
+  }
+  
+  rule(:change) {
+    (
+      status_name >> str('増加') >> bra >> (effect_coeff | natural_number.as(:coeff_B)).as(:change_value) >> ket
+    ).as(:increase) |
+    (
+      status_name >> str('減少') >> bra >> (effect_coeff | natural_number.as(:coeff_B)).as(:change_value) >> ket
+    ).as(:decrease) |
+    (
+      status_name >> str('上昇') >> bra >> (effect_coeff | natural_number.as(:coeff_B)).as(:change_value) >> ket
+    ).as(:up) |
+    (
+      status_name >> str('低下') >> bra >> (effect_coeff | natural_number.as(:coeff_B)).as(:change_value) >> ket
+    ).as(:down) |
+    (
+      disease_name >> str('軽減') >> bra >> natural_number.as(:coeff_B).as(:change_value) >> ket
+    ).as(:decrease)
+  }
+  
+  rule(:disease) {
+    (
+      disease_name >> str('追加').maybe >> bra >> natural_number.as(:coeff_B).as(:change_value) >> ket
+    ).as(:disease)
+  }
+  
   rule(:effect) {
     (
-      effect_name >> bra >> (effect_coeff | natural_number.as(:coeff_B)) >> ket |
-      attack_effect_name >> bra >> (effect_coeff | decimal.as(:coeff_A)) >> (separator >> effect_hit).maybe >> ket |
-      const >> attack_effect_name >> bra >> natural_number.as(:coeff_B) >> (separator >> effect_hit).maybe >>ket
+      disease |
+      change |
+      attack |
+      heal
     ).as(:effect)
   }
   
@@ -228,19 +287,27 @@ class EffectParser < Parslet::Parser
     (
       (
         (state_character_target >> (str('HP') | str('MP')).as(:status_name)).as(:state_character).as(:left) >> natural_number.as(:percent).as(:state_character).as(:right) >> percent >> op_ge
-      ).as(:condition_ge)
-    ).as(:status_percent) |
-    (
+      ).as(:condition_ge) |
       (
         (state_character_target >> (str('HP') | str('MP')).as(:status_name)).as(:state_character).as(:left) >> natural_number.as(:percent).as(:state_character).as(:right) >> percent >> op_le
-      ).as(:condition_le)
+      ).as(:condition_le) |
+      (
+        (state_character_target >> (str('HP') | str('MP')).as(:status_name)).as(:state_character).as(:left) >> natural_number.as(:percent).as(:state_character).as(:right) >> percent
+      ).as(:condition_eq)
     ).as(:status_percent)
+  }
+  
+  rule(:random_percent) {
+    (
+      natural_number >> percent >> str('の確率').maybe
+    ).as(:random_percent)
   }
   
   rule(:condition_boolean) {
     state_effect_boolean |
     state_character_boolean |
-    status_percent
+    status_percent |
+    random_percent
   }
   
   rule(:state) {

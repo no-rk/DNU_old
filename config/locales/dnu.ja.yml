@@ -210,10 +210,12 @@ ja:
         AddAct: 追加行動
         Effects: 効果
         Cemetery: 墓地埋葬
-        Undefined: 未実装
-        Physical: 物理攻撃
-        PhysicalSuccess: 物理攻撃被弾
-        PhysicalFailure: 物理攻撃回避
-        Magical: 魔法攻撃
-        MagicalSuccess: 魔法攻撃被弾
-        MagicalFailure: 魔法攻撃回避
+        Attack: 攻撃
+        Physical: 物理
+        Magical: 魔法
+        Element: 属性
+        Hit: 攻撃命中
+        Miss: 攻撃空振
+        Disease: 状態異常
+        Add: 状態異常追加
+        Resist: 状態異常抵抗

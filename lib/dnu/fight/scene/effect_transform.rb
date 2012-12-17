@@ -40,13 +40,6 @@ class EffectTransform < Parslet::Transform
     }
   }
   
-  rule(:status_percent => subtree(:status_percent)) {
-    status_percent[status_percent.keys.first][:right][:state_character][:state_character_target] = status_percent[status_percent.keys.first][:left][:state_character][:state_character_target]
-    status_percent[status_percent.keys.first][:right][:state_character][:status_name] = "M" + status_percent[status_percent.keys.first][:left][:state_character][:status_name]
-    
-    status_percent
-  }
-  
   rule(:root => { :passive => subtree(:passive), :do => { :repeat => subtree(:repeat) } }) {
     {
       :repeat => {
@@ -57,6 +50,58 @@ class EffectTransform < Parslet::Transform
           }
         },
         :times => repeat[:times]
+      }
+    }
+  }
+  
+  rule(:status_percent => subtree(:status_percent)) {
+    status_percent[status_percent.keys.first][:right][:state_character][:state_character_target] = status_percent[status_percent.keys.first][:left][:state_character][:state_character_target]
+    status_percent[status_percent.keys.first][:right][:state_character][:status_name] = "M" + status_percent[status_percent.keys.first][:left][:state_character][:status_name]
+    
+    status_percent
+  }
+  
+  rule(:effect => { :attack => subtree(:attack) }) {
+    attack[:element] ||= '無'
+    {
+      :effect => {
+        :attack => attack.merge({
+          :do => {
+            :if => {
+              :condition => {
+                :hit? => attack
+              },
+              :then => {
+                :hit => attack
+              },
+              :else => {
+                :miss => attack
+              }
+            }
+          }
+        })
+      }
+    }
+  }
+  
+  rule(:effect => { :disease => subtree(:disease) }) {
+    {
+      :effect => {
+        :disease => disease.merge({
+          :do => {
+            :if => {
+              :condition => {
+                :add? => disease
+              },
+              :then => {
+                :add => disease
+              },
+              :else => {
+                :resist => disease
+              }
+            }
+          }
+        })
       }
     }
   }
