@@ -2,10 +2,11 @@ module DNU
   module Fight
     module Scene
       class Effect < BaseScene
+        include Condition
         
         def after_each_scene
           @label[:each_effect].try(:each) do |h|
-            if rand(100)<50
+            unless (h.values.first.respond_to?(:call) ? h.values.first : (h[h.keys.first] = condition(h.values.first))).call
               throw h.keys.first
             end
           end

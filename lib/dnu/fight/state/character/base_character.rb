@@ -15,6 +15,10 @@ module DNU
             eval "@#{stat} = #{stat}.new(rand(1000))"
           end
         end
+        
+        def disease(type)
+          rand(5)
+        end
       end
     end
   end

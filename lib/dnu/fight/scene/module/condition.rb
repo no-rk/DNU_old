@@ -25,19 +25,20 @@ module DNU
           lambda{ r=rand(100); r < tree.to_i }
         end
         
-        def state_character_boolean(tree)
-          lambda{ r=rand; r<0.5 }
-        end
-        
         def state_character(tree)
           percent = (tree[:percent] || 100).to_f/100
-          lambda{ r=try(tree[:state_character_target]).try(tree[:status_name]).value*percent; r }
+          lambda{ r=try(tree[:state_target]).try(tree[:status_name]).value*percent; r }
         end
         
-        def state_effect_boolean(tree)
+        def state_disease(tree)
+          lambda{ try(tree[:state_target]).try(:disease,tree[:disease_name]) }
+        end
+        
+        def just_before_attack(tree)
+          hit_or_miss = tree.keys.first.to_s.camelize.to_sym
           lambda do
             begin
-              history[:children].last[:Attack][:children].last[:Hit].present?
+              history[:children].last[:Attack][:children].last[hit_or_miss].present?
             rescue
               false
             end

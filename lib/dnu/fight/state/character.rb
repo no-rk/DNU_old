@@ -37,13 +37,33 @@ module DNU
         def 敵(active)
           find_by_team_not(active.team)
         end
-        def 単
+        def 敵味(active)
+          self
+        end
+        def 味敵(active)
+          self
+        end
+        def 単(dummy = nil)
           random
         end
-        def ラ
+        def ラ(dummy = nil)
           lambda{ random }
         end
-        def method_missing(action, *args)
+        def 全(dummy = nil)
+          self
+        end
+        def 低(status_name)
+          status_name = status_name[:status_name] || :HP
+          lambda{ self.min{ |a,b| a.try(status_name).value<=>b.try(status_name).value } }
+        end
+        def 高(status_name)
+          status_name = status_name[:status_name] || :HP
+          lambda{ self.max{ |a,b| a.try(status_name).value<=>b.try(status_name).value } }
+        end
+        def 竜(master)
+          self
+        end
+        def 人形(master)
           self
         end
       end

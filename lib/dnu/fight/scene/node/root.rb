@@ -10,11 +10,12 @@ module DNU
         
         def create_passive
           scope = @character.try(@tree[:passive][:scope].to_s, @parent.active)
-          @root_passive = scope.respond_to?(@tree[:passive][:target].to_s) ? scope.try(@tree[:passive][:target].to_s) : scope
+          scope = @character.try(@tree[:passive][:sub_scope].to_s, scope) unless @tree[:passive][:sub_scope].nil?
+          @tree[:passive][:target].nil? ? scope : scope.try([@tree[:passive][:target]].flatten.first.to_s, [@tree[:passive][:target]].flatten.last)
         end
         
         def has_next_scene?
-          ([@root_passive || create_passive].flatten - @root).present?
+          ([@root_passive ||= create_passive].flatten - @root).present?
         end
         
         def before_each_scene

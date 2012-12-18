@@ -7,21 +7,13 @@ class EffectTransform < Parslet::Transform
   
   rule('回避停止') {
     {
-      :state_effect_boolean => {
-        :just_before              => '直前',
-        :state_effect_condition   => '攻撃',
-        :boolean                  => '成功'
-      }
+      :just_before_attack => { :hit => '命中' }
     }
   }
   
   rule('命中停止') {
     {
-      :state_effect_boolean => {
-        :just_before            => '直前',
-        :state_effect_condition => '攻撃',
-        :boolean                => '失敗'
-      }
+      :just_before_attack => { :miss => '空振' }
     }
   }
   
@@ -29,15 +21,15 @@ class EffectTransform < Parslet::Transform
     {
       :if => {
         :condition => {
-          :state_effect_boolean => {
-            :just_before            => '直前',
-            :state_effect_condition => '攻撃',
-            :boolean                => '成功'
-          }
+          :just_before_attack => { :hit => '命中' }
         },
         :then => arrow_process
       }
     }
+  }
+  
+  rule(:target_sequence => subtree(:target_sequence)) {
+    [target_sequence.delete(:target_condition),target_sequence]
   }
   
   rule(:root => { :passive => subtree(:passive), :do => { :repeat => subtree(:repeat) } }) {
@@ -55,8 +47,8 @@ class EffectTransform < Parslet::Transform
   }
   
   rule(:status_percent => subtree(:status_percent)) {
-    status_percent[status_percent.keys.first][:right][:state_character][:state_character_target] = status_percent[status_percent.keys.first][:left][:state_character][:state_character_target]
-    status_percent[status_percent.keys.first][:right][:state_character][:status_name] = "M" + status_percent[status_percent.keys.first][:left][:state_character][:status_name]
+    status_percent[status_percent.keys.first][:right][:state_character][:state_target] = status_percent[status_percent.keys.first][:left][:state_character][:state_target]
+    status_percent[status_percent.keys.first][:right][:state_character][:status_name]  = "M" + status_percent[status_percent.keys.first][:left][:state_character][:status_name]
     
     status_percent
   }

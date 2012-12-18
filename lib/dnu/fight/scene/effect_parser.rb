@@ -105,7 +105,7 @@ class EffectParser < Parslet::Parser
   
   rule(:target) {
     (
-      str('単') | str('ラ') | str('全') | (target_condition >> (status_name | disease_name) >> str('追尾'))
+      str('単') | str('ラ') | str('全') | (target_condition >> (status_name | disease_name) >> str('追尾')).as(:target_sequence)
     ).as(:target)
   }
   
@@ -224,26 +224,28 @@ class EffectParser < Parslet::Parser
   
   # effect_condition
   
-  rule(:state_effect_condition) {
-    (
-      str('攻撃') | str('効果')
-    ).as(:state_effect_condition)
+  rule(:attack_boolean) {
+    str('命中').as(:hit) | str('空振').as(:miss)
   }
   
-  rule(:boolean) {
+  rule(:disease_boolean) {
     (
-      str('成功') | str('失敗')
-    ).as(:boolean)
+      str('追加') | str('抵抗')
+    ).as(:disease_boolean)
   }
   
   rule(:just_before) {
-    str('直前').as(:just_before)
+    str('直前')
   }
   
-  rule(:state_character_target) {
+  rule(:attack_name) {
+    str('攻撃')
+  }
+  
+  rule(:state_target) {
     (
       str('自分') | str('対象')
-    ).as(:state_character_target)
+    ).as(:state_target)
   }
   
   rule(:op_ge) {
@@ -254,40 +256,40 @@ class EffectParser < Parslet::Parser
     str('以下')
   }
   
-  rule(:state_effect_boolean) {
-    (
-      just_before >> state_effect_condition >> boolean
-    ).as(:state_effect_boolean)
-  }
-  
   rule(:state_effect) {
     (
-      state_effect_condition >> boolean >> str('回数')
+      attack_name >> attack_boolean >> str('回数')
     ).as(:state_effect)
   }
   
-  rule(:state_character_boolean) {
+  rule(:just_before_attack) {
     (
-      state_character_target >> str('生存').as(:live)
-    ).as(:state_character_boolean)
+      just_before >> attack_name >> attack_boolean
+    ).as(:just_before_attack)
   }
   
   rule(:state_character) {
     (
-      state_character_target >> (status_name >> (str('の') >>natural_number.as(:percent) >> percent).maybe | disease_name >> str('深度'))
+      state_target >> status_name >> (str('の') >>natural_number.as(:percent) >> percent).maybe
     ).as(:state_character)
+  }
+  
+  rule(:state_disease) {
+    (
+      state_target >> disease_name >> str('深度')
+    ).as(:state_disease)
   }
   
   rule(:status_percent) {
     (
       (
-        (state_character_target >> (str('HP') | str('MP')).as(:status_name)).as(:state_character).as(:left) >> natural_number.as(:percent).as(:state_character).as(:right) >> percent >> op_ge
+        (state_target >> (str('HP') | str('MP')).as(:status_name)).as(:state_character).as(:left) >> natural_number.as(:percent).as(:state_character).as(:right) >> percent >> op_ge
       ).as(:condition_ge) |
       (
-        (state_character_target >> (str('HP') | str('MP')).as(:status_name)).as(:state_character).as(:left) >> natural_number.as(:percent).as(:state_character).as(:right) >> percent >> op_le
+        (state_target >> (str('HP') | str('MP')).as(:status_name)).as(:state_character).as(:left) >> natural_number.as(:percent).as(:state_character).as(:right) >> percent >> op_le
       ).as(:condition_le) |
       (
-        (state_character_target >> (str('HP') | str('MP')).as(:status_name)).as(:state_character).as(:left) >> natural_number.as(:percent).as(:state_character).as(:right) >> percent
+        (state_target >> (str('HP') | str('MP')).as(:status_name)).as(:state_character).as(:left) >> natural_number.as(:percent).as(:state_character).as(:right) >> percent
       ).as(:condition_eq)
     ).as(:status_percent)
   }
@@ -299,14 +301,14 @@ class EffectParser < Parslet::Parser
   }
   
   rule(:condition_boolean) {
-    state_effect_boolean |
-    state_character_boolean |
+    just_before_attack |
     status_percent |
     random_percent
   }
   
   rule(:state) {
     state_character |
+    state_disease |
     state_effect
   }
   
@@ -328,7 +330,7 @@ class EffectParser < Parslet::Parser
   
   rule(:condition_eq) {
     (
-      state.as(:left) >> str('が') >> (condition_coeff | state).as(:right)
+      state.as(:left) >> str('が').maybe >> (condition_coeff | state).as(:right)
     ).as(:condition_eq)
   }
 
