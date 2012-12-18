@@ -202,7 +202,7 @@ class EffectParser < Parslet::Parser
     ).as(:down) |
     (
       disease_name >> str('軽減') >> bra >> natural_number.as(:coeff_B).as(:change_value) >> ket
-    ).as(:decrease)
+    ).as(:reduce)
   }
   
   rule(:disease) {

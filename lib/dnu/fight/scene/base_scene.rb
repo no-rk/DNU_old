@@ -116,7 +116,7 @@ module DNU
           begin
             eval("#{child_name(tree).to_s.camelize}.new(@character,tree[child_name(tree)], self)")
           rescue
-            history[:children] = "#{scene_name}の子要素#{child_name(tree)}\{:#{
+            history[:children] << "#{scene_name}の子要素#{child_name(tree)}\{:#{
             tree[child_name(tree)].respond_to?(:keys) ? tree[child_name(tree)].keys.join(',:') : tree[child_name(tree)]
             }\}は未実装"
             Nothing.new(@character, tree[child_name(tree)], self)
@@ -136,11 +136,9 @@ module DNU
         end
         
         def before
-          history[:before] = human_name + @index.to_s
         end
         
         def after
-          history[:after]  = human_name + @index.to_s
         end
         
         def history
@@ -161,8 +159,9 @@ module DNU
             play_children
             after
           end
-          @history
+          @history.extend Html
         end
+        
       end
     end
   end

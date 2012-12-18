@@ -2,10 +2,10 @@
 module DNU
   module Fight
     module Scene
-      class Heal < BaseScene
+      class Decrease < BaseScene
         
         def play_children
-          history[:children] << "#{@tree[:status_name]}が回復した！"
+          history[:children] << "#{@tree[:status_name]}が減少した！"
         end
         
         def before

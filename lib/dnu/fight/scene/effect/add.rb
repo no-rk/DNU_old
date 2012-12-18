@@ -5,7 +5,7 @@ module DNU
       class Add < BaseScene
         
         def play_children
-          history[:children] = "#{@tree[:disease_name]}を追加した！"
+          history[:children] << "#{@tree[:disease_name]}を追加された！"
         end
         
         def before

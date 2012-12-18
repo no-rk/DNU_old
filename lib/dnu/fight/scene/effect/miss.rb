@@ -17,7 +17,7 @@ module DNU
         end
         
         def play_children
-          history[:children] = last_name + "回避！"
+          history[:children] << "回避した！"
         end
         
       end
