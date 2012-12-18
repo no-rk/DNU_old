@@ -28,7 +28,7 @@ end
 
 def skill(text)
   tree = transform.apply(parser.parse(text))
-  parent = Struct.new(:active,:passive,:label).new
+  parent = Struct.new(:active,:passive,:label,:history).new
   parent.active = character.random
   DNU::Fight::Scene::Effects.new(character, tree, parent)
 end

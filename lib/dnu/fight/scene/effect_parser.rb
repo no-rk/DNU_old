@@ -92,7 +92,7 @@ class EffectParser < Parslet::Parser
   }
   
   rule(:multi_scope) {
-    str('敵') | str('味') | str('敵味') | str('味敵')
+    str('敵味') | str('味敵') | str('敵') | str('味')
   }
   
   rule(:single_sub_scope) {
@@ -146,13 +146,6 @@ class EffectParser < Parslet::Parser
   
   rule(:effect_coeff) {
     status_name >> multiply >> decimal.as(:coeff_A) >> (plus >> natural_number.as(:coeff_B)).maybe
-  }
-  
-  rule(:effect_name) {
-    (
-      status_name >> (str('増加') | str('減少') | str('上昇') | str('低下')).as(:effect_detail) |
-      disease_name >> (str('追加') | str('軽減')).as(:effect_detail)
-    ).as(:effect_name)
   }
   
   rule(:const) {
@@ -220,10 +213,12 @@ class EffectParser < Parslet::Parser
   
   rule(:effect) {
     (
-      disease |
-      change |
-      attack |
-      heal
+      (
+        heal |
+        change |
+        disease
+      ) >> arrow.absent? |
+      attack
     ).as(:effect)
   }
   

@@ -4,7 +4,7 @@ module DNU
       class Cemetery < BaseScene
         
         def play_children
-          p human_name
+          history[:children] = human_name
         end
         
       end

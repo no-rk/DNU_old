@@ -7,8 +7,6 @@ module DNU
         
         attr_reader :active, :passive, :label
         
-        @@debug_log = []
-        
         @@default_tree = {
           :sequence => [
             {
@@ -37,12 +35,8 @@ module DNU
           ]
         }
         
-        def p(msg)
-          @@debug_log.push(msg)
-        end
-        
         def self_name
-          self.class.name.split("::").last
+          self.class.name.split("::").last.to_sym
         end
         
         # シーン名
@@ -66,6 +60,7 @@ module DNU
           @active    = nil
           @passive   = nil
           @label     = nil
+          @history   = nil
           @index     = 0
           when_initialize
         end
@@ -121,7 +116,7 @@ module DNU
           begin
             eval("#{child_name(tree).to_s.camelize}.new(@character,tree[child_name(tree)], self)")
           rescue
-            p "#{scene_name}の子要素#{child_name(tree)}\{:#{
+            history[:children] = "#{scene_name}の子要素#{child_name(tree)}\{:#{
             tree[child_name(tree)].respond_to?(:keys) ? tree[child_name(tree)].keys.join(',:') : tree[child_name(tree)]
             }\}は未実装"
             Nothing.new(@character, tree[child_name(tree)], self)
@@ -141,21 +136,32 @@ module DNU
         end
         
         def before
-          p "#{@active.name}の#{[human_name].flatten.join}" unless @active.nil?
-          p I18n.t("Before", :scope => "DNU.Fight.Scene", :Scene => "#{[human_name].flatten.join}")# + "(object_id:#{self.object_id})"
+          history[:before] = human_name + @index.to_s
         end
         
         def after
-          p I18n.t("After" , :scope => "DNU.Fight.Scene", :Scene => "#{[human_name].flatten.join}")# + "(object_id:#{self.object_id})"
+          history[:after]  = human_name + @index.to_s
+        end
+        
+        def history
+          @history.last[scene_name]
+        end
+        
+        def log_before_each_scene
+          @history = (@parent.try(:history) || { :children => [] })[:children]
+          @history << { scene_name => { :children => [] } }
+          history[:active]  = @active.try(:name)
+          history[:passive] = @passive.try(:name)
         end
         
         def play
           self.each do |scene|
+            log_before_each_scene
             before
             play_children
             after
           end
-          @@debug_log
+          @history
         end
       end
     end

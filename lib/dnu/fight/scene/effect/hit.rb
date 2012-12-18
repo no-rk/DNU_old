@@ -16,20 +16,8 @@ module DNU
           child_name(@tree[:attack_type]).to_s.camelize
         end
         
-        def scene_name
-          [first_name, middle_name, last_name, self_name]
-        end
-        
-        def human_name
-          [
-            first_name + I18n.t(middle_name, :scope => "DNU.Fight.Scene"),
-            I18n.t(last_name, :scope => "DNU.Fight.Scene"),
-            I18n.t(self_name, :scope => "DNU.Fight.Scene")
-          ]
-        end
-        
         def play_children
-          p "#{@passive.name}にダメージ！"
+          history[:children] = last_name + "ダメージ！"
         end
         
       end

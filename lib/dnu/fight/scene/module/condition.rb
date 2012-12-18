@@ -13,33 +13,39 @@ module DNU
         end
         
         def hit?(tree)
-          lambda{ p r=rand; r<0.5 }
+          lambda{ r=rand; r<0.5 }
         end
         
         
         def add?(tree)
-          lambda{ p r=rand; r<0.5 }
+          lambda{ r=rand; r<0.5 }
         end
         
         def random_percent(tree)
-          lambda{ p r=rand(100); r < tree.to_i }
+          lambda{ r=rand(100); r < tree.to_i }
         end
         
         def state_character_boolean(tree)
-          lambda{ p r=rand; r<0.5 }
+          lambda{ r=rand; r<0.5 }
         end
         
         def state_character(tree)
           percent = (tree[:percent] || 100).to_f/100
-          lambda{ p r=try(tree[:state_character_target]).try(tree[:status_name]).value*percent; r }
+          lambda{ r=try(tree[:state_character_target]).try(tree[:status_name]).value*percent; r }
         end
         
         def state_effect_boolean(tree)
-          lambda{ p r=rand; r<0.5 }
+          lambda do
+            begin
+              history[:children].last[:Attack][:children].last[:Hit].present?
+            rescue
+              false
+            end
+          end
         end
         
         def state_effect(tree)
-          lambda{ p r=rand; r }
+          lambda{ r=rand; r }
         end
         
         def fixnum(tree)
