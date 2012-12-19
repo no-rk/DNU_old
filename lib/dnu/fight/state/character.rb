@@ -54,11 +54,11 @@ module DNU
         end
         def 低(status_name)
           status_name = status_name[:status_name] || :HP
-          lambda{ self.min{ |a,b| a.try(status_name).value<=>b.try(status_name).value } }
+          lambda{ self.min{ |a,b| a.try(status_name)<=>b.try(status_name) } }
         end
         def 高(status_name)
           status_name = status_name[:status_name] || :HP
-          lambda{ self.max{ |a,b| a.try(status_name).value<=>b.try(status_name).value } }
+          lambda{ self.max{ |a,b| a.try(status_name)<=>b.try(status_name) } }
         end
         def 竜(master)
           self
@@ -70,7 +70,7 @@ module DNU
       class Character < Array
         include Target
         def initialize
-          teamA = TEAM.new("A")
+          teamA = "A"
           3.times do
             child = PC.new
             child.team = teamA
@@ -80,7 +80,7 @@ module DNU
             end.join + "@Aチーム"
             self << child
           end
-          teamB = TEAM.new("B")
+          teamB = "B"
           3.times do
             child = NPC.new
             child.team = teamB

@@ -3,6 +3,7 @@ module DNU
   module Fight
     module Scene
       class Hit < BaseScene
+        include Damage
         
         def first_name
           @tree[:element]
@@ -17,7 +18,7 @@ module DNU
         end
         
         def play_children
-          history[:children] << "ダメージを受けた！"
+          history[:children] << "#{damage(@tree)}の#{@tree[:element]}属性ダメージを受けた！"
         end
         
       end

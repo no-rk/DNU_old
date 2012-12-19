@@ -12,8 +12,24 @@ module DNU
           @passive
         end
         
+        def physical(tree)
+          自分.HIT.to_f/(自分.HIT.to_f+対象.EVA.to_f)
+        end
+        
+        def magical(tree)
+          自分.MHIT.to_f/(自分.MHIT.to_f+対象.MEVA.to_f)
+        end
+        
+        def element(tree)
+          1.to_f
+        end
+        
         def hit?(tree)
-          lambda{ r=rand; r<0.5 }
+          attack_type = tree[:attack_type].keys.first
+          min_hit = (tree[:attack_type][attack_type][:min_hit] ||  50).to_f
+          max_hit = (tree[:attack_type][attack_type][:max_hit] || 100).to_f
+          hit_rate = min_hit + (max_hit - min_hit)*try(attack_type, tree[:attack_type][attack_type])*element(tree[:element])
+          lambda{ rand(100) < hit_rate }
         end
         
         
@@ -27,7 +43,7 @@ module DNU
         
         def state_character(tree)
           percent = (tree[:percent] || 100).to_f/100
-          lambda{ r=try(tree[:state_target]).try(tree[:status_name]).value*percent; r }
+          lambda{ r=try(tree[:state_target]).try(tree[:status_name])*percent; r }
         end
         
         def state_disease(tree)

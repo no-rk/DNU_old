@@ -2,6 +2,7 @@ require_dependency "dnu/fight/scene/effect_parser"
 require_dependency "dnu/fight/scene/effect_transform"
 require_dependency "dnu/fight/scene/base_scene"
 
+require_dependency "dnu/fight/scene/module/damage"
 require_dependency "dnu/fight/scene/module/condition"
 require_dependency "dnu/fight/scene/module/html"
 
