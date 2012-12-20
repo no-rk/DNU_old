@@ -1,7 +1,7 @@
 module DNU
   module Fight
     module State
-      class MEVA < BaseValue
+      class MEVA < BaseStatus
       end
     end
   end

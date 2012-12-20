@@ -1,7 +1,7 @@
 module DNU
   module Fight
     module State
-      class MDF < BaseValue
+      class MDF < BaseStatus
       end
     end
   end

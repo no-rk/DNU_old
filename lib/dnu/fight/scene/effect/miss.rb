@@ -17,7 +17,7 @@ module DNU
         end
         
         def play_children
-          history[:children] << "#{first_name}#{middle_name}#{last_name}攻撃を回避した！"
+          history[:children] = { :element => first_name, :attack_type => last_name }
         end
         
       end

@@ -5,7 +5,8 @@ module DNU
       class Resist < BaseScene
         
         def play_children
-          history[:children] << "#{@tree[:disease_name]}に抵抗した！"
+          disease_name = @tree[:disease_name]
+          history[:children] = { :disease_name => disease_name }
         end
         
         def before

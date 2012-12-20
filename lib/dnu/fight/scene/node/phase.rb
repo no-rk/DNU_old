@@ -3,9 +3,9 @@ module DNU
     module Scene
       class Phase < BaseScene
         
-        # Žc‚èƒ`[ƒ€”‚ª1‚É‚È‚é‚©Å‘åƒtƒFƒCƒY‚É’B‚·‚é‚Ü‚ÅŽŸƒtƒFƒCƒY‚ª‚ ‚é
+        # æ®‹ã‚Šãƒãƒ¼ãƒ æ•°ãŒ1ã«ãªã‚‹ã‹æœ€å¤§ãƒ•ã‚§ã‚¤ã‚ºã«é”ã™ã‚‹ã¾ã§æ¬¡ãƒ•ã‚§ã‚¤ã‚ºãŒã‚ã‚‹
         def has_next_scene?
-          @character.live.team.count > 1 and @index < 3
+          @character.live.team.count > 1 and @index < 10
         end
         
       end

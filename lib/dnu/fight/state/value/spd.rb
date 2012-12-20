@@ -1,7 +1,7 @@
 module DNU
   module Fight
     module State
-      class SPD < BaseValue
+      class SPD < BaseStatus
       end
     end
   end

@@ -62,7 +62,7 @@ module DNU
         
         def Cemetery(tree)
           nested_div(tree[:before])   +
-          nested_div(tree[:children]) +
+          tree[:children].inject(""){ |s,n| s << n + "は墓地に送られた！<br>" } +
           nested_div(tree[:after])
         end
         
@@ -79,17 +79,17 @@ module DNU
           nested_div(tree[:after])
         end
         
-        def Miss(tree)
-          %Q|\n<span class="passive">#{tree[:passive]}</span>は| +
+        def Hit(tree)
+          h = tree[:children]
           nested_div(tree[:before])   +
-          nested_div(tree[:children]) +
+          %Q|\n<span class="passive">#{tree[:passive]}</span>は#{(h[:after_change]-h[:before_change]).abs}の#{h[:element]}属性#{h[:attack_type]}ダメージを受けた！（ #{h[:before_change]} ⇒ #{h[:after_change]} ）| +
           nested_div(tree[:after])
         end
         
-        def Hit(tree)
-          %Q|\n<span class="passive">#{tree[:passive]}</span>は| +
+        def Miss(tree)
+          h = tree[:children]
           nested_div(tree[:before])   +
-          nested_div(tree[:children]) +
+          %Q|\n<span class="passive">#{tree[:passive]}</span>は#{h[:element]}属性#{h[:attack_type]}攻撃を回避した！| +
           nested_div(tree[:after])
         end
         
@@ -107,44 +107,44 @@ module DNU
         end
         
         def Resist(tree)
-          %Q|\n<span class="passive">#{tree[:passive]}</span>は| +
+          h = tree[:children]
           nested_div(tree[:before])   +
-          nested_div(tree[:children]) +
+          %Q|\n<span class="passive">#{tree[:passive]}</span>は#{h[:disease_name]}に抵抗した！| +
           nested_div(tree[:after])
         end
         
         def Heal(tree)
-          %Q|\n<span class="passive">#{tree[:passive]}</span>は| +
+          h = tree[:children]
           nested_div(tree[:before])   +
-          nested_div(tree[:children]) +
+          %Q|\n<span class="passive">#{tree[:passive]}</span>は#{(h[:change]).abs}回復した！（ #{h[:before_change]} ⇒ #{h[:after_change]} ）| +
           nested_div(tree[:after])
         end
         
         def Up(tree)
-          %Q|\n<span class="passive">#{tree[:passive]}</span>は| +
+          h = tree[:children]
           nested_div(tree[:before])   +
-          nested_div(tree[:children]) +
+          %Q|\n<span class="passive">#{tree[:passive]}</span>の#{h[:status_name]}が#{(h[:after_change]-h[:before_change]).abs}上昇した！（ #{h[:before_change]} ⇒ #{h[:after_change]} ）| +
           nested_div(tree[:after])
         end
         
         def Down(tree)
-          %Q|\n<span class="passive">#{tree[:passive]}</span>は| +
+          h = tree[:children]
           nested_div(tree[:before])   +
-          nested_div(tree[:children]) +
+          %Q|\n<span class="passive">#{tree[:passive]}</span>の#{h[:status_name]}が#{(h[:after_change]-h[:before_change]).abs}低下した！（ #{h[:before_change]} ⇒ #{h[:after_change]} ）| +
           nested_div(tree[:after])
         end
         
         def Increase(tree)
-          %Q|\n<span class="passive">#{tree[:passive]}</span>は| +
+          h = tree[:children]
           nested_div(tree[:before])   +
-          nested_div(tree[:children]) +
+          %Q|\n<span class="passive">#{tree[:passive]}</span>の#{h[:status_name]}が#{(h[:after_change]-h[:before_change]).abs}増加した！（ #{h[:before_change]} ⇒ #{h[:after_change]} ）| +
           nested_div(tree[:after])
         end
         
         def Decrease(tree)
-          %Q|\n<span class="passive">#{tree[:passive]}</span>は| +
+          h = tree[:children]
           nested_div(tree[:before])   +
-          nested_div(tree[:children]) +
+          %Q|\n<span class="passive">#{tree[:passive]}</span>の#{h[:status_name]}が#{(h[:after_change]-h[:before_change]).abs}減少した！（ #{h[:before_change]} ⇒ #{h[:after_change]} ）| +
           nested_div(tree[:after])
         end
         

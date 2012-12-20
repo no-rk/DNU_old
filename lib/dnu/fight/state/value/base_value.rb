@@ -1,39 +1,40 @@
-# encoding: UTF-8
 module DNU
   module Fight
     module State
       class BaseValue < SimpleDelegator
-        attr_reader :initial, :equip_initial, :val, :equip_val
+        attr_reader :ini, :val, :min, :max
         
-        def mix(val, equip_val)
-          val + equip_val
+        def min_val(n)
+          n/5
         end
         
-        def initialize(val, equip_val)
-          @val       = @initial       = val
-          @equip_val = @equip_initial = equip_val
-          super mix(@val, @equip_val)
+        def max_val(n)
+          n*5
         end
         
-        def set_val
-          __setobj__ mix(@val, @equip_val)
+        def initialize(n, parent = nil)
+          @parent = parent
+          @ini = n
+          @val = n
+          @min = min_val(n)
+          @max = max_val(n)
+          super val
         end
         
         def validate_value
+          @val = @min if @val < @min
+          @val = @max if @val > @max
+          @val.to_i
         end
         
-        def change_value(val)
-          @val += val
+        def set_val
           validate_value
-          set_val
+          __setobj__ val
+          @parent.nil? ? val : @parent.send(:set_val)
         end
         
-        def validate_equip_value
-        end
-        
-        def change_equip_value(equip_val)
-          @equip_val += equip_val
-          validate_equip_value
+        def change_value(n)
+          @val += n
           set_val
         end
         

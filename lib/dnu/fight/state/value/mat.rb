@@ -1,7 +1,7 @@
 module DNU
   module Fight
     module State
-      class MAT < BaseValue
+      class MAT < BaseStatus
       end
     end
   end

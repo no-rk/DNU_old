@@ -1,7 +1,7 @@
 module DNU
   module Fight
     module State
-      class MHIT < BaseValue
+      class MHIT < BaseStatus
       end
     end
   end

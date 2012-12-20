@@ -22,11 +22,18 @@ module DNU
         end
         
         def create_damage
-          damage(@tree)
+          @damage ||= damage(@tree)
         end
         
         def play_children
-          history[:children] << "#{(@damage || create_damage).call}の#{first_name}#{middle_name}#{last_name}ダメージを受けた！"
+          damage = (@damage || create_damage).call
+          
+          before_change = 対象.HP.val
+          対象.HP.change_value(-damage)
+          after_change  = 対象.HP.val
+          
+          history[:children] = { :element => first_name, :attack_type => last_name, :before_change => before_change, :after_change => after_change }
+          logger({ :element => first_name, :attack_type => last_name, :before_change => before_change, :after_change => after_change })
         end
         
       end

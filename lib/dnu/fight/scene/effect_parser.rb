@@ -55,10 +55,16 @@ class EffectParser < Parslet::Parser
   }
   # name rule
   
+  rule(:hp_mp) {
+    str('HP') | str('MP')
+  }
+  
   rule(:status_name) {
     (
-      str('M').maybe >> str('HP') |
-      str('M').repeat(1,2) >> str('P') |
+      str('M').maybe >>
+      hp_mp
+    ).as(:status_name) |
+    str('装備').as(:equip).maybe >> (
       str('M').maybe >> str('AT') |
       str('M').maybe >> str('DF') |
       str('M').maybe >> str('HIT') |
@@ -211,7 +217,7 @@ class EffectParser < Parslet::Parser
   
   rule(:heal) {
     (
-      (str('HP') | str('MP')).as(:status_name) >> str('回復') >> bra >> (effect_coeff | natural_number.as(:coeff_B)).as(:heal_value) >> ket
+      hp_mp.as(:status_name) >> str('回復') >> bra >> (effect_coeff | natural_number.as(:coeff_B)).as(:change_value) >> ket
     ).as(:heal)
   }
   
@@ -311,13 +317,13 @@ class EffectParser < Parslet::Parser
   rule(:status_percent) {
     (
       (
-        (state_target >> (str('HP') | str('MP')).as(:status_name)).as(:state_character).as(:left) >> natural_number.as(:percent).as(:state_character).as(:right) >> percent >> op_ge
+        (state_target >> hp_mp.as(:status_name)).as(:state_character).as(:left) >> natural_number.as(:percent).as(:state_character).as(:right) >> percent >> op_ge
       ).as(:condition_ge) |
       (
-        (state_target >> (str('HP') | str('MP')).as(:status_name)).as(:state_character).as(:left) >> natural_number.as(:percent).as(:state_character).as(:right) >> percent >> op_le
+        (state_target >> hp_mp.as(:status_name)).as(:state_character).as(:left) >> natural_number.as(:percent).as(:state_character).as(:right) >> percent >> op_le
       ).as(:condition_le) |
       (
-        (state_target >> (str('HP') | str('MP')).as(:status_name)).as(:state_character).as(:left) >> natural_number.as(:percent).as(:state_character).as(:right) >> percent
+        (state_target >> hp_mp.as(:status_name)).as(:state_character).as(:left) >> natural_number.as(:percent).as(:state_character).as(:right) >> percent
       ).as(:condition_eq)
     ).as(:status_percent)
   }

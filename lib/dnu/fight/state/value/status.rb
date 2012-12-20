@@ -1,7 +1,7 @@
 module DNU
   module Fight
     module State
-      class HIT < BaseStatus
+      class Status < BaseValue
       end
     end
   end

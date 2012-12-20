@@ -1,3 +1,4 @@
+# encoding: UTF-8
 module DNU
   module Fight
     module Scene
@@ -10,7 +11,7 @@ module DNU
         
         # SPDなどに応じて順番に俺のターン
         def before_each_scene
-          @active = @character.live.turn_end_not.random
+          @active = @character.live.turn_end_not.高(:status_name => :SPD).call
         end
         
         def after_each_scene
