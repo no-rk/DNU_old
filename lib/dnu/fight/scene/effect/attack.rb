@@ -5,7 +5,7 @@ module DNU
       class Attack < BaseScene
         
         def first_name
-          @tree[:element]
+          @tree[:attack_type][child_name(@tree[:attack_type])][:element]
         end
         
         def middle_name

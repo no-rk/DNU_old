@@ -5,20 +5,28 @@ module DNU
       class Hit < BaseScene
         include Damage
         
+        def when_initialize
+          @damage = nil
+        end
+        
         def first_name
-          @tree[:element]
+          @tree[child_name(@tree)][:element]
         end
         
         def middle_name
-          "Element"
+          :'属性'
         end
         
         def last_name
-          child_name(@tree[:attack_type]).to_s.camelize
+          I18n.t(child_name(@tree).to_s.camelize, :scope => "DNU.Fight.Scene")
+        end
+        
+        def create_damage
+          damage(@tree)
         end
         
         def play_children
-          history[:children] << "#{damage(@tree)}の#{@tree[:element]}属性ダメージを受けた！"
+          history[:children] << "#{(@damage || create_damage).call}の#{first_name}#{middle_name}#{last_name}ダメージを受けた！"
         end
         
       end

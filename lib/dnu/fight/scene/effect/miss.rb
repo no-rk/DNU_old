@@ -5,19 +5,19 @@ module DNU
       class Miss < BaseScene
         
         def first_name
-          @tree[:element]
+          @tree[child_name(@tree)][:element]
         end
         
         def middle_name
-          "Element"
+          :'属性'
         end
         
         def last_name
-          child_name(@tree[:attack_type]).to_s.camelize
+          I18n.t(child_name(@tree).to_s.camelize, :scope => "DNU.Fight.Scene")
         end
         
         def play_children
-          history[:children] << "回避した！"
+          history[:children] << "#{first_name}#{middle_name}#{last_name}攻撃を回避した！"
         end
         
       end

@@ -160,24 +160,52 @@ class EffectParser < Parslet::Parser
     str('魔法攻撃')
   }
   
+  rule(:physical_magical_attack) {
+    str('純物魔攻撃')
+  }
+  
+  rule(:switch_physical_magical_attack) {
+    match('[SＳ]') >> match('[WＷ]') >> str('物魔攻撃')
+  }
+  
   rule(:effect_hit) {
     (natural_number >> percent).as(:min_hit) >> (separator >> (natural_number >> percent).as(:max_hit)).maybe
   }
   
   rule(:physical) {
-             element_name.maybe >> physical_attack >> bra >> ((effect_coeff | decimal.as(:coeff_A)) >> (separator >> effect_hit).maybe).as(:physical).as(:attack_type) >> ket |
-    const >> element_name.maybe >> physical_attack >> bra >> (         natural_number.as(:coeff_B)  >> (separator >> effect_hit).maybe).as(:physical).as(:attack_type) >> ket
+    (
+               element_name.maybe >> physical_attack >> bra >> (effect_coeff | decimal.as(:coeff_A)) >> (separator >> effect_hit).maybe >> ket |
+      const >> element_name.maybe >> physical_attack >> bra >>          natural_number.as(:coeff_B)  >> (separator >> effect_hit).maybe >> ket
+    ).as(:physical)
   }
   
   rule(:magical) {
-             element_name.maybe >> magical_attack >> bra >> ((effect_coeff | decimal.as(:coeff_A)) >> (separator >> effect_hit).maybe).as(:magical).as(:attack_type) >> ket |
-    const >> element_name.maybe >> magical_attack >> bra >> (         natural_number.as(:coeff_B)  >> (separator >> effect_hit).maybe).as(:magical).as(:attack_type) >> ket
+    (
+               element_name.maybe >>  magical_attack >> bra >> (effect_coeff | decimal.as(:coeff_A)) >> (separator >> effect_hit).maybe >> ket |
+      const >> element_name.maybe >>  magical_attack >> bra >>          natural_number.as(:coeff_B)  >> (separator >> effect_hit).maybe >> ket
+    ).as(:magical)
+  }
+  
+  rule(:physical_magical) {
+    (
+               element_name.maybe >> physical_magical_attack >> bra >> (effect_coeff | decimal.as(:coeff_A)) >> (separator >> effect_hit).maybe >> ket |
+      const >> element_name.maybe >> physical_magical_attack >> bra >>          natural_number.as(:coeff_B)  >> (separator >> effect_hit).maybe >> ket
+    ).as(:physical_magical)
+  }
+  
+  rule(:switch_physical_magical) {
+    (
+               element_name.maybe >> switch_physical_magical_attack >> bra >> (effect_coeff | decimal.as(:coeff_A)) >> (separator >> effect_hit).maybe >> ket |
+      const >> element_name.maybe >> switch_physical_magical_attack >> bra >>          natural_number.as(:coeff_B)  >> (separator >> effect_hit).maybe >> ket
+    ).as(:switch_physical_magical)
   }
   
   rule(:attack) {
     (
       physical |
-      magical
+      magical |
+      physical_magical |
+      switch_physical_magical
     ).as(:attack)
   }
   

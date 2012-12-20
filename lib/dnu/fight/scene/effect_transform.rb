@@ -54,26 +54,48 @@ class EffectTransform < Parslet::Transform
   }
   
   rule(:effect => { :attack => subtree(:attack) }) {
-    attack[:element] ||= '無'
-    {
-      :effect => {
-        :attack => attack.merge({
-          :do => {
-            :if => {
-              :condition => {
-                :hit? => attack
-              },
-              :then => {
-                :hit => attack
-              },
-              :else => {
-                :miss => attack
+    attack_type = attack.keys.first
+    attack[attack_type][:element] ||= '無'
+    
+    def effect_tree(tree)
+      {
+        :effect => {
+          :attack => {
+            :attack_type => tree,
+            :do => {
+              :if => {
+                :condition => {
+                  :hit? => tree
+                },
+                :then => {
+                  :hit => tree
+                },
+                :else => {
+                  :miss => tree
+                }
               }
             }
           }
-        })
+        }
       }
-    }
+    end
+    
+    if attack_type == :switch_physical_magical
+      {
+        :if => {
+          :condition => {
+            :condition_ge => {
+              :left  => { :condition_damage => :physical },
+              :right => { :condition_damage =>  :magical }
+            }
+          },
+          :then => effect_tree(:physical => attack[:switch_physical_magical]),
+          :else => effect_tree( :magical => attack[:switch_physical_magical])
+        }
+      }
+    else
+      effect_tree(attack)
+    end
   }
   
   rule(:effect => { :disease => subtree(:disease) }) {

@@ -35,6 +35,11 @@ module DNU
           ]
         }
         
+        def logger(val)
+          history[:debug] ||= []
+          history[:debug] << val
+        end
+        
         def self_name
           self.class.name.split("::").last.to_sym
         end

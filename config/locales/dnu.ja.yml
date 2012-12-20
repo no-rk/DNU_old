@@ -213,6 +213,7 @@ ja:
         Attack: 攻撃
         Physical: 物理
         Magical: 魔法
+        PhysicalMagical: 純物魔
         Element: 属性
         Hit: 攻撃命中
         Miss: 攻撃空振

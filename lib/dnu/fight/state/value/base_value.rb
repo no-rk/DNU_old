@@ -2,7 +2,7 @@
 module DNU
   module Fight
     module State
-      class BaseValue < DelegateClass(Integer)
+      class BaseValue < SimpleDelegator
         attr_reader :initial, :equip_initial, :val, :equip_val
         
         def mix(val, equip_val)
