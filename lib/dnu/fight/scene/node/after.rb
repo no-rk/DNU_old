@@ -1,10 +1,10 @@
 module DNU
   module Fight
     module Scene
-      class Repeat < BaseScene
+      class After < BaseScene
         
-        def has_next_scene?
-          @index < @tree[:times].to_i
+        def before_each_scene
+          @active = @tree[:active]
         end
         
         def create_children
@@ -17,13 +17,13 @@ module DNU
         def after
         end
         
-        def history
-          @parent.history
-        end
-        
         def log_before_each_scene
           @history = @parent.try(:history) || {}
-          @history = @history[:children] ||= []
+          @history = @history[:after] ||= []
+          @history << { scene_name => { :children => [] } }
+          history[:active]  = @active.try(:name)
+          history[:passive] = @passive.try(:name)
+          history[:parent] = @parent.try(:human_name)
         end
         
       end

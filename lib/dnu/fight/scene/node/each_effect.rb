@@ -32,7 +32,8 @@ module DNU
         end
         
         def log_before_each_scene
-          @history = (@parent.try(:history) || { :children => [] })[:children]
+          @history = @parent.try(:history) || {}
+          @history = @history[:children] ||= []
         end
         
       end

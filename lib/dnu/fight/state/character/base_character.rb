@@ -13,6 +13,8 @@ module DNU
         attr_reader *@@status_name
         attr_reader *@@has_max.inject([]){ |a,s| a<<('M'+s.to_s).to_sym }
         
+        attr_reader :effects
+        
         def initialize
           @@status_name.each do |stat|
             instance_variable_set("@#{stat}", "DNU::Fight::State::#{stat}".constantize.new(rand(500), rand(500)))
@@ -20,6 +22,7 @@ module DNU
           @@has_max.each do |stat|
             instance_variable_set("@M#{stat}", instance_variable_get("@#{stat}").max)
           end
+          @effects = [].extend FindEffects
         end
         
         def disease(type)

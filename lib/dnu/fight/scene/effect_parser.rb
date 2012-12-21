@@ -457,6 +457,47 @@ class EffectParser < Parslet::Parser
     passive.present? >> process_wrap >> newline.maybe
   }
   
+  # setting
+  
+  rule(:before_after) {
+    str('前').as(:before) |
+    str('後').as(:after)
+  }
+  
+  rule(:timing) {
+    str('技').as(:skill).as(:effects).as(:timing) >> (ket >> priority).present? |
+    (
+      str('戦闘').as(:battle) |
+      str('フェイズ').as(:phase) |
+      str('ターン').as(:turn) |
+      str('行動').as(:act) |
+      str('追加行動').as(:add_act) |
+      str('攻撃命中').as(:hit) |
+      str('攻撃回避').as(:miss) |
+      str('攻撃').as(:attack) |
+      str('効果').as(:effects) |
+      str('墓地埋葬').as(:cemetery)
+    ).as(:timing)  >> before_after.as(:before_after)
+  }
+  
+  rule(:priority) {
+    str('優先度') >> natural_number.as(:priority)
+  }
+  
+  rule(:setting) {
+    bra >> timing >> ket >> (priority >> separator).maybe >> (conditions | condition).as(:condition)
+  }
+  
+  # skill_settings
+  
+  rule(:skill_setting) {
+    setting >> newline >> root_process.as(:do)
+  }
+  
+  rule(:skill_settings) {
+    skill_setting >> (newline >> skill_setting).repeat(0) >> newline.maybe
+  }
+  
   # root
   
   root(:root_processes)

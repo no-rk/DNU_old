@@ -1,7 +1,7 @@
 require_dependency "dnu/fight/state/module/target"
+require_dependency "dnu/fight/state/module/find_effects"
 
 require_dependency "dnu/fight/state/character"
-require_dependency "dnu/fight/state/effects"
 
 require_dependency "dnu/fight/state/character/base_character"
 require_dependency "dnu/fight/state/character/pc"
@@ -9,9 +9,7 @@ require_dependency "dnu/fight/state/character/npc"
 require_dependency "dnu/fight/state/character/dragon"
 require_dependency "dnu/fight/state/character/puppet"
 
-require_dependency "dnu/fight/state/effects/base_effects"
-require_dependency "dnu/fight/state/effects/skill"
-
+require_dependency "dnu/fight/state/value/effects"
 require_dependency "dnu/fight/state/value/base_value"
 require_dependency "dnu/fight/state/value/mhp"
 require_dependency "dnu/fight/state/value/mmp"

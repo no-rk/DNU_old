@@ -57,15 +57,15 @@ module DNU
           self
         end
         
-        def 単(dummy = nil)
-          random
+        def 単(passive = nil)
+          passive || random
         end
         
-        def ラ(dummy = nil)
+        def ラ(passive = nil)
           lambda{ random }
         end
         
-        def 全(dummy = nil)
+        def 全(passive = nil)
           self
         end
         

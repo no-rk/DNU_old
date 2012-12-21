@@ -73,6 +73,16 @@ module DNU
           nested_div(tree[:after])
         end
         
+        def Before(tree)
+          %Q|\n<span class="active">#{tree[:active]}</span>の#{tree[:parent]}前効果| +
+          nested_div(tree[:children])
+        end
+        
+        def After(tree)
+          %Q|\n<span class="active">#{tree[:active]}</span>の#{tree[:parent]}後効果| +
+          nested_div(tree[:children])
+        end
+        
         def Attack(tree)
           nested_div(tree[:before])   +
           nested_div(tree[:children]) +

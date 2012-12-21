@@ -13,6 +13,8 @@ require_dependency "dnu/fight/scene/node/if"
 require_dependency "dnu/fight/scene/node/repeat"
 require_dependency "dnu/fight/scene/node/each_effect"
 require_dependency "dnu/fight/scene/node/effect"
+require_dependency "dnu/fight/scene/node/before"
+require_dependency "dnu/fight/scene/node/after"
 
 require_dependency "dnu/fight/scene/node/battle"
 require_dependency "dnu/fight/scene/node/duel"

@@ -9,15 +9,25 @@ module DNU
         end
         
         def before_each_scene
-          @children = nil
           @label[:effects].try(:push, @effects) || @label[:effects] = [ @effects ]
         end
         
-        # 構文木
+        def default_attack
+          @default_attack ||= EffectTransform.new.apply(EffectParser.new.root_processes.parse("敵単/SW物魔攻撃(1.0)"))
+        end
+        
+        # @activeが所持している技を優先順位順にif elseで繋げる
+        def create_tree
+          @active.effects.timing(:Effects).sample.try(:do) || default_attack
+        end
+        
         def before_create_children
-          parser    = EffectParser.new
-          transform = EffectTransform.new
-          @tree ||= transform.apply(parser.parse("自/[自分HP20%以下]HP回復(MHP×0.05+300):敵単/SW物魔攻撃(1.0)"))
+          @tree ||= create_tree
+        end
+        
+        def after_each_scene
+          @children = nil
+          @tree = nil
         end
         
         def play_children

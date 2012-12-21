@@ -11,7 +11,8 @@ module DNU
         def create_passive
           scope = @character.try(@tree[:passive][:scope].to_s, @parent.active)
           scope = @character.try(@tree[:passive][:sub_scope].to_s, scope) unless @tree[:passive][:sub_scope].nil?
-          @tree[:passive][:target].nil? ? scope : scope.try([@tree[:passive][:target]].flatten.first.to_s, [@tree[:passive][:target]].flatten.last)
+          target = [@tree[:passive][:target]].flatten
+          @tree[:passive][:target].nil? ? scope : scope.try(target[0].to_s, target[1] || @parent.passive)
         end
         
         def has_next_scene?
@@ -43,7 +44,8 @@ module DNU
         end
         
         def log_before_each_scene
-          @history = (@parent.try(:history) || { :children => [] })[:children]
+          @history = @parent.try(:history) || {}
+          @history = @history[:children] ||= []
         end
         
       end

@@ -141,9 +141,19 @@ module DNU
         end
         
         def before
+          [@active || @character].flatten.each do |char|
+            char.effects.timing(scene_name).before.each do |effects|
+              create_from_hash({ :before => { :active => char, :do => effects.do } }).play
+            end
+          end
         end
         
         def after
+          [@active || @character].flatten.each do |char|
+            char.effects.timing(scene_name).after.each do |effects|
+              create_from_hash({ :after => { :active => char, :do => effects.do } }).play
+            end
+          end
         end
         
         def history
@@ -151,7 +161,8 @@ module DNU
         end
         
         def log_before_each_scene
-          @history = (@parent.try(:history) || { :children => [] })[:children]
+          @history = @parent.try(:history) || {}
+          @history = @history[:children] ||= []
           @history << { scene_name => { :children => [] } }
           history[:active]  = @active.try(:name)
           history[:passive] = @passive.try(:name)
