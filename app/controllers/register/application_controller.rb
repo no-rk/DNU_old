@@ -8,7 +8,7 @@ class Register::ApplicationController < ApplicationController
   def index
     names = self.class.controller_name
 
-    registers = eval "current_user.#{names}.scoped.page(params[:page]).per(Settings.register.history.per)"
+    registers = current_user.try(names).scoped.page(params[:page]).per(Settings.register.history.per)
 
     self.instance_variable_set("@register_#{names}",registers)
     @read_only = true
@@ -16,7 +16,7 @@ class Register::ApplicationController < ApplicationController
 
     if registers.blank?
       respond_to do |format|
-        format.html { redirect_to register_index_path, alert: I18n.t("index", :scope => "register.message", :model_name => eval("Register::#{names.classify}.model_name.human")) }
+        format.html { redirect_to register_index_path, alert: I18n.t("index", :scope => "register.message", :model_name => "Register::#{names.classify}".constantize.model_name.human) }
         format.json { render json: registers }
       end
     else
@@ -33,7 +33,7 @@ class Register::ApplicationController < ApplicationController
     names = self.class.controller_name
     name  = names.singularize
 
-    register = eval "current_user.#{names}.find(params[:id])"
+    register = current_user.try(names).find(params[:id])
 
     self.instance_variable_set("@register_#{name}",register)
     @read_only = true
@@ -50,9 +50,9 @@ class Register::ApplicationController < ApplicationController
     names = self.class.controller_name
     name  = names.singularize
 
-    temp = eval "current_user.#{name}"
-    register = eval "temp.nil? ? Register::#{names.classify}.new : clone_record(temp)"
-    eval "register.build_#{name}"
+    temp = current_user.try(name)
+    register = temp.nil? ? "Register::#{names.classify}".constantize.new : clone_record(temp)
+    register.try("build_#{name}")
 
     self.instance_variable_set("@register_#{name}",register)
 
@@ -67,8 +67,8 @@ class Register::ApplicationController < ApplicationController
     names = self.class.controller_name
     name  = names.singularize
 
-    register = eval "current_user.#{names}.find(params[:id])"
-    eval "register.build_#{name}"
+    register = current_user.try(names).find(params[:id])
+    register.try("build_#{name}")
 
     self.instance_variable_set("@register_#{name}",register)
   end
@@ -79,7 +79,7 @@ class Register::ApplicationController < ApplicationController
     names = self.class.controller_name
     name  = names.singularize
 
-    register = eval "Register::#{names.classify}.new(params[:register_#{name}])"
+    register = "Register::#{names.classify}".constantize.new(params[:"register_#{name}"])
     register.user = current_user
 
     self.instance_variable_set("@register_#{name}",register)
@@ -89,12 +89,12 @@ class Register::ApplicationController < ApplicationController
       #Ajaxの場合はバリデートのみ行う
       if @read_only
         register.valid?
-        format.html { render :partial => 'form', :locals=>{eval(":register_#{name}")=>register} }
+        format.html { render :partial => 'form', :locals => { :"register_#{name}" => register } }
         format.json { render json: { "change" => changed?(register), "errors" => register.errors.full_messages } }
       else
         if register.save
           save_success(register)
-          format.html { redirect_to register, notice: I18n.t("create", :scope => "register.message", :model_name => eval("Register::#{names.classify}.model_name.human")) }
+          format.html { redirect_to register, notice: I18n.t("create", :scope => "register.message", :model_name => "Register::#{names.classify}".constantize.model_name.human) }
           format.json { render json: register, status: :created, location: register }
         else
           format.html { render action: "new" }
@@ -110,8 +110,8 @@ class Register::ApplicationController < ApplicationController
     names = self.class.controller_name
     name  = names.singularize
 
-    register = eval "Register::#{names.classify}.find(params[:id])"
-    register.assign_attributes(params["register_#{name}"])
+    register = "Register::#{names.classify}".constantize.find(params[:id])
+    register.assign_attributes(params[:"register_#{name}"])
     register.touch
 
     self.instance_variable_set("@register_#{name}",register)
@@ -121,12 +121,12 @@ class Register::ApplicationController < ApplicationController
       #Ajaxの場合はバリデートのみ行う
       if @read_only
         register.valid?
-        format.html { render :partial => 'form', :locals=>{eval(":register_#{name}")=>register} }
+        format.html { render :partial => 'form', :locals => { :"register_#{name}" => register } }
         format.json { render json: { "change" => changed?(register), "errors" => register.errors.full_messages } }
       else
         if register.save
           save_success(register)
-          format.html { redirect_to register, notice: I18n.t("update", :scope => "register.message", :model_name => eval("Register::#{names.classify}.model_name.human")) }
+          format.html { redirect_to register, notice: I18n.t("update", :scope => "register.message", :model_name => "Register::#{names.classify}".constantize.model_name.human) }
           format.json { head :no_content }
         else
           format.html { render action: edit_action }
@@ -142,13 +142,13 @@ class Register::ApplicationController < ApplicationController
     names = self.class.controller_name
     name  = names.singularize
 
-    register = eval "current_user.#{names}.find(params[:id])"
+    register = current_user.try(names).find(params[:id])
     register.destroy
 
     self.instance_variable_set("@register_#{name}",register)
 
     respond_to do |format|
-      format.html { redirect_to eval("register_#{names}_url") }
+      format.html { redirect_to send("register_#{names}_url") }
       format.json { head :no_content }
     end
   end
@@ -159,7 +159,7 @@ class Register::ApplicationController < ApplicationController
     return record.dup(:include=>nested_attr)
   end
   def changed?(record)
-    last_record = eval "current_user.#{record.class.model_name.split('::').last.downcase}"
+    last_record = current_user.try(record.class.model_name.split('::').last.downcase)
 
     if last_record.nil?
       return false

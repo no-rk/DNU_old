@@ -6,7 +6,6 @@ module DNU
         include Damage
         
         def condition_damage(attack_type)
-          p attack_type
           lambda do
             dmg = try('dmg_' + attack_type.to_s).call
             logger(attack_type => dmg)

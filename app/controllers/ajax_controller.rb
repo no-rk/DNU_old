@@ -4,9 +4,9 @@ class AjaxController < ApplicationController
   def help
     begin
       if params[:id]
-        @ajax = "GameData::#{params[:model].classify}".split("::").inject(Object){ |oldclass, name| oldclass.const_get(name) }.select([:name,:caption]).find(params[:id])
+        @ajax = "GameData::#{params[:model].classify}".constantize.select([:name,:caption]).find(params[:id])
       else
-        @ajax = "GameData::#{params[:model].classify}".split("::").inject(Object){ |oldclass, name| oldclass.const_get(name) }.select([:id,:name,:caption]).all
+        @ajax = "GameData::#{params[:model].classify}".constantize.select([:id,:name,:caption]).all
       end
       model = @ajax.class.model_name.human.downcase
       @ajax = @ajax.attributes
@@ -30,9 +30,9 @@ class AjaxController < ApplicationController
   def img
     begin
       if params[:id]
-        @ajax = "Register::#{params[:model].classify}".split("::").inject(Object){ |oldclass, name| oldclass.const_get(name) }.find(params[:id])
+        @ajax = "Register::#{params[:model].classify}".constantize.find(params[:id])
       else
-        @ajax = "Register::#{params[:model].classify}".split("::").inject(Object){ |oldclass, name| oldclass.const_get(name) }.all
+        @ajax = "Register::#{params[:model].classify}".constantize.all
       end
       model = @ajax.class.model_name.human.downcase
       img_path   = @ajax.icon_url(:icon)

@@ -9,7 +9,7 @@ class GalleryController < ApplicationController
         @imgs = ActsAsTaggableOn::Tagging.where(taggings[:tagger_type].eq("User")).includes(:taggable=>[:image=>[:user=>[:character=>:profile]]])
         @imgs = @imgs.map{ |t| t.taggable }.uniq
       else
-        @imgs = eval "Register::Upload#{model.classify}.where_public"
+        @imgs = "Register::Upload#{model.classify}".constantize.where_public
         @imgs = @imgs.tagged_with(tag) if tag
         @imgs = @imgs.all
       end
@@ -21,13 +21,13 @@ class GalleryController < ApplicationController
   # GET /gallery/:model/:id
   # GET /gallery/:model/:id.json
   def show
-    @img = eval "Register::Upload#{model.classify}.find_by_id(params[:id])"
+    @img = "Register::Upload#{model.classify}".constantize.find_by_id(params[:id])
   end
 
   # PUT /gallery/:model/:id
   # PUT /gallery/:model/:id.json
   def update
-    @img = eval "Register::Upload#{model.classify}.find_by_id(params[:id])"
+    @img = "Register::Upload#{model.classify}".constantize.find_by_id(params[:id])
     @img.tag_list = tag_list
     @img.save
     redirect_to gallery_path

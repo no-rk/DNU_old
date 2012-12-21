@@ -54,6 +54,6 @@ class Communication::ApplicationController < ApplicationController
     names = self.class.controller_name
     name  = names.singularize
 
-    @communication ||= eval ("Communication::#{names.classify}.new(params[:communication_#{name}])")
+    @communication ||= "Communication::#{names.classify}".constantize.new(params[:"communication_#{name}"])
   end
 end
