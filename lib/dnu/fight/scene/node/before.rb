@@ -4,6 +4,7 @@ module DNU
       class Before < BaseScene
         
         def before_each_scene
+          @label = nil
           @active = @tree[:active]
         end
         
@@ -23,7 +24,7 @@ module DNU
           @history << { scene_name => { :children => [] } }
           history[:active]  = @active.try(:name)
           history[:passive] = @passive.try(:name)
-          history[:parent] = @parent.try(:human_name)
+          history[:parent] = "#{@tree[:parent]}(#{@tree[:object_id]})"
         end
         
       end

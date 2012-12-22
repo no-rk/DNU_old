@@ -5,7 +5,7 @@ module DNU
       class BaseScene
         include Enumerable
         
-        attr_reader :active, :passive, :label
+        attr_reader :active, :passive, :label, :before_effects, :after_effects
         
         @@default_tree = {
           :sequence => [
@@ -58,15 +58,17 @@ module DNU
         end
         
         def initialize(character, tree = @@default_tree, parent = nil)
-          @character = character
-          @tree      = tree
-          @parent    = parent
-          @children  = nil
-          @active    = nil
-          @passive   = nil
-          @label     = nil
-          @history   = nil
-          @index     = 0
+          @character      = character
+          @tree           = tree
+          @parent         = parent
+          @children       = nil
+          @active         = nil
+          @passive        = nil
+          @label          = nil
+          @before_effects = nil
+          @after_effects  = nil
+          @history        = nil
+          @index          = 0
           when_initialize
         end
         
@@ -81,9 +83,11 @@ module DNU
         end
         
         def next_scene
-          @active  = @parent.try(:active)
-          @passive = @parent.try(:passive)
-          @label   = @parent.try(:label).try(:dup) || {}
+          @active          = @parent.try(:active)
+          @passive         = @parent.try(:passive)
+          @label           = @parent.try(:label).try(:dup) || {}
+          @before_effects  = @parent.try(:before_effects)
+          @after_effects   = @parent.try(:after_effects)
           before_each_scene
           self
         end
@@ -141,18 +145,54 @@ module DNU
         end
         
         def before
+          @before_effects ||= { :id => self.object_id, :effects => [] }
           [@active || @character].flatten.each do |char|
-            char.effects.timing(scene_name).before.each do |effects|
-              create_from_hash({ :before => { :active => char, :do => effects.do } }).play
+            while effects = char.effects.timing(scene_name).before.done_not.sample.try(:off)
+              @before_effects[:effects] << effects
+              create_from_hash({
+                :if => {
+                  :condition=> effects.condition,
+                  :then => {
+                    :before => {
+                      :active => char,
+                      :do => effects.do,
+                      :parent=> human_name,
+                      :object_id => effects.object_id
+                    }
+                  }
+                }
+              }).play
             end
+          end
+          if @before_effects[:id] == self.object_id
+            @before_effects[:effects].each{ |effects| effects.on }
+            @before_effects = nil
           end
         end
         
         def after
+          @after_effects ||= { :id => self.object_id, :effects => [] }
           [@active || @character].flatten.each do |char|
-            char.effects.timing(scene_name).after.each do |effects|
-              create_from_hash({ :after => { :active => char, :do => effects.do } }).play
+            while effects = char.effects.timing(scene_name).after.done_not.sample.try(:off)
+              @after_effects[:effects] << effects
+              create_from_hash({
+                :if => {
+                  :condition=> effects.condition,
+                  :then => {
+                    :after => {
+                      :active => char,
+                      :do => effects.do,
+                      :parent=> human_name,
+                      :object_id => effects.object_id
+                    }
+                  }
+                }
+              }).play
             end
+          end
+          if @after_effects[:id] == self.object_id
+            @after_effects[:effects].each{ |effects| effects.on }
+            @after_effects = nil
           end
         end
         

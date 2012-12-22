@@ -16,6 +16,10 @@ module DNU
           self.find_all{ |child| child.before_after == :After }.extend FindEffects
         end
         
+        def done_not
+          self.find_all{ |child| !child.done }.extend FindEffects
+        end
+        
       end
     end
   end
