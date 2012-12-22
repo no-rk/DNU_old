@@ -18,7 +18,20 @@ module DNU
         
         # @activeが所持している技を優先順位順にif elseで繋げる
         def create_tree
-          @active.effects.timing(:Effects).sample.try(:do) || default_attack
+          temp = []
+          tree = default_attack
+          while effects = @active.effects.timing(:Effects).done_not.low_priority.try(:off)
+            temp << effects
+            tree = {
+              :if => {
+                :condition => effects.condition,
+                :then => effects.do,
+                :else => tree
+              }
+            }
+          end
+          temp.each{ |effects| effects.on }
+          tree
         end
         
         def before_create_children

@@ -4,7 +4,7 @@ module DNU
     module State
       class Effects
         
-        attr_reader :type, :timing, :before_after, :condition, :do
+        attr_reader :type, :timing, :before_after, :priority, :condition, :do
         
         attr_accessor :done
         
@@ -16,6 +16,7 @@ module DNU
           @type         = child_name(tree[:timing][:effects])
           @timing       = child_name(tree[:timing])
           @before_after = child_name(tree[:before_after])
+          @priority     = tree[:priority].to_i
           @condition    = tree[:condition]
           @do           = tree[:do]
         end

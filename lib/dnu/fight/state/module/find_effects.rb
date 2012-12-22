@@ -20,6 +20,10 @@ module DNU
           self.find_all{ |child| !child.done }.extend FindEffects
         end
         
+        def low_priority
+          self.sort_by{rand}.max{ |a,b| a.priority <=> b.priority }
+        end
+        
       end
     end
   end
