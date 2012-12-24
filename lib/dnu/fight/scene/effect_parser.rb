@@ -175,7 +175,7 @@ class EffectParser < Parslet::Parser
   }
   
   rule(:effect_hit) {
-    (natural_number >> percent).as(:min_hit) >> (separator >> (natural_number >> percent).as(:max_hit)).maybe
+    (positive_integer >> percent).as(:min_hit) >> (separator >> (positive_integer >> percent).as(:max_hit)).maybe
   }
   
   rule(:physical) {
@@ -314,7 +314,7 @@ class EffectParser < Parslet::Parser
   
   rule(:state_character) {
     (
-      state_target >> status_name >> (str('の') >>natural_number.as(:percent) >> percent).maybe
+      state_target >> status_name >> (str('の') >> positive_integer.as(:percent) >> percent).maybe
     ).as(:state_character)
   }
   
@@ -327,27 +327,29 @@ class EffectParser < Parslet::Parser
   rule(:status_percent) {
     (
       (
-        (state_target >> hp_mp.as(:status_name)).as(:state_character).as(:left) >> natural_number.as(:percent).as(:state_character).as(:right) >> percent >> op_ge
+        (state_target >> hp_mp.as(:status_name)).as(:state_character).as(:left) >> positive_integer.as(:percent).as(:state_character).as(:right) >> percent >> op_ge
       ).as(:condition_ge) |
       (
-        (state_target >> hp_mp.as(:status_name)).as(:state_character).as(:left) >> natural_number.as(:percent).as(:state_character).as(:right) >> percent >> op_le
+        (state_target >> hp_mp.as(:status_name)).as(:state_character).as(:left) >> positive_integer.as(:percent).as(:state_character).as(:right) >> percent >> op_le
       ).as(:condition_le) |
       (
-        (state_target >> hp_mp.as(:status_name)).as(:state_character).as(:left) >> natural_number.as(:percent).as(:state_character).as(:right) >> percent
+        (state_target >> hp_mp.as(:status_name)).as(:state_character).as(:left) >> positive_integer.as(:percent).as(:state_character).as(:right) >> percent
       ).as(:condition_eq)
     ).as(:status_percent)
   }
   
   rule(:random_percent) {
     (
-      natural_number >> percent >> str('の確率').maybe
+      positive_integer >> percent >> str('の確率').maybe
     ).as(:random_percent)
   }
   
   rule(:condition_boolean) {
-    just_before_attack |
-    status_percent |
-    random_percent
+    (
+      just_before_attack |
+      random_percent
+    ) >> str('になった').absent? |
+    status_percent
   }
   
   rule(:state) {
@@ -357,7 +359,7 @@ class EffectParser < Parslet::Parser
   }
   
   rule(:condition_coeff) {
-    natural_number.as(:fixnum)
+    positive_integer.as(:fixnum)
   }
   
   rule(:condition_ge) {
@@ -379,11 +381,16 @@ class EffectParser < Parslet::Parser
   }
 
   
-  rule(:condition) {
+  rule(:simple_condition) {
     condition_boolean |
     condition_ge |
     condition_le |
     condition_eq
+  }
+  
+  rule(:condition) {
+    (simple_condition >> str('になった')).as(:condition_become) |
+    simple_condition
   }
   
   rule(:op_and) {

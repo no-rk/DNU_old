@@ -154,13 +154,13 @@ module DNU
                   :condition=> effects.condition,
                   :then => {
                     :before => {
-                      :active => char,
                       :do => effects.do,
                       :parent => human_name,
                       :type => effects.type,
                       :object_id => effects.object_id
                     }
-                  }
+                  },
+                  :active => char
                 }
               }).play
             end
@@ -181,13 +181,13 @@ module DNU
                   :condition=> effects.condition,
                   :then => {
                     :after => {
-                      :active => char,
                       :do => effects.do,
                       :parent => human_name,
                       :type => effects.type,
                       :object_id => effects.object_id
                     }
-                  }
+                  },
+                  :active => char
                 }
               }).play
             end

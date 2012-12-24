@@ -15,6 +15,8 @@ module DNU
         end
         
         def before_each_scene
+          @active  ||= @tree[:active]
+          @passive ||= @tree[:active]
           @then_or_else =  (@if_condition || create_condition).call ? :then : :else
           @children = @if[@then_or_else]
         end

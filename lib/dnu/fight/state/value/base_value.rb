@@ -2,7 +2,7 @@ module DNU
   module Fight
     module State
       class BaseValue < SimpleDelegator
-        attr_reader :ini, :val, :min, :max
+        attr_reader :ini, :val, :min, :max, :history
         
         def min_val(n)
           n/5
@@ -18,6 +18,7 @@ module DNU
           @val = n
           @min = min_val(n)
           @max = max_val(n)
+          @history = [n]
           super val
         end
         
@@ -27,8 +28,13 @@ module DNU
           @val.to_i
         end
         
+        def history_value
+          @history << val
+        end
+        
         def set_val
           validate_value
+          history_value
           __setobj__ val
           @parent.nil? ? val : @parent.send(:set_val)
         end

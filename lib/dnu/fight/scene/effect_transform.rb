@@ -53,6 +53,18 @@ class EffectTransform < Parslet::Transform
     status_percent
   }
   
+  rule(:condition_become => subtree(:condition_become)) {
+    right = Marshal.load(Marshal.dump(condition_become))
+    right[right.keys.first][:left][:state_character_old] = right[right.keys.first][:left].delete(:state_character)
+    { :condition_and => {
+        :left  => condition_become,
+        :right => {
+          :condition_not => right
+        }
+      }
+    }
+  }
+  
   rule(:effect => { :attack => subtree(:attack) }) {
     attack_type = attack.keys.first
     attack[attack_type][:element] ||= '無'

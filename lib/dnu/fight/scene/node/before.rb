@@ -5,7 +5,6 @@ module DNU
         
         def before_each_scene
           @label = nil
-          @active = @tree[:active]
         end
         
         def create_children
