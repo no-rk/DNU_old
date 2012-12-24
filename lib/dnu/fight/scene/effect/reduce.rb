@@ -8,10 +8,10 @@ module DNU
           history[:children] << "#{@tree[:disease_name]}を軽減した！"
         end
         
-        def before
+        def play_before
         end
         
-        def after
+        def play_after
         end
         
       end

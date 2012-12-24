@@ -21,10 +21,10 @@ module DNU
           end
         end
         
-        def before
+        def play_before
         end
         
-        def after
+        def play_after
         end
         
         def history

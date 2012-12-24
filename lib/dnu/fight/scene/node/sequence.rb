@@ -19,10 +19,10 @@ module DNU
           @sequence[@index] = ( @children ||= create_from_hash(@tree[@index]) )
         end
         
-        def before
+        def play_before
         end
         
-        def after
+        def play_after
         end
         
         def history

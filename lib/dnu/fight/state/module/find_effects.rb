@@ -8,6 +8,10 @@ module DNU
           self.find_all{ |child| child.timing == name.to_sym }.extend FindEffects
         end
         
+        def type(name)
+          self.find_all{ |child| child.type == name.to_sym }.extend FindEffects
+        end
+        
         def before
           self.find_all{ |child| child.before_after == :Before }.extend FindEffects
         end

@@ -12,10 +12,10 @@ module DNU
           @children ||= create_from_hash(@tree[:do])
         end
         
-        def before
+        def play_before
         end
         
-        def after
+        def play_after
         end
         
         def log_before_each_scene
@@ -24,7 +24,8 @@ module DNU
           @history << { scene_name => { :children => [] } }
           history[:active]  = @active.try(:name)
           history[:passive] = @passive.try(:name)
-          history[:parent] = "#{@tree[:parent]}(#{@tree[:object_id]})"
+          history[:parent]  = "#{@tree[:parent]}(#{@tree[:object_id]})"
+          history[:type]    = @tree[:type]
         end
         
       end

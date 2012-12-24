@@ -24,10 +24,10 @@ module DNU
           @if[@then_or_else] = ( @children ||= create_from_hash(@tree[@then_or_else]) )
         end
         
-        def before
+        def play_before
         end
         
-        def after
+        def play_after
         end
         
         def history

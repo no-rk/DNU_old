@@ -5,7 +5,7 @@ module DNU
       class BaseScene
         include Enumerable
         
-        attr_reader :active, :passive, :label, :before_effects, :after_effects
+        attr_reader :active, :passive, :label, :before, :after
         
         @@default_tree = {
           :sequence => [
@@ -58,17 +58,17 @@ module DNU
         end
         
         def initialize(character, tree = @@default_tree, parent = nil)
-          @character      = character
-          @tree           = tree
-          @parent         = parent
-          @children       = nil
-          @active         = nil
-          @passive        = nil
-          @label          = nil
-          @before_effects = nil
-          @after_effects  = nil
-          @history        = nil
-          @index          = 0
+          @character = character
+          @tree      = tree
+          @parent    = parent
+          @children  = nil
+          @active    = nil
+          @passive   = nil
+          @label     = nil
+          @before    = nil
+          @after     = nil
+          @history   = nil
+          @index     = 0
           when_initialize
         end
         
@@ -83,11 +83,11 @@ module DNU
         end
         
         def next_scene
-          @active          = @parent.try(:active)
-          @passive         = @parent.try(:passive)
-          @label           = @parent.try(:label).try(:dup) || {}
-          @before_effects  = @parent.try(:before_effects)
-          @after_effects   = @parent.try(:after_effects)
+          @active  = @parent.try(:active)
+          @passive = @parent.try(:passive)
+          @label   = @parent.try(:label).try(:dup) || {}
+          @before  = @parent.try(:before)
+          @after   = @parent.try(:after)
           before_each_scene
           self
         end
@@ -144,11 +144,11 @@ module DNU
           @children.try(:play) || create_children.play
         end
         
-        def before
-          @before_effects ||= { :id => self.object_id, :effects => [] }
+        def play_before
+          @before ||= { :id => self.object_id, :effects => [] }
           [@active || @character].flatten.each do |char|
             while effects = char.effects.timing(scene_name).before.done_not.sample.try(:off)
-              @before_effects[:effects] << effects
+              @before[:effects] << effects
               create_from_hash({
                 :if => {
                   :condition=> effects.condition,
@@ -156,7 +156,8 @@ module DNU
                     :before => {
                       :active => char,
                       :do => effects.do,
-                      :parent=> human_name,
+                      :parent => human_name,
+                      :type => effects.type,
                       :object_id => effects.object_id
                     }
                   }
@@ -164,17 +165,17 @@ module DNU
               }).play
             end
           end
-          if @before_effects[:id] == self.object_id
-            @before_effects[:effects].each{ |effects| effects.on }
-            @before_effects = nil
+          if @before[:id] == self.object_id
+            @before[:effects].each{ |effects| effects.on }
+            @before = nil
           end
         end
         
-        def after
-          @after_effects ||= { :id => self.object_id, :effects => [] }
+        def play_after
+          @after ||= { :id => self.object_id, :effects => [] }
           [@active || @character].flatten.each do |char|
             while effects = char.effects.timing(scene_name).after.done_not.sample.try(:off)
-              @after_effects[:effects] << effects
+              @after[:effects] << effects
               create_from_hash({
                 :if => {
                   :condition=> effects.condition,
@@ -182,7 +183,8 @@ module DNU
                     :after => {
                       :active => char,
                       :do => effects.do,
-                      :parent=> human_name,
+                      :parent => human_name,
+                      :type => effects.type,
                       :object_id => effects.object_id
                     }
                   }
@@ -190,9 +192,9 @@ module DNU
               }).play
             end
           end
-          if @after_effects[:id] == self.object_id
-            @after_effects[:effects].each{ |effects| effects.on }
-            @after_effects = nil
+          if @after[:id] == self.object_id
+            @after[:effects].each{ |effects| effects.on }
+            @after = nil
           end
         end
         
@@ -211,9 +213,9 @@ module DNU
         def play
           self.each do |scene|
             log_before_each_scene
-            before
+            play_before
             play_children
-            after
+            play_after
           end
           @history.extend Html
         end

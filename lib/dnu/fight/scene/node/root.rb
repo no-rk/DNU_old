@@ -33,10 +33,10 @@ module DNU
           @children ||= create_from_hash(@tree[:do])
         end
         
-        def before
+        def play_before
         end
         
-        def after
+        def play_after
         end
         
         def history

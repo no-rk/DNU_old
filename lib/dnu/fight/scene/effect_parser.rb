@@ -245,12 +245,22 @@ class EffectParser < Parslet::Parser
     ).as(:disease)
   }
   
+  rule(:serif) {
+    str('"') >> 
+    (
+      str('\\') >> any |
+      str('"').absnt? >> any
+    ).repeat.as(:serif) >> 
+    str('"')
+  }
+  
   rule(:effect) {
     (
       (
         heal |
         change |
-        disease
+        disease |
+        serif
       ) >> arrow.absent? |
       attack
     ).as(:effect)
@@ -408,7 +418,7 @@ class EffectParser < Parslet::Parser
   # root_processes
   
   rule(:process) {
-    if_process | root_process | processes | effect
+    if_process | root_process | processes | random_processes | effect
   }
   
   rule(:process_wrap) {
@@ -450,6 +460,15 @@ class EffectParser < Parslet::Parser
     ) >> ket
   }
   
+  rule(:random_processes) {
+    bra >> (
+      (
+        process_wrap >> (separator >> process_wrap).repeat(1)
+      ).as(:random) |
+      process_wrap
+    ) >> ket
+  }
+  
   rule(:root_processes) {
     (
       (passive.present? >> process_wrap >> newline.maybe).repeat(2)
@@ -465,7 +484,7 @@ class EffectParser < Parslet::Parser
   }
   
   rule(:timing) {
-    str('技').as(:skill).as(:effects).as(:timing) >> (ket >> priority).present? |
+    str('技').as(:effects).as(:timing) >> (ket >> priority).present? |
     (
       str('戦闘').as(:battle) |
       str('フェイズ').as(:phase) |
@@ -477,7 +496,7 @@ class EffectParser < Parslet::Parser
       str('攻撃').as(:attack) |
       str('効果').as(:effects) |
       str('墓地埋葬').as(:cemetery)
-    ).as(:timing)  >> before_after.as(:before_after)
+    ).as(:timing) >> before_after.as(:before_after) >> (str('付加').as(:fuka) | str('セリフ').as(:serif)).as(:type)
   }
   
   rule(:priority) {

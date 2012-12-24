@@ -13,7 +13,7 @@ module DNU
         end
         
         def initialize(tree)
-          @type         = child_name(tree[:timing][:effects])
+          @type         = child_name(tree[:type]) || :Skill
           @timing       = child_name(tree[:timing])
           @before_after = child_name(tree[:before_after])
           @priority     = tree[:priority].to_i

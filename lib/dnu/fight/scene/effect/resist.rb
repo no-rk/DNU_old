@@ -9,10 +9,10 @@ module DNU
           history[:children] = { :disease_name => disease_name }
         end
         
-        def before
+        def play_before
         end
         
-        def after
+        def play_after
         end
         
       end
