@@ -132,10 +132,49 @@ class EffectParser < Parslet::Parser
     (scope >> sub_scope.maybe >> target.maybe).as(:passive)
   }
   
+  # effect_coeff
+  
+  rule(:calculable) {
+    state |
+    decimal.as(:fixnum)
+  }
+  
+  rule(:multi_coeff) {
+    (
+      calculable >>
+      (
+        multiply >>
+        calculable
+      ).repeat(1)
+    ).as(:multi_coeff)
+  }
+  
+  rule(:add_coeff) {
+    (
+      (
+        multi_coeff |
+        calculable
+      ) >>
+      (
+        plus >>
+        (
+          multi_coeff |
+          calculable
+        )
+      ).repeat(1)
+    ).as(:add_coeff)
+  }
+  
+  rule(:effect_coeff) {
+    add_coeff | multi_coeff | calculable
+  }
+  
   # effect
   
   rule(:positive_integer) {
-    num_1_to_9 >> num_0_to_9.repeat(1) | num_0_to_9
+    (
+      num_1_to_9 >> num_0_to_9.repeat(1) | num_0_to_9
+    ).as(:number)
   }
   
   rule(:natural_number) {
@@ -146,12 +185,8 @@ class EffectParser < Parslet::Parser
   
   rule(:decimal) {
     (
-      (positive_integer >> dot >> num_0_to_9.repeat(1)) | positive_integer
+      (num_1_to_9 >> num_0_to_9.repeat(1) | num_0_to_9 >> dot >> num_0_to_9.repeat(1)) | num_1_to_9 >> num_0_to_9.repeat(1) | num_0_to_9
     ).as(:number)
-  }
-  
-  rule(:effect_coeff) {
-    status_name >> multiply >> decimal.as(:coeff_A) >> (plus >> natural_number.as(:coeff_B)).maybe
   }
   
   rule(:const) {
@@ -180,29 +215,29 @@ class EffectParser < Parslet::Parser
   
   rule(:physical) {
     (
-               element_name.maybe >> physical_attack >> bra >> (effect_coeff | decimal.as(:coeff_A)) >> (separator >> effect_hit).maybe >> ket |
-      const >> element_name.maybe >> physical_attack >> bra >>          natural_number.as(:coeff_B)  >> (separator >> effect_hit).maybe >> ket
+               element_name.maybe >> physical_attack >> bra >> effect_coeff.as(:coeff_value)  >> (separator >> effect_hit).maybe >> ket |
+      const >> element_name.maybe >> physical_attack >> bra >> effect_coeff.as(:change_value) >> (separator >> effect_hit).maybe >> ket
     ).as(:physical)
   }
   
   rule(:magical) {
     (
-               element_name.maybe >>  magical_attack >> bra >> (effect_coeff | decimal.as(:coeff_A)) >> (separator >> effect_hit).maybe >> ket |
-      const >> element_name.maybe >>  magical_attack >> bra >>          natural_number.as(:coeff_B)  >> (separator >> effect_hit).maybe >> ket
+               element_name.maybe >>  magical_attack >> bra >> effect_coeff.as(:coeff_value)  >> (separator >> effect_hit).maybe >> ket |
+      const >> element_name.maybe >>  magical_attack >> bra >> effect_coeff.as(:change_value) >> (separator >> effect_hit).maybe >> ket
     ).as(:magical)
   }
   
   rule(:physical_magical) {
     (
-               element_name.maybe >> physical_magical_attack >> bra >> (effect_coeff | decimal.as(:coeff_A)) >> (separator >> effect_hit).maybe >> ket |
-      const >> element_name.maybe >> physical_magical_attack >> bra >>          natural_number.as(:coeff_B)  >> (separator >> effect_hit).maybe >> ket
+               element_name.maybe >> physical_magical_attack >> bra >> effect_coeff.as(:coeff_value)  >> (separator >> effect_hit).maybe >> ket |
+      const >> element_name.maybe >> physical_magical_attack >> bra >> effect_coeff.as(:change_value) >> (separator >> effect_hit).maybe >> ket
     ).as(:physical_magical)
   }
   
   rule(:switch_physical_magical) {
     (
-               element_name.maybe >> switch_physical_magical_attack >> bra >> (effect_coeff | decimal.as(:coeff_A)) >> (separator >> effect_hit).maybe >> ket |
-      const >> element_name.maybe >> switch_physical_magical_attack >> bra >>          natural_number.as(:coeff_B)  >> (separator >> effect_hit).maybe >> ket
+               element_name.maybe >> switch_physical_magical_attack >> bra >> effect_coeff.as(:coeff_value)  >> (separator >> effect_hit).maybe >> ket |
+      const >> element_name.maybe >> switch_physical_magical_attack >> bra >> effect_coeff.as(:change_value) >> (separator >> effect_hit).maybe >> ket
     ).as(:switch_physical_magical)
   }
   
@@ -217,31 +252,31 @@ class EffectParser < Parslet::Parser
   
   rule(:heal) {
     (
-      hp_mp.as(:status_name) >> str('回復') >> bra >> (effect_coeff | natural_number.as(:coeff_B)).as(:change_value) >> ket
+      hp_mp.as(:status_name) >> str('回復') >> bra >> effect_coeff.as(:change_value) >> ket
     ).as(:heal)
   }
   
   rule(:change) {
     (
-      status_name >> str('増加') >> bra >> (effect_coeff | natural_number.as(:coeff_B)).as(:change_value) >> ket
+      status_name >> str('増加') >> bra >> effect_coeff.as(:change_value) >> ket
     ).as(:increase) |
     (
-      status_name >> str('減少') >> bra >> (effect_coeff | natural_number.as(:coeff_B)).as(:change_value) >> ket
+      status_name >> str('減少') >> bra >> effect_coeff.as(:change_value) >> ket
     ).as(:decrease) |
     (
-      status_name >> str('上昇') >> bra >> (effect_coeff | natural_number.as(:coeff_B)).as(:change_value) >> ket
+      status_name >> str('上昇') >> bra >> effect_coeff.as(:change_value) >> ket
     ).as(:up) |
     (
-      status_name >> str('低下') >> bra >> (effect_coeff | natural_number.as(:coeff_B)).as(:change_value) >> ket
+      status_name >> str('低下') >> bra >> effect_coeff.as(:change_value) >> ket
     ).as(:down) |
     (
-      disease_name >> str('軽減') >> bra >> natural_number.as(:coeff_B).as(:change_value) >> ket
+      disease_name >> str('軽減') >> bra >> effect_coeff.as(:change_value) >> ket
     ).as(:reduce)
   }
   
   rule(:disease) {
     (
-      disease_name >> str('追加').maybe >> bra >> natural_number.as(:coeff_B).as(:change_value) >> ket
+      disease_name >> str('追加').maybe >> bra >> effect_coeff.as(:change_value) >> ket
     ).as(:disease)
   }
   
@@ -289,7 +324,7 @@ class EffectParser < Parslet::Parser
   rule(:state_target) {
     (
       str('自分') | str('対象')
-    ).as(:state_target)
+    ).as(:state_target).maybe
   }
   
   rule(:op_ge) {

@@ -3,7 +3,9 @@ module DNU
   module Fight
     module Scene
       class Hit < BaseScene
-        include Damage
+        include Calculate
+        
+        @@min_damage = 10
         
         def when_initialize
           @damage = nil
@@ -19,6 +21,24 @@ module DNU
         
         def last_name
           I18n.t(child_name(@tree).to_s.camelize, :scope => "DNU.Fight.Scene")
+        end
+        
+        def damage(tree)
+          attack_type = tree.keys.first
+          if tree[attack_type][:coeff_value]
+            lambda do
+              dmg  = try('dmg_' + attack_type.to_s).call
+              dmg  = (dmg >= @@min_damage) ? dmg : @@min_damage
+              logger(:dmg => dmg)
+              dmg  = dmg*calcu_value(tree[attack_type][:coeff_value]).call
+              dmg *= dmg_element.call
+              dmg.to_i
+            end
+          elsif tree[attack_type][:change_value]
+            lambda{ calcu_value(tree[attack_type][:change_value]).call*dmg_element.call.to_i }
+          else
+            raise tree.to_s
+          end
         end
         
         def create_damage

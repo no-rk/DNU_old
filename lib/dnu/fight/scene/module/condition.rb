@@ -3,7 +3,8 @@ module DNU
   module Fight
     module Scene
       module Condition
-        include Damage
+        include Calculate
+        include HitRate
         
         def condition_damage(attack_type)
           lambda do
@@ -11,22 +12,6 @@ module DNU
             logger(attack_type => dmg)
             dmg
           end
-        end
-        
-        def hit_physical
-          lambda{ 自分. HIT.to_f/(自分. HIT.to_f + 対象. EVA.to_f) }
-        end
-        
-        def hit_magical
-          lambda{ 自分.MHIT.to_f/(自分.MHIT.to_f + 対象.MEVA.to_f) }
-        end
-        
-        def hit_physical_magical
-          lambda{ (hit_physical.call + hit_magical.call)/2.to_f }
-        end
-        
-        def hit_element
-          lambda{ 1.to_f }
         end
         
         def hit?(tree)
@@ -48,37 +33,15 @@ module DNU
           lambda{ r=rand(100); r < tree.to_i }
         end
         
-        def state_character(tree)
-          percent = (tree[:percent] || 100).to_f/100
-          lambda{ r=try(tree[:state_target]).try(tree[:status_name])*percent; r }
-        end
-        
-        def state_character_old(tree)
-          percent = (tree[:percent] || 100).to_f/100
-          lambda{ r=try(tree[:state_target]).try(tree[:status_name]).history[-2].try(:*, percent); r }
-        end
-        
-        def state_disease(tree)
-          lambda{ try(tree[:state_target]).try(:disease,tree[:disease_name]) }
-        end
-        
         def just_before_attack(tree)
           hit_or_miss = tree.keys.first.to_s.camelize.to_sym
           lambda do
             begin
-              history[:children].last[:Attack][:children].last[hit_or_miss].present?
+              history[:children].select{ |h| h.keys.first == :Attack }.last[:Attack][:children].last[hit_or_miss].present?
             rescue
               false
             end
           end
-        end
-        
-        def state_effect(tree)
-          lambda{ r=rand; r }
-        end
-        
-        def fixnum(val)
-          lambda{ val.to_s.to_f }
         end
         
         def condition_not(tree)

@@ -3,14 +3,14 @@ module DNU
   module Fight
     module Scene
       class Heal < BaseScene
-        include Change
+        include Calculate
         
         def when_initialize
           @change = nil
         end
         
         def create_change
-          @change ||= change_value(@tree[:change_value])
+          @change ||= lambda{ calcu_value(@tree[:change_value]).call.to_i }
         end
         
         def play_children

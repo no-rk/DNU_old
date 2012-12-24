@@ -3,14 +3,14 @@ module DNU
   module Fight
     module Scene
       class Increase < BaseScene
-        include Change
+        include Calculate
         
         def when_initialize
           @change = nil
         end
         
         def create_change
-          @change ||= change_value(@tree[:change_value])
+          @change ||= lambda{ calcu_value(@tree[:change_value]).call.to_i }
         end
         
         def play_children
@@ -22,7 +22,7 @@ module DNU
           対象.send(status_name).send(status_or_equip).change_value(change)
           after_change  = 対象.send(status_name).send(status_or_equip).val
           
-          history[:children] = { :status_name => status_name, :before_change => before_change, :after_change => after_change }
+          history[:children] = { :status_or_equip => status_or_equip, :status_name => status_name, :before_change => before_change, :after_change => after_change }
         end
         
         def play_before
