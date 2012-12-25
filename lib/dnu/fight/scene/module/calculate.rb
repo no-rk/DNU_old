@@ -24,7 +24,7 @@ module DNU
         end
         
         def state_disease(tree)
-          lambda{ try(tree[:state_target] || '対象').try(:disease, tree[:disease_name]) }
+          lambda{ try(tree[:state_target] || '対象').try(child_name(tree[:disease_name])) }
         end
         
         def state_effect(tree)

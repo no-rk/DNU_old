@@ -92,7 +92,7 @@ module DNU
         def Hit(tree)
           h = tree[:children]
           nested_div(tree[:before])   +
-          %Q|\n<span class="passive">#{tree[:passive]}</span>は#{(h[:after_change]-h[:before_change]).abs}の#{h[:element]}属性#{h[:attack_type]}ダメージを受けた！（ #{h[:before_change]} ⇒ #{h[:after_change]} ）| +
+          %Q|\n<span class="passive">#{tree[:passive]}</span>に#{(h[:after_change]-h[:before_change]).abs}の#{h[:element]}属性#{h[:attack_type]}ダメージを与えた！（ #{h[:before_change]} ⇒ #{h[:after_change]} ）| +
           nested_div(tree[:after])
         end
         
@@ -110,16 +110,23 @@ module DNU
         end
         
         def Add(tree)
-          %Q|\n<span class="passive">#{tree[:passive]}</span>は| +
+          h = tree[:children]
           nested_div(tree[:before])   +
-          nested_div(tree[:children]) +
+          %Q|\n<span class="passive">#{tree[:passive]}</span>に#{I18n.t(h[:disease_name], :scope => "DNU.Fight.Scene")}を#{(h[:after_change]-h[:before_change]).abs}追加した！（ #{h[:before_change]} ⇒ #{h[:after_change]} ）| +
           nested_div(tree[:after])
         end
         
         def Resist(tree)
           h = tree[:children]
           nested_div(tree[:before])   +
-          %Q|\n<span class="passive">#{tree[:passive]}</span>は#{h[:disease_name]}に抵抗した！| +
+          %Q|\n<span class="passive">#{tree[:passive]}</span>は#{I18n.t(h[:disease_name], :scope => "DNU.Fight.Scene")}に抵抗した！| +
+          nested_div(tree[:after])
+        end
+        
+        def Reduce(tree)
+          h = tree[:children]
+          nested_div(tree[:before])   +
+          %Q|\n<span class="passive">#{tree[:passive]}</span>は#{I18n.t(h[:disease_name], :scope => "DNU.Fight.Scene")}を#{(h[:after_change]-h[:before_change]).abs}軽減した！（ #{h[:before_change]} ⇒ #{h[:after_change]} ）| +
           nested_div(tree[:after])
         end
         
@@ -155,13 +162,6 @@ module DNU
           h = tree[:children]
           nested_div(tree[:before])   +
           %Q|\n<span class="passive">#{tree[:passive]}</span>の#{h[:status_name]}が#{(h[:after_change]-h[:before_change]).abs}減少した！（ #{h[:before_change]} ⇒ #{h[:after_change]} ）| +
-          nested_div(tree[:after])
-        end
-        
-        def Reduce(tree)
-          %Q|\n<span class="passive">#{tree[:passive]}</span>は| +
-          nested_div(tree[:before])   +
-          nested_div(tree[:children]) +
           nested_div(tree[:after])
         end
         

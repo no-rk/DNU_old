@@ -12,7 +12,7 @@ module DNU
         end
         
         def first_name
-          @tree[child_name(@tree)][:element]
+          @tree[child_name(@tree)][:element].values.first
         end
         
         def middle_name
@@ -35,7 +35,7 @@ module DNU
               dmg.to_i
             end
           elsif tree[attack_type][:change_value]
-            lambda{ calcu_value(tree[attack_type][:change_value]).call*dmg_element.call.to_i }
+            lambda{ (calcu_value(tree[attack_type][:change_value]).call*dmg_element.call).to_i }
           else
             raise tree.to_s
           end

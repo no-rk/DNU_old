@@ -69,14 +69,14 @@ module DNU
           self
         end
         
-        def 低(status_name)
-          status_name = status_name[:status_name] || :HP
-          lambda{ self.min{ |a,b| a.try(status_name)<=>b.try(status_name) } }
+        def 低(status_or_disease_name)
+          status_or_disease_name = status_or_disease_name[:status_name] || status_or_disease_name[:disease_name].keys.first
+          lambda{ self.min{ |a,b| a.try(status_or_disease_name)<=>b.try(status_or_disease_name) } }
         end
         
-        def 高(status_name)
-          status_name = status_name[:status_name] || :HP
-          lambda{ self.max{ |a,b| a.try(status_name)<=>b.try(status_name) } }
+        def 高(status_or_disease_name)
+          status_or_disease_name = status_or_disease_name[:status_name] || status_or_disease_name[:disease_name].keys.first
+          lambda{ self.max{ |a,b| a.try(status_or_disease_name)<=>b.try(status_or_disease_name) } }
         end
         
         def 竜(master)

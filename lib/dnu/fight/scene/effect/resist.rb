@@ -5,7 +5,7 @@ module DNU
       class Resist < BaseScene
         
         def play_children
-          disease_name = @tree[:disease_name]
+          disease_name = child_name(@tree[:disease_name])
           history[:children] = { :disease_name => disease_name }
         end
         

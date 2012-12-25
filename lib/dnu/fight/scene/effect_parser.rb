@@ -75,13 +75,30 @@ class EffectParser < Parslet::Parser
   
   rule(:disease_name) {
     (
-      str('猛毒') | str('麻痺') | str('睡眠') | str('泥浸') | str('水濡') | str('炎纏') | str('鎌鼬') | str('光身') | str('暗幕') | str('混濁') | str('全状態異常')
+      str('猛毒').as(:Poison) |
+      str('麻痺').as(:Palsy) |
+      str('睡眠').as(:Sleep) |
+      str('泥浸').as(:Mud) |
+      str('水濡').as(:Wet) |
+      str('炎纏').as(:Burn) |
+      str('鎌鼬').as(:Vacuum) |
+      str('光身').as(:Shine) |
+      str('暗幕').as(:Black) |
+      str('混濁').as(:Confuse) |
+      str('全状態異常').as(:All)
     ).as(:disease_name)
   }
   
   rule(:element_name) {
     (
-      str('無') | str('火') | str('水') | str('地') | str('風') | str('光') | str('闇') | str('ラ')
+      str('無').as(:None) |
+      str('火').as(:Fire) |
+      str('水').as(:Water) |
+      str('地').as(:Earth) |
+      str('風').as(:Wind) |
+      str('光').as(:Light) |
+      str('闇').as(:Dark) |
+      str('ラ').as(:Random)
     ).as(:element) >> str('属性')
   }
   

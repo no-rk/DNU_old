@@ -67,7 +67,7 @@ class EffectTransform < Parslet::Transform
   
   rule(:effect => { :attack => subtree(:attack) }) {
     attack_type = attack.keys.first
-    attack[attack_type][:element] ||= '無'
+    attack[attack_type][:element] ||= { :None => '無' }
     
     def effect_tree(tree)
       {

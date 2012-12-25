@@ -5,7 +5,7 @@ module DNU
       class Miss < BaseScene
         
         def first_name
-          @tree[child_name(@tree)][:element]
+          @tree[child_name(@tree)][:element].values.first
         end
         
         def middle_name
