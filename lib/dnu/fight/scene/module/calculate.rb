@@ -9,6 +9,10 @@ module DNU
           lambda{ val.to_s.to_f }
         end
         
+        def lv(val)
+          lambda{ @current.try(:LV).to_f }
+        end
+        
         # 現在の戦闘値
         def state_character(tree)
           status_or_equip = tree[:equip].nil? ? :status : :equip

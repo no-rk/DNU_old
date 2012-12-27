@@ -74,12 +74,12 @@ module DNU
         end
         
         def Before(tree)
-          %Q|\n<span class="active">#{tree[:active]}</span>の#{tree[:parent]}前#{I18n.t(tree[:type], :scope => "DNU.Fight.Scene")}| +
+          %Q|\n<span class="active">#{tree[:active]}</span>の#{tree[:name]}「#{tree[:parent]}前#{I18n.t(tree[:type], :scope => "DNU.Fight.Scene")}」| +
           nested_div(tree[:children])
         end
         
         def After(tree)
-          %Q|\n<span class="active">#{tree[:active]}</span>の#{tree[:parent]}後#{I18n.t(tree[:type], :scope => "DNU.Fight.Scene")}| +
+          %Q|\n<span class="active">#{tree[:active]}</span>の#{tree[:name]}「#{tree[:parent]}後#{I18n.t(tree[:type], :scope => "DNU.Fight.Scene")}」| +
           nested_div(tree[:children])
         end
         
@@ -167,7 +167,7 @@ module DNU
         
         def Serif(tree)
           nested_div(tree[:before])   +
-           %Q|\n<span class="active">#{tree[:active]}</span>「#{tree[:children].to_s.gsub(/<target>/,tree[:passive])}」| +
+           %Q|\n#{tree[:children].to_s.gsub(/<target>/,tree[:passive])}| +
           nested_div(tree[:after])
         end
         

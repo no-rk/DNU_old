@@ -9,7 +9,12 @@ require_dependency "dnu/fight/state/character/npc"
 require_dependency "dnu/fight/state/character/dragon"
 require_dependency "dnu/fight/state/character/puppet"
 
-require_dependency "dnu/fight/state/value/effects"
+require_dependency "dnu/fight/state/effects/base_effects"
+require_dependency "dnu/fight/state/effects/skill"
+require_dependency "dnu/fight/state/effects/sup"
+require_dependency "dnu/fight/state/effects/serif"
+require_dependency "dnu/fight/state/effects/effects"
+
 require_dependency "dnu/fight/state/value/base_value"
 require_dependency "dnu/fight/state/value/mhp"
 require_dependency "dnu/fight/state/value/mmp"

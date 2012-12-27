@@ -151,9 +151,14 @@ class EffectParser < Parslet::Parser
   
   # effect_coeff
   
+  rule(:level) {
+    match('[LＬ]') >> match('[VＶ]')
+  }
+  
   rule(:calculable) {
     state |
-    decimal.as(:fixnum)
+    decimal.as(:fixnum) |
+    level.as(:lv)
   }
   
   rule(:multi_coeff) {
@@ -301,7 +306,7 @@ class EffectParser < Parslet::Parser
     str('"') >> 
     (
       str('\\') >> any |
-      str('"').absnt? >> any
+      str('"').absent? >> any
     ).repeat.as(:serif) >> 
     str('"')
   }
@@ -392,7 +397,10 @@ class EffectParser < Parslet::Parser
   
   rule(:random_percent) {
     (
-      positive_integer >> percent >> str('の確率').maybe
+      (
+        positive_integer.as(:fixnum) |
+        bra >> effect_coeff >> ket
+      ) >> percent >> str('の確率').maybe
     ).as(:random_percent)
   }
   
@@ -535,15 +543,18 @@ class EffectParser < Parslet::Parser
     passive.present? >> process_wrap >> newline.maybe
   }
   
-  # setting
+  # sup_effects
   
   rule(:before_after) {
     str('前').as(:before) |
     str('後').as(:after)
   }
   
+  rule(:priority) {
+    str('優先度') >> natural_number.as(:priority)
+  }
+  
   rule(:timing) {
-    str('技').as(:effects).as(:timing) >> (ket >> priority).present? |
     (
       str('戦闘').as(:battle) |
       str('フェイズ').as(:phase) |
@@ -551,29 +562,58 @@ class EffectParser < Parslet::Parser
       str('行動').as(:act) |
       str('追加行動').as(:add_act) |
       str('攻撃命中').as(:hit) |
-      str('攻撃回避').as(:miss) |
+      str('攻撃空振').as(:miss) |
       str('攻撃').as(:attack) |
       str('効果').as(:effects) |
       str('墓地埋葬').as(:cemetery)
-    ).as(:timing) >> before_after.as(:before_after) >> (str('付加').as(:fuka) | str('セリフ').as(:serif)).as(:type)
+    ).as(:timing) >> before_after.as(:before_after)
   }
   
-  rule(:priority) {
-    str('優先度') >> natural_number.as(:priority)
+  rule(:sup_effect) {
+    bra >> timing >> ket >> (priority >> separator).maybe >> (conditions | condition).as(:condition) >> newline >> root_processes.as(:do)
   }
   
-  rule(:setting) {
-    bra >> timing >> ket >> (priority >> separator).maybe >> (conditions | condition).as(:condition)
+  rule(:sup_effects) {
+    sup_effect.repeat(1)
   }
   
-  # skill_settings
+  # sup_definition
   
-  rule(:skill_setting) {
-    setting >> newline >> root_process.as(:do)
+  rule(:sup_definition) {
+    bra >> str('付加') >> ket >> (newline.absent? >> any).repeat(1).as(:name) >> newline >> sup_effects.as(:effects)
   }
   
-  rule(:skill_settings) {
-    skill_setting >> (newline >> skill_setting).repeat(0) >> newline.maybe
+  # sup_setting
+  
+  rule(:sup_setting) {
+    bra >> str('付加') >> ket >> (
+      (level | newline).absent? >> any
+    ).repeat(1).as(:name) >> (
+      level >> natural_number.as(:lv)
+    ).maybe >> newline.maybe
+  }
+  
+  # definitions
+  
+  rule(:definitions) {
+    (
+      sup_definition.as(:sup)
+    ).repeat(1)
+  }
+  
+  # settings
+  
+  rule(:settings) {
+    (
+      sup_setting.as(:sup)
+    ).repeat(1)
+  }
+  
+  # test_battle
+  
+  rule(:test_battle) {
+    definitions.as(:definitions) >>
+    settings.as(:settings)
   }
   
   # root

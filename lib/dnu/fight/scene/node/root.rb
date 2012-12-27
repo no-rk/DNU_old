@@ -9,7 +9,7 @@ module DNU
         end
         
         def create_passive
-          scope = @character.try(@tree[:passive][:scope].to_s, @parent.active)
+          scope = @character.live.try(@tree[:passive][:scope].to_s, @parent.active)
           scope = @character.try(@tree[:passive][:sub_scope].to_s, scope) unless @tree[:passive][:sub_scope].nil?
           target = [@tree[:passive][:target]].flatten
           @tree[:passive][:target].nil? ? scope : scope.try(target[0].to_s, target[1] || @parent.passive)

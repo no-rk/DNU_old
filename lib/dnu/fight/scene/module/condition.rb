@@ -30,7 +30,8 @@ module DNU
         end
         
         def random_percent(tree)
-          lambda{ r=rand(100); r < tree.to_i }
+          val = try(tree.keys.first, tree.values.first)
+          lambda{ r=rand(100); r < val.call }
         end
         
         def just_before_attack(tree)

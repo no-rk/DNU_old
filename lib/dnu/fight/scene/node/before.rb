@@ -25,6 +25,7 @@ module DNU
           history[:passive] = @passive.try(:name)
           history[:parent]  = "#{@tree[:parent]}(#{@tree[:object_id]})"
           history[:type]    = @tree[:type]
+          history[:name]    = @tree[:name]
         end
         
       end

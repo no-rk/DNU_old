@@ -5,7 +5,7 @@ module DNU
       class BaseScene
         include Enumerable
         
-        attr_reader :active, :passive, :label, :before, :after
+        attr_reader :active, :passive, :label, :before, :after, :current
         
         @@default_tree = {
           :sequence => [
@@ -67,6 +67,7 @@ module DNU
           @label     = nil
           @before    = nil
           @after     = nil
+          @current   = nil
           @history   = nil
           @index     = 0
           when_initialize
@@ -88,6 +89,7 @@ module DNU
           @label   = @parent.try(:label).try(:dup) || {}
           @before  = @parent.try(:before)
           @after   = @parent.try(:after)
+          @current = @parent.try(:current)
           before_each_scene
           self
         end
@@ -147,8 +149,9 @@ module DNU
         def play_before
           @before ||= { :id => self.object_id, :effects => [] }
           [@active || @character].flatten.each do |char|
-            while effects = char.effects.timing(scene_name).before.done_not.sample.try(:off)
-              @before[:effects] << effects
+            while effects = char.effects.timing(scene_name).before.done_not.sample
+              effects.off
+              @before[:effects] << @current = effects
               create_from_hash({
                 :if => {
                   :condition=> effects.condition,
@@ -157,6 +160,7 @@ module DNU
                       :do => effects.do,
                       :parent => human_name,
                       :type => effects.type,
+                      :name => effects.name,
                       :object_id => effects.object_id
                     }
                   },
@@ -174,8 +178,9 @@ module DNU
         def play_after
           @after ||= { :id => self.object_id, :effects => [] }
           [@active || @character].flatten.each do |char|
-            while effects = char.effects.timing(scene_name).after.done_not.sample.try(:off)
-              @after[:effects] << effects
+            while effects = char.effects.timing(scene_name).after.done_not.sample
+              effects.off
+              @after[:effects] << @current = effects
               create_from_hash({
                 :if => {
                   :condition=> effects.condition,
@@ -184,6 +189,7 @@ module DNU
                       :do => effects.do,
                       :parent => human_name,
                       :type => effects.type,
+                      :name => effects.name,
                       :object_id => effects.object_id
                     }
                   },

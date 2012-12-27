@@ -1,19 +1,12 @@
-# encoding: UTF-8
 module DNU
   module Fight
     module State
-      class Effects
+      class Effects < SimpleDelegator
         
-        attr_reader :type, :timing, :before_after, :priority, :condition, :do
-        
-        attr_accessor :done
-        
-        def child_name(tree)
-          tree.try(:keys).try(:first).try(:to_s).try(:camelize).try(:to_sym)
-        end
+        attr_reader :timing, :before_after, :priority, :condition, :do, :done
         
         def initialize(tree)
-          @type         = child_name(tree[:type]) || :Skill
+          super tree[:parent]
           @timing       = child_name(tree[:timing])
           @before_after = child_name(tree[:before_after])
           @priority     = tree[:priority].to_i
@@ -23,12 +16,10 @@ module DNU
         
         def on
           @done = nil
-          self
         end
         
         def off
           @done = true
-          self
         end
         
       end

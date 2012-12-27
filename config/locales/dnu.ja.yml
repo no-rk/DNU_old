@@ -201,7 +201,7 @@ ja:
         Before: "%{Scene}前"
         After: "%{Scene}後"
         Skill: 技
-        Fuka: 付加
+        Sup: 付加
         Serif: セリフ
         Battle: *battle
         Duel: *duel
