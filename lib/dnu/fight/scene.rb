@@ -26,6 +26,7 @@ require_dependency "dnu/fight/scene/node/phase"
 require_dependency "dnu/fight/scene/node/turn"
 require_dependency "dnu/fight/scene/node/act"
 require_dependency "dnu/fight/scene/node/add_act"
+require_dependency "dnu/fight/scene/node/set_effects"
 require_dependency "dnu/fight/scene/node/effects"
 require_dependency "dnu/fight/scene/node/cemetery"
 

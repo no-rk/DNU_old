@@ -12,7 +12,7 @@ module DNU
             {
               :pre_phase => {
                 :sequence => [
-                  { :turn => { :act => { :effects => nil } } },
+                  { :turn => { :act => { :set_effects => nil } } },
                   { :cemetery => nil }
                 ]
               }
@@ -23,8 +23,8 @@ module DNU
                   {
                     :turn => {
                       :sequence => [
-                        { :act => { :effects => nil } },
-                        { :add_act => { :effects => nil } }
+                        { :act => { :set_effects => nil } },
+                        { :add_act => { :set_effects => nil } }
                       ]
                     }
                   },

@@ -53,6 +53,11 @@ class EffectParser < Parslet::Parser
       match('[=＝]') >> match('[>＞]')
     ) >> spaces?
   }
+  
+  rule(:comment) {
+    str("#") >> (newline.absent? >> any).repeat(0) >> newline.maybe
+  }
+  
   # name rule
   
   rule(:hp_mp) {
@@ -580,7 +585,33 @@ class EffectParser < Parslet::Parser
   # sup_definition
   
   rule(:sup_definition) {
-    bra >> str('付加') >> ket >> (newline.absent? >> any).repeat(1).as(:name) >> newline >> sup_effects.as(:effects)
+    bra >> str('付加') >> ket >> (newline.absent? >> any).repeat(1).as(:name) >> newline >>
+    sup_effects.as(:effects)
+  }
+  
+  # skill_definition
+  
+  rule(:skill_definition) {
+    bra >> str('技') >> ket >> (newline.absent? >> any).repeat(1).as(:name) >> newline >>
+    root_processes.as(:do).repeat(1).as(:effects)
+  }
+  
+  # serif_definition
+  
+  rule(:serif_definition) {
+    bra >> str('セリフ') >> ket >> (newline.absent? >> any).repeat(1).as(:name) >> newline >>
+    sup_effects.as(:effects)
+  }
+  
+  # definitions
+  
+  rule(:definitions) {
+    (
+      comment |
+      sup_definition.as(:sup) |
+      skill_definition.as(:skill) |
+      serif_definition.as(:serif)
+    ).repeat(1)
   }
   
   # sup_setting
@@ -593,19 +624,35 @@ class EffectParser < Parslet::Parser
     ).maybe >> newline.maybe
   }
   
-  # definitions
+  # skill_setting
   
-  rule(:definitions) {
-    (
-      sup_definition.as(:sup)
-    ).repeat(1)
+  rule(:skill_setting) {
+    bra >> str('技') >> ket >> (
+      (level | newline).absent? >> any
+    ).repeat(1).as(:name) >> (
+      level >> natural_number.as(:lv)
+    ).maybe >> newline >>
+    priority >> separator >> (conditions | condition).as(:condition) >> (
+      newline >> root_processes.as(:serif)
+    ).maybe >> newline.maybe
+  }
+  
+  # serif_setting
+  
+  rule(:serif_setting) {
+    bra >> str('セリフ') >> ket >> (
+      newline.absent? >> any
+    ).repeat(1).as(:name) >> newline.maybe
   }
   
   # settings
   
   rule(:settings) {
     (
-      sup_setting.as(:sup)
+      comment |
+      sup_setting.as(:sup) |
+      skill_setting.as(:skill) |
+      serif_setting.as(:serif)
     ).repeat(1)
   }
   
