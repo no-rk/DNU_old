@@ -165,6 +165,13 @@ module DNU
           nested_div(tree[:after])
         end
         
+        def Cost(tree)
+          h = tree[:children]
+          nested_div(tree[:before])   +
+          %Q|\n消費#{(h[:after_change]-h[:before_change]).abs}（ #{h[:before_change]} ⇒ #{h[:after_change]} ）| +
+          nested_div(tree[:after])
+        end
+        
         def Serif(tree)
           nested_div(tree[:before])   +
            %Q|\n#{tree[:children].to_s.gsub(/<target>/,tree[:passive])}| +

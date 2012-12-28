@@ -28,7 +28,7 @@ module DNU
         
         def initialize
           @@status_name.each do |stat|
-            instance_variable_set("@#{stat}", "DNU::Fight::State::#{stat}".constantize.new(rand(500), rand(500)))
+            instance_variable_set("@#{stat}", "DNU::Fight::State::#{stat}".constantize.new(500+rand(50), 500+rand(50)))
           end
           @@has_max.each do |stat|
             instance_variable_set("@M#{stat}", instance_variable_get("@#{stat}").max)

@@ -13,11 +13,11 @@ module DNU
         end
         
         def dmg_physical
-          lambda{ 自分. AT.to_f - 対象. DF.to_f/2 }
+          lambda{ 自分. AT.to_f/2 - 対象. DF.to_f/4 }
         end
         
         def dmg_magical
-          lambda{ 自分.MAT.to_f - 対象.MDF.to_f/2 }
+          lambda{ 自分.MAT.to_f/2 - 対象.MDF.to_f/4 }
         end
         
         def dmg_physical_magical

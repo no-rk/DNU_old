@@ -66,7 +66,7 @@ class EffectParser < Parslet::Parser
   
   rule(:status_name) {
     (
-      str('M').maybe >>
+      (hp_mp.absent? >> str('M')).maybe >>
       hp_mp
     ).as(:status_name) |
     str('装備').as(:equip).maybe >> (
@@ -105,6 +105,31 @@ class EffectParser < Parslet::Parser
       str('闇').as(:Dark) |
       str('ラ').as(:Random)
     ).as(:element) >> str('属性')
+  }
+  
+  rule(:equip_name) {
+    str('剣') |
+    str('槍') |
+    str('斧') |
+    str('弓') |
+    str('銃') |
+    str('刀') |
+    str('素手') |
+    str('本') |
+    str('魔石') |
+    str('杖') |
+    str('兜') |
+    str('帽子') |
+    str('耳') |
+    str('盾') |
+    str('小手') |
+    str('腕輪') |
+    str('鎧') |
+    str('ローブ') |
+    str('服') |
+    str('レンズ') |
+    str('ピアス') |
+    str('オーブ')
   }
   
   # passive
@@ -307,6 +332,12 @@ class EffectParser < Parslet::Parser
     ).as(:disease)
   }
   
+  rule(:cost) {
+    (
+      str('消費') >> bra >> effect_coeff.as(:change_value) >> ket
+    ).as(:cost)
+  }
+  
   rule(:serif) {
     str('"') >> 
     (
@@ -322,6 +353,7 @@ class EffectParser < Parslet::Parser
         heal |
         change |
         disease |
+        cost |
         serif
       ) >> arrow.absent? |
       attack
@@ -591,8 +623,23 @@ class EffectParser < Parslet::Parser
   
   # skill_definition
   
+  rule(:pre_phase) {
+    str('遠')
+  }
+  
+  rule(:targetable) {
+    str('対')
+  }
+  
+  rule(:skill_options) {
+    separator >> positive_integer.as(:cost) >>
+    (separator >> equip_name.as(:require)).maybe >>
+    (separator >> pre_phase.as(:pre_phase)).maybe >>
+    (separator >> targetable.as(:targetable)).maybe >> newline
+  }
+  
   rule(:skill_definition) {
-    bra >> str('技') >> ket >> (newline.absent? >> any).repeat(1).as(:name) >> newline >>
+    bra >> str('技') >> ket >> (skill_options.absent? >> any).repeat(1).as(:name) >> skill_options >>
     root_processes.as(:do).repeat(1).as(:effects)
   }
   

@@ -25,7 +25,7 @@ module DNU
         def validate_value
           @val = @min if @val < @min
           @val = @max if @val > @max
-          @val.to_i
+          @val = @val.to_i
         end
         
         def history_value
