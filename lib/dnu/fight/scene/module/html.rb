@@ -133,7 +133,7 @@ module DNU
         def Heal(tree)
           h = tree[:children]
           nested_div(tree[:before])   +
-          %Q|\n<span class="passive">#{tree[:passive]}</span>は#{(h[:change]).abs}回復した！（ #{h[:before_change]} ⇒ #{h[:after_change]} ）| +
+          %Q|\n<span class="passive">#{tree[:passive]}</span>は#{h[:change].abs}回復した！（ #{h[:before_change]} ⇒ #{h[:after_change]} ）| +
           nested_div(tree[:after])
         end
         
@@ -165,10 +165,45 @@ module DNU
           nested_div(tree[:after])
         end
         
+        def CostUp(tree)
+          h = tree[:children]
+          h[:skill_name] = h[:skill_name].nil? ? "全技" : "[技]#{h[:skill_name]}"
+          nested_div(tree[:before])   +
+          if h[:success]
+            %Q|\n<span class="passive">#{tree[:passive]}</span>の#{h[:skill_name]}の消費が#{h[:change].abs}増加した！|
+          else
+            %Q|\n消費増加の対象となる技は存在しない。|
+          end +
+          nested_div(tree[:after])
+        end
+        
+        def CostDown(tree)
+          h = tree[:children]
+          h[:skill_name] = h[:skill_name].nil? ? "全技" : "[技]#{h[:skill_name]}"
+          nested_div(tree[:before])   +
+          if h[:success]
+            %Q|\n<span class="passive">#{tree[:passive]}</span>の#{h[:skill_name]}の消費が#{h[:change].abs}減少した！|
+          else
+            %Q|\n消費増加の対象となる技は存在しない。|
+          end +
+          nested_div(tree[:after])
+        end
+        
         def Cost(tree)
           h = tree[:children]
           nested_div(tree[:before])   +
           %Q|\n消費#{(h[:after_change]-h[:before_change]).abs}（ #{h[:before_change]} ⇒ #{h[:after_change]} ）| +
+          nested_div(tree[:after])
+        end
+        
+        def Interrupt(tree)
+          h = tree[:children]
+          nested_div(tree[:before])   +
+          if h[:interrupt] == h[:type]
+            %|\n[#{I18n.t(h[:type], :scope => "DNU.Fight.Scene")}]#{h[:name]}を強制中断！|
+          else
+            %|\n強制中断の対象となる#{I18n.t(h[:interrupt], :scope => "DNU.Fight.Scene")}は存在しない。|
+          end +
           nested_div(tree[:after])
         end
         

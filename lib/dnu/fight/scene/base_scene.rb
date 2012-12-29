@@ -188,10 +188,18 @@ module DNU
           history[:passive] = @passive.try(:name)
         end
         
+        def interrupt_before_play
+          if @stack.last.try(:interrupt).try(:call)
+            @stack.last.interrupt = nil
+            throw :"#{@stack.last.type}#{@stack.last.object_id}"
+          end
+        end
+        
         def play
           self.each do |scene|
             log_before_each_scene
             play_(:before)
+            interrupt_before_play
             play_children
             play_(:after)
           end

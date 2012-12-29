@@ -323,7 +323,15 @@ class EffectParser < Parslet::Parser
     ).as(:down) |
     (
       disease_name >> str('軽減') >> bra >> effect_coeff.as(:change_value) >> ket
-    ).as(:reduce)
+    ).as(:reduce) |
+    (
+      (bra >> str('技') >> ket >> (str('消費増加').absent? >> any).repeat(1).as(:name)).maybe >>
+      str('消費増加') >> bra >> effect_coeff.as(:change_value) >> ket
+    ).as(:cost_up) |
+    (
+      (bra >> str('技') >> ket >> (str('消費減少').absent? >> any).repeat(1).as(:name)).maybe >>
+      str('消費減少') >> bra >> effect_coeff.as(:change_value) >> ket
+    ).as(:cost_down)
   }
   
   rule(:disease) {

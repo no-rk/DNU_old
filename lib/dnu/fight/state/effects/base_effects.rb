@@ -4,6 +4,7 @@ module DNU
       class BaseEffects < Array
         
         attr_reader :LV
+        attr_accessor :interrupt
         
         def child_name(tree)
           tree.try(:keys).try(:first).try(:to_s).try(:camelize).try(:to_sym)

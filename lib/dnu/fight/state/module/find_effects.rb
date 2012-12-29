@@ -24,6 +24,10 @@ module DNU
           self.find_all{ |child| !child.done }.extend FindEffects
         end
         
+        def find_by_name(name)
+          name.nil? ? self : [self.find{ |child| child.name.to_sym == name.to_sym }].compact
+        end
+        
         def low_priority
           self.sort_by{rand}.max{ |a,b| a.priority <=> b.priority }
         end
