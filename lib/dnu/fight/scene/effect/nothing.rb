@@ -6,10 +6,7 @@ module DNU
         def play_children
         end
         
-        def play_before
-        end
-        
-        def play_after
+        def play_(b_or_a)
         end
         
         def history

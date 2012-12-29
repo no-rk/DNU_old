@@ -8,6 +8,11 @@ module DNU
           rand(100) < 50
         end
         
+        def play_children
+          history[:index] = @index + 1
+          super
+        end
+        
       end
     end
   end

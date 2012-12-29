@@ -33,7 +33,7 @@ module DNU
         end
         
         def Phase(tree)
-          %Q|\nフェイズ| +
+          %Q|\nフェイズ#{tree[:index]}| +
           nested_div(tree[:before])   +
           nested_div(tree[:children]) +
           nested_div(tree[:after])
@@ -54,7 +54,7 @@ module DNU
         end
         
         def AddAct(tree)
-          %Q|\n<span class="active">#{tree[:active]}</span>の追加行動| +
+          %Q|\n<span class="active">#{tree[:active]}</span>の追加行動#{tree[:index]}| +
           nested_div(tree[:before])   +
           nested_div(tree[:children]) +
           nested_div(tree[:after])
@@ -74,12 +74,12 @@ module DNU
         end
         
         def Before(tree)
-          %Q|\n<span class="active">#{tree[:active]}</span>の#{tree[:name]}「#{tree[:parent]}前#{I18n.t(tree[:type], :scope => "DNU.Fight.Scene")}」| +
+          %Q|\n<span class="active">#{tree[:active]}</span>の#{tree[:name]}「#{I18n.t(tree[:parent], :scope => "DNU.Fight.Scene")}前#{I18n.t(tree[:type], :scope => "DNU.Fight.Scene")}」| +
           nested_div(tree[:children])
         end
         
         def After(tree)
-          %Q|\n<span class="active">#{tree[:active]}</span>の#{tree[:name]}「#{tree[:parent]}後#{I18n.t(tree[:type], :scope => "DNU.Fight.Scene")}」| +
+          %Q|\n<span class="active">#{tree[:active]}</span>の#{tree[:name]}「#{I18n.t(tree[:parent], :scope => "DNU.Fight.Scene")}後#{I18n.t(tree[:type], :scope => "DNU.Fight.Scene")}」| +
           nested_div(tree[:children])
         end
         

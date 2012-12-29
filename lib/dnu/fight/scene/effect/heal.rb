@@ -24,10 +24,7 @@ module DNU
           history[:children] = { :status_name => status_name, :change => change, :before_change => before_change, :after_change => after_change }
         end
         
-        def play_before
-        end
-        
-        def play_after
+        def play_(b_or_a)
         end
         
       end

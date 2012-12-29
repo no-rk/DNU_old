@@ -214,12 +214,15 @@ ja:
         Effects: 効果
         Cemetery: 墓地埋葬
         Attack: 攻撃
+        AttackAnt: 被攻撃
         Physical: 物理
         Magical: 魔法
         PhysicalMagical: 純物魔
         Element: 属性
         Hit: 攻撃命中
+        HitAnt: 攻撃被弾
         Miss: 攻撃空振
+        MissAnt: 攻撃回避
         Disease: 状態異常
         Add: 状態異常追加
         Resist: 状態異常抵抗

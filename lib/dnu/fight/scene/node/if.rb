@@ -15,8 +15,8 @@ module DNU
         end
         
         def before_each_scene
-          @active  ||= @tree[:active]
-          @passive ||= @tree[:active]
+          @active  = @tree[:active]  || @active
+          @passive = @tree[:passive] || @passive
           @then_or_else =  (@if_condition || create_condition).call ? :then : :else
           @children = @if[@then_or_else]
         end
@@ -26,10 +26,7 @@ module DNU
           @if[@then_or_else] = ( @children ||= create_from_hash(@tree[@then_or_else]) )
         end
         
-        def play_before
-        end
-        
-        def play_after
+        def play_(b_or_a)
         end
         
         def history

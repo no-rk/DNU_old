@@ -8,6 +8,11 @@ module DNU
           @character.live.team.count > 1 and @index < 10
         end
         
+        def play_children
+          history[:index] = @index + 1
+          super
+        end
+        
       end
     end
   end

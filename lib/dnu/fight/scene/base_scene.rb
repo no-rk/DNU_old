@@ -5,7 +5,7 @@ module DNU
       class BaseScene
         include Enumerable
         
-        attr_reader :active, :passive, :label, :before, :after, :stack
+        attr_reader :active, :passive, :label, :pool, :stack
         
         @@default_tree = {
           :sequence => [
@@ -65,8 +65,7 @@ module DNU
           @active    = nil
           @passive   = nil
           @label     = nil
-          @before    = nil
-          @after     = nil
+          @pool      = nil
           @stack     = nil
           @history   = nil
           @index     = 0
@@ -87,8 +86,7 @@ module DNU
           @active  = @parent.try(:active)
           @passive = @parent.try(:passive)
           @label   = @parent.try(:label) || {}
-          @before  = @parent.try(:before)
-          @after   = @parent.try(:after)
+          @pool    = @parent.try(:pool)
           @stack   = @parent.try(:stack) || []
           before_each_scene
           self
@@ -146,55 +144,35 @@ module DNU
           @children.try(:play) || create_children.play
         end
         
-        def play_before
-          @before ||= { :id => self.object_id, :effects => [] }
-          [@active || @character].flatten.each do |char|
-            while effects = char.effects.timing(scene_name).before.done_not.sample
+        def play_(b_or_a)
+          @pool ||= { :id => object_id, :effects => [] }
+          active_array = [@active ].flatten.compact.map{|char| { :ant =>  nil , :active_now => char } } +
+                         [@passive].flatten.compact.map{|char| { :ant => :ant , :active_now => char } }
+          active_array.sort_by{rand}.each do |char|
+            ant         = char[:ant]
+            active_now  = char[:active_now]
+            passive_now = ant.nil? ? [@passive].flatten.compact.sample : [@active].flatten.compact.sample
+            while effects = active_now.effects.timing(:"#{scene_name}#{ant.to_s.camelize}").send(b_or_a).done_not.sample
               effects.off
-              @before[:effects] << effects
+              @pool[:effects] << effects
               create_from_hash({
                 :if => {
                   :condition=> effects.condition,
                   :then => {
-                    :before => {
-                      :parent => human_name,
+                    b_or_a => {
+                      :parent => :"#{scene_name}#{ant.to_s.camelize}",
                       :effects => effects
                     }
                   },
-                  :active => char
+                  :active  => active_now,
+                  :passive => passive_now
                 }
               }).play
             end
           end
-          if @before[:id] == self.object_id
-            @before[:effects].each{ |effects| effects.on }
-            @before = nil
-          end
-        end
-        
-        def play_after
-          @after ||= { :id => self.object_id, :effects => [] }
-          [@active || @character].flatten.each do |char|
-            while effects = char.effects.timing(scene_name).after.done_not.sample
-              effects.off
-              @after[:effects] << effects
-              create_from_hash({
-                :if => {
-                  :condition=> effects.condition,
-                  :then => {
-                    :after => {
-                      :parent => human_name,
-                      :effects => effects
-                    }
-                  },
-                  :active => char
-                }
-              }).play
-            end
-          end
-          if @after[:id] == self.object_id
-            @after[:effects].each{ |effects| effects.on }
-            @after = nil
+          if @pool[:id] == object_id
+            @pool[:effects].each{ |effects| effects.on }
+            @pool = nil
           end
         end
         
@@ -206,16 +184,16 @@ module DNU
           @history = @parent.try(:history) || {}
           @history = @history[:children] ||= []
           @history << { scene_name => { :children => [] } }
-          history[:active]  = @active.try(:name)
+          history[:active]  = [@active].flatten.compact.map{|c| c.try(:name)}.join(",")
           history[:passive] = @passive.try(:name)
         end
         
         def play
           self.each do |scene|
             log_before_each_scene
-            play_before
+            play_(:before)
             play_children
-            play_after
+            play_(:after)
           end
           @history.extend Html
         end

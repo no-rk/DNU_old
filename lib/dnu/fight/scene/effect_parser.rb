@@ -608,10 +608,13 @@ class EffectParser < Parslet::Parser
       str('ターン').as(:turn) |
       str('行動').as(:act) |
       str('追加行動').as(:add_act) |
-      str('攻撃命中').as(:hit) |
-      str('攻撃空振').as(:miss) |
-      str('攻撃').as(:attack) |
       str('効果').as(:effects) |
+      str('攻撃命中').as(:hit) |
+      str('攻撃被弾').as(:hit_ant) |
+      str('攻撃空振').as(:miss) |
+      str('攻撃回避').as(:miss_ant) |
+      str('攻撃').as(:attack) |
+      str('被攻撃').as(:attack_ant) |
       str('墓地埋葬').as(:cemetery)
     ).as(:timing) >> before_after.as(:before_after)
   }

@@ -7,6 +7,9 @@ module DNU
           history[:children] = @tree
         end
         
+        def play_(b_or_a)
+        end
+        
       end
     end
   end
