@@ -5,7 +5,7 @@ module DNU
       class BaseScene
         include Enumerable
         
-        attr_reader :active, :passive, :label, :before, :after, :current
+        attr_reader :active, :passive, :label, :before, :after, :stack
         
         @@default_tree = {
           :sequence => [
@@ -67,7 +67,7 @@ module DNU
           @label     = nil
           @before    = nil
           @after     = nil
-          @current   = nil
+          @stack     = nil
           @history   = nil
           @index     = 0
           when_initialize
@@ -86,10 +86,10 @@ module DNU
         def next_scene
           @active  = @parent.try(:active)
           @passive = @parent.try(:passive)
-          @label   = @parent.try(:label).try(:dup) || {}
+          @label   = @parent.try(:label) || {}
           @before  = @parent.try(:before)
           @after   = @parent.try(:after)
-          @current = @parent.try(:current)
+          @stack   = @parent.try(:stack) || []
           before_each_scene
           self
         end
@@ -151,17 +151,14 @@ module DNU
           [@active || @character].flatten.each do |char|
             while effects = char.effects.timing(scene_name).before.done_not.sample
               effects.off
-              @before[:effects] << @current = effects
+              @before[:effects] << effects
               create_from_hash({
                 :if => {
                   :condition=> effects.condition,
                   :then => {
                     :before => {
-                      :do => effects.do,
                       :parent => human_name,
-                      :type => effects.type,
-                      :name => effects.name,
-                      :object_id => effects.object_id
+                      :effects => effects
                     }
                   },
                   :active => char
@@ -180,17 +177,14 @@ module DNU
           [@active || @character].flatten.each do |char|
             while effects = char.effects.timing(scene_name).after.done_not.sample
               effects.off
-              @after[:effects] << @current = effects
+              @after[:effects] << effects
               create_from_hash({
                 :if => {
                   :condition=> effects.condition,
                   :then => {
                     :after => {
-                      :do => effects.do,
                       :parent => human_name,
-                      :type => effects.type,
-                      :name => effects.name,
-                      :object_id => effects.object_id
+                      :effects => effects
                     }
                   },
                   :active => char

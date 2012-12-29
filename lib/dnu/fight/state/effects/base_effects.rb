@@ -16,7 +16,7 @@ module DNU
           tree = Marshal.load(Marshal.dump(tree))
           when_initialize(tree)
           @name = tree[:name].to_sym
-          @LV = tree[:lv]
+          @LV = tree[:lv].nil? ? nil : DNU::Fight::State::LV.new(tree[:lv])
           tree[:effects].each do |effect|
             push Effects.new(effect.merge(:parent => self))
           end
@@ -27,7 +27,7 @@ module DNU
         end
         
         def name
-          @LV.nil? ? @name : "#{@name}LV#{@LV}"
+          @LV.nil? ? @name : "#{@name}LV#{@LV.to_i}"
         end
         
       end

@@ -11,6 +11,10 @@ module DNU
           @label[:each_effect].try(:push, @each_effect) || @label[:each_effect] = [ @each_effect ]
         end
         
+        def after_each_scene
+          @label[:each_effect].try(:pop)
+        end
+        
         def create_children
           @children ||= create_from_hash(@tree[:do])
         end

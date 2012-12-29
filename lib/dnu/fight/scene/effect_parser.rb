@@ -332,6 +332,15 @@ class EffectParser < Parslet::Parser
     ).as(:disease)
   }
   
+  rule(:interrupt) {
+    (
+      (
+        str('技').as(:skill) |
+        str('付加').as(:sup)
+      ) >> str('強制中断')
+    ).as(:interrupt)
+  }
+  
   rule(:cost) {
     (
       str('消費') >> bra >> effect_coeff.as(:change_value) >> ket
@@ -353,6 +362,7 @@ class EffectParser < Parslet::Parser
         heal |
         change |
         disease |
+        interrupt |
         cost |
         serif
       ) >> arrow.absent? |

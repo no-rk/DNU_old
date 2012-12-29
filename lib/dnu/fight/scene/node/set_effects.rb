@@ -20,11 +20,7 @@ module DNU
                 :condition => effects.condition,
                 :then => {
                   :effects => {
-                    :do => effects.do,
-                    :type => effects.type,
-                    :name => effects.name,
-                    :current => effects,
-                    :object_id => effects.object_id
+                    :effects => effects,
                   }
                 },
                 :else => tree

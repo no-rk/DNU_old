@@ -14,11 +14,12 @@ module DNU
         
         def initialize(n, parent = nil)
           @parent = parent
-          @ini = n
-          @val = n
-          @min = min_val(n)
-          @max = max_val(n)
-          @history = [n]
+          @val = n.to_i
+          @min = min_val(val)
+          @max = max_val(val)
+          validate_value
+          @ini = val
+          @history = [val]
           super val
         end
         

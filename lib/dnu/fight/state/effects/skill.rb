@@ -4,14 +4,10 @@ module DNU
     module State
       class Skill < BaseEffects
         
-        def cost_effects
-          EffectTransform.new.apply(EffectParser.new.root_processes.parse("自/消費(#{cost})"))
-        end
-        
         attr_reader :cost, :require, :pre_phase, :targetable
         
         def when_initialize(tree)
-          @cost       = tree[:cost]
+          @cost       = DNU::Fight::State::Cost.new(tree[:cost])
           @require    = tree[:require]
           @pre_phase  = tree[:pre_phase]
           @targetable = tree[:targetable]
@@ -29,8 +25,21 @@ module DNU
               }
             }
             effect[:do] = {
-              :sequence => [ cost_effects, tree[:serif], effect[:do] ]
-            } if tree[:serif]
+              :sequence => [
+                {
+                  :root => {
+                    :passive => { :scope => "自" },
+                    :do => {
+                      :effect => {
+                        :cost => { :change_value => { :fixnum => cost } }
+                      }
+                    }
+                  }
+                },
+                tree[:serif],
+                effect[:do]
+              ].compact
+            }
           end
         end
         

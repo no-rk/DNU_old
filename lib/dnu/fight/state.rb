@@ -16,6 +16,8 @@ require_dependency "dnu/fight/state/effects/serif"
 require_dependency "dnu/fight/state/effects/effects"
 
 require_dependency "dnu/fight/state/value/base_value"
+require_dependency "dnu/fight/state/value/lv"
+require_dependency "dnu/fight/state/value/cost"
 require_dependency "dnu/fight/state/value/mhp"
 require_dependency "dnu/fight/state/value/mmp"
 require_dependency "dnu/fight/state/value/hp"
