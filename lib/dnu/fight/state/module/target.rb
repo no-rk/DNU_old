@@ -32,9 +32,8 @@ module DNU
           self.uniq{ |child| child.team }.map{ |child| child.team }.extend Target
         end
         
-        def random(*num)
-          return self.sample if num.first.nil?
-          self.sample(num.first).extend Target
+        def random(active)
+          self.find_all{ |child| ((child.team==active.team ? -1 : 1)*child.Position + active.Position).abs <= active.Range + 1 }.sample || self.sample
         end
         
         def 自(active)
@@ -57,26 +56,34 @@ module DNU
           self
         end
         
-        def 単(passive = [])
-          passive[1].try(:call).try(:live) ? passive[1].call : (passive[0] || random)
+        def find_by_name(name)
+          lambda{ self.live.find_all{ |child| child.name==name }.sample }
         end
         
-        def ラ(passive = [])
-          lambda{ passive[1].try(:call).try(:live) ? passive[1].call : random }
+        def find_by_position(position)
+          lambda{ self.live.find_all{ |child| child.Position==position }.sample }
         end
         
-        def 全(passive = [])
+        def 単(passive, active, target)
+          target.try(:call) || passive || random(active)
+        end
+        
+        def ラ(passive, active, target)
+          lambda{ target.try(:call) || random(active) }
+        end
+        
+        def 全(active, passive, target)
           self
         end
         
-        def 低(status_or_disease_name)
+        def 低(status_or_disease_name, active=nil, target=nil)
           status_or_disease_name = status_or_disease_name[:status_name] || status_or_disease_name[:disease_name].keys.first
-          lambda{ self.min{ |a,b| a.try(status_or_disease_name)<=>b.try(status_or_disease_name) } }
+          lambda{ target.try(:call) || self.min{ |a,b| a.try(status_or_disease_name)<=>b.try(status_or_disease_name) } }
         end
         
-        def 高(status_or_disease_name)
+        def 高(status_or_disease_name, active=nil, target=nil)
           status_or_disease_name = status_or_disease_name[:status_name] || status_or_disease_name[:disease_name].keys.first
-          lambda{ self.max{ |a,b| a.try(status_or_disease_name)<=>b.try(status_or_disease_name) } }
+          lambda{ target.try(:call) || self.max{ |a,b| a.try(status_or_disease_name)<=>b.try(status_or_disease_name) } }
         end
         
         def 竜(master)

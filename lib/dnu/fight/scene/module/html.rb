@@ -27,7 +27,7 @@ module DNU
         
         def PrePhase(tree)
           %Q|\n非接触フェイズ<br>| +
-          tree[:active].inject("<table>"){ |s,n| s << "<tr><td>#{n[:active]}</td><td>ＨＰ#{n[:HP]}</td><td>／#{n[:MHP]}</td><td>ＭＰ#{n[:MP]}</td><td>／#{n[:MMP]}</td><td>隊列#{n[:Position]}</td></tr>" } + "</table>" +
+          tree[:active].inject("<table>"){ |s,n| s << "<tr><td>#{n[:active]}</td><td>ＨＰ#{n[:HP]}</td><td>／#{n[:MHP]}</td><td>ＭＰ#{n[:MP]}</td><td>／#{n[:MMP]}</td><td>隊列#{n[:Position]}</td><td>射程#{n[:Range]}</td></tr>" } + "</table>" +
           nested_div(tree[:before])   +
           nested_div(tree[:children]) +
           nested_div(tree[:after])
@@ -35,7 +35,7 @@ module DNU
         
         def Phase(tree)
           %Q|\nフェイズ#{tree[:index]}<br>| +
-          tree[:active].inject("<table>"){ |s,n| s << "<tr><td>#{n[:active]}</td><td>ＨＰ#{n[:HP]}</td><td>／#{n[:MHP]}</td><td>ＭＰ#{n[:MP]}</td><td>／#{n[:MMP]}</td><td>隊列#{n[:Position]}</td></tr>" } + "</table>" +
+          tree[:active].inject("<table>"){ |s,n| s << "<tr><td>#{n[:active]}</td><td>ＨＰ#{n[:HP]}</td><td>／#{n[:MHP]}</td><td>ＭＰ#{n[:MP]}</td><td>／#{n[:MMP]}</td><td>隊列#{n[:Position]}</td><td>射程#{n[:Range]}</td></tr>" } + "</table>" +
           nested_div(tree[:before])   +
           nested_div(tree[:children]) +
           nested_div(tree[:after])

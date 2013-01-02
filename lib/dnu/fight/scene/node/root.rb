@@ -11,8 +11,11 @@ module DNU
         def create_passive
           scope = @character.live.try(@tree[:passive][:scope].to_s, @parent.active.try(:call))
           scope = @character.try(@tree[:passive][:sub_scope].to_s, scope) unless @tree[:passive][:sub_scope].nil?
-          target = [@tree[:passive][:target]].flatten
-          @tree[:passive][:target].nil? ? scope : scope.try(target[0].to_s, target[1] || [@parent.passive.try(:call), @parent.stack.last.respond_to?(:target) ? @parent.stack.last.target : nil])
+          return scope if @tree[:passive][:target].nil?
+          target1 = @parent.stack.last.respond_to?(:target) ? @parent.stack.last.target : nil
+          target1 = (target1.nil? ? nil : scope.try(target1.keys.first, target1.values.first))
+          target2 = [@tree[:passive][:target]].flatten
+          scope.try(target2[0].to_s, target2[1] || @parent.passive.try(:call), @parent.active.try(:call), target1)
         end
         
         def has_next_scene?

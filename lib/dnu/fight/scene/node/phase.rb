@@ -19,7 +19,8 @@ module DNU
               :MHP => char.MHP.val,
               :MP  => char.MP.val,
               :MMP => char.MMP.val,
-              :Position => char.Position.val
+              :Position => char.Position.val,
+              :Range => char.Range.val
             }
           end
         end
