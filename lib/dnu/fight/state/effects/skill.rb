@@ -4,13 +4,14 @@ module DNU
     module State
       class Skill < BaseEffects
         
-        attr_reader :cost, :require, :pre_phase, :targetable
+        attr_reader :cost, :require, :pre_phase, :targetable, :target
         
         def when_initialize(tree)
           @cost       = DNU::Fight::State::Cost.new(tree[:cost])
           @require    = tree[:require]
           @pre_phase  = tree[:pre_phase]
           @targetable = tree[:targetable]
+          @target     = tree[:target] if @targetable
           tree[:effects].each do |effect|
             effect[:priority]  = tree[:priority]
             effect[:condition] = {

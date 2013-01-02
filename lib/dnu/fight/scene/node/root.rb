@@ -12,21 +12,21 @@ module DNU
           scope = @character.live.try(@tree[:passive][:scope].to_s, @parent.active)
           scope = @character.try(@tree[:passive][:sub_scope].to_s, scope) unless @tree[:passive][:sub_scope].nil?
           target = [@tree[:passive][:target]].flatten
-          @tree[:passive][:target].nil? ? scope : scope.try(target[0].to_s, target[1] || @parent.passive)
+          @tree[:passive][:target].nil? ? scope : scope.try(target[0].to_s, target[1] || [@parent.passive, @parent.stack.last.respond_to?(:target) ? @parent.stack.last.target : nil])
         end
         
         def has_next_scene?
           ([@root_passive ||= create_passive].flatten - @root).present?
         end
         
+        def before_all_scene
+          @root = []
+        end
+        
         def before_each_scene
           @root << ([@root_passive].flatten - @root).sample
           @passive = @root.last
           @passive = @passive.respond_to?(:call) ? @passive.call : @passive
-        end
-        
-        def after_all_scene
-          @root = []
         end
         
         def create_children

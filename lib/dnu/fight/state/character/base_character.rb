@@ -39,6 +39,10 @@ module DNU
           @effects = [].extend FindEffects
         end
         
+        def live
+          !@dead
+        end
+        
       end
     end
   end

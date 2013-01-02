@@ -57,15 +57,15 @@ module DNU
           self
         end
         
-        def 単(passive = nil)
-          passive || random
+        def 単(passive = [])
+          passive[1].try(:call).try(:live) ? passive[1].call : (passive[0] || random)
         end
         
-        def ラ(passive = nil)
-          lambda{ random }
+        def ラ(passive = [])
+          lambda{ passive[1].try(:call).try(:live) ? passive[1].call : random }
         end
         
-        def 全(passive = nil)
+        def 全(passive = [])
           self
         end
         

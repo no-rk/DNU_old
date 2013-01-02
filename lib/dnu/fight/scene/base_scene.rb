@@ -109,6 +109,7 @@ module DNU
         end
         
         def each
+          @index = 0
           before_all_scene
           while has_next_scene?
             yield next_scene

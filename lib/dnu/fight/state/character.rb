@@ -4,6 +4,7 @@ module DNU
     module State
       class Character < Array
         include Target
+        
         def initialize
           teamA = "A"
           3.times do
@@ -25,6 +26,7 @@ module DNU
             end.join + "@Bチーム"
             self << child
           end
+          
         end
       end
     end
