@@ -24,7 +24,7 @@ module DNU
         attr_reader *@@disease_name
         attr_reader *@@has_max.inject([]){ |a,s| a<<('M'+s.to_s).to_sym }
         
-        attr_reader :effects
+        attr_reader :Position, :Range, :effects
         
         def initialize
           @@status_name.each do |stat|
@@ -36,6 +36,8 @@ module DNU
           @@disease_name.each do |stat|
             instance_variable_set("@#{stat}", "DNU::Fight::State::#{stat}".constantize.new(0, 0))
           end
+          @Position = DNU::Fight::State::Position.new(rand(3)+1)
+          @Range    = DNU::Fight::State::Range.new(rand(5)+1)
           @effects = [].extend FindEffects
         end
         

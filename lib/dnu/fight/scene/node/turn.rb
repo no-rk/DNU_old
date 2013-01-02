@@ -11,11 +11,12 @@ module DNU
         
         # SPDなどに応じて順番に俺のターン
         def before_each_scene
-          @active = @character.live.turn_end_not.高(:status_name => :SPD).call
+          active_now = @character.live.turn_end_not.高(:status_name => :SPD).call
+          @active = lambda{ active_now }
         end
         
         def after_each_scene
-          @active.turn_end = true
+          @active.call.turn_end = true
         end
         
         def after_all_scene

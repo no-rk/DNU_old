@@ -4,11 +4,9 @@ module DNU
       class Cemetery < BaseScene
         
         def play_children
-          @character.live.each do |char|
-            if char.HP <= 0
-              char.dead = true
-              history[:children] << char.name
-            end
+          @character.live.find_all{ |c| c.HP <= 0 }.each do |char|
+            char.dead = true
+            history[:children] << char.name
           end
         end
         

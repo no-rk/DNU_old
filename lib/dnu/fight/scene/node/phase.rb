@@ -8,9 +8,20 @@ module DNU
           @character.live.team.count > 1 and @index < 10
         end
         
-        def play_children
-          history[:index] = @index + 1
+        def log_before_each_scene
           super
+          history[:index] = @index + 1
+          history[:active] = []
+          @active.call.each do |char|
+            history[:active] << {
+              :active => char.name,
+              :HP  => char.HP.val,
+              :MHP => char.MHP.val,
+              :MP  => char.MP.val,
+              :MMP => char.MMP.val,
+              :Position => char.Position.val
+            }
+          end
         end
         
       end

@@ -29,6 +29,7 @@ require_dependency "dnu/fight/scene/node/add_act"
 require_dependency "dnu/fight/scene/node/set_effects"
 require_dependency "dnu/fight/scene/node/effects"
 require_dependency "dnu/fight/scene/node/cemetery"
+require_dependency "dnu/fight/scene/node/formation"
 
 require_dependency "dnu/fight/scene/effect/attack"
 require_dependency "dnu/fight/scene/effect/hit"

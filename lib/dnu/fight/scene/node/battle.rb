@@ -4,7 +4,7 @@ module DNU
       class Battle < BaseScene
         
         def before_each_scene
-          @active = @character.live
+          @active = lambda{ @character.live }
         end
         
       end

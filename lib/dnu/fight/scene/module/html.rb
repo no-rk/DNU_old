@@ -26,14 +26,16 @@ module DNU
         end
         
         def PrePhase(tree)
-          %Q|\n非接触フェイズ| +
+          %Q|\n非接触フェイズ<br>| +
+          tree[:active].inject("<table>"){ |s,n| s << "<tr><td>#{n[:active]}</td><td>ＨＰ#{n[:HP]}</td><td>／#{n[:MHP]}</td><td>ＭＰ#{n[:MP]}</td><td>／#{n[:MMP]}</td><td>隊列#{n[:Position]}</td></tr>" } + "</table>" +
           nested_div(tree[:before])   +
           nested_div(tree[:children]) +
           nested_div(tree[:after])
         end
         
         def Phase(tree)
-          %Q|\nフェイズ#{tree[:index]}| +
+          %Q|\nフェイズ#{tree[:index]}<br>| +
+          tree[:active].inject("<table>"){ |s,n| s << "<tr><td>#{n[:active]}</td><td>ＨＰ#{n[:HP]}</td><td>／#{n[:MHP]}</td><td>ＭＰ#{n[:MP]}</td><td>／#{n[:MMP]}</td><td>隊列#{n[:Position]}</td></tr>" } + "</table>" +
           nested_div(tree[:before])   +
           nested_div(tree[:children]) +
           nested_div(tree[:after])
@@ -62,7 +64,13 @@ module DNU
         
         def Cemetery(tree)
           nested_div(tree[:before])   +
-          tree[:children].inject(""){ |s,n| s << n + "は墓地に送られた！<br>" } +
+          tree[:children].inject(""){ |s,n| s << "#{n}は墓地に送られた！<br>" } +
+          nested_div(tree[:after])
+        end
+        
+        def Formation(tree)
+          nested_div(tree[:before])   +
+          tree[:children].inject(""){ |s,n| s << "#{n}は隊列を整えた！<br>" } +
           nested_div(tree[:after])
         end
         

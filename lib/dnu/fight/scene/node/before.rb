@@ -33,8 +33,8 @@ module DNU
           @history = @parent.try(:history) || {}
           @history = @history[:before] ||= []
           @history << { scene_name => { :children => [] } }
-          history[:active]  = @active.try(:name)
-          history[:passive] = @passive.try(:name)
+          history[:active]  = @active.try(:call).try(:name)
+          history[:passive] = @passive.try(:call).try(:name)
         end
         
       end

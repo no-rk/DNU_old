@@ -13,7 +13,8 @@ module DNU
               :pre_phase => {
                 :sequence => [
                   { :turn => { :act => { :set_effects => nil } } },
-                  { :cemetery => nil }
+                  { :cemetery => nil },
+                  { :formation => nil }
                 ]
               }
             },
@@ -28,7 +29,8 @@ module DNU
                       ]
                     }
                   },
-                  { :cemetery => nil }
+                  { :cemetery => nil },
+                  { :formation => nil }
                 ]
               }
             }
@@ -147,12 +149,12 @@ module DNU
         
         def play_(b_or_a)
           @pool ||= { :id => object_id, :effects => [] }
-          active_array = [@active ].flatten.compact.map{|char| { :ant =>  nil , :active_now => char } } +
-                         [@passive].flatten.compact.map{|char| { :ant => :ant , :active_now => char } }
+          active_array = [@active.try(:call) ].flatten.compact.map{|char| { :ant =>  nil , :active_now => char } } +
+                         [@passive.try(:call)].flatten.compact.map{|char| { :ant => :ant , :active_now => char } }
           active_array.sort_by{rand}.each do |char|
             ant         = char[:ant]
             active_now  = char[:active_now]
-            passive_now = ant.nil? ? [@passive].flatten.compact.sample : [@active].flatten.compact.sample
+            passive_now = ant.nil? ? [@passive.try(:call)].flatten.compact.sample : [@active.try(:call)].flatten.compact.sample
             while effects = active_now.effects.timing(:"#{scene_name}#{ant.to_s.camelize}").send(b_or_a).done_not.sample
               effects.off
               @pool[:effects] << effects
@@ -185,8 +187,8 @@ module DNU
           @history = @parent.try(:history) || {}
           @history = @history[:children] ||= []
           @history << { scene_name => { :children => [] } }
-          history[:active]  = [@active].flatten.compact.map{|c| c.try(:name)}.join(",")
-          history[:passive] = @passive.try(:name)
+          history[:active]  = [@active.try(:call)].flatten.compact.map{|c| c.try(:name)}
+          history[:passive] =  @passive.try(:call).try(:name)
         end
         
         def interrupt_before_play

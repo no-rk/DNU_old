@@ -5,11 +5,11 @@ module DNU
       module HitRate
         
         def 自分
-          @active
+          @active.call
         end
         
         def 対象
-          @passive
+          @passive.call
         end
         
         def hit_physical

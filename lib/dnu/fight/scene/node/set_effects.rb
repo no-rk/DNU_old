@@ -12,7 +12,7 @@ module DNU
         def create_tree
           temp = []
           tree = default_attack
-          while effects = @active.effects.type(:Skill).done_not.low_priority
+          while effects = @active.call.effects.type(:Skill).done_not.low_priority
             effects.off
             temp << effects
             tree = {
