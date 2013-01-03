@@ -141,7 +141,7 @@ module DNU
         def Heal(tree)
           h = tree[:children]
           nested_div(tree[:before])   +
-          %Q|\n<span class="passive">#{tree[:passive]}</span>は#{h[:change].abs}回復した！（ #{h[:before_change]} ⇒ #{h[:after_change]} ）| +
+          %Q|\n<span class="passive">#{tree[:passive]}</span>の#{h[:status_name]}は#{h[:change].abs}回復した！（ #{h[:before_change]} ⇒ #{h[:after_change]} ）| +
           nested_div(tree[:after])
         end
         

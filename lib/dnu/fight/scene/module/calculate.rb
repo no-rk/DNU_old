@@ -10,7 +10,7 @@ module DNU
         end
         
         def lv(val)
-          lambda{ @stack.last.try(:LV).to_f }
+          lambda{ @tree[:lv] || @stack.last.try(:LV).to_f }
         end
         
         # 現在の戦闘値

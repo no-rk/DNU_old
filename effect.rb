@@ -19,7 +19,18 @@ def transform
 end
 
 def character
-  @character ||= DNU::Fight::State::Character.new
+pt = <<"PT"
+[PT]NPCたち
+[NPC]その１
+[NPC]その２
+[NPC]その３
+
+[PT]モンスターズ
+[モンスター]キュアプルプル
+[モンスター]ピコピコテール
+[モンスター]酔いどれドラゴン
+PT
+  @character ||= DNU::Fight::State::Character.new(transform.apply(EffectParser.new.pt_settings.parse(pt)))
 end
 
 def duel

@@ -5,6 +5,19 @@ class EffectTransform < Parslet::Transform
     number.to_s.tr("０-９．","0-9.")
   }
   
+  rule(:find_by_position => simple(:position)) {
+    filter = {
+      :"前" => 1,
+      :"中" => 2,
+      :"後" => 3
+    }
+    { :find_by_position => filter[position.to_sym] }
+  }
+  
+  rule(:value_resist => subtree(:value_resist)) {
+    :"#{(value_resist[:disease_name] || value_resist[:element]).keys.first}#{value_resist.key('特性') || value_resist.key('耐性')}"
+  }
+  
   rule('回避停止') {
     {
       :just_before_attack => { :hit => '命中' }

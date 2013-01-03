@@ -2,9 +2,11 @@ module DNU
   module Fight
     module Scene
       class Repeat < BaseScene
+        include Calculate
         
         def has_next_scene?
-          @index < @tree[:times].to_i
+          next_scene
+          @index < calcu_value(@tree[:times]).call
         end
         
         def create_children

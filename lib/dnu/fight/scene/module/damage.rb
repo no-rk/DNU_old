@@ -9,7 +9,7 @@ module DNU
         end
         
         def 対象
-          @passive.call
+          @passive.try(:call) || @active.call
         end
         
         def dmg_physical

@@ -74,7 +74,10 @@ class EffectParser < Parslet::Parser
       str('M').maybe >> str('DF') |
       str('M').maybe >> str('HIT') |
       str('M').maybe >> str('EVA') |
-      str('SPD')
+      str('SPD') |
+      (
+        (disease_name | element_name) >> (str('特性').as(:Value) | str('耐性').as(:Resist))
+      ).as(:value_resist)
     ).as(:status_name)
   }
   
@@ -104,7 +107,7 @@ class EffectParser < Parslet::Parser
       str('光').as(:Light) |
       str('闇').as(:Dark) |
       str('ラ').as(:Random)
-    ).as(:element) >> str('属性')
+    ).as(:element)
   }
   
   rule(:equip_name) {
@@ -188,7 +191,8 @@ class EffectParser < Parslet::Parser
   rule(:calculable) {
     state |
     decimal.as(:fixnum) |
-    level.as(:lv)
+    level.as(:lv) |
+    bra >> (add_coeff | multi_coeff) >> ket
   }
   
   rule(:multi_coeff) {
@@ -267,29 +271,29 @@ class EffectParser < Parslet::Parser
   
   rule(:physical) {
     (
-               element_name.maybe >> physical_attack >> bra >> effect_coeff.as(:coeff_value)  >> (separator >> effect_hit).maybe >> ket |
-      const >> element_name.maybe >> physical_attack >> bra >> effect_coeff.as(:change_value) >> (separator >> effect_hit).maybe >> ket
+               (element_name >> str('属性')).maybe >> physical_attack >> bra >> effect_coeff.as(:coeff_value)  >> (separator >> effect_hit).maybe >> ket |
+      const >> (element_name >> str('属性')).maybe >> physical_attack >> bra >> effect_coeff.as(:change_value) >> (separator >> effect_hit).maybe >> ket
     ).as(:physical)
   }
   
   rule(:magical) {
     (
-               element_name.maybe >>  magical_attack >> bra >> effect_coeff.as(:coeff_value)  >> (separator >> effect_hit).maybe >> ket |
-      const >> element_name.maybe >>  magical_attack >> bra >> effect_coeff.as(:change_value) >> (separator >> effect_hit).maybe >> ket
+               (element_name >> str('属性')).maybe >>  magical_attack >> bra >> effect_coeff.as(:coeff_value)  >> (separator >> effect_hit).maybe >> ket |
+      const >> (element_name >> str('属性')).maybe >>  magical_attack >> bra >> effect_coeff.as(:change_value) >> (separator >> effect_hit).maybe >> ket
     ).as(:magical)
   }
   
   rule(:physical_magical) {
     (
-               element_name.maybe >> physical_magical_attack >> bra >> effect_coeff.as(:coeff_value)  >> (separator >> effect_hit).maybe >> ket |
-      const >> element_name.maybe >> physical_magical_attack >> bra >> effect_coeff.as(:change_value) >> (separator >> effect_hit).maybe >> ket
+               (element_name >> str('属性')).maybe >> physical_magical_attack >> bra >> effect_coeff.as(:coeff_value)  >> (separator >> effect_hit).maybe >> ket |
+      const >> (element_name >> str('属性')).maybe >> physical_magical_attack >> bra >> effect_coeff.as(:change_value) >> (separator >> effect_hit).maybe >> ket
     ).as(:physical_magical)
   }
   
   rule(:switch_physical_magical) {
     (
-               element_name.maybe >> switch_physical_magical_attack >> bra >> effect_coeff.as(:coeff_value)  >> (separator >> effect_hit).maybe >> ket |
-      const >> element_name.maybe >> switch_physical_magical_attack >> bra >> effect_coeff.as(:change_value) >> (separator >> effect_hit).maybe >> ket
+               (element_name >> str('属性')).maybe >> switch_physical_magical_attack >> bra >> effect_coeff.as(:coeff_value)  >> (separator >> effect_hit).maybe >> ket |
+      const >> (element_name >> str('属性')).maybe >> switch_physical_magical_attack >> bra >> effect_coeff.as(:change_value) >> (separator >> effect_hit).maybe >> ket
     ).as(:switch_physical_magical)
   }
   
@@ -325,18 +329,18 @@ class EffectParser < Parslet::Parser
       disease_name >> str('軽減') >> bra >> effect_coeff.as(:change_value) >> ket
     ).as(:reduce) |
     (
-      (bra >> str('技') >> ket >> (str('消費増加').absent? >> any).repeat(1).as(:name)).maybe >>
+      (bra >> str('技') >> ket >> ((str('消費増加') | str('消費減少')).absent? >> any).repeat(1).as(:name)).maybe >>
       str('消費増加') >> bra >> effect_coeff.as(:change_value) >> ket
     ).as(:cost_up) |
     (
-      (bra >> str('技') >> ket >> (str('消費減少').absent? >> any).repeat(1).as(:name)).maybe >>
+      (bra >> str('技') >> ket >> ((str('消費増加') | str('消費減少')).absent? >> any).repeat(1).as(:name)).maybe >>
       str('消費減少') >> bra >> effect_coeff.as(:change_value) >> ket
     ).as(:cost_down)
   }
   
   rule(:disease) {
     (
-      disease_name >> str('追加').maybe >> bra >> effect_coeff.as(:change_value) >> ket
+      disease_name >> str('追加').maybe >> bra >> effect_coeff.as(:change_value) >> (separator >> effect_hit).maybe >> ket
     ).as(:disease)
   }
   
@@ -554,7 +558,7 @@ class EffectParser < Parslet::Parser
   }
   
   rule(:times_wrap) {
-    multiply >> natural_number.as(:times)
+    multiply >> calculable.as(:times)
   }
   
   rule(:while_wrap) {
@@ -694,6 +698,11 @@ class EffectParser < Parslet::Parser
   
   # skill_setting
   
+  rule(:skill_target) {
+    (str('前') | str('中') | str('後')).as(:find_by_position) >> str('列') |
+    (newline.absent? >> any).repeat(1).as(:find_by_name)
+  }
+  
   rule(:skill_setting) {
     bra >> str('技') >> ket >> (
       (level | newline).absent? >> any
@@ -701,6 +710,8 @@ class EffectParser < Parslet::Parser
       level >> natural_number.as(:lv)
     ).maybe >> newline >>
     priority >> separator >> (conditions | condition).as(:condition) >> (
+      (newline | separator) >> str('対象') >> separator >> skill_target.as(:target)
+    ).maybe >> (
       newline >> root_processes.as(:serif)
     ).maybe >> newline.maybe
   }
@@ -724,11 +735,49 @@ class EffectParser < Parslet::Parser
     ).repeat(1)
   }
   
-  # test_battle
+  # character_definitions
   
-  rule(:test_battle) {
-    definitions.as(:definitions) >>
-    settings.as(:settings)
+  rule(:character_type) {
+    str('PC').as(:PC) |
+    str('NPC').as(:NPC) |
+    str('モンスター').as(:Monster) |
+    str('竜').as(:Dragon) |
+    str('人形').as(:Puppet) |
+    str('召喚').as(:Summon)
+  }
+  
+  rule(:character_definition) {
+    bra >> character_type.as(:type) >> ket >> (newline.absent? >> any).repeat(1).as(:name) >> newline >>
+    definitions.as(:definitions).maybe >>
+    settings.as(:settings).maybe
+  }
+  
+  rule(:character_definitions) {
+    character_definition.repeat(1)
+  }
+  
+  # character_settings
+  
+  rule(:character_setting) {
+    bra >> character_type.as(:type) >> ket >> (
+      newline.absent? >> any
+    ).repeat(1).as(:name) >> newline.maybe
+  }
+  
+  rule(:character_settings) {
+    character_setting.repeat(1)
+  }
+  
+  # pt_settings
+  
+  rule(:pt_setting) {
+    bra >> str('PT') >> ket >> (newline.absent? >> any).repeat(1).as(:pt_name) >> newline >>
+    character_settings.as(:members)
+  }
+  
+  rule(:pt_settings) {
+    character_definitions.as(:definitions).maybe >>
+    pt_setting.repeat(2).as(:settings)
   }
   
   # root

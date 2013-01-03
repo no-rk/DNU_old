@@ -167,6 +167,7 @@ module DNU
                       :effects => effects
                     }
                   },
+                  :lv => effects.LV,
                   :active  => active_now,
                   :passive => passive_now
                 }
