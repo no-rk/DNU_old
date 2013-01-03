@@ -27,7 +27,12 @@ module DNU
         
         def PrePhase(tree)
           %Q|\n非接触フェイズ<br>| +
-          tree[:active].inject("<table>"){ |s,n| s << "<tr><td>#{n[:active]}</td><td>ＨＰ#{n[:HP]}</td><td>／#{n[:MHP]}</td><td>ＭＰ#{n[:MP]}</td><td>／#{n[:MMP]}</td><td>隊列#{n[:Position]}</td><td>射程#{n[:Range]}</td></tr>" } + "</table>" +
+          tree[:active].inject("") do |t,h|
+            t << "<table>\n<tr><td colspan=7>#{h.keys.first.to_s}</td></tr>\n" +
+              h.values.first.inject("") do |s,n|
+                s << "<tr><td>#{n[:active]}</td><td>ＨＰ#{n[:HP]}</td><td>／#{n[:MHP]}</td><td>ＭＰ#{n[:MP]}</td><td>／#{n[:MMP]}</td><td>隊列#{n[:Position]}</td><td>射程#{n[:Range]}</td></tr>\n"
+              end + "</table>\n"
+          end +
           nested_div(tree[:before])   +
           nested_div(tree[:children]) +
           nested_div(tree[:after])
@@ -35,28 +40,35 @@ module DNU
         
         def Phase(tree)
           %Q|\nフェイズ#{tree[:index]}<br>| +
-          tree[:active].inject("<table>"){ |s,n| s << "<tr><td>#{n[:active]}</td><td>ＨＰ#{n[:HP]}</td><td>／#{n[:MHP]}</td><td>ＭＰ#{n[:MP]}</td><td>／#{n[:MMP]}</td><td>隊列#{n[:Position]}</td><td>射程#{n[:Range]}</td></tr>" } + "</table>" +
+          tree[:active].inject("") do |t,h|
+            t << "<table>\n<tr><td colspan=7>#{h.keys.first.to_s}</td></tr>\n" +
+              h.values.first.inject("") do |s,n|
+                s << "<tr><td>#{n[:active]}</td><td>ＨＰ#{n[:HP]}</td><td>／#{n[:MHP]}</td><td>ＭＰ#{n[:MP]}</td><td>／#{n[:MMP]}</td><td>隊列#{n[:Position]}</td><td>射程#{n[:Range]}</td></tr>\n"
+              end + "</table>\n"
+          end +
           nested_div(tree[:before])   +
           nested_div(tree[:children]) +
           nested_div(tree[:after])
         end
         
         def Turn(tree)
-          %Q|\n<span class="active">#{tree[:active]}</span>のターン| +
+          %Q|\n<span class="active">#{tree[:active].first}</span>のターン<br>| +
+          %Q|\nHP#{tree[:HP]}/#{tree[:MHP]}<br>| +
+          %Q|\nMP#{tree[:MP]}/#{tree[:MMP]}<br>| +
           nested_div(tree[:before])   +
           nested_div(tree[:children]) +
           nested_div(tree[:after])
         end
         
         def Act(tree)
-          %Q|\n<span class="active">#{tree[:active]}</span>の行動| +
+          %Q|\n<span class="active">#{tree[:active].first}</span>の行動| +
           nested_div(tree[:before])   +
           nested_div(tree[:children]) +
           nested_div(tree[:after])
         end
         
         def AddAct(tree)
-          %Q|\n<span class="active">#{tree[:active]}</span>の追加行動#{tree[:index]}| +
+          %Q|\n<span class="active">#{tree[:active].first}</span>の追加行動#{tree[:index]}| +
           nested_div(tree[:before])   +
           nested_div(tree[:children]) +
           nested_div(tree[:after])
@@ -71,6 +83,12 @@ module DNU
         def Formation(tree)
           nested_div(tree[:before])   +
           tree[:children].inject(""){ |s,n| s << "#{n}は隊列を整えた！<br>" } +
+          nested_div(tree[:after])
+        end
+        
+        def Result(tree)
+          nested_div(tree[:before])   +
+          (tree[:children].count==1 ? "#{tree[:children].first}の勝利！" : "引き分け。") +
           nested_div(tree[:after])
         end
         
@@ -141,35 +159,35 @@ module DNU
         def Heal(tree)
           h = tree[:children]
           nested_div(tree[:before])   +
-          %Q|\n<span class="passive">#{tree[:passive]}</span>の#{h[:status_name]}は#{h[:change].abs}回復した！（ #{h[:before_change]} ⇒ #{h[:after_change]} ）| +
+          %Q|\n<span class="passive">#{tree[:passive]}</span>の#{I18n.t(h[:status_name], :scope => "DNU.Fight.Scene")}は#{h[:change].abs}回復した！（ #{h[:before_change]} ⇒ #{h[:after_change]} ）| +
           nested_div(tree[:after])
         end
         
         def Up(tree)
           h = tree[:children]
           nested_div(tree[:before])   +
-          %Q|\n<span class="passive">#{tree[:passive]}</span>の#{h[:status_name]}が#{(h[:after_change]-h[:before_change]).abs}上昇した！（ #{h[:before_change]} ⇒ #{h[:after_change]} ）| +
+          %Q|\n<span class="passive">#{tree[:passive]}</span>の#{I18n.t(h[:status_name], :scope => "DNU.Fight.Scene")}が#{(h[:after_change]-h[:before_change]).abs}上昇した！（ #{h[:before_change]} ⇒ #{h[:after_change]} ）| +
           nested_div(tree[:after])
         end
         
         def Down(tree)
           h = tree[:children]
           nested_div(tree[:before])   +
-          %Q|\n<span class="passive">#{tree[:passive]}</span>の#{h[:status_name]}が#{(h[:after_change]-h[:before_change]).abs}低下した！（ #{h[:before_change]} ⇒ #{h[:after_change]} ）| +
+          %Q|\n<span class="passive">#{tree[:passive]}</span>の#{I18n.t(h[:status_name], :scope => "DNU.Fight.Scene")}が#{(h[:after_change]-h[:before_change]).abs}低下した！（ #{h[:before_change]} ⇒ #{h[:after_change]} ）| +
           nested_div(tree[:after])
         end
         
         def Increase(tree)
           h = tree[:children]
           nested_div(tree[:before])   +
-          %Q|\n<span class="passive">#{tree[:passive]}</span>の#{h[:status_name]}が#{(h[:after_change]-h[:before_change]).abs}増加した！（ #{h[:before_change]} ⇒ #{h[:after_change]} ）| +
+          %Q|\n<span class="passive">#{tree[:passive]}</span>の#{I18n.t(h[:status_name], :scope => "DNU.Fight.Scene")}が#{(h[:after_change]-h[:before_change]).abs}増加した！（ #{h[:before_change]} ⇒ #{h[:after_change]} ）| +
           nested_div(tree[:after])
         end
         
         def Decrease(tree)
           h = tree[:children]
           nested_div(tree[:before])   +
-          %Q|\n<span class="passive">#{tree[:passive]}</span>の#{h[:status_name]}が#{(h[:after_change]-h[:before_change]).abs}減少した！（ #{h[:before_change]} ⇒ #{h[:after_change]} ）| +
+          %Q|\n<span class="passive">#{tree[:passive]}</span>の#{I18n.t(h[:status_name], :scope => "DNU.Fight.Scene")}が#{(h[:after_change]-h[:before_change]).abs}減少した！（ #{h[:before_change]} ⇒ #{h[:after_change]} ）| +
           nested_div(tree[:after])
         end
         

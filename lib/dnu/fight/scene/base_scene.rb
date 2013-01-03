@@ -33,7 +33,8 @@ module DNU
                   { :formation => nil }
                 ]
               }
-            }
+            },
+            { :result => nil }
           ]
         }
         

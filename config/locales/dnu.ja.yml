@@ -227,6 +227,19 @@ ja:
         Add: 状態異常追加
         Resist: 状態異常抵抗
         Heal: 回復
+        HP: HP
+        MHP: 最大HP
+        MP: MP
+        MMP: 最大MP
+        AT: 攻撃力
+        MAT: 魔法攻撃力
+        DF: 防御力
+        MDF: 魔法防御力
+        HIT: 命中力
+        MHIT: 魔法命中力
+        EVA: 回避力
+        MEVA: 魔法回避力
+        SPD: 素早さ
         Poison: 猛毒
         Palsy: 麻痺
         Sleep: 睡眠
@@ -237,3 +250,44 @@ ja:
         Shine: 光身
         Black: 暗幕
         Confuse: 混濁
+        PoisonValue: 猛毒特性
+        PalsyValue: 麻痺特性
+        SleepValue: 睡眠特性
+        MudValue: 泥浸特性
+        WetValue: 水濡特性
+        BurnValue: 炎纏特性
+        VacuumValue: 鎌鼬特性
+        ShineValue: 光身特性
+        BlackValue: 暗幕特性
+        ConfuseValue: 混濁特性
+        PoisonResist: 猛毒耐性
+        PalsyResist: 麻痺耐性
+        SleepResist: 睡眠耐性
+        MudResist: 泥浸耐性
+        WetResist: 水濡耐性
+        BurnResist: 炎纏耐性
+        VacuumResist: 鎌鼬耐性
+        ShineResist: 光身耐性
+        BlackResist: 暗幕耐性
+        ConfuseResist: 混濁耐性
+        None: 無
+        Fire: 火
+        Water: 水
+        Earth: 地
+        Wind: 風
+        Light: 光
+        Dark: 闇
+        NoneValue: 無特性
+        FireValue: 火特性
+        WaterValue: 水特性
+        EarthValue: 地特性
+        WindValue: 風特性
+        LightValue: 光特性
+        DarkValue: 闇特性
+        NoneResist: 無耐性
+        FireResist: 火耐性
+        WaterResist: 水耐性
+        EarthResist: 地耐性
+        WindResist: 風耐性
+        LightResist: 光耐性
+        DarkResist: 闇耐性

@@ -3,9 +3,9 @@ module DNU
     module Scene
       class AddAct < BaseScene
         
-        # SPD‚È‚Ç‚É‰ž‚¶‚Ä’Ç‰Ás“®‚ª‚ ‚é‚©‚à‚µ‚ê‚È‚¢
+        # SPDãªã©ã«å¿œã˜ã¦è¿½åŠ è¡Œå‹•ãŒã‚ã‚‹ã‹ã‚‚ã—ã‚Œãªã„
         def has_next_scene?
-          rand(100) < 50
+          @parent.active.call.SPD > 1000*(@index+1)
         end
         
         def play_children

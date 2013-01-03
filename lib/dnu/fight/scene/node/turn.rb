@@ -25,6 +25,14 @@ module DNU
           end
         end
         
+        def log_before_each_scene
+          super
+          history[:HP]  = @active.call.HP.val
+          history[:MHP] = @active.call.MHP.val
+          history[:MP]  = @active.call.MP.val
+          history[:MMP] = @active.call.MMP.val
+        end
+        
       end
     end
   end
