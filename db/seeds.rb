@@ -1,3 +1,5 @@
+# encoding: UTF-8
+
 #ジョブ
 ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_jobs")
 jobs = YAML.load(ERB.new(File.read("#{Rails.root}/db/game_data/job.yml")).result)
@@ -46,4 +48,22 @@ abilities.each do |ability|
   p ability
   ability_model = GameData::Ability.new(ability)
   ability_model.save!
+end
+
+#付加
+ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_sups")
+sups = YAML.load(ERB.new(File.read("#{Rails.root}/db/game_data/sup.yml")).result)
+parser = EffectParser.new
+sups.each do |sup|
+  begin
+    tree = parser.sup_definition.parse(sup)
+  rescue
+    p "文法エラー"
+    p sup
+  else
+    sup = { "name" => tree[:name].to_s, "definition" => sup }
+    p sup
+    sup_model = GameData::Sup.new(sup)
+    sup_model.save!
+  end
 end
