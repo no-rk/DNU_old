@@ -3,14 +3,6 @@ module DNU
     module State
       class HP < BaseValue
         
-        def status
-          self
-        end
-        
-        def equip
-          self
-        end
-        
         def min_val(n)
           -10**10
         end

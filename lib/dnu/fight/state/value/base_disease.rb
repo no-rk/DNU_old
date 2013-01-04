@@ -3,14 +3,6 @@ module DNU
     module State
       class BaseDisease < BaseValue
         
-        def status
-          self
-        end
-        
-        def equip
-          self
-        end
-        
         def min_val(n)
           0
         end

@@ -39,7 +39,7 @@ module DNU
             instance_variable_set("@#{stat}", "DNU::Fight::State::#{stat}".constantize.new(0, 0))
           end
           @id   = @@id += 1
-          @name = tree[:name]
+          @name = tree[:name].to_s
           @team = tree[:team]
           @Position = DNU::Fight::State::Position.new(rand(3)+1)
           @Range    = DNU::Fight::State::Range.new(rand(5)+1)

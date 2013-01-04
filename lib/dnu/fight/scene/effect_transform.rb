@@ -5,13 +5,21 @@ class EffectTransform < Parslet::Transform
     number.to_s.tr("０-９．","0-9.")
   }
   
-  rule(:find_by_position => simple(:position)) {
+  rule(:position_to_fixnum => simple(:position)) {
     filter = {
       :"前" => 1,
       :"中" => 2,
       :"後" => 3
     }
-    { :find_by_position => filter[position.to_sym] }
+    filter[position.to_sym]
+  }
+  
+  rule(:range => simple(:range)) {
+    "Range"
+  }
+  
+  rule(:position => simple(:position)) {
+    "Position"
   }
   
   rule(:value_resist => subtree(:value_resist)) {

@@ -9,7 +9,7 @@ module DNU
         end
         
         def create_passive
-          scope = @character.live.try(@tree[:passive][:scope].to_s, @parent.active.try(:call))
+          scope = @character.try(@tree[:passive][:scope].to_s, @parent.active.try(:call))
           scope = @character.try(@tree[:passive][:sub_scope].to_s, scope) unless @tree[:passive][:sub_scope].nil?
           return scope if @tree[:passive][:target].nil?
           target1 = @parent.stack.last.respond_to?(:target) ? @parent.stack.last.target : nil
@@ -34,7 +34,7 @@ module DNU
         end
         
         def create_children
-          @children ||= create_from_hash(@tree[:do])
+          @children ||= create_from_hash(@passive.call.nil? ? { :empty => @tree[:passive] } : @tree[:do])
         end
         
         def play_(b_or_a)

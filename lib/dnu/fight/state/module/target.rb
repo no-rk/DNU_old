@@ -5,7 +5,7 @@ module DNU
       module Target
         
         def live
-          self.find_all{ |child| !child.dead }.extend Target
+          self.find_all{ |child|  child.live }.extend Target
         end
         
         def dead
@@ -41,19 +41,35 @@ module DNU
         end
         
         def 味(active)
-          find_by_team(active.team)
+          self.live.find_by_team(active.team)
         end
         
         def 敵(active)
-          find_by_team_not(active.team)
+          self.live.find_by_team_not(active.team)
         end
         
         def 敵味(active)
-          self
+          self.live
         end
         
         def 味敵(active)
-          self
+          self.live
+        end
+        
+        def 味墓地(active)
+          self.dead.find_by_team(active.team)
+        end
+        
+        def 敵墓地(active)
+          self.dead.find_by_team_not(active.team)
+        end
+        
+        def 敵味墓地(active)
+          self.dead
+        end
+        
+        def 味敵墓地(active)
+          self.dead
         end
         
         def find_by_name(name)
@@ -73,7 +89,7 @@ module DNU
         end
         
         def 全(active, passive, target)
-          self
+          self.blank? ? nil : self
         end
         
         def 低(status_or_disease_name, active=nil, target=nil)

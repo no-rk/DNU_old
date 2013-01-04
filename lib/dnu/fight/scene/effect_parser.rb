@@ -66,8 +66,9 @@ class EffectParser < Parslet::Parser
   
   rule(:status_name) {
     (
-      (hp_mp.absent? >> str('M')).maybe >>
-      hp_mp
+      (hp_mp.absent? >> str('M')).maybe >> hp_mp |
+      str('隊列').as(:position) |
+      str('射程').as(:range)
     ).as(:status_name) |
     str('装備').as(:equip).maybe >> (
       str('M').maybe >> str('AT') |
@@ -148,7 +149,12 @@ class EffectParser < Parslet::Parser
   }
   
   rule(:multi_scope) {
-    str('敵味') | str('味敵') | str('敵') | str('味')
+    (
+      str('敵味') |
+      str('味敵') |
+      str('敵') |
+      str('味')
+    ) >> str('墓地').maybe
   }
   
   rule(:single_sub_scope) {
@@ -368,17 +374,24 @@ class EffectParser < Parslet::Parser
     str('"')
   }
   
+  rule(:revive) {
+    (
+      str('蘇生') >> bra >> effect_coeff.as(:change_to) >> (separator >> effect_hit).maybe >> ket
+    ).as(:revive)
+  }
+  
   rule(:effect) {
     (
       (
         heal |
         change |
-        disease |
-        interrupt |
         cost |
         serif
       ) >> arrow.absent? |
-      attack
+      attack |
+      revive |
+      disease |
+      interrupt
     ).as(:effect)
   }
   
@@ -478,7 +491,8 @@ class EffectParser < Parslet::Parser
   }
   
   rule(:condition_coeff) {
-    positive_integer.as(:fixnum)
+    positive_integer.as(:fixnum) |
+    position_to_fixnum.as(:fixnum)
   }
   
   rule(:condition_ge) {
@@ -698,8 +712,12 @@ class EffectParser < Parslet::Parser
   
   # skill_setting
   
+  rule(:position_to_fixnum) {
+    (str('前') | str('中') | str('後')).as(:position_to_fixnum) >> str('列')
+  }
+  
   rule(:skill_target) {
-    (str('前') | str('中') | str('後')).as(:find_by_position) >> str('列') |
+    position_to_fixnum.as(:find_by_position) |
     (newline.absent? >> any).repeat(1).as(:find_by_name)
   }
   

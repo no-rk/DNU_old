@@ -233,9 +233,26 @@ module DNU
           nested_div(tree[:after])
         end
         
+        def Revive(tree)
+          h = tree[:children]
+          nested_div(tree[:before])   +
+          if h[:live]
+            %Q|\n<span class="passive">#{tree[:passive]}</span>は生きてる。|
+          else
+            %Q|\n<span class="passive">#{tree[:passive]}</span>は生き返った。（ #{h[:before_change]} ⇒ #{h[:after_change]} ）|
+          end +
+          nested_div(tree[:after])
+        end
+        
         def Serif(tree)
           nested_div(tree[:before])   +
            %Q|\n#{tree[:children].to_s.gsub(/<target>/,tree[:passive])}| +
+          nested_div(tree[:after])
+        end
+        
+        def Empty(tree)
+          nested_div(tree[:before])   +
+           %Q|\n#{tree[:children][:scope]}には対象が存在しない。| +
           nested_div(tree[:after])
         end
         

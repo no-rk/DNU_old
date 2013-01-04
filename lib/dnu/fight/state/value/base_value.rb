@@ -4,6 +4,14 @@ module DNU
       class BaseValue < SimpleDelegator
         attr_reader :ini, :val, :min, :max, :history
         
+        def status
+          self
+        end
+        
+        def equip
+          self
+        end
+        
         def min_val(n)
           n/5
         end
@@ -42,6 +50,11 @@ module DNU
         
         def change_value(n)
           @val += n
+          set_val
+        end
+        
+        def change_to(n)
+          @val = n
           set_val
         end
         

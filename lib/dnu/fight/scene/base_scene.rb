@@ -127,7 +127,7 @@ module DNU
         
         def create_from_hash(tree)
           begin
-            "DNU::Fight::Scene::#{child_name(tree).to_s.camelize}".constantize.new(@character,tree[child_name(tree)], self)
+            "DNU::Fight::Scene::#{child_name(tree).to_s.camelize}".constantize.new(@character, tree[child_name(tree)], self)
           rescue
             history[:children] << "#{scene_name}の子要素#{child_name(tree)}\{:#{
             tree[child_name(tree)].respond_to?(:keys) ? tree[child_name(tree)].keys.join(',:') : tree[child_name(tree)]

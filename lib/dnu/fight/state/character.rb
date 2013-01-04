@@ -7,7 +7,7 @@ module DNU
         
         def initialize(tree)
           tree[:settings].each do |pt|
-            team = DNU::Fight::State::Team.new(pt[:pt_name])
+            team = DNU::Fight::State::Team.new(pt[:pt_name].to_s)
             pt[:members].each do |character|
               definition = tree[:definitions].try(:find){|d| d[:type]==character[:type] and d[:name]==character[:name] } || {}
               definition.merge!(character).merge!(:team => team)
