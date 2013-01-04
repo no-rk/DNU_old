@@ -23,6 +23,10 @@ module DNU
           end
         end
         
+        def id
+          object_id
+        end
+        
         def type
           self.class.name.split("::").last.to_sym
         end

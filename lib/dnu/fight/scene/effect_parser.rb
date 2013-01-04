@@ -335,11 +335,11 @@ class EffectParser < Parslet::Parser
       disease_name >> str('軽減') >> bra >> effect_coeff.as(:change_value) >> ket
     ).as(:reduce) |
     (
-      (bra >> str('技') >> ket >> ((str('消費増加') | str('消費減少')).absent? >> any).repeat(1).as(:name)).maybe >>
+      (bra >> str('技') >> ket >> ((str('消費増加') | newline).absent? >> any).repeat(1).as(:name)).maybe >>
       str('消費増加') >> bra >> effect_coeff.as(:change_value) >> ket
     ).as(:cost_up) |
     (
-      (bra >> str('技') >> ket >> ((str('消費増加') | str('消費減少')).absent? >> any).repeat(1).as(:name)).maybe >>
+      (bra >> str('技') >> ket >> ((str('消費減少') | newline).absent? >> any).repeat(1).as(:name)).maybe >>
       str('消費減少') >> bra >> effect_coeff.as(:change_value) >> ket
     ).as(:cost_down)
   }
@@ -357,6 +357,21 @@ class EffectParser < Parslet::Parser
         str('付加').as(:sup)
       ) >> str('強制中断')
     ).as(:interrupt)
+  }
+  
+  rule(:vanish) {
+    (
+      (
+        (
+          str('技設定').as(:this) |
+          bra >> str('技') >> ket >> ((str('の設定') | newline).absent? >> any).repeat(1).as(:name) >> str('の設定')
+        ).as(:skill) |
+        (
+          str('付加').as(:this) |
+          bra >> str('付加') >> ket >> ((str('消滅') | newline).absent? >> any).repeat(1).as(:name)
+        ).as(:sup)
+      ) >> str('消滅')
+    ).as(:vanish)
   }
   
   rule(:cost) {
@@ -391,6 +406,7 @@ class EffectParser < Parslet::Parser
       attack |
       revive |
       disease |
+      vanish |
       interrupt
     ).as(:effect)
   }
@@ -678,7 +694,7 @@ class EffectParser < Parslet::Parser
   }
   
   rule(:skill_definition) {
-    bra >> str('技') >> ket >> (skill_options.absent? >> any).repeat(1).as(:name) >> skill_options >>
+    bra >> str('技') >> ket >> ((skill_options | newline).absent? >> any).repeat(1).as(:name) >> skill_options >>
     root_processes.as(:do).repeat(1).as(:effects)
   }
   

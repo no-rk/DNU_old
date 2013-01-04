@@ -61,6 +61,11 @@ module DNU
           !@dead
         end
         
+        def remove_effects(array)
+          @effects = (@effects - array).extend FindEffects
+          array.present?
+        end
+        
       end
     end
   end

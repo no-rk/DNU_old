@@ -222,6 +222,25 @@ module DNU
           nested_div(tree[:after])
         end
         
+        def Vanish(tree)
+          h = tree[:children]
+          nested_div(tree[:before])   +
+          if h[:success]
+            if h[:vanish_name]
+              %|\n<span class="passive">#{tree[:passive]}</span>の[#{I18n.t(h[:vanish_type], :scope => "DNU.Fight.Scene")}]#{h[:vanish_name]}#{'の設定' if h[:vanish_type]==:Skill}が全て消滅した！|
+            else
+              if h[:type] == h[:vanish_type]
+                %|\n[#{I18n.t(h[:type], :scope => "DNU.Fight.Scene")}]#{h[:name]}#{'の設定' if h[:type]==:Skill}が消滅した！|
+              else
+                %|\n[#{I18n.t(h[:type], :scope => "DNU.Fight.Scene")}]#{h[:name]}は#{I18n.t(h[:vanish_type], :scope => "DNU.Fight.Scene")}ではないので消滅しない。|
+              end
+            end
+          else
+            %|\n消滅の対象となる#{I18n.t(h[:vanish_type], :scope => "DNU.Fight.Scene")}は存在しない。|
+          end +
+          nested_div(tree[:after])
+        end
+        
         def Interrupt(tree)
           h = tree[:children]
           nested_div(tree[:before])   +
