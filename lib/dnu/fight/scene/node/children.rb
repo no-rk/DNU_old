@@ -1,7 +1,7 @@
 module DNU
   module Fight
     module Scene
-      class Before < BaseScene
+      class Children < BaseScene
         
         def before_each_scene
           @label = nil
@@ -18,6 +18,7 @@ module DNU
         
         def play_children
           history[:parent] = @tree[:parent]
+          history[:b_or_a] = @tree[:b_or_a]
           history[:id]     = @tree[:effects].object_id
           history[:type]   = @tree[:effects].type
           history[:name]   = @tree[:effects].name
@@ -28,14 +29,6 @@ module DNU
         end
         
         def play_(b_or_a)
-        end
-        
-        def log_before_each_scene
-          @history = @parent.try(:history) || {}
-          @history = @history[:before] ||= []
-          @history << { scene_name => { :children => [] } }
-          history[:active]  = @active.try(:call).try(:name)
-          history[:passive] = @passive.try(:call).try(:name)
         end
         
       end

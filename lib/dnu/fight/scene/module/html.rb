@@ -104,6 +104,11 @@ module DNU
           nested_div(tree[:children])
         end
         
+        def Children(tree)
+          %Q|\n<span class="active">#{tree[:active]}</span>の#{tree[:name]}「#{I18n.t(tree[:parent], :scope => "DNU.Fight.Scene")}#{I18n.t(tree[:b_or_a], :scope => "DNU.Fight.Scene")}#{I18n.t(tree[:type], :scope => "DNU.Fight.Scene")}」| +
+          nested_div(tree[:children])
+        end
+        
         def After(tree)
           %Q|\n<span class="active">#{tree[:active]}</span>の#{tree[:name]}「#{I18n.t(tree[:parent], :scope => "DNU.Fight.Scene")}後#{I18n.t(tree[:type], :scope => "DNU.Fight.Scene")}」| +
           nested_div(tree[:children])

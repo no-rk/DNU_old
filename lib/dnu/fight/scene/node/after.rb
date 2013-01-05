@@ -17,10 +17,10 @@ module DNU
         end
         
         def play_children
-          history[:parent]  = @tree[:parent]
-          history[:id]      = @tree[:effects].object_id
-          history[:type]    = @tree[:effects].type
-          history[:name]    = @tree[:effects].name
+          history[:parent] = @tree[:parent]
+          history[:id]     = @tree[:effects].object_id
+          history[:type]   = @tree[:effects].type
+          history[:name]   = @tree[:effects].name
           catch :"#{@tree[:effects].type}#{@tree[:effects].object_id}" do
             super
           end

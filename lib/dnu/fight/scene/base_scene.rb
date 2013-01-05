@@ -148,7 +148,7 @@ module DNU
           @children.try(:play) || create_children.play
         end
         
-        def play_(b_or_a)
+        def play_(b_or_a, c=nil)
           @pool ||= { :id => object_id, :effects => [] }
           active_array = [@active.try(:call) ].flatten.compact.map{|char| { :ant =>  nil , :active_now => char } } +
                          [@passive.try(:call)].flatten.compact.map{|char| { :ant => :ant , :active_now => char } }
@@ -163,9 +163,10 @@ module DNU
                 :if => {
                   :condition=> effects.condition,
                   :then => {
-                    b_or_a => {
+                    (c || b_or_a) => {
                       :parent => :"#{scene_name}#{ant.to_s.camelize}",
-                      :effects => effects
+                      :effects => effects,
+                      :b_or_a => b_or_a.to_s.camelize
                     }
                   },
                   :lv => effects.LV,

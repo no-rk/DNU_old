@@ -198,8 +198,8 @@ ja:
   DNU:
     Fight:
       Scene:
-        Before: "%{Scene}前"
-        After: "%{Scene}後"
+        Before: 前
+        After: 後
         Skill: 技
         Sup: 付加
         Serif: セリフ
@@ -212,6 +212,7 @@ ja:
         Act: 行動
         AddAct: 追加行動
         Effects: 効果
+        Root: 対象決定
         Cemetery: 墓地埋葬
         Attack: 攻撃
         AttackAnt: 被攻撃

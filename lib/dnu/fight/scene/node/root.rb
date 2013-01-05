@@ -1,3 +1,4 @@
+# encoding: UTF-8
 module DNU
   module Fight
     module Scene
@@ -9,13 +10,19 @@ module DNU
         end
         
         def create_passive
-          scope = @character.try(@tree[:passive][:scope].to_s, @parent.active.try(:call))
+          @active = @parent.active
+          play_(:before, :children) unless @tree[:passive][:scope].to_s=="自"
+          
+          scope = @character.try(@tree[:passive][:scope].to_s, @active.try(:call))
           scope = @character.try(@tree[:passive][:sub_scope].to_s, scope) unless @tree[:passive][:sub_scope].nil?
           return scope if @tree[:passive][:target].nil?
           target1 = @parent.stack.last.respond_to?(:target) ? @parent.stack.last.target : nil
           target1 = (target1.nil? ? nil : scope.try(target1.keys.first, target1.values.first))
           target2 = [@tree[:passive][:target]].flatten
-          scope.try(target2[0].to_s, target2[1] || @parent.passive.try(:call), @parent.active.try(:call), target1)
+          @root_passive= scope.try(target2[0].to_s, target2[1] || @parent.passive.try(:call), @active.try(:call), target1)
+          
+          play_(:after, :children) unless @tree[:passive][:scope].to_s=="自"
+          @root_passive
         end
         
         def has_next_scene?
@@ -37,9 +44,6 @@ module DNU
           @children ||= create_from_hash(@passive.call.nil? ? { :empty => @tree[:passive] } : @tree[:do])
         end
         
-        def play_(b_or_a)
-        end
-        
         def history
           @parent.history
         end
@@ -47,6 +51,15 @@ module DNU
         def log_before_each_scene
           @history = @parent.try(:history) || {}
           @history = @history[:children] ||= []
+        end
+        
+        def play
+          self.each do |scene|
+            log_before_each_scene
+            interrupt_before_play
+            play_children
+          end
+          @history.extend Html
         end
         
       end
