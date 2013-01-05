@@ -28,6 +28,10 @@ module DNU
           lambda{ 1.to_f }
         end
         
+        def dmg_critical
+          lambda{ 1.5 }
+        end
+        
       end
     end
   end

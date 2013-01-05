@@ -30,12 +30,18 @@ module DNU
               dmg  = try('dmg_' + attack_type.to_s).call
               dmg  = (dmg >= @@min_damage) ? dmg : @@min_damage
               logger(:dmg => dmg)
-              dmg  = dmg*calcu_value(tree[attack_type][:coeff_value]).call
+              dmg *= calcu_value(tree[attack_type][:coeff_value]).call
               dmg *= dmg_element.call
+              dmg *= dmg_critical.call if tree[attack_type][:critical]
               dmg.to_i
             end
           elsif tree[attack_type][:change_value]
-            lambda{ (calcu_value(tree[attack_type][:change_value]).call*dmg_element.call).to_i }
+            lambda do
+              dmg  = calcu_value(tree[attack_type][:change_value]).call
+              dmg *= dmg_element.call
+              dmg *= dmg_critical.call if tree[attack_type][:critical]
+              dmg.to_i
+            end
           else
             raise tree.to_s
           end
@@ -52,7 +58,7 @@ module DNU
           対象.HP.change_value(-damage)
           after_change  = 対象.HP.val
           
-          history[:children] = { :element => first_name, :attack_type => last_name, :before_change => before_change, :after_change => after_change }
+          history[:children] = { :critical => @tree.values.first[:critical], :element => first_name, :attack_type => last_name, :before_change => before_change, :after_change => after_change }
           logger({ :element => first_name, :attack_type => last_name, :before_change => before_change, :after_change => after_change })
         end
         

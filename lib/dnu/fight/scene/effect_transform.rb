@@ -158,7 +158,17 @@ class EffectTransform < Parslet::Transform
                   :hit? => tree
                 },
                 :then => {
-                  :hit => tree
+                  :if => {
+                    :condition => {
+                      :critical? => tree
+                    },
+                    :then => {
+                      :hit => { tree.keys.first => tree.values.first.merge(:critical => true) }
+                    },
+                    :else => {
+                      :hit => tree
+                    }
+                  }
                 },
                 :else => {
                   :miss => tree

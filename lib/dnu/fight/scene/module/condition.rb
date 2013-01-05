@@ -25,6 +25,10 @@ module DNU
           end
         end
         
+        def critical?(tree)
+          lambda{ r=rand; r<0.5 }
+        end
+        
         def add?(tree)
           lambda{ r=rand; r<0.5 }
         end

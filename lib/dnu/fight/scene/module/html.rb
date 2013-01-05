@@ -123,6 +123,7 @@ module DNU
         def Hit(tree)
           h = tree[:children]
           nested_div(tree[:before])   +
+          (h[:critical] ? "クリティカル！<br>" : "") +
           %Q|\n<span class="passive">#{tree[:passive]}</span>に#{(h[:after_change]-h[:before_change]).abs}の#{h[:element]}属性#{h[:attack_type]}ダメージを与えた！（ #{h[:before_change]} ⇒ #{h[:after_change]} ）| +
           nested_div(tree[:after])
         end
