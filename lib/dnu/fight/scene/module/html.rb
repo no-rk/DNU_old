@@ -280,6 +280,12 @@ module DNU
           nested_div(tree[:after])
         end
         
+        def NextScope(tree)
+          nested_div(tree[:before])   +
+           %Q|\n<span class="passive">#{tree[:passive]}</span>の次の対象範囲が#{tree[:children][:scope]}になった。| +
+          nested_div(tree[:after])
+        end
+        
         def nested_div(tree)
           if tree.respond_to?(:keys)
             class_name = tree.keys.first

@@ -409,12 +409,26 @@ class EffectParser < Parslet::Parser
     ).as(:revive)
   }
   
+  rule(:next_scope) {
+    (single_scope | multi_scope).as(:scope).as(:next_scope)
+  }
+  
+  rule(:next_scopes) {
+    str('次の対象範囲') >> bra >> (
+      (
+        next_scope >> (separator >> next_scope).repeat(1)
+      ).as(:random) |
+      next_scope
+    ) >> ket
+  }
+  
   rule(:effect) {
     (
       (
         heal |
         change |
         cost |
+        next_scopes |
         serif
       ) >> arrow.absent? |
       attack |
@@ -700,6 +714,13 @@ class EffectParser < Parslet::Parser
     sup_effects.as(:effects)
   }
   
+  # disease_definition
+  
+  rule(:disease_definition) {
+    bra >> str('異常') >> ket >> (newline.absent? >> any).repeat(1).as(:name) >> newline >>
+    sup_effects.as(:effects)
+  }
+  
   # skill_definition
   
   rule(:pre_phase) {
@@ -735,6 +756,7 @@ class EffectParser < Parslet::Parser
     (
       comment |
       sup_definition.as(:sup) |
+      disease_definition.as(:disease) |
       skill_definition.as(:skill) |
       serif_definition.as(:serif)
     ).repeat(1)
@@ -748,6 +770,14 @@ class EffectParser < Parslet::Parser
     ).repeat(1).as(:name) >> (
       level >> natural_number.as(:lv)
     ).maybe >> newline.maybe
+  }
+  
+  # disease_setting
+  
+  rule(:disease_setting) {
+    bra >> str('異常') >> ket >> (
+      newline.absent? >> any
+    ).repeat(1).as(:name) >> newline.maybe
   }
   
   # skill_setting
@@ -788,6 +818,7 @@ class EffectParser < Parslet::Parser
     (
       comment |
       sup_setting.as(:sup) |
+      disease_setting.as(:disease) |
       skill_setting.as(:skill) |
       serif_setting.as(:serif)
     ).repeat(1)

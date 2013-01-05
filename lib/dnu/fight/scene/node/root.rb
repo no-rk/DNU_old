@@ -13,9 +13,9 @@ module DNU
           @active = @parent.active
           play_(:before, :children) unless @tree[:passive][:scope].to_s=="自"
           
-          scope = @character.try(@tree[:passive][:scope].to_s, @active.try(:call))
+          scope = @character.try(@active.try(:call).try(:scope) || @tree[:passive][:scope].to_s, @active.try(:call))
           scope = @character.try(@tree[:passive][:sub_scope].to_s, scope) unless @tree[:passive][:sub_scope].nil?
-          return scope if @tree[:passive][:target].nil?
+          return scope if scope.respond_to?(:call)
           target1 = @parent.stack.last.respond_to?(:target) ? @parent.stack.last.target : nil
           target1 = (target1.nil? ? nil : scope.try(target1.keys.first, target1.values.first))
           target2 = [@tree[:passive][:target]].flatten

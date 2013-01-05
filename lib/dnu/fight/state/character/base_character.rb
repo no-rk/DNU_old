@@ -45,11 +45,12 @@ module DNU
           @Range    = DNU::Fight::State::Range.new(rand(5)+1)
           @effects         = [].extend FindEffects
           @effects_removed = [].extend FindEffects
+          @scope = []
           tree[:settings].try(:each) do |setting|
             effects_type = setting.keys.first
             effects_name = setting[effects_type][:name]
             effects = tree[:definitions].try(:find){|d| d.keys.first==effects_type and d[effects_type][:name] == effects_name }
-            raise "[#{I18n.t(effects_type.to_s.camelize, :scope => "DNU.Fight.Scene")}]#{effects_name}は定義されてない" if effects.nil?
+            raise "[#{I18n.t(effects_type.to_s.camelize, :scope => 'DNU.Fight.Scene')}]#{effects_name}は定義されてない" if effects.nil?
             effects = effects[effects_type].merge(setting[effects_type])#.merge({:target=>{:find_by_position=>3}})
             es = "DNU::Fight::State::#{effects_type.to_s.camelize}".constantize.new(effects)
             es.each do |e|
@@ -66,6 +67,14 @@ module DNU
           @effects = (@effects - array).extend FindEffects
           @effects_removed += array
           array.present?
+        end
+        
+        def scope
+          @scope.pop
+        end
+        
+        def scope=(s)
+          @scope.push(s.to_s)
         end
         
       end

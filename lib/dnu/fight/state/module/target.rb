@@ -37,7 +37,7 @@ module DNU
         end
         
         def 自(active)
-          active
+          lambda{ active }
         end
         
         def 味(active)
