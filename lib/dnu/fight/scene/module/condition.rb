@@ -34,11 +34,14 @@ module DNU
           lambda{ r=rand(100); r < val.call }
         end
         
-        def just_before_attack(tree)
-          hit_or_miss = tree.keys.first.to_s.camelize.to_sym
+        def just_before(scene)
           lambda do
             begin
-              history[:children].select{ |h| h.keys.first == :Attack }.last[:Attack][:children].last[hit_or_miss].present?
+              if history[:children].last.values.first[:children].respond_to?(:last)
+                history[:children].last.values.first[:children].last[scene].present?
+              else
+                history[:children].last.values.first[:children][scene].present?
+              end
             rescue
               false
             end
@@ -53,31 +56,31 @@ module DNU
         def condition_ge(tree)
           left  = try(tree[:left ].keys.first, tree[:left ].values.first)
           right = try(tree[:right].keys.first, tree[:right].values.first)
-          lambda{ (left_call = left.call) and (right_call = right.call) ? (left_call >= right_call) : nil }
+          lambda{ !(left_call = left.call).nil? and !(right_call = right.call).nil? ? (left_call >= right_call) : nil }
         end
         
         def condition_eq(tree)
           left  = try(tree[:left ].keys.first, tree[:left ].values.first)
           right = try(tree[:right].keys.first, tree[:right].values.first)
-          lambda{ (left_call = left.call) and (right_call = right.call) ? (left_call == right_call) : nil }
+          lambda{ !(left_call = left.call).nil? and !(right_call = right.call).nil? ? (left_call == right_call) : nil }
         end
         
         def condition_le(tree)
           left  = try(tree[:left ].keys.first, tree[:left ].values.first)
           right = try(tree[:right].keys.first, tree[:right].values.first)
-          lambda{ (left_call = left.call) and (right_call = right.call) ? (left_call <= right_call) : nil }
+          lambda{ !(left_call = left.call).nil? and !(right_call = right.call).nil? ? (left_call <= right_call) : nil }
         end
         
         def condition_and(tree)
           left  = try(tree[:left ].keys.first, tree[:left ].values.first)
           right = try(tree[:right].keys.first, tree[:right].values.first)
-          lambda{ (left_call = left.call) and (right_call = right.call) ? (left_call and right_call) : nil }
+          lambda{ !(left_call = left.call).nil? and !(right_call = right.call).nil? ? (left_call and right_call) : nil }
         end
         
         def condition_or(tree)
           left  = try(tree[:left ].keys.first, tree[:left ].values.first)
           right = try(tree[:right].keys.first, tree[:right].values.first)
-          lambda{ (left_call = left.call) and (right_call = right.call) ? (left_call or right_call) : nil }
+          lambda{ !(left_call = left.call).nil? and !(right_call = right.call).nil? ? (left_call or right_call) : nil }
         end
         
         def condition(tree)

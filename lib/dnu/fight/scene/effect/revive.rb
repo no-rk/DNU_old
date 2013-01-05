@@ -25,7 +25,7 @@ module DNU
             対象.HP.change_to(change)
             after_change  = 対象.HP.val
             
-            history[:children] = { :before_change => before_change, :after_change => after_change }
+            history[:children] = { :before_change => before_change, :after_change => after_change, :success => true }
           else
             history[:children] = { :live => true }
           end

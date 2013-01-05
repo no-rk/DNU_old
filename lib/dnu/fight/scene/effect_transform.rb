@@ -22,19 +22,55 @@ class EffectTransform < Parslet::Transform
     "Position"
   }
   
+  rule(:just_before => { :hit => "命中" }) {
+    { :just_before => :Hit }
+  }
+  
+  rule(:just_before => { :miss => "空振" }) {
+    { :just_before => :Miss }
+  }
+  
+  rule(:just_before => { :add => "追加" }) {
+    { :just_before => :Add }
+  }
+  
+  rule(:just_before => { :resist => "抵抗" }) {
+    { :just_before => :Resist }
+  }
+  
+  rule(:just_before => { :success => "成功" }) {
+    { :just_before => :success }
+  }
+  
+  rule(:just_before => { :failure => "失敗" }) {
+    { :condition_not => { :just_before => :success } }
+  }
+  
   rule(:value_resist => subtree(:value_resist)) {
     :"#{(value_resist[:disease_name] || value_resist[:element]).keys.first}#{value_resist.key('特性') || value_resist.key('耐性')}"
   }
   
   rule('回避停止') {
     {
-      :just_before_attack => { :hit => '命中' }
+      :just_before => :Hit
     }
   }
   
   rule('命中停止') {
     {
-      :just_before_attack => { :miss => '空振' }
+      :just_before => :Miss
+    }
+  }
+  
+  rule('抵抗停止') {
+    {
+      :just_before => :Add
+    }
+  }
+  
+  rule('追加停止') {
+    {
+      :just_before => :Resist
     }
   }
   
@@ -42,7 +78,15 @@ class EffectTransform < Parslet::Transform
     {
       :if => {
         :condition => {
-          :just_before_attack => { :hit => '命中' }
+          :condition_or => {
+            :left  => { :just_before => :Hit },
+            :right => { 
+              :condition_or => {
+                :left  => { :just_before => :Add },
+                :right => { :just_before => :success }
+              }
+            }
+          }
         },
         :then => arrow_process
       }

@@ -432,13 +432,11 @@ class EffectParser < Parslet::Parser
   }
   
   rule(:disease_boolean) {
-    (
-      str('追加') | str('抵抗')
-    ).as(:disease_boolean)
+    str('追加').as(:add) | str('抵抗').as(:resist)
   }
   
-  rule(:just_before) {
-    str('直前')
+  rule(:effects_boolean) {
+    str('成功').as(:success) | str('失敗').as(:failure)
   }
   
   rule(:attack_name) {
@@ -465,10 +463,14 @@ class EffectParser < Parslet::Parser
     ).as(:state_effect)
   }
   
-  rule(:just_before_attack) {
+  rule(:just_before) {
     (
-      just_before >> attack_name >> attack_boolean
-    ).as(:just_before_attack)
+      str('直前') >> (
+        attack_name >> attack_boolean |
+        str('異常') >> disease_boolean |
+        str('効果') >> effects_boolean
+      )
+    ).as(:just_before)
   }
   
   rule(:state_character) {
@@ -508,7 +510,7 @@ class EffectParser < Parslet::Parser
   
   rule(:condition_boolean) {
     (
-      just_before_attack |
+      just_before |
       random_percent
     ) >> str('になった').absent? |
     status_percent
@@ -606,7 +608,14 @@ class EffectParser < Parslet::Parser
   }
   
   rule(:while_wrap) {
-    separator >> (conditions | condition | str('回避停止') | str('命中停止')).as(:while)
+    separator >> (
+      conditions |
+      condition |
+      str('回避停止') |
+      str('命中停止') |
+      str('抵抗停止') |
+      str('追加停止')
+    ).as(:while)
   }
   
   rule(:if_process) {

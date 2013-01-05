@@ -9,9 +9,12 @@ module DNU
           effects_type   = @stack[-2].try(:type)
           effects_name   = @stack[-2].try(:name)
           
-          @stack[-2].interrupt = lambda{ true } if effects_type == interrupt_type
+          if effects_type == interrupt_type
+            @stack[-2].interrupt = lambda{ true }
+            success = true
+          end
           
-          history[:children] = { :type => effects_type, :name => effects_name, :interrupt => interrupt_type }
+          history[:children] = { :type => effects_type, :name => effects_name, :interrupt => interrupt_type, :success => success }
         end
         
         def play_(b_or_a)
