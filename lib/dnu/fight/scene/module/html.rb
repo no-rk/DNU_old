@@ -246,6 +246,17 @@ module DNU
           nested_div(tree[:after])
         end
         
+        def AddEffects(tree)
+          h = tree[:children]
+          nested_div(tree[:before])   +
+          if h[:success]
+            %Q|\n<span class="passive">#{tree[:passive]}</span>に[#{I18n.t(h[:type], :scope => "DNU.Fight.Scene")}]#{h[:name]}#{"LV#{h[:setting][:lv]}" if h[:setting][:lv]}を追加！|
+          else
+            %Q|\n<span class="passive">#{tree[:passive]}</span>に[#{I18n.t(h[:type], :scope => "DNU.Fight.Scene")}]#{h[:name]}#{"LV#{h[:setting][:lv]}" if h[:setting][:lv]}をもう追加できない！|
+          end +
+          nested_div(tree[:after])
+        end
+        
         def Interrupt(tree)
           h = tree[:children]
           nested_div(tree[:before])   +

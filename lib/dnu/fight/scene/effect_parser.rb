@@ -31,6 +31,10 @@ class EffectParser < Parslet::Parser
     spaces? >> match('[|:/｜：／・]') >> spaces?
   }
   
+  rule(:partition) {
+    match('[-]').repeat(1) >> newline
+  }
+  
   rule(:from_to) {
     match('[-~‐－―ー～]') | str('から')
   }
@@ -349,11 +353,11 @@ class EffectParser < Parslet::Parser
       disease_name >> str('軽減') >> bra >> effect_coeff.as(:change_value) >> ket
     ).as(:reduce) |
     (
-      (bra >> str('技') >> ket >> ((str('消費増加') | newline).absent? >> any).repeat(1).as(:name)).maybe >>
+      (bra >> str('技') >> ket >> ((str('消費増加') | arrow | plus | newline).absent? >> any).repeat(1).as(:name)).maybe >>
       str('消費増加') >> bra >> effect_coeff.as(:change_value) >> ket
     ).as(:cost_up) |
     (
-      (bra >> str('技') >> ket >> ((str('消費減少') | newline).absent? >> any).repeat(1).as(:name)).maybe >>
+      (bra >> str('技') >> ket >> ((str('消費減少') | arrow | plus | newline).absent? >> any).repeat(1).as(:name)).maybe >>
       str('消費減少') >> bra >> effect_coeff.as(:change_value) >> ket
     ).as(:cost_down)
   }
@@ -378,14 +382,25 @@ class EffectParser < Parslet::Parser
       (
         (
           str('技設定').as(:this) |
-          bra >> str('技') >> ket >> ((str('の設定') | newline).absent? >> any).repeat(1).as(:name) >> str('の設定')
+          bra >> str('技') >> ket >> ((str('の設定') | arrow | plus | newline).absent? >> any).repeat(1).as(:name) >> str('の設定')
         ).as(:skill) |
         (
           str('付加').as(:this) |
-          bra >> str('付加') >> ket >> ((str('消滅') | newline).absent? >> any).repeat(1).as(:name)
+          bra >> str('付加') >> ket >> ((str('消滅') | arrow | plus | newline).absent? >> any).repeat(1).as(:name)
         ).as(:sup)
       ) >> str('消滅')
     ).as(:vanish)
+  }
+  
+  rule(:add_effects) {
+    (
+      (
+        bra >> str('付加') >> ket >>
+        ((level | arrow | plus | bra | ket | newline).absent? >> any).repeat(1).as(:name) >>
+        (level >> natural_number.as(:lv)).maybe >>
+        (bra >> str('重複不可').as(:unique) >> ket).maybe
+      ).as(:sup)
+    ).as(:add_effects)
   }
   
   rule(:cost) {
@@ -435,6 +450,7 @@ class EffectParser < Parslet::Parser
       revive |
       disease |
       vanish |
+      add_effects |
       interrupt
     ).as(:effect)
   }
@@ -740,6 +756,7 @@ class EffectParser < Parslet::Parser
   
   rule(:skill_definition) {
     bra >> str('技') >> ket >> ((skill_options | newline).absent? >> any).repeat(1).as(:name) >> skill_options >>
+    (partition >> sup_definition.as(:sup).repeat(1).as(:definitions) >> partition).maybe >>
     root_processes.as(:do).repeat(1).as(:effects)
   }
   

@@ -47,20 +47,23 @@ module DNU
           @effects_removed = [].extend FindEffects
           @scope = []
           tree[:settings].try(:each) do |setting|
-            effects_type = setting.keys.first
-            effects_name = setting[effects_type][:name]
-            effects = tree[:definitions].try(:find){|d| d.keys.first==effects_type and d[effects_type][:name] == effects_name }
-            raise "[#{I18n.t(effects_type.to_s.camelize, :scope => 'DNU.Fight.Scene')}]#{effects_name}は定義されてない" if effects.nil?
-            effects = effects[effects_type].merge(setting[effects_type])#.merge({:target=>{:find_by_position=>3}})
-            es = "DNU::Fight::State::#{effects_type.to_s.camelize}".constantize.new(effects)
-            es.each do |e|
-              @effects << e
-            end
+            add_effects(setting.keys.first, setting.values.first[:name], setting.values.first, tree[:definitions])
           end
         end
         
         def live
           !@dead
+        end
+        
+        def add_effects(type, name, setting, definitions, parent=nil)
+          effects = definitions.try(:find){|d| d.keys.first==type and d[type][:name] == name }
+          # 定義されていない場合はデータベースから読み込みを試みる
+          raise "[#{I18n.t(type.to_s.camelize, :scope => 'DNU.Fight.Scene')}]#{name}は定義されてない" if effects.nil?
+          effects = effects[type].merge(setting).merge(:parent => parent)
+          es = "DNU::Fight::State::#{type.to_s.camelize}".constantize.new(effects)
+          es.each do |e|
+            @effects << e
+          end
         end
         
         def remove_effects(array)

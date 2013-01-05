@@ -25,11 +25,15 @@ module DNU
         end
         
         def find_by_name(name)
-          name.nil? ? self : self.find_all{ |child| child.name.to_sym == name.to_sym }
+          name.nil? ? self : (self.find_all{ |child| child.name.to_sym == name.to_sym }.extend FindEffects)
         end
         
         def find_by_id(id)
-          self.find_all{ |child| child.id == id }
+          self.find_all{ |child| child.id == id }.extend FindEffects
+        end
+        
+        def find_by_parent(parent)
+          self.find_all{ |child| child.parent.type == parent.type and child.parent.name == parent.name }.extend FindEffects
         end
         
         def low_priority
