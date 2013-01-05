@@ -35,6 +35,12 @@ module DNU
           lambda{ r=rand; r }
         end
         
+        def random_number(tree)
+          from = try(tree[:from].keys.first, tree[:from].values.first)
+          to   = try(  tree[:to].keys.first,   tree[:to].values.first)
+          lambda{ [from.call, to.call].min + rand((to.call-from.call).abs + 1) }
+        end
+        
         def add_coeff(tree)
           add_array = tree.map{ |h| try(h.keys.first, h.values.first) }
           lambda{ add_array.inject(0){|r,v| r=r+v.call } }

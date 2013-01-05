@@ -28,7 +28,11 @@ class EffectParser < Parslet::Parser
   }
   
   rule(:separator) {
-    spaces? >> match('[-|:/－｜：／・]') >> spaces?
+    spaces? >> match('[|:/｜：／・]') >> spaces?
+  }
+  
+  rule(:from_to) {
+    match('[-~‐－―ー～]') | str('から')
   }
   
   rule(:dot) {
@@ -198,17 +202,17 @@ class EffectParser < Parslet::Parser
     state |
     decimal.as(:fixnum) |
     level.as(:lv) |
-    bra >> (add_coeff | multi_coeff) >> ket
+    bra >> (
+      random_number |
+      add_coeff |
+      multi_coeff
+    ) >> ket
   }
   
-  rule(:multi_coeff) {
+  rule(:random_number) {
     (
-      calculable >>
-      (
-        multiply >>
-        calculable
-      ).repeat(1)
-    ).as(:multi_coeff)
+      (multi_coeff | calculable).as(:from) >> from_to >> (multi_coeff | calculable).as(:to)
+    ).as(:random_number)
   }
   
   rule(:add_coeff) {
@@ -227,8 +231,18 @@ class EffectParser < Parslet::Parser
     ).as(:add_coeff)
   }
   
+  rule(:multi_coeff) {
+    (
+      calculable >>
+      (
+        multiply >>
+        calculable
+      ).repeat(1)
+    ).as(:multi_coeff)
+  }
+  
   rule(:effect_coeff) {
-    add_coeff | multi_coeff | calculable
+     random_number | add_coeff | multi_coeff | calculable
   }
   
   # effect
@@ -272,7 +286,7 @@ class EffectParser < Parslet::Parser
   }
   
   rule(:effect_hit) {
-    (positive_integer >> percent).as(:min_hit) >> (separator >> (positive_integer >> percent).as(:max_hit)).maybe
+    (positive_integer >> percent).as(:min_hit) >> (from_to >> (positive_integer >> percent).as(:max_hit)).maybe
   }
   
   rule(:physical) {

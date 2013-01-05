@@ -23,6 +23,7 @@ module DNU
           catch :"#{@tree[:effects].type}#{@tree[:effects].object_id}" do
             super
           end
+          @tree[:effects].history << history[:children]
         end
         
       end

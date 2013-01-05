@@ -3,7 +3,7 @@ module DNU
     module State
       class BaseEffects < Array
         
-        attr_reader :LV
+        attr_reader :LV, :history
         attr_accessor :interrupt
         
         def child_name(tree)
@@ -18,6 +18,7 @@ module DNU
           when_initialize(tree)
           @name = tree[:name].to_sym
           @LV = tree[:lv].nil? ? nil : DNU::Fight::State::LV.new(tree[:lv])
+          @history = []
           tree[:effects].each do |effect|
             push Effects.new(effect.merge(:parent => self))
           end

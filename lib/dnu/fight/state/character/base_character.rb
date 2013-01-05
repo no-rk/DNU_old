@@ -43,7 +43,8 @@ module DNU
           @team = tree[:team]
           @Position = DNU::Fight::State::Position.new(rand(3)+1)
           @Range    = DNU::Fight::State::Range.new(rand(5)+1)
-          @effects = [].extend FindEffects
+          @effects         = [].extend FindEffects
+          @effects_removed = [].extend FindEffects
           tree[:settings].try(:each) do |setting|
             effects_type = setting.keys.first
             effects_name = setting[effects_type][:name]
@@ -63,6 +64,7 @@ module DNU
         
         def remove_effects(array)
           @effects = (@effects - array).extend FindEffects
+          @effects_removed += array
           array.present?
         end
         
