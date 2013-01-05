@@ -85,7 +85,7 @@ class EffectParser < Parslet::Parser
       str('M').maybe >> str('EVA') |
       str('SPD') |
       (
-        (disease_name | element_name) >> (str('特性').as(:Value) | str('耐性').as(:Resist))
+        (disease_name | element_name.as(:element)) >> (str('特性').as(:Value) | str('耐性').as(:Resist))
       ).as(:value_resist)
     ).as(:status_name)
   }
@@ -107,16 +107,14 @@ class EffectParser < Parslet::Parser
   }
   
   rule(:element_name) {
-    (
-      str('無').as(:None) |
-      str('火').as(:Fire) |
-      str('水').as(:Water) |
-      str('地').as(:Earth) |
-      str('風').as(:Wind) |
-      str('光').as(:Light) |
-      str('闇').as(:Dark) |
-      str('ラ').as(:Random)
-    ).as(:element)
+    str('無').as(:None) |
+    str('火').as(:Fire) |
+    str('水').as(:Water) |
+    str('地').as(:Earth) |
+    str('風').as(:Wind) |
+    str('光').as(:Light) |
+    str('闇').as(:Dark) |
+    str('ラ').as(:Random)
   }
   
   rule(:equip_name) {
@@ -295,29 +293,29 @@ class EffectParser < Parslet::Parser
   
   rule(:physical) {
     (
-               (element_name >> str('属性')).maybe >> physical_attack >> bra >> effect_coeff.as(:coeff_value)  >> (separator >> effect_hit).maybe >> ket |
-      const >> (element_name >> str('属性')).maybe >> physical_attack >> bra >> effect_coeff.as(:change_value) >> (separator >> effect_hit).maybe >> ket
+               (element_name.as(:element) >> str('属性')).maybe >> physical_attack >> bra >> effect_coeff.as(:coeff_value)  >> (separator >> effect_hit).maybe >> ket |
+      const >> (element_name.as(:element) >> str('属性')).maybe >> physical_attack >> bra >> effect_coeff.as(:change_value) >> (separator >> effect_hit).maybe >> ket
     ).as(:physical)
   }
   
   rule(:magical) {
     (
-               (element_name >> str('属性')).maybe >>  magical_attack >> bra >> effect_coeff.as(:coeff_value)  >> (separator >> effect_hit).maybe >> ket |
-      const >> (element_name >> str('属性')).maybe >>  magical_attack >> bra >> effect_coeff.as(:change_value) >> (separator >> effect_hit).maybe >> ket
+               (element_name.as(:element) >> str('属性')).maybe >>  magical_attack >> bra >> effect_coeff.as(:coeff_value)  >> (separator >> effect_hit).maybe >> ket |
+      const >> (element_name.as(:element) >> str('属性')).maybe >>  magical_attack >> bra >> effect_coeff.as(:change_value) >> (separator >> effect_hit).maybe >> ket
     ).as(:magical)
   }
   
   rule(:physical_magical) {
     (
-               (element_name >> str('属性')).maybe >> physical_magical_attack >> bra >> effect_coeff.as(:coeff_value)  >> (separator >> effect_hit).maybe >> ket |
-      const >> (element_name >> str('属性')).maybe >> physical_magical_attack >> bra >> effect_coeff.as(:change_value) >> (separator >> effect_hit).maybe >> ket
+               (element_name.as(:element) >> str('属性')).maybe >> physical_magical_attack >> bra >> effect_coeff.as(:coeff_value)  >> (separator >> effect_hit).maybe >> ket |
+      const >> (element_name.as(:element) >> str('属性')).maybe >> physical_magical_attack >> bra >> effect_coeff.as(:change_value) >> (separator >> effect_hit).maybe >> ket
     ).as(:physical_magical)
   }
   
   rule(:switch_physical_magical) {
     (
-               (element_name >> str('属性')).maybe >> switch_physical_magical_attack >> bra >> effect_coeff.as(:coeff_value)  >> (separator >> effect_hit).maybe >> ket |
-      const >> (element_name >> str('属性')).maybe >> switch_physical_magical_attack >> bra >> effect_coeff.as(:change_value) >> (separator >> effect_hit).maybe >> ket
+               (element_name.as(:element) >> str('属性')).maybe >> switch_physical_magical_attack >> bra >> effect_coeff.as(:coeff_value)  >> (separator >> effect_hit).maybe >> ket |
+      const >> (element_name.as(:element) >> str('属性')).maybe >> switch_physical_magical_attack >> bra >> effect_coeff.as(:change_value) >> (separator >> effect_hit).maybe >> ket
     ).as(:switch_physical_magical)
   }
   
@@ -696,6 +694,11 @@ class EffectParser < Parslet::Parser
     str('優先度') >> natural_number.as(:priority)
   }
   
+  rule(:timing_options) {
+    (element_name >> str('属性')).maybe >>
+    (str('物理').as(:physical) | str('魔法').as(:magical)).maybe
+  }
+  
   rule(:timing) {
     (
       str('戦闘').as(:battle) |
@@ -705,14 +708,18 @@ class EffectParser < Parslet::Parser
       str('追加行動').as(:add_act) |
       str('効果').as(:effects) |
       str('対象決定').as(:root) |
-      str('攻撃命中').as(:hit) |
-      str('攻撃被弾').as(:hit_ant) |
-      str('攻撃空振').as(:miss) |
-      str('攻撃回避').as(:miss_ant) |
-      str('攻撃').as(:attack) |
-      str('被攻撃').as(:attack_ant) |
+      timing_options >> (
+        str('攻撃命中').as(:hit) |
+        str('攻撃被弾').as(:hit_ant) |
+        str('攻撃空振').as(:miss) |
+        str('攻撃回避').as(:miss_ant) |
+        str('攻撃').as(:attack) |
+        str('被攻撃').as(:attack_ant)
+      ) |
+      str('クリティカル').as(:critical) |
+      str('被クリティカル').as(:critical_ant) |
       str('墓地埋葬').as(:cemetery)
-    ).as(:timing) >> before_after.as(:before_after)
+    ).as(:timing_transform).as(:timing) >> before_after.as(:before_after)
   }
   
   rule(:sup_effect) {

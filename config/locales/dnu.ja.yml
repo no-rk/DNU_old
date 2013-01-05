@@ -216,6 +216,8 @@ ja:
         Cemetery: 墓地埋葬
         Attack: 攻撃
         AttackAnt: 被攻撃
+        Critical: クリティカル
+        CriticalAnt: 被クリティカル
         Physical: 物理
         Magical: 魔法
         PhysicalMagical: 純物魔

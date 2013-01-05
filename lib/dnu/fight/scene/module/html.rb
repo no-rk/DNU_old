@@ -100,17 +100,17 @@ module DNU
         end
         
         def Before(tree)
-          %Q|\n<span class="active">#{tree[:active]}</span>の#{tree[:name]}「#{I18n.t(tree[:parent], :scope => "DNU.Fight.Scene")}前#{I18n.t(tree[:type], :scope => "DNU.Fight.Scene")}」| +
+          %Q|\n<span class="active">#{tree[:active]}</span>の#{tree[:name]}「#{tree[:parent].to_s.underscore.split(/_(?!ant)/).map{|s|s.camelize.to_sym}.inject(""){|a,s| a << I18n.t(s, :scope => "DNU.Fight.Scene") }}前#{I18n.t(tree[:type], :scope => "DNU.Fight.Scene")}」| +
           nested_div(tree[:children])
         end
         
         def Children(tree)
-          %Q|\n<span class="active">#{tree[:active]}</span>の#{tree[:name]}「#{I18n.t(tree[:parent], :scope => "DNU.Fight.Scene")}#{I18n.t(tree[:b_or_a], :scope => "DNU.Fight.Scene")}#{I18n.t(tree[:type], :scope => "DNU.Fight.Scene")}」| +
+          %Q|\n<span class="active">#{tree[:active]}</span>の#{tree[:name]}「#{tree[:parent].to_s.underscore.split(/_(?!ant)/).map{|s|s.camelize.to_sym}.inject(""){|a,s| a << I18n.t(s, :scope => "DNU.Fight.Scene") }}#{I18n.t(tree[:b_or_a], :scope => "DNU.Fight.Scene")}#{I18n.t(tree[:type], :scope => "DNU.Fight.Scene")}」| +
           nested_div(tree[:children])
         end
         
         def After(tree)
-          %Q|\n<span class="active">#{tree[:active]}</span>の#{tree[:name]}「#{I18n.t(tree[:parent], :scope => "DNU.Fight.Scene")}後#{I18n.t(tree[:type], :scope => "DNU.Fight.Scene")}」| +
+          %Q|\n<span class="active">#{tree[:active]}</span>の#{tree[:name]}「#{tree[:parent].to_s.underscore.split(/_(?!ant)/).map{|s|s.camelize.to_sym}.inject(""){|a,s| a << I18n.t(s, :scope => "DNU.Fight.Scene") }}後#{I18n.t(tree[:type], :scope => "DNU.Fight.Scene")}」| +
           nested_div(tree[:children])
         end
         
@@ -124,14 +124,14 @@ module DNU
           h = tree[:children]
           nested_div(tree[:before])   +
           (h[:critical] ? "クリティカル！<br>" : "") +
-          %Q|\n<span class="passive">#{tree[:passive]}</span>に#{(h[:after_change]-h[:before_change]).abs}の#{h[:element]}属性#{h[:attack_type]}ダメージを与えた！（ #{h[:before_change]} ⇒ #{h[:after_change]} ）| +
+          %Q|\n<span class="passive">#{tree[:passive]}</span>に#{(h[:after_change]-h[:before_change]).abs}の#{I18n.t(h[:element], :scope => "DNU.Fight.Scene")}属性#{I18n.t(h[:attack_type], :scope => "DNU.Fight.Scene")}ダメージを与えた！（ #{h[:before_change]} ⇒ #{h[:after_change]} ）| +
           nested_div(tree[:after])
         end
         
         def Miss(tree)
           h = tree[:children]
           nested_div(tree[:before])   +
-          %Q|\n<span class="passive">#{tree[:passive]}</span>は#{h[:element]}属性#{h[:attack_type]}攻撃を回避した！| +
+          %Q|\n<span class="passive">#{tree[:passive]}</span>は#{I18n.t(h[:element], :scope => "DNU.Fight.Scene")}属性#{I18n.t(h[:attack_type], :scope => "DNU.Fight.Scene")}攻撃を回避した！| +
           nested_div(tree[:after])
         end
         

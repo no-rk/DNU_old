@@ -148,7 +148,7 @@ module DNU
           @children.try(:play) || create_children.play
         end
         
-        def play_(b_or_a, c=nil)
+        def play_(b_or_a, c=nil, scene=scene_name)
           @pool ||= { :id => object_id, :effects => [] }
           active_array = [@active.try(:call) ].flatten.compact.map{|char| { :ant =>  nil , :active_now => char } } +
                          [@passive.try(:call)].flatten.compact.map{|char| { :ant => :ant , :active_now => char } }
@@ -156,7 +156,7 @@ module DNU
             ant         = char[:ant]
             active_now  = char[:active_now]
             passive_now = ant.nil? ? [@passive.try(:call)].flatten.compact.sample : [@active.try(:call)].flatten.compact.sample
-            while effects = active_now.effects.timing(:"#{scene_name}#{ant.to_s.camelize}").send(b_or_a).done_not.sample
+            while effects = active_now.effects.timing(:"#{scene}#{ant.to_s.camelize}").send(b_or_a).done_not.sample
               effects.off
               @pool[:effects] << effects
               create_from_hash({
@@ -164,7 +164,7 @@ module DNU
                   :condition=> effects.condition,
                   :then => {
                     (c || b_or_a) => {
-                      :parent => :"#{scene_name}#{ant.to_s.camelize}",
+                      :parent => :"#{scene}#{ant.to_s.camelize}",
                       :effects => effects,
                       :b_or_a => b_or_a.to_s.camelize
                     }

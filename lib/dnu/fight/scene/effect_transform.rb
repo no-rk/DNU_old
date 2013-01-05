@@ -14,6 +14,10 @@ class EffectTransform < Parslet::Transform
     filter[position.to_sym]
   }
   
+  rule(:timing_transform => subtree(:timing)) {
+    { timing.keys.map{|s| s.to_s.underscore }.join("_").to_sym => timing.values.join }
+  }
+  
   rule(:range => simple(:range)) {
     "Range"
   }
