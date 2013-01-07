@@ -204,6 +204,7 @@ class EffectParser < Parslet::Parser
     state |
     decimal.as(:fixnum) |
     level.as(:lv) |
+    position_to_fixnum.as(:fixnum) |
     bra >> (
       random_number |
       add_coeff |
@@ -485,10 +486,16 @@ class EffectParser < Parslet::Parser
     str('以下')
   }
   
-  rule(:state_effect) {
+  rule(:state_effects) {
     (
-      attack_name >> attack_boolean >> str('回数')
-    ).as(:state_effect)
+      (
+        str('ダメージ').as(:attack) |
+        (status_name >> str('上昇')).as(:up) |
+        (status_name >> str('低下')).as(:down) |
+        (status_name >> str('増加')).as(:increase) |
+        (status_name >> str('減少')).as(:decrease)
+      ) >> str('合計')
+    ).as(:state_effects_sum_change)
   }
   
   rule(:just_before) {
@@ -545,31 +552,26 @@ class EffectParser < Parslet::Parser
   }
   
   rule(:state) {
+    state_effects |
     state_character |
-    state_disease |
-    state_effect
-  }
-  
-  rule(:condition_coeff) {
-    positive_integer.as(:fixnum) |
-    position_to_fixnum.as(:fixnum)
+    state_disease
   }
   
   rule(:condition_ge) {
     (
-      state.as(:left) >> (str('が').maybe >> condition_coeff | str('が') >> state).as(:right) >> op_ge
+      calculable.as(:left) >> str('が').maybe >> calculable.as(:right) >> op_ge
     ).as(:condition_ge)
   }
   
   rule(:condition_le) {
     (
-      state.as(:left) >> (str('が').maybe >> condition_coeff | str('が') >> state).as(:right) >> op_le
+      calculable.as(:left) >> str('が').maybe >> calculable.as(:right) >> op_le
     ).as(:condition_le)
   }
   
   rule(:condition_eq) {
     (
-      state.as(:left) >> str('が').maybe >> (condition_coeff | state).as(:right)
+      calculable.as(:left) >> str('が').maybe >> calculable.as(:right)
     ).as(:condition_eq)
   }
 

@@ -93,7 +93,7 @@ module DNU
         end
         
         def Effects(tree)
-          %Q|\n<span class="active">#{tree[:active]}</span>の#{tree[:name]}！| +
+          %Q|\n<span class="active">#{tree[:active].first}</span>の#{tree[:name]}！| +
           nested_div(tree[:before])   +
           nested_div(tree[:children]) +
           nested_div(tree[:after])

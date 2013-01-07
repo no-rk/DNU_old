@@ -31,8 +31,17 @@ module DNU
           lambda{ try(tree[:state_target] || '対象').try(child_name(tree[:disease_name])) }
         end
         
-        def state_effect(tree)
-          lambda{ r=rand; r }
+        # sceneによるstatus_nameの変化量合計
+        def state_effects_sum_change(tree)
+          scene       = tree.keys.first.to_s.camelize.to_sym
+          status_name = tree.values.first.respond_to?(:values) ? tree.values.first.values.first : nil
+          lambda do
+            @parent.history[:children].map{ |child|
+              child[scene].try(:fetch, :children).respond_to?(:last) ? child[scene].try(:fetch, :children).last.values.first[:children] : child[scene].try(:fetch, :children)
+            }.compact.map{ |child|
+              (child[:after_change].to_i - child[:before_change].to_i).abs
+            }.sum.to_i
+          end
         end
         
         def random_number(tree)
