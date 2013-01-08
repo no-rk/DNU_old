@@ -79,6 +79,15 @@ module DNU
           @index == 0
         end
         
+        def wrap_has_next_scene?
+          @active  = @parent.try(:active)
+          @passive = @parent.try(:passive)
+          @label   = @parent.try(:label) || {}
+          @pool    = @parent.try(:pool)
+          @stack   = @parent.try(:stack) || []
+          has_next_scene?
+        end
+        
         def before_all_scene
         end
         
@@ -86,12 +95,8 @@ module DNU
         end
         
         def next_scene
-          @active  = @parent.try(:active)
-          @passive = @parent.try(:passive)
-          @label   = @parent.try(:label) || {}
-          @pool    = @parent.try(:pool)
-          @stack   = @parent.try(:stack) || []
           before_each_scene
+          log_before_each_scene
           self
         end
         
@@ -114,7 +119,7 @@ module DNU
         def each
           @index = 0
           before_all_scene
-          while has_next_scene?
+          while wrap_has_next_scene?
             yield next_scene
             end_scene
           end
@@ -177,9 +182,14 @@ module DNU
             end
           end
           if @pool[:id] == object_id
-            @pool[:effects].each{ |effects| effects.on }
-            @pool = nil
+            clear_pool
           end
+          interrupt_before_play
+        end
+        
+        def clear_pool
+          @pool[:effects].each{ |effects| effects.on } unless @pool.nil?
+          @pool = nil
         end
         
         def history
@@ -203,9 +213,7 @@ module DNU
         
         def play
           self.each do |scene|
-            log_before_each_scene
             play_(:before)
-            interrupt_before_play
             play_children
             play_(:after)
           end

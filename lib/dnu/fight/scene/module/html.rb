@@ -240,7 +240,11 @@ module DNU
           nested_div(tree[:before])   +
           if h[:success]
             if h[:vanish_name]
-              %|\n<span class="passive">#{tree[:passive]}</span>の[#{I18n.t(h[:vanish_type], :scope => "DNU.Fight.Scene")}]#{h[:vanish_name]}#{'の設定' if h[:vanish_type]==:Skill}が全て消滅した！|
+              if h[:vanish_all]
+                %|\n<span class="passive">#{tree[:passive]}</span>の[#{I18n.t(h[:vanish_type], :scope => "DNU.Fight.Scene")}]#{h[:vanish_name]}#{'の設定' if h[:vanish_type]==:Skill}が全て消滅した！|
+              else
+                %|\n<span class="passive">#{tree[:passive]}</span>の[#{I18n.t(h[:vanish_type], :scope => "DNU.Fight.Scene")}]#{h[:vanish_name]}#{'の設定' if h[:vanish_type]==:Skill}が１つ消滅した！|
+              end
             else
               if h[:type] == h[:vanish_type]
                 %|\n[#{I18n.t(h[:type], :scope => "DNU.Fight.Scene")}]#{h[:name]}#{'の設定' if h[:type]==:Skill}が消滅した！|
@@ -268,8 +272,10 @@ module DNU
         def Interrupt(tree)
           h = tree[:children]
           nested_div(tree[:before])   +
-          if h[:interrupt] == h[:type]
+          if h[:interrupt] == h[:type] and h[:success]
             %|\n[#{I18n.t(h[:type], :scope => "DNU.Fight.Scene")}]#{h[:name]}を強制中断！|
+          elsif h[:interrupt] == h[:type]
+            %|\n[#{I18n.t(h[:type], :scope => "DNU.Fight.Scene")}]#{h[:name]}は既に中断されている・・・！|
           else
             %|\n強制中断の対象となる#{I18n.t(h[:interrupt], :scope => "DNU.Fight.Scene")}は存在しない。|
           end +

@@ -385,7 +385,7 @@ class EffectParser < Parslet::Parser
         ).as(:skill) |
         (
           str('付加').as(:this) |
-          bra >> str('付加') >> ket >> ((str('消滅') | arrow | plus | newline).absent? >> any).repeat(1).as(:name)
+          bra >> str('付加') >> ket >> ((str('全て') | str('消滅') | arrow | plus | newline).absent? >> any).repeat(1).as(:name) >> str('全て').as(:all).maybe
         ).as(:sup)
       ) >> str('消滅')
     ).as(:vanish)

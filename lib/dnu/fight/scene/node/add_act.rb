@@ -5,7 +5,7 @@ module DNU
         
         # SPDなどに応じて追加行動があるかもしれない
         def has_next_scene?
-          @parent.active.call.SPD > 1000*(@index+1)
+          @active.call.SPD > 1000*(@index+1)
         end
         
         def play_children

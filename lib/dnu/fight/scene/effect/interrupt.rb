@@ -9,7 +9,7 @@ module DNU
           effects_type   = @stack[-2].try(:type)
           effects_name   = @stack[-2].try(:name)
           
-          if effects_type == interrupt_type
+          if effects_type == interrupt_type and !@stack[-2].interrupt.try(:call)
             @stack[-2].interrupt = lambda{ true }
             success = true
           end

@@ -10,16 +10,15 @@ module DNU
         end
         
         def create_passive
-          @active = @parent.active
           play_(:before, :children) unless @tree[:passive][:scope].to_s=="自"
           
           scope = @character.try(@active.try(:call).try(:scope) || @tree[:passive][:scope].to_s, @active.try(:call))
           scope = @character.try(@tree[:passive][:sub_scope].to_s, scope) unless @tree[:passive][:sub_scope].nil?
           return scope if scope.respond_to?(:call)
-          target1 = @parent.stack.last.respond_to?(:target) ? @parent.stack.last.target : nil
+          target1 = @stack.last.respond_to?(:target) ? @stack.last.target : nil
           target1 = (target1.nil? ? nil : scope.try(target1.keys.first, target1.values.first))
           target2 = [@tree[:passive][:target]].flatten
-          @root_passive= scope.try(target2[0].to_s, target2[1] || @parent.passive.try(:call), @active.try(:call), target1)
+          @root_passive= scope.try(target2[0].to_s, target2[1] || @passive.try(:call), @active.try(:call), target1)
           
           play_(:after, :children) unless @tree[:passive][:scope].to_s=="自"
           @root_passive
@@ -55,8 +54,6 @@ module DNU
         
         def play
           self.each do |scene|
-            log_before_each_scene
-            interrupt_before_play
             play_children
           end
           @history.extend Html
