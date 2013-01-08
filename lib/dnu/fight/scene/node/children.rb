@@ -22,10 +22,10 @@ module DNU
           history[:id]     = @tree[:effects].object_id
           history[:type]   = @tree[:effects].type
           history[:name]   = @tree[:effects].name
+          @tree[:effects].history << (history[:children].extend FindHistory)
           catch :"#{@tree[:effects].type}#{@tree[:effects].object_id}" do
             super
           end
-          @tree[:effects].history << history[:children]
         end
         
         def play_(b_or_a)

@@ -11,7 +11,14 @@ module DNU
         # @activeが所持している技を優先順位順にif elseで繋げる
         def create_tree
           temp = []
-          tree = default_attack
+          tree = {
+                   :default_attack => {
+                     :effects => (DNU::Fight::State::DefaultAttack.new({
+                       :name => :"通常攻撃",
+                       :effects => [ { :do => default_attack } ]
+                     }).first)
+                   }
+                 }
           while effects = @active.call.effects.type(:Skill).done_not.low_priority
             effects.off
             temp << effects

@@ -36,11 +36,19 @@ module DNU
           scene       = tree.keys.first.to_s.camelize.to_sym
           status_name = tree.values.first.respond_to?(:values) ? tree.values.first.values.first : nil
           lambda do
-            @parent.history[:children].map{ |child|
-              child[scene].try(:fetch, :children).respond_to?(:last) ? child[scene].try(:fetch, :children).last.values.first[:children] : child[scene].try(:fetch, :children)
-            }.compact.map{ |child|
-              (child[:after_change].to_i - child[:before_change].to_i).abs
-            }.sum.to_i
+            @stack.last.history.last.childrens_find_by_scene(scene).map do |children|
+              status_name.to_s==children[:status_name].to_s ? (children[:after_change].to_i - children[:before_change].to_i).abs : 0
+            end.sum.to_i
+          end
+        end
+        
+        # sceneによるstatus_nameの直前の変化量
+        def state_effects_just_before_change(tree)
+          scene       = tree.keys.first.to_s.camelize.to_sym
+          status_name = tree.values.first.respond_to?(:values) ? tree.values.first.values.first : nil
+          lambda do
+            children = @stack.last.history.last.try(:childrens_find_by_scene, scene).try(:last) || @stack[-2].try(:history).try(:last).try(:childrens_find_by_scene, scene).try(:last)
+            children ? (status_name.to_s==children[:status_name].to_s ? (children[:after_change].to_i - children[:before_change].to_i).abs : 0) : 0
           end
         end
         

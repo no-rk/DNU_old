@@ -488,6 +488,15 @@ class EffectParser < Parslet::Parser
   
   rule(:state_effects) {
     (
+      str('直前') >> (
+        str('ダメージ').as(:attack) |
+        (status_name >> str('上昇')).as(:up) |
+        (status_name >> str('低下')).as(:down) |
+        (status_name >> str('増加')).as(:increase) |
+        (status_name >> str('減少')).as(:decrease)
+      )
+    ).as(:state_effects_just_before_change) |
+    (
       (
         str('ダメージ').as(:attack) |
         (status_name >> str('上昇')).as(:up) |
@@ -708,6 +717,7 @@ class EffectParser < Parslet::Parser
       str('ターン').as(:turn) |
       str('行動').as(:act) |
       str('追加行動').as(:add_act) |
+      str('通常攻撃').as(:default_attack) |
       str('効果').as(:effects) |
       str('対象決定').as(:root) |
       timing_options >> (

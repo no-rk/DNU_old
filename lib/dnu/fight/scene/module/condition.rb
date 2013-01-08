@@ -38,17 +38,9 @@ module DNU
           lambda{ r=rand(100); r < val.call }
         end
         
-        def just_before(scene)
+        def just_before(success)
           lambda do
-            begin
-              if history[:children].last.values.first[:children].respond_to?(:last)
-                history[:children].last.values.first[:children].last[scene].present?
-              else
-                history[:children].last.values.first[:children][scene].present?
-              end
-            rescue
-              false
-            end
+            @stack.last.history.last.just_before_children_success[success].present?
           end
         end
         

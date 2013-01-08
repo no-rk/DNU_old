@@ -1,7 +1,7 @@
 module DNU
   module Fight
     module Scene
-      class Effects < BaseScene
+      class DefaultAttack < BaseScene
         
         def before_each_scene
           @label = nil
