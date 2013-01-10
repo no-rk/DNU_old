@@ -7,6 +7,10 @@ ja:
       game_data/art_type: 技能種別
       game_data/art: 技能
       game_data/word: 言葉
+      game_data/disease: 状態異常
+      game_data/battle_value: 戦闘値
+      game_data/product: 生産行動
+      game_data/element: 属性
 
       register/main: &main
         基本行動

@@ -17,7 +17,8 @@ module DNU
     def add_link(str)
       gsub(str) do |key, value|
         value = value.split('/')
-        %Q|<span data-help-path="#{Rails.application.routes.url_helpers.ajax_help_url(value[0])}" data-params="id=#{value[1]}">#{key}</span>|
+        key = %Q|<font color="##{value[2]}">#{key}</font>| if value[2].present?
+        %Q|<a href="#{Rails.application.routes.url_helpers.ajax_help_url(value[0], value[1])}" data-remote="true" data-type="json" data-html="true" data-trigger="manual" rel="popover">#{key}</a>|
       end
     end
     

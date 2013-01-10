@@ -21,3 +21,4 @@ $ ->
   $('body').delegate 'a[href=#]', 'click', (event) ->
     event.preventDefault()
   $('a[rel*=tooltip]').tooltip()
+  $('a[rel*=popover]').popover()

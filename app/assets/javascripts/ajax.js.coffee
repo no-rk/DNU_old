@@ -31,7 +31,7 @@ $ ->
           $(this).popover('hide')
         else
           $(this).popover('show')
-          $(this).data("popover").$tip.find('*[data-help-path]').helpLink()
+          $(this).data("popover").$tip.find('a[rel*=popover]').popover()
         console.log("a click")
       console.log("no ajax")
 
@@ -108,8 +108,8 @@ $ ->
     next.noAjax() if next.data("remote")
     #ポップオーバー表示されてるときは再表示して内容更新
     if next.data("popover").$tip? && next.data("popover").$tip.hasClass("in")
-      next.popover("show")
-      next.data("popover").$tip.find('*[data-help-path]').helpLink()
+      next.popover('show')
+      next.data("popover").$tip.find('a[rel*=popover]').popover()
     console.log('select[data-remote] ajax:success')
 
   #ボタン確認

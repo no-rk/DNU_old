@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130110074725) do
+ActiveRecord::Schema.define(:version => 20130110130023) do
 
   create_table "conversations", :force => true do |t|
     t.string   "subject",    :default => ""
@@ -43,6 +43,30 @@ ActiveRecord::Schema.define(:version => 20130110074725) do
 
   add_index "game_data_arts", ["art_type_id"], :name => "index_game_data_arts_on_art_type_id"
 
+  create_table "game_data_battle_values", :force => true do |t|
+    t.string   "name"
+    t.text     "caption"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "game_data_diseases", :force => true do |t|
+    t.string   "name"
+    t.text     "caption"
+    t.string   "color"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "game_data_elements", :force => true do |t|
+    t.string   "name"
+    t.text     "caption"
+    t.string   "color"
+    t.string   "anti"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
   create_table "game_data_guardians", :force => true do |t|
     t.string   "name"
     t.text     "caption"
@@ -51,6 +75,13 @@ ActiveRecord::Schema.define(:version => 20130110074725) do
   end
 
   create_table "game_data_jobs", :force => true do |t|
+    t.string   "name"
+    t.text     "caption"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "game_data_products", :force => true do |t|
     t.string   "name"
     t.text     "caption"
     t.datetime "created_at", :null => false

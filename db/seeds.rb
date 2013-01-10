@@ -1,7 +1,7 @@
 # encoding: UTF-8
 
 # ジョブ, 守護, ステータス, 言葉
-[:job, :guardian, :status, :word].each do |table|
+[:job, :guardian, :status, :word, :disease, :battle_value, :product, :element].each do |table|
   ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_#{table.to_s.tableize}")
   list = YAML.load(ERB.new(File.read("#{Rails.root}/db/game_data/#{table}.yml")).result)
   list.each do |data|
@@ -54,8 +54,8 @@ end
 
 # 単語自動リンク用のインデックス保存
 tx_map = []
-[:Job, :Guardian, :Status, :ArtType, :Art, :Word].each do |class_name|
-  tx_map += "GameData::#{class_name}".constantize.select([:name, :id]).map{ |a| [a.name, "#{class_name}/#{a.id}"] }.flatten
+[:Job, :Guardian, :Status, :ArtType, :Art, :Word, :Disease, :BattleValue, :Product, :Element].each do |class_name|
+  tx_map += "GameData::#{class_name}".constantize.all.map{ |a| [a.name, "#{class_name.to_s.tableize}/#{a.id}/#{a.color if a.respond_to?(:color)}"] }.flatten
 end
 builder = Tx::MapBuilder.new
 builder.add_all(tx_map.flatten)
