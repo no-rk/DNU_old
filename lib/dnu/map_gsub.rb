@@ -14,5 +14,12 @@ module DNU
       return result
     end
     
+    def add_link(str)
+      gsub(str) do |key, value|
+        value = value.split('/')
+        %Q|<span data-help-path="#{Rails.application.routes.url_helpers.ajax_help_url(value[0])}" data-params="id=#{value[1]}">#{key}</span>|
+      end
+    end
+    
   end
 end

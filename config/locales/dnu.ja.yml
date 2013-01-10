@@ -6,6 +6,7 @@ ja:
       game_data/status: 能力値
       game_data/art_type: 技能種別
       game_data/art: 技能
+      game_data/word: 言葉
 
       register/main: &main
         基本行動

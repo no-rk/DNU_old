@@ -1,120 +1,13 @@
-/ Main hero unit for a primary marketing message or call to action
 .hero-unit
   %h1 Dragon NUnavut
   %p 定期更新ゲームを作る過程の何か
   - unless user_signed_in?
     %p
       %a.btn.btn-primary.btn-large{:href => new_user_registration_path} 新規登録 &raquo;
-#container.transitions-enabled.clearfix
-  .box.col3
-    %p
-      %a{:href => "http://www.flickr.com/photos/nemoorange/3318887645/", :title => "Clarendon Metro by nemoorange, on Flickr"}
-        %img{:alt => "Clarendon Metro", :src => "http://farm4.static.flickr.com/3619/3318887645_1f33364338.jpg"}/
-  .box.col1
-    %p Donec nec justo eget felis facilisis fermentum. Aliquam porttitor mauris sit amet orci.
-  .box.col2
-    %p
-      %a{:href => "http://www.flickr.com/photos/nemoorange/3319714470/", :title => "Whitlow's on Wilson by nemoorange, on Flickr"}
-        %img{:alt => "Whitlow's on Wilson", :src => "http://farm4.static.flickr.com/3008/3319714470_c05a5cb5a8_m.jpg"}/
-  .box.col1
-    %p Fusce accumsan mollis eros. Pellentesque a diam sit amet mi ullamcorper vehicula
-  .box.col1
-    %p Sit amet mi ullamcorper vehicula
-  .box.col1
-    %p adipiscing in, lacinia vel, tellus. Suspendisse ac urna. Etiam pellentesque mauris ut lectus.
-  .box.col5
-    %p Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-    %p Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-  .box.col3
-    %p Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-    %p Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-    %p Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-    %p Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-  .box.col2
-    %p Sit amet mi ullamcorper vehicula
-  .box.col1
-    %p Phasellus pede arcu, dapibus eu, fermentum et, dapibus sed, urna.
-  .box.col2
-    %p Ut condimentum mi vel tellus. Suspendisse laoreet. Fusce ut est sed dolor gravida convallis. Morbi vitae ante. Vivamus ultrices luctus nunc. Suspendisse et dolor. Etiam dignissim. Proin malesuada adipiscing lacus. Donec metus. Curabitur gravida.
-    %p Phasellus pede arcu, dapibus eu, fermentum et, dapibus sed, urna.
-  .box.col3
-    %p Sed ac risus. Phasellus lacinia, magna a ullamcorper laoreet, lectus arcu pulvinar risus, vitae facilisis libero dolor a purus. Sed vel lacus. Mauris nibh felis, adipiscing varius, adipiscing in, lacinia vel, tellus. Suspendisse ac urna. Etiam pellentesque mauris ut lectus. Nunc tellus ante, mattis eget, gravida vitae, ultricies ac, leo. Integer leo pede, ornare a, lacinia eu, vulputate vel, nisl.
-  .box.col1
-    %p Morbi purus libero, faucibus adipiscing, commodo quis, gravida id, est. Sed lectus. Praesent elementum hendrerit tortor. Sed semper lorem at felis.
-  %div
-    .box.col2
-      %p Vestibulum volutpat, lacus a ultrices sagittis,
-      %p Fusce accumsan mollis eros. Pellentesque a diam sit amet mi ullamcorper vehicula
-    .box.col2
-      %p Sit amet mi ullamcorper vehicula
-    .box.col1
-      %p Morbi purus libero
-    .box.col1
-      %p Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. Nullam malesuada erat ut turpis. Suspendisse urna nibh, viverra non, semper suscipit, posuere a, pede.
-    .box.col3
-      %p Donec nec justo eget felis facilisis fermentum. Aliquam porttitor mauris sit amet orci. Aenean dignissim pellentesque felis.
-      %p Vestibulum volutpat, lacus a ultrices sagittis,
-      %ul
-        %li Lacus a ultrices sagittis
-        %li Democratis
-        %li Plummus
-    .box.col1
-      %p Fusce accumsan mollis eros. Pellentesque a diam sit amet mi ullamcorper vehicula
-    .box.col1
-      %p Sit amet mi ullamcorper vehicula
-    .box.col1
-      %p Morbi purus libero
-    .box.col2
-      %p Ut condimentum mi vel tellus. Suspendisse laoreet. Fusce ut est sed dolor gravida convallis. Morbi vitae ante. Vivamus ultrices luctus nunc. Suspendisse et dolor. Etiam dignissim. Proin malesuada adipiscing lacus. Donec metus. Curabitur gravida.
-      %p Phasellus pede arcu, dapibus eu, fermentum et, dapibus sed, urna.
-    .box.col1
-      %p Fusce accumsan mollis eros. Pellentesque a diam sit amet mi ullamcorper vehicula
-    .box.col3
-      %p Morbi purus libero, faucibus adipiscing, commodo quis, gravida id, est. Sed lectus. Praesent elementum hendrerit tortor. Sed semper lorem at felis.
-      %p Sed ac risus. Phasellus lacinia, magna a ullamcorper laoreet, lectus arcu pulvinar risus, vitae facilisis libero dolor a purus. Sed vel lacus. Mauris nibh felis, adipiscing varius, adipiscing in, lacinia vel, tellus. Suspendisse ac urna. Etiam pellentesque mauris ut lectus. Nunc tellus ante, mattis eget, gravida vitae, ultricies ac, leo. Integer leo pede, ornare a, lacinia eu, vulputate vel, nisl.
-      %p Sed ac risus. Phasellus lacinia, magna a ullamcorper laoreet, lectus arcu pulvinar risus, vitae facilisis libero dolor a purus. Sed vel lacus. Mauris nibh felis, adipiscing varius, adipiscing in, lacinia vel, tellus. Suspendisse ac urna. Etiam pellentesque mauris ut lectus. Nunc tellus ante, mattis eget, gravida vitae, ultricies ac, leo. Integer leo pede, ornare a, lacinia eu, vulputate vel, nisl.
-    .box.col1
-      %p adipiscing in, lacinia vel, tellus. Suspendisse ac urna. Etiam pellentesque mauris ut lectus.
-    .box.col4
-      %p Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-      %p Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-      %p Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-    .box.col2
-      %p Sit amet mi ullamcorper vehicula
-    .box.col1
-      %p Phasellus pede arcu, dapibus eu, fermentum et, dapibus sed, urna.
-    .box.col1
-      %p Fusce accumsan mollis eros. Pellentesque a diam sit amet mi ullamcorper vehicula
-    .box.col2
-      %p Ut convallis, sem sit amet interdum consectetuer, odio augue aliquam leo, nec dapibus tortor nibh sed augue.
-      %p Ut condimentum mi vel tellus. Suspendisse laoreet. Fusce ut est sed dolor gravida convallis. Morbi vitae ante. Vivamus ultrices luctus nunc. Suspendisse et dolor. Etiam dignissim. Proin malesuada adipiscing lacus. Donec metus. Curabitur gravida.
-    .box.col1
-      %ul
-        %li Lacus a ultrices sagittis
-        %li Democratis
-        %li Plummus
-    .box.col3
-      %p Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Phasellus hendrerit. Pellentesque aliquet nibh nec urna. In nisi neque, aliquet vel, dapibus id, mattis vel, nisi. Sed pretium, ligula sollicitudin laoreet viverra, tortor libero sodales leo, eget blandit nunc tortor eu nibh. Nullam mollis. Ut justo. Suspendisse potenti.
-      %p Fusce accumsan mollis eros. Pellentesque a diam sit amet mi ullamcorper vehicula
-      %p Morbi interdum mollis sapien. Sed ac risus. Phasellus lacinia, magna a ullamcorper laoreet, lectus arcu pulvinar risus, vitae facilisis libero dolor a purus.
-    .box.col2
-      %p adipiscing in, lacinia vel, tellus. Suspendisse ac urna. Etiam pellentesque mauris ut lectus.
-      %p Ut convallis, sem sit amet interdum consectetuer, odio augue aliquam leo, nec dapibus tortor nibh sed augue.  Sed vel lacus. Mauris nibh felis, adipiscing varius, adipiscing in, lacinia vel, tellus. Suspendisse ac urna. Etiam pellentesque mauris ut lectus. Nunc tellus ante, mattis eget, gravida vitae, ultricies ac, leo. Integer leo pede, ornare a, lacinia eu, vulputate vel, nisl.
-    .box.col1
-      %p Phasellus pede arcu, dapibus eu, fermentum et, dapibus sed, urna.
-    .box.col1
-      %p Fusce accumsan mollis eros. Pellentesque a diam sit amet mi ullamcorper vehicula
-    .box.col3
-      %p Morbi purus libero, faucibus adipiscing, commodo quis, gravida id, est. Sed lectus. Praesent elementum hendrerit tortor. Sed semper lorem at felis.
-      %p Sed ac risus. Phasellus lacinia, magna a ullamcorper laoreet, lectus arcu pulvinar risus, vitae facilisis libero dolor a purus. Sed vel lacus. Mauris nibh felis, adipiscing varius, adipiscing in, lacinia vel, tellus. Suspendisse ac urna. Etiam pellentesque mauris ut lectus. Nunc tellus ante, mattis eget, gravida vitae, ultricies ac, leo. Integer leo pede, ornare a, lacinia eu, vulputate vel, nisl.
-  .box.col1
-    %p Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. Nullam malesuada erat ut turpis. Suspendisse urna nibh, viverra non, semper suscipit, posuere a, pede.
-  .box.col1
-    %p Donec nec justo eget felis facilisis fermentum. Aliquam porttitor mauris sit amet orci.
-  .box.col1
-    %p Fusce accumsan mollis eros. Pellentesque a diam sit amet mi ullamcorper vehicula
-  .box.col2
-    %p Vestibulum volutpat, lacus a ultrices sagittis,
-    %p Fusce accumsan mollis eros. Pellentesque a diam sit amet mi ullamcorper vehicula
-    %p Morbi purus libero, faucibus adipiscing, commodo quis, gravida id, est. Sed lectus. Praesent elementum hendrerit tortor. Sed semper lorem at felis.
-/ #container
+- tx_map = Tx::Map.open("#{Rails.root}/db/game_data/dnu")
+.rule
+  != tx_map.add_link(" |
+    特殊効果記述ルール<br><br> |
+    対象範囲対象/{効果(効果量)＋効果(効果量)}×2<br><br> |
+    などと言う形式で記述する。 |
+  ") |

@@ -12,7 +12,7 @@ class AjaxController < ApplicationController
       json = {
         "model"   => @ajax.class.model_name.human.downcase,
         "name"    => @ajax.name,
-        "caption" => tx_map.gsub(@ajax.caption){ |k,v| v = v.split('/'); %Q|<span data-help-path="/ajax_help/#{v[0]}" data-params="id=#{v[1]}">#{k}</span>| }
+        "caption" => tx_map.add_link(@ajax.caption)
       }
     rescue
       json = {

@@ -1,0 +1,77 @@
+- name: 戦闘値
+  caption: |-
+    戦闘中にキャラクターが所持する数値化可能な値<br>
+    戦闘値一覧
+
+- name: 戦闘値一覧
+  caption: |-
+    HP、MHP、MP、MMP<br>
+    AT、MAT、DF、MDF<br>
+    射程、隊列、状態異常深度
+
+- name: 状態異常
+  caption: |-
+    猛毒など
+
+- name: キャラクター
+  caption: |-
+    PC、NPC、モンスター、召喚、人形、竜などのこと
+
+- name: PC
+  caption: |-
+    プレイヤーキャラクター
+
+- name: NPC
+  caption: |-
+    ノンプレイヤーキャラクター
+
+- name: モンスター
+  caption: |-
+    モンスター
+
+- name: 召喚
+  caption: |-
+    戦闘中に技などで呼ぶ
+
+- name: 人形
+  caption: |-
+    一人が数体もてる
+
+- name: 竜
+  caption: |-
+    一人に一匹だけ
+
+- name: 特殊効果
+  caption: |-
+    付加やアビリティーなどの総称
+
+- name: 効果量
+  caption: |-
+    戦闘値やLVを＋たり×たりなどした数値
+
+- name: LV
+  caption: |-
+    特殊効果が所持する数値
+
+- name: 対象範囲
+  caption: |-
+    敵、味、敵味
+
+- name: 対象
+  caption: |-
+    単、ラ、全
+
+- name: 効果
+  caption: |-
+    特殊効果を構成するパーツの総称<br>
+    効果一覧
+
+- name: 効果一覧
+  caption: |-
+    攻撃<br>
+    増加、減少、上昇、低下<br>
+    回復
+
+- name: 攻撃
+  caption: |-
+    物理、魔法、純物魔、SW物魔<br>
