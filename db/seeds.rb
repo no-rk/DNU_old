@@ -1,33 +1,17 @@
 # encoding: UTF-8
 
-#ジョブ
-ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_jobs")
-jobs = YAML.load(ERB.new(File.read("#{Rails.root}/db/game_data/job.yml")).result)
-jobs.each do |job|
-  p job
-  job_model = GameData::Job.new(job)
-  job_model.save!
+# ジョブ, 守護, ステータス
+[:job, :guardian, :status].each do |table|
+  ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_#{table.to_s.tableize}")
+  list = YAML.load(ERB.new(File.read("#{Rails.root}/db/game_data/#{table}.yml")).result)
+  list.each do |data|
+    p data
+    model = "GameData::#{table.to_s.camelize}".constantize.new(data)
+    model.save!
+  end
 end
 
-#守護
-ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_guardians")
-guardians = YAML.load(ERB.new(File.read("#{Rails.root}/db/game_data/guardian.yml")).result)
-guardians.each do |guardian|
-  p guardian
-  guardian_model = GameData::Guardian.new(guardian)
-  guardian_model.save!
-end
-
-#ステータス
-ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_statuses")
-statuses = YAML.load(ERB.new(File.read("#{Rails.root}/db/game_data/status.yml")).result)
-statuses.each do |status|
-  p status
-  status_model = GameData::Status.new(status)
-  status_model.save!
-end
-
-#技能
+# 技能
 ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_art_types")
 ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_arts")
 art_types = YAML.load(ERB.new(File.read("#{Rails.root}/db/game_data/art.yml")).result)
@@ -41,7 +25,7 @@ art_types.each do |art_type|
   art_type_model.save!
 end
 
-#アビリティ
+# アビリティ
 ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_abilities")
 abilities = YAML.load(ERB.new(File.read("#{Rails.root}/db/game_data/ability.yml")).result)
 abilities.each do |ability|
@@ -50,7 +34,7 @@ abilities.each do |ability|
   ability_model.save!
 end
 
-#付加
+# 付加
 ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_sups")
 sups = YAML.load(ERB.new(File.read("#{Rails.root}/db/game_data/sup.yml")).result)
 parser = EffectParser.new
@@ -67,3 +51,12 @@ sups.each do |sup|
     sup_model.save!
   end
 end
+
+# 単語自動リンク用のインデックス保存
+tx_map = []
+[:Job, :Guardian, :Status, :ArtType, :Art].each do |class_name|
+  tx_map += "GameData::#{class_name}".constantize.select([:name, :id]).map{ |a| [a.name, "#{class_name}/#{a.id}"] }.flatten
+end
+builder = Tx::MapBuilder.new
+builder.add_all(tx_map.flatten)
+builder.build("#{Rails.root}/db/game_data/dnu")

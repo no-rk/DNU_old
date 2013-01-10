@@ -21,3 +21,7 @@
 config/settings.local.yml
 config/settings/*.local.yml
 config/environments/*.local.yml
+
+db/game_data/dnu.key
+db/game_data/dnu.map
+db/game_data/dnu.val

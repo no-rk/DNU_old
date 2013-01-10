@@ -11,7 +11,7 @@ $ ->
         "data-params": $(this).data('params')
         "data-type": "json"
         "data-html": true
-        "data-trigge": "manual"
+        "data-trigger": "manual"
         "rel": "popover"
       ).html('<i class="icon-search"></i>')
       help.hide() unless $(this).data('params')
@@ -31,6 +31,7 @@ $ ->
           $(this).popover('hide')
         else
           $(this).popover('show')
+          $(this).data("popover").$tip.find('*[data-help-path]').helpLink()
         console.log("a click")
       console.log("no ajax")
 
@@ -51,13 +52,14 @@ $ ->
     event.stopPropagation()
     #ポップオーバーで表示されるデータ書き換える
     img = if data.img_path? then '<img src="' + data.img_path + '" class="img-polaroid icon">' else ""
+    $html = $('<div>').html(img + data.caption)
     $(this).attr({
       "data-original-title": data.model + "::" + data.name
-      "data-content": img + data.caption
+      "data-content": $html.html()
     })
     $(this).data({
       "original-title": data.model + "::" + data.name
-      "content": img + data.caption
+      "content": $html.html()
     })
     #もうAjaxしないようにする
     $(this).noAjax()
@@ -93,18 +95,21 @@ $ ->
     next.show()
     #ポップオーバーで表示されるデータ書き換える
     img = if data.img_path? then '<img src="' + data.img_path + '" class="img-polaroid icon">' else ""
+    $html = $('<div>').html(img + data.caption)
     next.attr({
       "data-original-title": data.model + "::" + data.name
-      "data-content": img + data.caption
+      "data-content": $html.html()
     })
     next.data({
       "original-title": data.model + "::" + data.name
-      "content": img + data.caption
+      "content": $html.html()
     })
     #もうAjaxしないようにする
     next.noAjax() if next.data("remote")
     #ポップオーバー表示されてるときは再表示して内容更新
-    next.popover("show") if next.data("popover").$tip? && next.data("popover").$tip.hasClass("in")
+    if next.data("popover").$tip? && next.data("popover").$tip.hasClass("in")
+      next.popover("show")
+      next.data("popover").$tip.find('*[data-help-path]').helpLink()
     console.log('select[data-remote] ajax:success')
 
   #ボタン確認
@@ -151,11 +156,11 @@ $ ->
     event.stopPropagation()
     #データタイプがhtmlだったら
     if($.type(data) == "string")
-      html = $(data)
-      html.find('*[data-help-path]').helpLink()
-      html.find('a[rel*=tooltip]').tooltip()
+      $html = $(data)
+      $html.find('*[data-help-path]').helpLink()
+      $html.find('a[rel*=tooltip]').tooltip()
       $(this).after('<div class="alert"></div>')
-      $(this).next('div').html(html)
+      $(this).next('div').html($html)
       $(this).next('div').prepend('<button type="button" class="close" data-dismiss="alert">（・×・）</button><br />')
     #データタイプがjsonだったら
     else
