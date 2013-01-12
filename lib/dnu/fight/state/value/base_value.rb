@@ -48,6 +48,10 @@ module DNU
           @parent.nil? ? val : @parent.send(:set_val)
         end
         
+        def ratio
+          max==0 ? 0 : val.to_f/max.to_f
+        end
+        
         def change_value(n)
           @val += n
           set_val

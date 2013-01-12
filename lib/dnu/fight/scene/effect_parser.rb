@@ -510,10 +510,10 @@ class EffectParser < Parslet::Parser
   
   rule(:group_value) {
     (
-      str('最大').as(:max) |
-      str('最小').as(:min) |
-      str('平均').as(:avg) |
-      str('合計').as(:sum)
+      str('最大').as(:max_value) |
+      str('最小').as(:min_value) |
+      str('平均').as(:avg_value) |
+      str('合計').as(:sum_value)
     ).as(:group_value)
   }
   
@@ -567,10 +567,12 @@ class EffectParser < Parslet::Parser
       (
         (
           (
-            state_target >> hp_mp.as(:status_name)
+            state_target       >> hp_mp.as(:status_name) |
+            state_target_group >> hp_mp.as(:status_name) >> group_value
           ).as(:state_character).as(:left) |
           (
-            state_target_group >> hp_mp.as(:status_name).as(:state_character).as(:do)
+            state_target_group >>
+            hp_mp.as(:status_name).as(:state_character).as(:do)
           ).as(:lefts)
         ) >>
         positive_integer.as(:percent).as(:fixnum).as(:right) >>
@@ -579,10 +581,12 @@ class EffectParser < Parslet::Parser
       (
         (
           (
-            state_target >> hp_mp.as(:status_name)
+            state_target       >> hp_mp.as(:status_name) |
+            state_target_group >> hp_mp.as(:status_name) >> group_value
           ).as(:state_character).as(:left) |
           (
-            state_target_group >> hp_mp.as(:status_name).as(:state_character).as(:do)
+            state_target_group >>
+            hp_mp.as(:status_name).as(:state_character).as(:do)
           ).as(:lefts)
         ) >>
         positive_integer.as(:percent).as(:fixnum).as(:right) >>
@@ -591,10 +595,12 @@ class EffectParser < Parslet::Parser
       (
         (
           (
-            state_target >> hp_mp.as(:status_name)
+            state_target       >> hp_mp.as(:status_name) |
+            state_target_group >> hp_mp.as(:status_name) >> group_value
           ).as(:state_character).as(:left) |
           (
-            state_target_group >> hp_mp.as(:status_name).as(:state_character).as(:do)
+            state_target_group >>
+            hp_mp.as(:status_name).as(:state_character).as(:do)
           ).as(:lefts)
         ) >>
         positive_integer.as(:percent).as(:fixnum).as(:right) >>
@@ -617,8 +623,7 @@ class EffectParser < Parslet::Parser
       (
         just_before |
         random_percent
-      ) >> str('になった').absent? |
-      hp_mp_percent
+      ) >> str('になった').absent?
     )
   }
   
@@ -674,6 +679,7 @@ class EffectParser < Parslet::Parser
   
   rule(:simple_condition) {
     condition_boolean |
+    hp_mp_percent |
     condition_ge |
     condition_le |
     condition_eq

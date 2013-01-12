@@ -23,12 +23,13 @@ module DNU
         def state_character(tree)
           status_or_equip = tree[:equip].nil? ? :status : :equip
           percent = (tree[:percent] || 100).to_f/100
+          ratio   = tree[:ratio] ? :ratio : :to_f
           if tree[:group]
             type = tree[:group_value].keys.first
             lambda do
               scope_group(tree[:group]).send(type) do |c|
                 r = c.send(tree[:status_name]).send(status_or_equip)
-                r = r*percent/((tree[:ratio] and r.max!=0) ? r.max : 1).to_f
+                r = r.send(ratio)*percent
                 logger(type => r)
                 r
               end
@@ -36,7 +37,7 @@ module DNU
           else
             lambda do
               r = (tree[:group_target] || try(tree[:state_target] || '対象')).send(tree[:status_name]).send(status_or_equip)
-              r = r*percent/((tree[:ratio] and r.max!=0) ? r.max : 1).to_f
+              r = r.send(ratio)*percent
               logger(r)
               r
             end

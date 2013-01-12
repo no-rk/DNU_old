@@ -65,7 +65,11 @@ module DNU
             rights = scope_group(tree[:rights][:group]).map{ |c| try(tree[:rights][:do].keys.first, tree[:rights][:do].values.first.merge(:group_target => c)) }
           end
           lambda do
-            lefts.product(rights).any?{ |l,r| l.call.try(:>=, r.call) }
+            begin
+              lefts.product(rights).any?{ |l,r| l.call >= r.call }
+            rescue
+              nil
+            end
           end
         end
         
@@ -97,7 +101,11 @@ module DNU
             rights = scope_group(tree[:rights][:group]).map{ |c| try(tree[:rights][:do].keys.first, tree[:rights][:do].values.first.merge(:group_target => c)) }
           end
           lambda do
-            lefts.product(rights).any?{ |l,r| l.call.try(:<=, r.call) }
+            begin
+              lefts.product(rights).any?{ |l,r| l.call <= r.call }
+            rescue
+              nil
+            end
           end
         end
         

@@ -4,12 +4,20 @@ module DNU
     module State
       module Target
         
-        def avg
-          result = []
-          self.each do |c|
-            result << yield(c).to_f
-          end
-          result.size>=1 ? result.sum.to_f/result.size.to_f : 0
+        def avg_value
+          size>=1 ? sum{ |c| yield(c) }.to_f/size.to_f : 0
+        end
+        
+        def sum_value
+          sum{ |c| yield(c) }
+        end
+        
+        def min_value
+          yield min{ |a,b| yield(a) <=> yield(b) }
+        end
+        
+        def max_value
+          yield max{ |a,b| yield(a) <=> yield(b) }
         end
         
         def live
@@ -100,14 +108,16 @@ module DNU
           self.blank? ? nil : self
         end
         
-        def 低(status_or_disease_name, active=nil, target=nil)
-          status_or_disease_name = status_or_disease_name[:status_name] || status_or_disease_name[:disease_name].keys.first
-          lambda{ target.try(:call) || self.min{ |a,b| a.try(status_or_disease_name)<=>b.try(status_or_disease_name) } }
+        def 低(tree, active=nil, target=nil)
+          status_or_disease_name = tree[:status_name] || tree[:disease_name].keys.first
+          ratio = tree[:ratio] ? :ratio : :to_f
+          lambda{ target.try(:call) || self.min{ |a,b| a.send(status_or_disease_name).send(ratio) <=> b.send(status_or_disease_name).send(ratio) } }
         end
         
-        def 高(status_or_disease_name, active=nil, target=nil)
-          status_or_disease_name = status_or_disease_name[:status_name] || status_or_disease_name[:disease_name].keys.first
-          lambda{ target.try(:call) || self.max{ |a,b| a.try(status_or_disease_name)<=>b.try(status_or_disease_name) } }
+        def 高(tree, active=nil, target=nil)
+          status_or_disease_name = tree[:status_name] || tree[:disease_name].keys.first
+          ratio = tree[:ratio] ? :ratio : :to_f
+          lambda{ target.try(:call) || self.max{ |a,b| a.send(status_or_disease_name).send(ratio) <=> b.send(status_or_disease_name).send(ratio) } }
         end
         
         def 竜(master)
