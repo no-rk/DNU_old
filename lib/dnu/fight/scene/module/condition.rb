@@ -49,38 +49,70 @@ module DNU
           lambda{ (child_call = child.call).nil? ? nil : !child_call }
         end
         
+        def condition_boolean(tree)
+          try(tree[:do].keys.first, tree[:do].values.first)
+        end
+        
         def condition_ge(tree)
-          left  = try(tree[:left ].keys.first, tree[:left ].values.first)
-          right = try(tree[:right].keys.first, tree[:right].values.first)
-          lambda{ !(left_call = left.call).nil? and !(right_call = right.call).nil? ? (left_call >= right_call) : nil }
+          if tree[:left]
+            lefts = [try(tree[:left].keys.first, tree[:left].values.first)]
+          else
+            lefts = scope_group(tree[:lefts][:group]).map{ |c| try(tree[:lefts][:do].keys.first, tree[:lefts][:do].values.first.merge(:group_target => c)) }
+          end
+          if tree[:right]
+            rights = [try(tree[:right].keys.first, tree[:right].values.first)]
+          else
+            rights = scope_group(tree[:rights][:group]).map{ |c| try(tree[:rights][:do].keys.first, tree[:rights][:do].values.first.merge(:group_target => c)) }
+          end
+          lambda do
+            lefts.product(rights).any?{ |l,r| l.call.try(:>=, r.call) }
+          end
         end
         
         def condition_eq(tree)
-          left  = try(tree[:left ].keys.first, tree[:left ].values.first)
-          right = try(tree[:right].keys.first, tree[:right].values.first)
-          lambda{ !(left_call = left.call).nil? and !(right_call = right.call).nil? ? (left_call == right_call) : nil }
+          if tree[:left]
+            lefts = [try(tree[:left].keys.first, tree[:left].values.first)]
+          else
+            lefts = scope_group(tree[:lefts][:group]).map{ |c| try(tree[:lefts][:do].keys.first, tree[:lefts][:do].values.first.merge(:group_target => c)) }
+          end
+          if tree[:right]
+            rights = [try(tree[:right].keys.first, tree[:right].values.first)]
+          else
+            rights = scope_group(tree[:rights][:group]).map{ |c| try(tree[:rights][:do].keys.first, tree[:rights][:do].values.first.merge(:group_target => c)) }
+          end
+          lambda do
+            lefts.product(rights).any?{ |l,r| l.call == r.call }
+          end
         end
         
         def condition_le(tree)
-          left  = try(tree[:left ].keys.first, tree[:left ].values.first)
-          right = try(tree[:right].keys.first, tree[:right].values.first)
-          lambda{ !(left_call = left.call).nil? and !(right_call = right.call).nil? ? (left_call <= right_call) : nil }
+          if tree[:left]
+            lefts = [try(tree[:left].keys.first, tree[:left].values.first)]
+          else
+            lefts = scope_group(tree[:lefts][:group]).map{ |c| try(tree[:lefts][:do].keys.first, tree[:lefts][:do].values.first.merge(:group_target => c)) }
+          end
+          if tree[:right]
+            rights = [try(tree[:right].keys.first, tree[:right].values.first)]
+          else
+            rights = scope_group(tree[:rights][:group]).map{ |c| try(tree[:rights][:do].keys.first, tree[:rights][:do].values.first.merge(:group_target => c)) }
+          end
+          lambda do
+            lefts.product(rights).any?{ |l,r| l.call.try(:<=, r.call) }
+          end
         end
         
         def condition_and(tree)
-          left  = try(tree[:left ].keys.first, tree[:left ].values.first)
-          right = try(tree[:right].keys.first, tree[:right].values.first)
-          lambda{ !(left_call = left.call).nil? and !(right_call = right.call).nil? ? (left_call and right_call) : nil }
+          a = tree.map{ |h| send(h.keys.first, h.values.first) }
+          lambda{ a.all?{ |la| la.call } }
         end
         
         def condition_or(tree)
-          left  = try(tree[:left ].keys.first, tree[:left ].values.first)
-          right = try(tree[:right].keys.first, tree[:right].values.first)
-          lambda{ !(left_call = left.call).nil? and !(right_call = right.call).nil? ? (left_call or right_call) : nil }
+          a = tree.map{ |h| send(h.keys.first, h.values.first) }
+          lambda{ a.any?{ |la| la.call } }
         end
         
         def condition(tree)
-          try(tree.keys.first,tree.values.first)
+          try(tree.keys.first, tree.values.first)
         end
         
       end

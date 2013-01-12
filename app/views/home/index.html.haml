@@ -6,13 +6,23 @@
       %a.btn.btn-primary.btn-large{:href => new_user_registration_path} 新規登録 &raquo;
 - tx_map = Tx::Map.open("#{Rails.root}/db/game_data/dnu")
 .rule
-  != tx_map.add_link(" |
-    特殊効果記述ルール<br><br> |
-    効果対象/効果：最小効果条件<br><br> |
-    のような形式またはそれらの組み合わせで記述する。<br> |
-    「敵ラ/物理攻撃(1.0)×1000：回避停止」<br> |
-    これは敵からランダムに対象を選択し、回避されるまで1000回攻撃する。<br><br> |
-    また、効果には発動条件を指定可能で、<br> |
-    「自/[HP50％以下]HP回復(MHP×0.1)：物理攻撃(1.0)」<br> |
-    これは自分のHPがMHPの50％以下ならHP回復、そうでなければ攻撃する。<br><br> |
-  ") |
+  %p ●特殊効果内容
+  != tx_map.add_link(GameData::Word.find_by_name("特殊効果内容").caption, "特殊効果内容")
+.rule
+  %p ◆効果
+  != tx_map.add_link(GameData::Word.find_by_name("効果").caption, "効果")
+.rule
+  %p ◇対象
+  != tx_map.add_link(GameData::Word.find_by_name("対象").caption, "対象")
+.rule
+  %p ◇発動条件
+  != tx_map.add_link(GameData::Word.find_by_name("発動条件").caption, "発動条件")
+.rule
+  %p ◇効果種
+  != tx_map.add_link(GameData::Word.find_by_name("効果種").caption, "効果種")
+.rule
+  %p ◇停止条件
+  != tx_map.add_link(GameData::Word.find_by_name("停止条件").caption, "停止条件")
+.rule
+  %p ○効果条件
+  != tx_map.add_link(GameData::Word.find_by_name("効果条件").caption, "効果条件")

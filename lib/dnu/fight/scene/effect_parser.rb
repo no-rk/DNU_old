@@ -62,6 +62,28 @@ class EffectParser < Parslet::Parser
     ) >> spaces?
   }
   
+  rule(:op_ge) {
+    match('[≧]') |
+    match('[>＞]') >> match('[=＝]')
+  }
+  
+  rule(:op_le) {
+    match('[≦]') |
+    match('[<＜]') >> match('[=＝]')
+  }
+  
+  rule(:op_eq) {
+    match('[=＝]')
+  }
+  
+  rule(:op_and) {
+    str('かつ') | str('and')
+  }
+  
+  rule(:op_or) {
+    str('または') | str('or')
+  }
+  
   rule(:comment) {
     str("#") >> (newline.absent? >> any).repeat(0) >> newline.maybe
   }
@@ -168,12 +190,12 @@ class EffectParser < Parslet::Parser
   }
   
   rule(:multi_sub_scope) {
-    str('人形')
+    str('人形') | str('召喚')
   }
   
   rule(:target) {
     (
-      str('単') | str('ラ') | str('全') | (target_condition >> (status_name | disease_name) >> str('追尾')).as(:target_sequence)
+      str('単') | str('ラ') | str('全') | (target_condition >> (status_name >> str('割合').as(:ratio).maybe | disease_name) >> str('追尾')).as(:target_sequence)
     ).as(:target)
   }
   
@@ -474,16 +496,25 @@ class EffectParser < Parslet::Parser
   
   rule(:state_target) {
     (
-      str('自分') | str('対象')
+      str('自分') |
+      str('対象')
     ).as(:state_target).maybe
   }
   
-  rule(:op_ge) {
-    str('以上')
+  rule(:state_target_group) {
+    (
+      multi_scope.as(:scope) >> (single_sub_scope | multi_sub_scope).as(:sub_scope).maybe |
+      single_scope.as(:scope) >> multi_sub_scope.as(:sub_scope)
+    ).as(:group)
   }
   
-  rule(:op_le) {
-    str('以下')
+  rule(:group_value) {
+    (
+      str('最大').as(:max) |
+      str('最小').as(:min) |
+      str('平均').as(:avg) |
+      str('合計').as(:sum)
+    ).as(:group_value)
   }
   
   rule(:state_effects) {
@@ -519,28 +550,57 @@ class EffectParser < Parslet::Parser
   
   rule(:state_character) {
     (
-      state_target >> status_name >> (str('の') >> positive_integer.as(:percent) >> percent).maybe
+      state_target       >> status_name >> (str('の') >> positive_integer.as(:percent) >> percent | str('割合').as(:ratio)).maybe |
+      state_target_group >> status_name >> (str('の') >> positive_integer.as(:percent) >> percent | str('割合').as(:ratio)).maybe >> group_value
     ).as(:state_character)
   }
   
   rule(:state_disease) {
     (
-      state_target >> disease_name >> str('深度')
+      state_target       >> disease_name >> str('深度') |
+      state_target_group >> disease_name >> str('深度') >> group_value
     ).as(:state_disease)
   }
   
-  rule(:status_percent) {
+  rule(:hp_mp_percent) {
     (
       (
-        (state_target >> hp_mp.as(:status_name)).as(:state_character).as(:left) >> positive_integer.as(:percent).as(:state_character).as(:right) >> percent >> op_ge
+        (
+          (
+            state_target >> hp_mp.as(:status_name)
+          ).as(:state_character).as(:left) |
+          (
+            state_target_group >> hp_mp.as(:status_name).as(:state_character).as(:do)
+          ).as(:lefts)
+        ) >>
+        positive_integer.as(:percent).as(:fixnum).as(:right) >>
+        percent >> str('以上')
       ).as(:condition_ge) |
       (
-        (state_target >> hp_mp.as(:status_name)).as(:state_character).as(:left) >> positive_integer.as(:percent).as(:state_character).as(:right) >> percent >> op_le
+        (
+          (
+            state_target >> hp_mp.as(:status_name)
+          ).as(:state_character).as(:left) |
+          (
+            state_target_group >> hp_mp.as(:status_name).as(:state_character).as(:do)
+          ).as(:lefts)
+        ) >>
+        positive_integer.as(:percent).as(:fixnum).as(:right) >>
+        percent >> str('以下')
       ).as(:condition_le) |
       (
-        (state_target >> hp_mp.as(:status_name)).as(:state_character).as(:left) >> positive_integer.as(:percent).as(:state_character).as(:right) >> percent
+        (
+          (
+            state_target >> hp_mp.as(:status_name)
+          ).as(:state_character).as(:left) |
+          (
+            state_target_group >> hp_mp.as(:status_name).as(:state_character).as(:do)
+          ).as(:lefts)
+        ) >>
+        positive_integer.as(:percent).as(:fixnum).as(:right) >>
+        percent
       ).as(:condition_eq)
-    ).as(:status_percent)
+    ).as(:hp_mp_percent)
   }
   
   rule(:random_percent) {
@@ -554,10 +614,12 @@ class EffectParser < Parslet::Parser
   
   rule(:condition_boolean) {
     (
-      just_before |
-      random_percent
-    ) >> str('になった').absent? |
-    status_percent
+      (
+        just_before |
+        random_percent
+      ) >> str('になった').absent? |
+      hp_mp_percent
+    )
   }
   
   rule(:state) {
@@ -566,21 +628,46 @@ class EffectParser < Parslet::Parser
     state_disease
   }
   
+  rule(:comparable) {
+    state_target_group >> (
+      (
+        status_name >> (
+          str('の') >> positive_integer.as(:percent) >> percent |
+          str('割合').as(:ratio)
+        ).maybe
+      ).as(:state_character).as(:do) |
+      disease_name.as(:state_disease).as(:do) >> str('深度')
+    )
+  }
+  
+  rule(:comparable_left) {
+    calculable.as(:left) |
+    comparable.as(:lefts)
+  }
+  
+  rule(:comparable_right) {
+    calculable.as(:right) |
+    comparable.as(:rights)
+  }
+  
   rule(:condition_ge) {
     (
-      calculable.as(:left) >> str('が').maybe >> calculable.as(:right) >> op_ge
+      comparable_left >> str('が').maybe >> comparable_right >> str('以上') |
+      comparable_left >> op_ge >> comparable_right
     ).as(:condition_ge)
   }
   
   rule(:condition_le) {
     (
-      calculable.as(:left) >> str('が').maybe >> calculable.as(:right) >> op_le
+      comparable_left >> str('が').maybe >> comparable_right >> str('以下') |
+      comparable_left >> op_le >> comparable_right
     ).as(:condition_le)
   }
   
   rule(:condition_eq) {
     (
-      calculable.as(:left) >> str('が').maybe >> calculable.as(:right)
+      comparable_left >> str('が').maybe >> comparable_right |
+      comparable_left >> op_eq >> comparable_right
     ).as(:condition_eq)
   }
 
@@ -594,32 +681,39 @@ class EffectParser < Parslet::Parser
   
   rule(:condition) {
     (simple_condition >> str('になった')).as(:condition_become) |
-    simple_condition
+    simple_condition |
+    bra >> conditions >> ket
   }
   
-  rule(:op_and) {
-    str('かつ') | str('and')
-  }
-  
-  rule(:op_or) {
-    str('または') | str('or')
-  }
-  
-  rule(:condition_and) {
-    (
-      condition.as(:left) >> op_and >> (conditions | condition).as(:right)
-    ).as(:condition_and)
+  rule(:conditions) {
+    condition_or |
+    condition_and
   }
   
   rule(:condition_or) {
     (
-      condition.as(:left) >> op_or  >> (conditions | condition).as(:right)
+      (
+        condition_and |
+        condition
+      ) >>
+      (
+        op_or >>
+        (
+          condition_and |
+          condition
+        )
+      ).repeat(1)
     ).as(:condition_or)
   }
   
-  rule(:conditions) {
-    condition_and |
-    condition_or
+  rule(:condition_and) {
+    (
+      condition >>
+      (
+        op_and >>
+        condition
+      ).repeat(1)
+    ).as(:condition_and)
   }
   
   rule(:effect_condition) {

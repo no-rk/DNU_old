@@ -12,7 +12,7 @@ class AjaxController < ApplicationController
       json = {
         "model"   => @ajax.class.model_name.human.downcase,
         "name"    => @ajax.name,
-        "caption" => tx_map.add_link(@ajax.caption)
+        "caption" => tx_map.add_link(@ajax.caption, @ajax.name)
       }
     rescue
       json = {

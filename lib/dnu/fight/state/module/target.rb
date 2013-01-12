@@ -4,6 +4,14 @@ module DNU
     module State
       module Target
         
+        def avg
+          result = []
+          self.each do |c|
+            result << yield(c).to_f
+          end
+          result.size>=1 ? result.sum.to_f/result.size.to_f : 0
+        end
+        
         def live
           self.find_all{ |child|  child.live }.extend Target
         end

@@ -13,22 +13,97 @@ module DNU
           lambda{ @tree[:lv] || @stack.last.try(:LV).to_f }
         end
         
+        def scope_group(tree)
+          scope = @character.try(tree[:scope].to_s, @active.try(:call))
+          scope = @character.try(tree[:sub_scope].to_s, scope) unless tree[:sub_scope].nil?
+          scope
+        end
+        
         # 現在の戦闘値
         def state_character(tree)
           status_or_equip = tree[:equip].nil? ? :status : :equip
           percent = (tree[:percent] || 100).to_f/100
-          lambda{ r=try(tree[:state_target] || '対象').send(tree[:status_name]).send(status_or_equip)*percent; r }
+          if tree[:group]
+            type = tree[:group_value].keys.first
+            lambda do
+              scope_group(tree[:group]).send(type) do |c|
+                r = c.send(tree[:status_name]).send(status_or_equip)
+                r = r*percent/((tree[:ratio] and r.max!=0) ? r.max : 1).to_f
+                logger(type => r)
+                r
+              end
+            end
+          else
+            lambda do
+              r = (tree[:group_target] || try(tree[:state_target] || '対象')).send(tree[:status_name]).send(status_or_equip)
+              r = r*percent/((tree[:ratio] and r.max!=0) ? r.max : 1).to_f
+              logger(r)
+              r
+            end
+          end
         end
         
         # 1つ前の戦闘値
         def state_character_old(tree)
           status_or_equip = tree[:equip].nil? ? :status : :equip
           percent = (tree[:percent] || 100).to_f/100
-          lambda{ r=try(tree[:state_target] || '対象').send(tree[:status_name]).send(status_or_equip).history[-2].try(:*, percent); r }
+          if tree[:group]
+            type = tree[:group_value].keys.first
+            lambda do
+              scope_group(tree[:group]).send(type) do |c|
+                r = c.send(tree[:status_name]).send(status_or_equip)
+                r = r.history[-2].try(:*, percent).try("/", ((tree[:ratio] and r.max!=0) ? r.max : 1).to_f)
+                logger(type => r)
+                r
+              end
+            end
+          else
+            lambda do
+              r = (tree[:group_target] || try(tree[:state_target] || '対象')).send(tree[:status_name]).send(status_or_equip)
+              r = r.history[-2].try(:*, percent).try("/", ((tree[:ratio] and r.max!=0) ? r.max : 1).to_f)
+              logger(r)
+              r
+            end
+          end
         end
         
         def state_disease(tree)
-          lambda{ try(tree[:state_target] || '対象').try(child_name(tree[:disease_name])) }
+          if tree[:group]
+            type = tree[:group_value].keys.first
+            lambda do
+              scope_group(tree[:group]).send(type) do |c|
+                r = c.try(child_name(tree[:disease_name]))
+                logger(type => r)
+                r
+              end
+            end
+          else
+            lambda do
+              r = (tree[:group_target] || try(tree[:state_target] || '対象')).try(child_name(tree[:disease_name]))
+              logger(r)
+              r
+            end
+          end
+        end
+        
+        def state_disease_old(tree)
+          if tree[:group]
+            type = tree[:group_value].keys.first
+            lambda do
+              scope_group(tree[:group]).send(type) do |c|
+                r = c.try(child_name(tree[:disease_name]))
+                logger(type => r)
+                r
+              end
+            end
+          else
+            lambda do
+              r = (tree[:group_target] || try(tree[:state_target] || '対象')).try(child_name(tree[:disease_name]))
+              r = r.history[-2]
+              logger(r)
+              r
+            end
+          end
         end
         
         # sceneによるstatus_nameの変化量合計

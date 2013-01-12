@@ -82,15 +82,11 @@ class EffectTransform < Parslet::Transform
     {
       :if => {
         :condition => {
-          :condition_or => {
-            :left  => { :just_before => :Hit },
-            :right => { 
-              :condition_or => {
-                :left  => { :just_before => :Add },
-                :right => { :just_before => :success }
-              }
-            }
-          }
+          :condition_or => [
+            { :just_before => :Hit },
+            { :just_before => :Add },
+            { :just_before => :success }
+          ]
         },
         :then => arrow_process
       }
@@ -128,22 +124,39 @@ class EffectTransform < Parslet::Transform
     }
   }
   
-  rule(:status_percent => subtree(:status_percent)) {
-    status_percent[status_percent.keys.first][:right][:state_character][:state_target] = status_percent[status_percent.keys.first][:left][:state_character][:state_target]
-    status_percent[status_percent.keys.first][:right][:state_character][:status_name]  = "M" + status_percent[status_percent.keys.first][:left][:state_character][:status_name]
-    
-    status_percent
+  rule(:fixnum => { :percent => subtree(:percent) } ) {
+    {
+      :multi_coeff => [
+        { :fixnum => percent },
+        { :fixnum => 0.01 }
+      ]
+    }
+  }
+  
+  rule(:hp_mp_percent => subtree(:hp_mp_percent)) {
+    if hp_mp_percent.values.first[:left]
+      hp_mp_percent.values.first[:left].values.first.merge!(:ratio => "割合")
+    else
+      hp_mp_percent.values.first[:lefts][:do].values.first.merge!(:ratio => "割合")
+    end
+    hp_mp_percent
   }
   
   rule(:condition_become => subtree(:condition_become)) {
     right = Marshal.load(Marshal.dump(condition_become))
-    right[right.keys.first][:left][:state_character_old] = right[right.keys.first][:left].delete(:state_character)
-    { :condition_and => {
-        :left  => condition_become,
-        :right => {
+    if right.values.first[:left]
+      state = right.values.first[:left].keys.first
+      right.values.first[:left][:"#{state}_old"] = right.values.first[:left].delete(state)
+    else
+      state = right.values.first[:lefts][:do].keys.first
+      right.values.first[:lefts][:do][:"#{state}_old"] = right.values.first[:lefts][:do].delete(state)
+    end
+    { :condition_and => [
+        condition_become,
+        {
           :condition_not => right
         }
-      }
+      ]
     }
   }
   

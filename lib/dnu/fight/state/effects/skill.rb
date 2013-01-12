@@ -16,15 +16,15 @@ module DNU
           tree[:effects].each do |effect|
             effect[:priority]  = tree[:priority]
             effect[:condition] = {
-              :condition_and => {
-                :left  => {
+              :condition_and => [
+                {
                   :condition_ge => {
                     :left  => { :state_character => { :state_target=> "自分", :status_name=> "MP" } },
                     :right => { :fixnum => cost }
                   }
                 },
-                :right => tree[:condition]
-              }
+                tree[:condition]
+              ]
             }
             effect[:do] = {
               :sequence => [
