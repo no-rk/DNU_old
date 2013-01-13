@@ -17,6 +17,7 @@ require_dependency "dnu/fight/state/effects/skill"
 require_dependency "dnu/fight/state/effects/sup"
 require_dependency "dnu/fight/state/effects/disease"
 require_dependency "dnu/fight/state/effects/serif"
+require_dependency "dnu/fight/state/effects/ability"
 require_dependency "dnu/fight/state/effects/effects"
 
 require_dependency "dnu/fight/state/value/team"

@@ -886,11 +886,24 @@ class EffectParser < Parslet::Parser
     sup_effects.as(:effects)
   }
   
+  # ability_definition
+  
+  rule(:ability_definition) {
+    bra >> str('アビリティ') >> ket >> (newline.absent? >> any).repeat(1).as(:name) >> newline >>
+    partition >> (partition.absent? >> any).repeat(1).as(:caption) >> partition >>
+    sup_effects.as(:effects) >>
+    (
+      level >> natural_number.as(:lv) >> separator >> (newline.absent? >> any).repeat(1).as(:caption) >> newline >>
+      sup_effects.as(:effects)
+    ).repeat(1).as(:definitions)
+  }
+  
   # definitions
   
   rule(:definitions) {
     (
       comment |
+      ability_definition.as(:ability) |
       sup_definition.as(:sup) |
       disease_definition.as(:disease) |
       skill_definition.as(:skill) |
@@ -948,11 +961,20 @@ class EffectParser < Parslet::Parser
     ).repeat(1).as(:name) >> newline.maybe
   }
   
+  # ability_setting
+  
+  rule(:ability_setting) {
+    bra >> str('アビリティ') >> ket >>
+    (level.absent? >> any).repeat(1).as(:name) >>
+    level >> natural_number.as(:lv) >> newline.maybe
+  }
+  
   # settings
   
   rule(:settings) {
     (
       comment |
+      ability_setting.as(:ability) |
       sup_setting.as(:sup) |
       disease_setting.as(:disease) |
       skill_setting.as(:skill) |

@@ -15,11 +15,11 @@ module DNU
         
         def initialize(tree)
           tree = Marshal.load(Marshal.dump(tree))
-          when_initialize(tree)
           @parent = tree[:parent]
           @name = tree[:name].to_sym
           @LV = tree[:lv].nil? ? nil : DNU::Fight::State::LV.new(tree[:lv])
           @history = []
+          when_initialize(tree)
           tree[:effects].each do |effect|
             push Effects.new(effect.merge(:parent => self))
           end

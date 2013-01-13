@@ -1,20 +1,20 @@
 - name: 猛毒
   caption: |-
-    行動前にHPが減少します。<br>
+    行動前にHPが減少します。
     また、受けるHP回復の効果量が低くなります。
   color: 00cc33
 
 - name: 麻痺
   caption: |-
-    EVA、MEVAが減少します。<br>
+    EVA、MEVAが減少します。
     また、まれに行動不能になります。
   color: ccff33
 
 - name: 睡眠
   caption: |-
-    HIT、MHITが減少します。<br>
-    また、たまに行動不能になります。<br>
-    攻撃を受けることでたまに深度が軽減されます。<br>
+    HIT、MHITが減少します。
+    また、たまに行動不能になります。
+    攻撃を受けることでたまに深度が軽減されます。
   color: 9966ff
 
 - name: 混濁
@@ -24,36 +24,36 @@
 
 - name: 炎纏
   caption: |-
-    行動前にHP、MPが減少します。<br>
+    行動前にHP、MPが減少します。
     また、火特性が増加します。
   color: cc3333
 
 - name: 水濡
   caption: |-
-    AT、MATが減少します。<br>
+    AT、MATが減少します。
     また、水特性が増加します。
   color: 3366ff
 
 - name: 泥浸
   caption: |-
-    CRI、SPDが減少します。<br>
+    CRI、SPDが減少します。
     また、地特性が増加します。
   color: cc9966
 
 - name: 鎌鼬
   caption: |-
-    DF、MDFが減少します。<br>
+    DF、MDFが減少します。
     また、風特性が増加します。
   color: 66cc66
 
 - name: 光身
   caption: |-
-    DF、MDFが増加します。<br>
+    DF、MDFが増加します。
     また、攻撃対象になりやすくなります。
   color: cccc00
 
 - name: 暗幕
   caption: |-
-    AT、MATが増加します。<br>
+    AT、MATが増加します。
     また、攻撃対象になりにくくなります。
   color: cc33cc
