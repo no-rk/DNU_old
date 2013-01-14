@@ -1,0 +1,18 @@
+- if @words.present?
+  .hero-unit
+    %h1= @name
+  - tx_map = Tx::Map.open("#{Rails.root}/db/game_data/dnu")
+  - @words.try(:each) do |word|
+    - data = GameData::Word.find_by_name(word)
+    - if data
+      .rule
+        %p ●#{word}
+        != tx_map.add_link(data.caption, word, :remote)
+- else
+  .hero-unit
+    %h1 ルール
+  - @keys.each do |key|
+    .rule
+      %a{:href => helps_path(key)}= key
+      - if @link[key]
+        %a{:href => @link[key], :target=>"_blank"} 「テストページ」

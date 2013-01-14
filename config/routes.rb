@@ -30,6 +30,9 @@ DNU::Application.routes.draw do
   post 'ajax_html_to'           => 'ajax#html_to', :as => 'ajax_html_to'
   post 'ajax_to_html'           => 'ajax#to_html', :as => 'ajax_to_html'
 
+  get "help(/:name)"    => 'help#index', :as => 'helps'
+  get "help/:model/:id" => 'help#show' , :as => 'help'
+
   get  "tests/battle"
   post "tests/battle"
   get  "tests/character"
