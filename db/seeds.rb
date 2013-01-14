@@ -25,30 +25,23 @@ art_types.each do |art_type|
   art_type_model.save!
 end
 
-# アビリティ
-ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_abilities")
-abilities = YAML.load(ERB.new(File.read("#{Rails.root}/db/game_data/ability.yml")).result)
-abilities.each do |ability|
-  p ability
-  ability_model = GameData::Ability.new(ability)
-  ability_model.save!
-end
-
-# 付加
-ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_sups")
-sups = YAML.load(ERB.new(File.read("#{Rails.root}/db/game_data/sup.yml")).result)
-parser = EffectParser.new
-sups.each do |sup|
-  begin
-    tree = parser.sup_definition.parse(sup)
-  rescue
-    p "文法エラー"
-    p sup
-  else
-    sup = { "name" => tree[:name].to_s, "definition" => sup }
-    p sup
-    sup_model = GameData::Sup.new(sup)
-    sup_model.save!
+# 技, 付加, アビリティ
+[:skill, :sup, :ability].each do |table|
+  ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_#{table.to_s.tableize}")
+  list = YAML.load(ERB.new(File.read("#{Rails.root}/db/game_data/#{table}.yml")).result)
+  parser = EffectParser.new
+  list.each do |data|
+    begin
+      tree = parser.send("#{table}_definition").parse(data)
+    rescue
+      p "文法エラー"
+      p data
+    else
+      data = { "name" => tree[:name].to_s, "definition" => data }
+      p data
+      model = "GameData::#{table.to_s.camelize}".constantize.new(data)
+      model.save!
+    end
   end
 end
 

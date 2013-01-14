@@ -78,6 +78,36 @@ body {
 div.rule{
   @include shaded_box;
 }
+div.Battle{
+  @include shaded_box;
+}
+div.PrePhase{
+  @include shaded_box;
+}
+div.Phase{
+  @include shaded_box;
+}
+div.Turn{
+  @include shaded_box;
+}
+div.Act{
+  @include shaded_box;
+}
+div.AddAct{
+  @include shaded_box;
+}
+div.Before{
+  @include shaded_box;
+}
+div.Children{
+  @include shaded_box;
+}
+div.After{
+  @include shaded_box;
+}
+div.Result{
+  @include shaded_box;
+}
 .popover{
   width: 500px;
 }

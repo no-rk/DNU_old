@@ -58,6 +58,15 @@ module DNU
         def add_effects(type, name, setting, definitions, parent=nil)
           effects = definitions.try(:find){|d| d.keys.first==type and d[type][:name] == name }
           # 定義されていない場合はデータベースから読み込みを試みる
+          if effects.nil?
+            parser    = EffectParser.new
+            transform = EffectTransform.new
+            tree = "GameData::#{type.to_s.camelize}".constantize.select(:definition).find_by_name(name.to_s)
+            if tree.present?
+              tree = parser.send("#{type}_definition").parse(tree.definition)
+              effects = { type => transform.apply(tree) }
+            end
+          end
           raise "[#{I18n.t(type.to_s.camelize, :scope => 'DNU.Fight.Scene')}]#{name}は定義されてない" if effects.nil?
           effects = effects[type].merge(setting).merge(:parent => parent)
           es = "DNU::Fight::State::#{type.to_s.camelize}".constantize.new(effects)

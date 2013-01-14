@@ -24,7 +24,7 @@ module DNU
           key = %Q|<font color="##{value[2]}">#{key}</font>| if value[2].present?
           %Q|<a href="#{Rails.application.routes.url_helpers.ajax_help_url(value[0], value[1])}" data-remote="true" data-type="json" data-html="true" data-trigger="manual" rel="popover">#{key}</a>|
         end
-      end.gsub(/[\n\r]+/,'<br>')
+      end.gsub(/(\n\r|\r\n|\n|\r)/,'<br>')
     end
     
   end

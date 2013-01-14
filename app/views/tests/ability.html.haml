@@ -1,0 +1,15 @@
+- tx_map = Tx::Map.open("#{Rails.root}/db/game_data/dnu")
+- @words.try(:each) do |word|
+  - caption = GameData::Word.find_by_name(word)
+  - if caption
+    .rule
+      %p ●#{word}
+      != tx_map.add_link(GameData::Word.find_by_name(word).caption, word)
+= form_tag(tests_ability_path, :class => "no_diff select_submit") do
+  = text_area_tag :text, @text, :size => "60x10", :class => "span12"
+  = submit_tag "送信"
+- if @text.present?
+  - if @result.nil?
+    .rule "入力エラー　#{@error}"
+  - else
+    = @result.html_safe

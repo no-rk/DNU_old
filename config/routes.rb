@@ -30,6 +30,19 @@ DNU::Application.routes.draw do
   post 'ajax_html_to'           => 'ajax#html_to', :as => 'ajax_html_to'
   post 'ajax_to_html'           => 'ajax#to_html', :as => 'ajax_to_html'
 
+  get  "tests/battle"
+  post "tests/battle"
+  get  "tests/character"
+  post "tests/character"
+  get  "tests/skill"
+  post "tests/skill"
+  get  "tests/sup"
+  post "tests/sup"
+  get  "tests/ability"
+  post "tests/ability"
+  get  "tests/effects"
+  post "tests/effects"
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

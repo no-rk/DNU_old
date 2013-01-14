@@ -895,7 +895,7 @@ class EffectParser < Parslet::Parser
     (
       level >> natural_number.as(:lv) >> separator >> (newline.absent? >> any).repeat(1).as(:caption) >> newline >>
       sup_effects.as(:effects)
-    ).repeat(1).as(:definitions)
+    ).repeat(0).as(:definitions)
   }
   
   # definitions
@@ -996,7 +996,7 @@ class EffectParser < Parslet::Parser
   rule(:character_definition) {
     bra >> character_type.as(:type) >> ket >> (newline.absent? >> any).repeat(1).as(:name) >> newline >>
     definitions.as(:definitions).maybe >>
-    settings.as(:settings).maybe
+    settings.as(:settings)
   }
   
   rule(:character_definitions) {
