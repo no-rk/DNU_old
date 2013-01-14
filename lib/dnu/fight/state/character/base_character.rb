@@ -19,7 +19,7 @@ module DNU
         @@disease_name = [:Poison, :Wet, :Sleep, :Burn, :Shine,
                           :Palsy, :Vacuum, :Mud, :Confuse, :Black]
 
-        attr_reader :name, :team, :id
+        attr_reader :name, :team, :id, :parent
         attr_accessor :dead, :turn_end
         
         attr_reader *@@status_name
@@ -39,6 +39,7 @@ module DNU
             instance_variable_set("@#{stat}", "DNU::Fight::State::#{stat}".constantize.new(0, 0))
           end
           @id   = @@id += 1
+          @parent = tree[:parent]
           @name = tree[:name].to_s
           @team = tree[:team]
           @Position = DNU::Fight::State::Position.new(rand(3)+1)
@@ -59,10 +60,10 @@ module DNU
           effects = definitions.try(:find){|d| d.keys.first==type and d[type][:name] == name }
           # 定義されていない場合はデータベースから読み込みを試みる
           if effects.nil?
-            parser    = EffectParser.new
-            transform = EffectTransform.new
             tree = "GameData::#{type.to_s.camelize}".constantize.select(:definition).find_by_name(name.to_s)
             if tree.present?
+              parser    = EffectParser.new
+              transform = EffectTransform.new
               tree = parser.send("#{type}_definition").parse(tree.definition)
               effects = { type => transform.apply(tree) }
             end

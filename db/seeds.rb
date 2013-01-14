@@ -25,8 +25,8 @@ art_types.each do |art_type|
   art_type_model.save!
 end
 
-# 技, 付加, アビリティ
-[:skill, :sup, :ability].each do |table|
+# 技, 付加, アビリティ, キャラクター
+[:skill, :sup, :ability, :character].each do |table|
   ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_#{table.to_s.tableize}")
   list = YAML.load(ERB.new(File.read("#{Rails.root}/db/game_data/#{table}.yml")).result)
   parser = EffectParser.new
@@ -38,6 +38,7 @@ end
       p data
     else
       data = { "name" => tree[:name].to_s, "definition" => data }
+      data = data.merge(:kind =>  tree[:kind].keys.first) if tree[:kind].try(:respond_to?, :keys)
       p data
       model = "GameData::#{table.to_s.camelize}".constantize.new(data)
       model.save!

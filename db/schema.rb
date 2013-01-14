@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130113083241) do
+ActiveRecord::Schema.define(:version => 20130114114052) do
 
   create_table "conversations", :force => true do |t|
     t.string   "subject",    :default => ""
@@ -46,6 +46,14 @@ ActiveRecord::Schema.define(:version => 20130113083241) do
   create_table "game_data_battle_values", :force => true do |t|
     t.string   "name"
     t.text     "caption"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "game_data_characters", :force => true do |t|
+    t.string   "kind"
+    t.string   "name"
+    t.text     "definition"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end

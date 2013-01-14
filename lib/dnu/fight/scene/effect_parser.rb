@@ -994,7 +994,7 @@ class EffectParser < Parslet::Parser
   }
   
   rule(:character_definition) {
-    bra >> character_type.as(:type) >> ket >> (newline.absent? >> any).repeat(1).as(:name) >> newline >>
+    bra >> character_type.as(:kind) >> ket >> (newline.absent? >> any).repeat(1).as(:name) >> newline >>
     definitions.as(:definitions).maybe >>
     settings.as(:settings)
   }
@@ -1006,7 +1006,7 @@ class EffectParser < Parslet::Parser
   # character_settings
   
   rule(:character_setting) {
-    bra >> character_type.as(:type) >> ket >> (
+    bra >> character_type.as(:kind) >> ket >> (
       newline.absent? >> any
     ).repeat(1).as(:name) >> newline.maybe
   }

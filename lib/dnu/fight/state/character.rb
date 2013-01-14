@@ -9,11 +9,25 @@ module DNU
           tree[:settings].each do |pt|
             team = DNU::Fight::State::Team.new(pt[:pt_name].to_s)
             pt[:members].each do |character|
-              definition = tree[:definitions].try(:find){|d| d[:type]==character[:type] and d[:name]==character[:name] } || {}
-              definition.merge!(character).merge!(:team => team)
-              self << "DNU::Fight::State::#{character[:type].keys.first}".constantize.new(definition)
+              add_character(character[:kind].keys.first, character[:name], character.merge(:team => team), tree[:definitions])
             end
           end
+        end
+        
+        def add_character(kind, name, setting, definitions, parent=nil)
+          definition = definitions.try(:find){|d| d[:kind].keys.first==kind and d[:name]==name } || {}
+          # 定義されていない場合はデータベースから読み込みを試みる
+          if definition.blank?
+            tree = GameData::Character.select(:definition).find_by_kind_and_name(kind.to_s, name.to_s)
+            if tree.present?
+              parser    = EffectParser.new
+              transform = EffectTransform.new
+              tree = parser.character_definition.parse(tree.definition)
+              definition = transform.apply(tree)
+            end
+          end
+          definition.merge!(setting).merge!(:parent => parent)
+          self << "DNU::Fight::State::#{kind}".constantize.new(definition)
         end
         
       end
