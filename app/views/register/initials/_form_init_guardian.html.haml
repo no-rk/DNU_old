@@ -1,3 +1,3 @@
 = form_initial.simple_fields_for :init_guardian, :defaults => { :as => (:plain if @read_only), :user => current_user } do |form_init_guardian|
   %br
-  = form_init_guardian.input :guardian_id, :collection => guardians.invert, :input_html => { :'data-url' => ajax_help_path(:guardians), :'data-remote' => true, :'data-params' => ("id=#{register_initial.init_guardian[:guardian_id]}" if register_initial.init_guardian[:guardian_id]), :'data-type' => :json, :'data-help-path' => ajax_help_path(:guardians), :class => "span3" }
+  = form_init_guardian.input :guardian_id, :collection => guardians.invert, :input_html => { :'data-url' => help_path(:guardians), :'data-remote' => true, :'data-params' => ("id=#{register_initial.init_guardian[:guardian_id]}" if register_initial.init_guardian[:guardian_id]), :'data-type' => :json, :'data-help-path' => help_path(:guardians), :class => "span3" }

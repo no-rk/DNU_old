@@ -1,33 +1,4 @@
 class AjaxController < ApplicationController
-  # GET /ajax_help/:model(/:id)
-  # GET /ajax_help/:model(/:id).json
-  def help
-    begin
-      if params[:id]
-        @ajax = "GameData::#{params[:model].classify}".constantize.select([:name,:caption]).find(params[:id])
-      else
-        @ajax = "GameData::#{params[:model].classify}".constantize.select([:id,:name,:caption]).all
-      end
-      tx_map = Tx::Map.open("#{Rails.root}/db/game_data/dnu")
-      json = {
-        "model"   => @ajax.class.model_name.human.downcase,
-        "name"    => @ajax.name,
-        "caption" => tx_map.add_link(@ajax.caption, @ajax.name)
-      }
-    rescue
-      json = {
-        "model"   => I18n.t("model"  , :scope => "ajax.message"),
-        "name"    => I18n.t("name"   , :scope => "ajax.message"),
-        "caption" => I18n.t("caption", :scope => "ajax.message")
-      }
-    end
-    
-    respond_to do |format|
-      format.html { redirect_to root_path } # search.html.erb
-      format.json { render json: json }
-    end
-  end
-
   # GET /ajax_img/:model(/:id)
   # GET /ajax_img/:model(/:id).json
   def img

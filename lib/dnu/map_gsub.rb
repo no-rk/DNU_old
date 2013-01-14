@@ -23,7 +23,7 @@ module DNU
           value = value.split('/')
           key = %Q|<font color="##{value[2]}">#{key}</font>| if value[2].present?
           if remote
-            %Q|<a href="#{Rails.application.routes.url_helpers.ajax_help_url(value[0], value[1])}" data-remote="true" data-type="json" data-html="true" data-trigger="manual" rel="popover">#{key}</a>|
+            %Q|<a href="#{Rails.application.routes.url_helpers.help_url(value[0], value[1])}" data-remote="true" data-type="json" data-html="true" data-trigger="manual" rel="popover">#{key}</a>|
           else
             %Q|<a href="#{Rails.application.routes.url_helpers.help_url(value[0], value[1])}" target="_blank">#{key}</a>|
           end

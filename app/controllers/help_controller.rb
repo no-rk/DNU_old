@@ -24,15 +24,40 @@ class HelpController < ApplicationController
   end
 
   def show
-    tx_map = Tx::Map.open("#{Rails.root}/db/game_data/dnu")
     model = params[:model]
     id    = params[:id]
     begin
-      data = "GameData::#{model.classify}".constantize.select([:name, :caption]).find(id)
-      @word    = data.name
-      @caption = tx_map.add_link(data.caption, data.name, :remote)
+      @data    = "GameData::#{model.classify}".constantize.select([:name, :caption]).find(id)
+      @word    = @data.name
+      @caption = @data.caption
     rescue
-      redirect_to root_path
+      respond_to do |format|
+        format.html{ redirect_to root_path }
+        format.json do
+          json = {
+            "model"   => I18n.t("model"  , :scope => "ajax.message"),
+            "name"    => I18n.t("name"   , :scope => "ajax.message"),
+            "caption" => I18n.t("caption", :scope => "ajax.message")
+          }
+          render json: json
+        end
+      end
+    else
+      tx_map = Tx::Map.open("#{Rails.root}/db/game_data/dnu")
+      respond_to do |format|
+        format.html do
+          @caption = tx_map.add_link(@caption, @word, :remote)
+        end
+        format.json do
+          json = {
+            "model"   => @data.class.model_name.human,
+            "name"    => @word,
+            "caption" => tx_map.add_link(@caption, @word, :remote)
+          }
+          render json: json
+        end
+      end
     end
   end
+  
 end

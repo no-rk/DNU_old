@@ -5,7 +5,8 @@ class TestsController < ApplicationController
   
   def battle
     @words = ["PT編成定義"]
-    @text = params[:text]
+    @text  = params[:text]
+    @type  = :battle
     if @text.present?
       begin
         parser = EffectParser.new
@@ -20,35 +21,41 @@ class TestsController < ApplicationController
         @error = msg
       end
     end
+    render 'test'
   end
   
   def character
     @words = ["キャラクター定義"]
-    @text = params[:text]
+    @text  = params[:text]
+    @type  = :character
     parse_from_text(:character)
   end
   
   def sup
     @words = ["付加定義"]
-    @text = params[:text]
+    @text  = params[:text]
+    @type  = :sup
     parse_from_text(:sup)
   end
   
   def ability
     @words = ["アビリティ定義"]
-    @text = params[:text]
+    @text  = params[:text]
+    @type  = :ability
     parse_from_text(:ability)
   end
   
   def skill
     @words = ["技定義"]
     @text = params[:text]
+    @type  = :skill
     parse_from_text(:skill)
   end
   
   def effects
     @words = ["特殊効果内容"]
-    @text = params[:text]
+    @text  = params[:text]
+    @type  = :effects
     parse_from_text(:root, :processes)
   end
   
@@ -66,6 +73,7 @@ class TestsController < ApplicationController
         @error = msg
       end
     end
+    render 'test'
   end
   
 end

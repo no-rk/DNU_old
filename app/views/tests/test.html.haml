@@ -1,0 +1,21 @@
+- @words.try(:each) do |word|
+  .rule
+    %a{:href => helps_path(word), :target=>"_blank"}= word
+- if @words.present?
+  - tx_map = Tx::Map.open("#{Rails.root}/db/game_data/dnu")
+  - @words.each do |word|
+    - word = "#{word}例"
+    - data = GameData::Word.find_by_name(word)
+    - if data
+      .rule
+        %p ◆#{word}
+        != tx_map.add_link(data.caption, word, :remote)
+      .rule 上記例のような書式を貼り付けて送信すると、正しいかどうかチェックする。
+= form_tag(send("tests_#{@type}_path"), :class => "no_diff select_submit") do
+  = text_area_tag :text, @text, :size => "60x10", :class => "span12"
+  = submit_tag "送信"
+- if @text.present?
+  - if @result.nil?
+    .rule "入力エラー　#{@error}"
+  - else
+    = @result.html_safe
