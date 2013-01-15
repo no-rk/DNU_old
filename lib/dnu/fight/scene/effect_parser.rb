@@ -286,8 +286,17 @@ class EffectParser < Parslet::Parser
   
   rule(:decimal) {
     (
-      (num_1_to_9 >> num_0_to_9.repeat(1) | num_0_to_9 >> dot >> num_0_to_9.repeat(1)) | num_1_to_9 >> num_0_to_9.repeat(1) | num_0_to_9
+      (
+        (
+          num_1_to_9 >> num_0_to_9.repeat(1) | num_0_to_9
+        ) >> dot >> num_0_to_9.repeat(1)
+      ) |
+      num_1_to_9 >> num_0_to_9.repeat(1) | num_0_to_9
     ).as(:number)
+  }
+  
+  rule(:ignore_position) {
+    str('隊列無視').as(:ignore_position).maybe
   }
   
   rule(:const) {
@@ -311,34 +320,38 @@ class EffectParser < Parslet::Parser
   }
   
   rule(:effect_hit) {
-    (positive_integer >> percent).as(:min_hit) >> (from_to >> (positive_integer >> percent).as(:max_hit)).maybe
+    str('命中').maybe   >> (positive_integer >> percent).as(:min_hit) >> (from_to >> (positive_integer >> percent).as(:max_hit)).maybe
+  }
+  
+  rule(:effect_cri) {
+    str('クリティカル') >> (positive_integer >> percent).as(:min_cri) >> (from_to >> (positive_integer >> percent).as(:max_cri)).maybe
   }
   
   rule(:physical) {
     (
-               (element_name.as(:element) >> str('属性')).maybe >> physical_attack >> bra >> effect_coeff.as(:coeff_value)  >> (separator >> effect_hit).maybe >> ket |
-      const >> (element_name.as(:element) >> str('属性')).maybe >> physical_attack >> bra >> effect_coeff.as(:change_value) >> (separator >> effect_hit).maybe >> ket
+      ignore_position >>          (element_name.as(:element) >> str('属性')).maybe >> physical_attack >> bra >> effect_coeff.as(:coeff_value)  >> (separator >> effect_hit).maybe >> (separator >> effect_cri).maybe >> ket |
+      ignore_position >> const >> (element_name.as(:element) >> str('属性')).maybe >> physical_attack >> bra >> effect_coeff.as(:change_value) >> (separator >> effect_hit).maybe >> (separator >> effect_cri).maybe >> ket
     ).as(:physical)
   }
   
   rule(:magical) {
     (
-               (element_name.as(:element) >> str('属性')).maybe >>  magical_attack >> bra >> effect_coeff.as(:coeff_value)  >> (separator >> effect_hit).maybe >> ket |
-      const >> (element_name.as(:element) >> str('属性')).maybe >>  magical_attack >> bra >> effect_coeff.as(:change_value) >> (separator >> effect_hit).maybe >> ket
+      ignore_position >>          (element_name.as(:element) >> str('属性')).maybe >>  magical_attack >> bra >> effect_coeff.as(:coeff_value)  >> (separator >> effect_hit).maybe >> (separator >> effect_cri).maybe >> ket |
+      ignore_position >> const >> (element_name.as(:element) >> str('属性')).maybe >>  magical_attack >> bra >> effect_coeff.as(:change_value) >> (separator >> effect_hit).maybe >> (separator >> effect_cri).maybe >> ket
     ).as(:magical)
   }
   
   rule(:physical_magical) {
     (
-               (element_name.as(:element) >> str('属性')).maybe >> physical_magical_attack >> bra >> effect_coeff.as(:coeff_value)  >> (separator >> effect_hit).maybe >> ket |
-      const >> (element_name.as(:element) >> str('属性')).maybe >> physical_magical_attack >> bra >> effect_coeff.as(:change_value) >> (separator >> effect_hit).maybe >> ket
+      ignore_position >>          (element_name.as(:element) >> str('属性')).maybe >> physical_magical_attack >> bra >> effect_coeff.as(:coeff_value)  >> (separator >> effect_hit).maybe >> (separator >> effect_cri).maybe >> ket |
+      ignore_position >> const >> (element_name.as(:element) >> str('属性')).maybe >> physical_magical_attack >> bra >> effect_coeff.as(:change_value) >> (separator >> effect_hit).maybe >> (separator >> effect_cri).maybe >> ket
     ).as(:physical_magical)
   }
   
   rule(:switch_physical_magical) {
     (
-               (element_name.as(:element) >> str('属性')).maybe >> switch_physical_magical_attack >> bra >> effect_coeff.as(:coeff_value)  >> (separator >> effect_hit).maybe >> ket |
-      const >> (element_name.as(:element) >> str('属性')).maybe >> switch_physical_magical_attack >> bra >> effect_coeff.as(:change_value) >> (separator >> effect_hit).maybe >> ket
+      ignore_position >>          (element_name.as(:element) >> str('属性')).maybe >> switch_physical_magical_attack >> bra >> effect_coeff.as(:coeff_value)  >> (separator >> effect_hit).maybe >> (separator >> effect_cri).maybe >> ket |
+      ignore_position >> const >> (element_name.as(:element) >> str('属性')).maybe >> switch_physical_magical_attack >> bra >> effect_coeff.as(:change_value) >> (separator >> effect_hit).maybe >> (separator >> effect_cri).maybe >> ket
     ).as(:switch_physical_magical)
   }
   
@@ -374,11 +387,20 @@ class EffectParser < Parslet::Parser
       disease_name >> str('軽減') >> bra >> effect_coeff.as(:change_value) >> ket
     ).as(:reduce) |
     (
-      (bra >> str('技') >> ket >> ((str('消費増加') | arrow | plus | newline).absent? >> any).repeat(1).as(:name)).maybe >>
+      status_name >> str('奪取') >> bra >> effect_coeff.as(:change_value) >> ket
+    ).as(:steal) |
+    (
+      status_name >> str('強奪') >> bra >> effect_coeff.as(:change_value) >> ket
+    ).as(:rob) |
+    (
+      status_name >> str('変換') >> bra >> effect_coeff.as(:change_to) >> ket
+    ).as(:convert) |
+    (
+      (bra >> str('技') >> ket >> ((str('消費増加') | separator | arrow | plus | bra | ket | newline).absent? >> any).repeat(1).as(:name)).maybe >>
       str('消費増加') >> bra >> effect_coeff.as(:change_value) >> ket
     ).as(:cost_up) |
     (
-      (bra >> str('技') >> ket >> ((str('消費減少') | arrow | plus | newline).absent? >> any).repeat(1).as(:name)).maybe >>
+      (bra >> str('技') >> ket >> ((str('消費減少') | separator | arrow | plus | bra | ket | newline).absent? >> any).repeat(1).as(:name)).maybe >>
       str('消費減少') >> bra >> effect_coeff.as(:change_value) >> ket
     ).as(:cost_down)
   }
@@ -403,11 +425,11 @@ class EffectParser < Parslet::Parser
       (
         (
           str('技設定').as(:this) |
-          bra >> str('技') >> ket >> ((str('の設定') | arrow | plus | newline).absent? >> any).repeat(1).as(:name) >> str('の設定')
+          bra >> str('技') >> ket >> ((str('の設定') | separator | arrow | plus | bra | ket | newline).absent? >> any).repeat(1).as(:name) >> str('の設定')
         ).as(:skill) |
         (
           str('付加').as(:this) |
-          bra >> str('付加') >> ket >> ((str('全て') | str('消滅') | arrow | plus | newline).absent? >> any).repeat(1).as(:name) >> str('全て').as(:all).maybe
+          bra >> str('付加') >> ket >> ((str('全て') | str('消滅') | separator | arrow | plus | bra | ket | newline).absent? >> any).repeat(1).as(:name) >> str('全て').as(:all).maybe
         ).as(:sup)
       ) >> str('消滅')
     ).as(:vanish)
@@ -417,7 +439,7 @@ class EffectParser < Parslet::Parser
     (
       (
         bra >> str('付加') >> ket >>
-        ((level | arrow | plus | bra | ket | newline).absent? >> any).repeat(1).as(:name) >>
+        ((level | separator | arrow | plus | bra | ket | newline).absent? >> any).repeat(1).as(:name) >>
         (level >> natural_number.as(:lv)).maybe >>
         (bra >> str('重複不可').as(:unique) >> ket).maybe
       ).as(:sup)
@@ -427,7 +449,7 @@ class EffectParser < Parslet::Parser
   rule(:add_character) {
     (
       bra >> character_type.as(:kind) >> ket >>
-      ((arrow | plus | bra | ket | newline).absent? >> any).repeat(1).as(:name) >>
+      ((separator | arrow | plus | bra | ket | newline).absent? >> any).repeat(1).as(:name) >>
       (bra >> str('重複不可').as(:unique) >> ket).maybe
     ).as(:add_character)
   }
@@ -530,21 +552,37 @@ class EffectParser < Parslet::Parser
     (
       str('直前') >> (
         str('ダメージ').as(:attack) |
-        (status_name >> str('上昇')).as(:up) |
-        (status_name >> str('低下')).as(:down) |
-        (status_name >> str('増加')).as(:increase) |
-        (status_name >> str('減少')).as(:decrease)
+        (status_name.maybe  >> str('上昇')).as(:up) |
+        (status_name.maybe  >> str('低下')).as(:down) |
+        (status_name.maybe  >> str('増加')).as(:increase) |
+        (status_name.maybe  >> str('減少')).as(:decrease) |
+        (disease_name.maybe >> str('軽減')).as(:reduce) |
+        (status_name.maybe  >> str('奪取')).as(:steal) |
+        (status_name.maybe  >> str('強奪')).as(:rob)
       )
     ).as(:state_effects_just_before_change) |
     (
       (
         str('ダメージ').as(:attack) |
-        (status_name >> str('上昇')).as(:up) |
-        (status_name >> str('低下')).as(:down) |
-        (status_name >> str('増加')).as(:increase) |
-        (status_name >> str('減少')).as(:decrease)
-      ) >> str('合計')
-    ).as(:state_effects_sum_change)
+        (status_name.maybe  >> str('上昇')).as(:up) |
+        (status_name.maybe  >> str('低下')).as(:down) |
+        (status_name.maybe  >> str('増加')).as(:increase) |
+        (status_name.maybe  >> str('減少')).as(:decrease) |
+        (disease_name.maybe >> str('軽減')).as(:reduce) |
+        (status_name.maybe  >> str('奪取')).as(:steal) |
+        (status_name.maybe  >> str('強奪')).as(:rob)
+      ).as(:scene) >>
+      (
+        str('合計').as(:sum) |
+        str('回数').as(:count)
+      ).as(:type)
+    ).as(:state_effects_change) |
+    (
+      (
+        bra >> str('技')   >> ket >> ((str('発動回数') | separator | arrow | plus | bra | ket | newline).absent? >> any).repeat(1).as(:name).as(:skill) |
+        bra >> str('付加') >> ket >> ((str('発動回数') | separator | arrow | plus | bra | ket | newline).absent? >> any).repeat(1).as(:name).as(:sup)
+      ) >> str('発動回数')
+    ).as(:state_effects_count)
   }
   
   rule(:just_before) {

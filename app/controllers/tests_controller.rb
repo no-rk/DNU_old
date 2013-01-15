@@ -14,7 +14,7 @@ class TestsController < ApplicationController
         character = DNU::Fight::State::Character.new(tree)
         battle = DNU::Fight::Scene::Battle.new(character)
         history = battle.play
-        @result = history.to_html + "<pre>#{tree.pretty_inspect}</pre>"
+        @result = history.to_html + "<pre>#{tree.pretty_inspect}</pre>" + "<pre>#{history.pretty_inspect}</pre>"
       rescue => msg
         @error = msg
       end
@@ -136,7 +136,8 @@ class TestsController < ApplicationController
   end
   
   def history_html_effects(tree)
-    DNU::Fight::Scene::Effects.new(characters, { :effects => es_effects(tree) }, parent).play.to_html
+    history = DNU::Fight::Scene::Effects.new(characters, { :effects => es_effects(tree) }, parent).play
+    history.to_html + "<pre>#{history.pretty_inspect}</pre>"
   end
   
   def history_html_sup(tree)

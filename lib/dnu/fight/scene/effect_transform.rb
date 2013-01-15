@@ -56,25 +56,25 @@ class EffectTransform < Parslet::Transform
   
   rule('回避停止') {
     {
-      :just_before => :Hit
+      :condition_not => { :just_before => :Miss }
     }
   }
   
   rule('命中停止') {
     {
-      :just_before => :Miss
+      :condition_not => { :just_before => :Hit }
     }
   }
   
   rule('抵抗停止') {
     {
-      :just_before => :Add
+      :condition_not => { :just_before => :Resist }
     }
   }
   
   rule('追加停止') {
     {
-      :just_before => :Resist
+      :condition_not => { :just_before => :Add }
     }
   }
   

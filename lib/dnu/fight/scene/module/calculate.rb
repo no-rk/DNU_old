@@ -107,24 +107,51 @@ module DNU
           end
         end
         
-        # sceneによるstatus_nameの変化量合計
-        def state_effects_sum_change(tree)
-          scene       = tree.keys.first.to_s.camelize.to_sym
-          status_name = tree.values.first.respond_to?(:values) ? tree.values.first.values.first : nil
+        def state_effects_count(tree)
+          effects_type = tree.keys.first.to_s.camelize.to_sym
+          effects_name = tree.values.first.values.first.to_s
+          lambda{ 対象.effects.type(effects_type).find_by_name(effects_name).map{ |e| e.history.count }.sum.to_i }
+        end
+        
+        # sceneによるstatus_or_disease_nameの変化量合計
+        def state_effects_change(tree)
+          type                   = tree[:type].keys.first
+          scene                  = tree[:scene].keys.first.to_s.camelize.to_sym
+          status_or_disease_name = tree[:scene].values.first.respond_to?(:values) ? tree[:scene].values.first.values.first : nil
+          status_or_disease_name = status_or_disease_name.respond_to?(:keys) ? status_or_disease_name.keys.first : status_or_disease_name
+          status_or_disease      = tree[:scene].values.first.respond_to?(:keys) ? tree[:scene].values.first.keys.first : nil
+          logger(status_or_disease_name)
+          logger(status_or_disease)
           lambda do
             @stack.last.history.last.childrens_find_by_scene(scene).map do |children|
-              status_name.to_s==children[:status_name].to_s ? (children[:after_change].to_i - children[:before_change].to_i).abs : 0
-            end.sum.to_i
+              if status_or_disease_name
+                status_or_disease_name.to_s==children[status_or_disease].to_s ? (children[:after_change].to_i - children[:before_change].to_i).abs : 0
+              else
+                (children[:after_change].to_i - children[:before_change].to_i).abs
+              end
+            end.select{ |i| i!=0 }.send(type).to_i
           end
         end
         
-        # sceneによるstatus_nameの直前の変化量
+        # sceneによるstatus_or_disease_nameの直前の変化量
         def state_effects_just_before_change(tree)
-          scene       = tree.keys.first.to_s.camelize.to_sym
-          status_name = tree.values.first.respond_to?(:values) ? tree.values.first.values.first : nil
+          scene                  = tree.keys.first.to_s.camelize.to_sym
+          status_or_disease_name = tree.values.first.respond_to?(:values) ? tree.values.first.values.first : nil
+          status_or_disease_name = status_or_disease_name.respond_to?(:keys) ? status_or_disease_name.keys.first : status_or_disease_name
+          status_or_disease      = tree.values.first.respond_to?(:keys) ? tree.values.first.keys.first : nil
+          logger(status_or_disease_name)
+          logger(status_or_disease)
           lambda do
             children = @stack.last.history.last.try(:childrens_find_by_scene, scene).try(:last) || @stack[-2].try(:history).try(:last).try(:childrens_find_by_scene, scene).try(:last)
-            children ? (status_name.to_s==children[:status_name].to_s ? (children[:after_change].to_i - children[:before_change].to_i).abs : 0) : 0
+            if children.present?
+              if status_or_disease_name
+                status_or_disease_name.to_s==children[status_or_disease].to_s ? (children[:after_change].to_i - children[:before_change].to_i).abs : 0
+              else
+                (children[:after_change].to_i - children[:before_change].to_i).abs
+              end
+            else
+              0
+            end
           end
         end
         
