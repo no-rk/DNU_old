@@ -96,6 +96,9 @@ div.Act{
 div.AddAct{
   @include shaded_box;
 }
+div.Effects{
+  @include shaded_box;
+}
 div.Before{
   @include shaded_box;
 }

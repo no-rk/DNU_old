@@ -97,32 +97,32 @@ class EffectTransform < Parslet::Transform
     [target_sequence.delete(:target_condition),target_sequence]
   }
   
-  rule(:root => { :passive => subtree(:passive), :do => { :each_effect => subtree(:each_effect) } }) {
-    {
-      :each_effect => {
-        :do => {
-          :root => {
-            :passive => passive,
-            :do => each_effect[:do]
-          }
-        },
-        :while => each_effect[:while]
-      }
-    }
-  }  
-  rule(:root => { :passive => subtree(:passive), :do => { :repeat => subtree(:repeat) } }) {
-    {
-      :repeat => {
-        :do => {
-          :root => {
-            :passive => passive,
-            :do => repeat[:do]
-          }
-        },
-        :times => repeat[:times]
-      }
-    }
-  }
+  #rule(:root => { :passive => subtree(:passive), :do => { :each_effect => subtree(:each_effect) } }) {
+  #  {
+  #    :each_effect => {
+  #      :do => {
+  #        :root => {
+  #          :passive => passive,
+  #          :do => each_effect[:do]
+  #        }
+  #      },
+  #      :while => each_effect[:while]
+  #    }
+  #  }
+  #}  
+  #rule(:root => { :passive => subtree(:passive), :do => { :repeat => subtree(:repeat) } }) {
+  #  {
+  #    :repeat => {
+  #      :do => {
+  #        :root => {
+  #          :passive => passive,
+  #          :do => repeat[:do]
+  #        }
+  #      },
+  #      :times => repeat[:times]
+  #    }
+  #  }
+  #}
   
   rule(:fixnum => { :percent => subtree(:percent) } ) {
     {

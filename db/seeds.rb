@@ -5,7 +5,7 @@
   ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_#{table.to_s.tableize}")
   list = YAML.load(ERB.new(File.read("#{Rails.root}/db/game_data/#{table}.yml")).result)
   list.each do |data|
-    p data
+    #p data
     model = "GameData::#{table.to_s.camelize}".constantize.new(data)
     model.save!
   end
@@ -16,10 +16,10 @@ ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_art_types")
 ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_arts")
 art_types = YAML.load(ERB.new(File.read("#{Rails.root}/db/game_data/art.yml")).result)
 art_types.each do |art_type|
-  p art_type.except("attributes")
+  #p art_type.except("attributes")
   art_type_model = GameData::ArtType.new(art_type.except("attributes"))
   art_type["attributes"].each do |art|
-    p art
+    #p art
     art_type_model.arts.build(art)
   end
   art_type_model.save!
@@ -39,7 +39,7 @@ end
     else
       data = { "name" => tree[:name].to_s, "definition" => data }
       data = data.merge(:kind =>  tree[:kind].keys.first) if tree[:kind].try(:respond_to?, :keys)
-      p data
+      #p data
       model = "GameData::#{table.to_s.camelize}".constantize.new(data)
       model.save!
     end

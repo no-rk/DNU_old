@@ -4,11 +4,11 @@ module DNU
       class Ability < BaseEffects
         
         def when_initialize(tree)
-          # ƒAƒrƒŠƒeƒB‚ÌLV‚Íí“¬’†‚É•Ï‰»‚µ‚È‚¢
+          # ã‚¢ãƒ“ãƒªãƒ†ã‚£ã®LVã¯æˆ¦é—˜ä¸­ã«å¤‰åŒ–ã—ãªã„
           @LV = tree[:lv]
-          # ƒAƒrƒŠƒeƒBLV‚É‰ž‚¶‚ÄLVŒø‰Ê‚ð’Ç‰Á
+          # ã‚¢ãƒ“ãƒªãƒ†ã‚£LVã«å¿œã˜ã¦LVåŠ¹æžœã‚’è¿½åŠ 
           tree[:definitions].each do |effects|
-            tree[:effects] += effects[:effects] if @LV>=effects[:lv]
+            tree[:effects] += effects[:effects] if @LV.to_i>=effects[:lv].to_i
           end
         end
         

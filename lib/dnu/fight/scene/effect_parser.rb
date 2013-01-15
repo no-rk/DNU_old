@@ -424,6 +424,14 @@ class EffectParser < Parslet::Parser
     ).as(:add_effects)
   }
   
+  rule(:add_character) {
+    (
+      bra >> character_type.as(:kind) >> ket >>
+      ((arrow | plus | bra | ket | newline).absent? >> any).repeat(1).as(:name) >>
+      (bra >> str('重複不可').as(:unique) >> ket).maybe
+    ).as(:add_character)
+  }
+  
   rule(:cost) {
     (
       str('消費') >> bra >> effect_coeff.as(:change_value) >> ket
@@ -472,6 +480,7 @@ class EffectParser < Parslet::Parser
       disease |
       vanish |
       add_effects |
+      add_character |
       interrupt
     ).as(:effect)
   }
@@ -732,13 +741,21 @@ class EffectParser < Parslet::Parser
     if_process | root_process | processes | random_processes | effect
   }
   
-  rule(:process_wrap) {
+  rule(:each_effect) {
+    (
+      (repeat_effect | process).as(:do) >> while_wrap
+    ).as(:each_effect)
+  }
+  
+  rule(:repeat_effect) {
     (
       process.as(:do) >> times_wrap
-    ).as(:repeat) |
-    (
-      process.as(:do) >> while_wrap
-    ).as(:each_effect) |
+    ).as(:repeat)
+  }
+  
+  rule(:process_wrap) {
+    each_effect |
+    repeat_effect |
     process
   }
   
@@ -759,13 +776,13 @@ class EffectParser < Parslet::Parser
   
   rule(:if_process) {
     (
-      effect_condition.as(:condition) >> process_wrap.as(:then) >> (separator >> process_wrap.as(:else)).maybe
+      effect_condition.as(:condition) >> process.as(:then) >> (separator >> process.as(:else)).maybe
     ).as(:if)
   }
   
   rule(:root_process) {
     (
-      passive >> (separator | bra.present?) >> process_wrap.as(:do)
+      passive >> (separator | bra.present?) >> process.as(:do)
     ).as(:root)
   }
   
@@ -789,9 +806,11 @@ class EffectParser < Parslet::Parser
   
   rule(:root_processes) {
     (
-      (passive.present? >> process_wrap >> newline.maybe).repeat(2)
+      (
+        (effect_condition.maybe >> passive).present? >> process_wrap >> newline.maybe
+      ).repeat(2)
     ).as(:sequence) |
-    passive.present? >> process_wrap >> newline.maybe
+    (effect_condition.maybe >> passive).present? >> process_wrap >> newline.maybe
   }
   
   # sup_effects

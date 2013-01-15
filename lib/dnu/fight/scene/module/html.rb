@@ -269,6 +269,17 @@ module DNU
           nested_div(tree[:after])
         end
         
+        def AddCharacter(tree)
+          h = tree[:children]
+          nested_div(tree[:before])   +
+          if h[:success]
+            %Q|\n<span class="passive">#{tree[:passive]}</span>に[#{I18n.t(h[:kind], :scope => "DNU.Fight.Scene")}]#{h[:name]}を召喚！|
+          else
+            %Q|\n<span class="passive">#{tree[:passive]}</span>に[#{I18n.t(h[:kind], :scope => "DNU.Fight.Scene")}]#{h[:name]}をもう召喚できない！|
+          end +
+          nested_div(tree[:after])
+        end
+        
         def Interrupt(tree)
           h = tree[:children]
           nested_div(tree[:before])   +
