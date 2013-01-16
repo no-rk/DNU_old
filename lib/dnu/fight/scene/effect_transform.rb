@@ -15,7 +15,7 @@ class EffectTransform < Parslet::Transform
   }
   
   rule(:timing_transform => subtree(:timing)) {
-    { timing.keys.map{|s| s.to_s.underscore }.join("_").to_sym => timing.values.join }
+    { timing.map{ |k,v| (k==:element ? v.keys.first : k).to_s.underscore }.join("_").to_sym => timing.map{ |k,v| k==:element ? "#{v.values.first}属性" : v }.join } if timing.respond_to?(:map)
   }
   
   rule(:range => simple(:range)) {

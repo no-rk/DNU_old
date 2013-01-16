@@ -16,7 +16,7 @@ module DNU
             if vanish_all
               success = 対象.remove_effects(対象.effects.type(vanish_type).find_by_name(vanish_name))
             else
-              id = 対象.effects.type(vanish_type).find_by_name(vanish_name).sample.id
+              id = 対象.effects.type(vanish_type).find_by_name(vanish_name).sample.try(:id)
               success = 対象.remove_effects(対象.effects.type(vanish_type).find_by_id(id))
             end
           else

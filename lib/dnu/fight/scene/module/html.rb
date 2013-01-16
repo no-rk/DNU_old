@@ -258,6 +258,17 @@ module DNU
           nested_div(tree[:after])
         end
         
+        def AddNextDamage(tree)
+          h = tree[:children]
+          nested_div(tree[:before])   +
+          if h[:success]
+            %Q|\n<span class="passive">#{tree[:passive]}</span>の#{h[:name]}！（#{"割合：#{h[:coeff]}" if h[:coeff].to_i!=1}#{"固定値：#{h[:change]}" if h[:change].to_i!=0}）|
+          else
+            %Q|\n<span class="passive">#{tree[:passive]}</span>の#{h[:name]}はもうできない。（#{"割合：#{h[:coeff]}" if h[:coeff].to_i!=1}#{"固定値：#{h[:change]}" if h[:change].to_i!=0}）|
+          end +
+          nested_div(tree[:after])
+        end
+        
         def AddEffects(tree)
           h = tree[:children]
           nested_div(tree[:before])   +
@@ -319,6 +330,12 @@ module DNU
         def NextScope(tree)
           nested_div(tree[:before])   +
            %Q|\n<span class="passive">#{tree[:passive]}</span>の次の対象範囲が#{tree[:children][:scope]}になった。| +
+          nested_div(tree[:after])
+        end
+        
+        def NextDamage(tree)
+          nested_div(tree[:before])   +
+           %Q|\n<span class="passive">#{tree[:passive]}</span>の次の#{"被" if tree[:children][:ant].present?}ダメージが#{tree[:children][:sign]>0 ? "増加" : "減少"}した！（#{"割合：#{tree[:children][:coeff]}％" if tree[:children][:coeff]!=1}#{"固定値：#{tree[:children][:change]}" if tree[:children][:change]!=0}）| +
           nested_div(tree[:after])
         end
         

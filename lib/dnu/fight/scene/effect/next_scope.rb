@@ -6,9 +6,9 @@ module DNU
         include Calculate
         
         def play_children
-          scope = @tree[:scope]
+          scope = @tree[:scope].to_s
           
-          対象.scope = scope
+          対象.next_scope = scope
           
           history[:children] = { :scope => scope }
         end

@@ -209,6 +209,7 @@ ja:
         Sup: 付加
         Serif: セリフ
         Ability: アビリティ
+        TemporaryEffect: 一時効果
         PC: PC
         NPC: NPC
         Monster: モンスター
@@ -227,6 +228,8 @@ ja:
         Effects: 効果
         Root: 対象決定
         Cemetery: 墓地埋葬
+        Damage: ダメージ決定
+        DamageAnt: 被ダメージ決定
         Attack: 攻撃
         AttackAnt: 被攻撃
         Critical: クリティカル

@@ -155,6 +155,28 @@ module DNU
           end
         end
         
+        # sceneによるstatus_or_disease_nameの直後の変化量
+        def state_effects_just_after_change(tree)
+          scene                  = tree.keys.first.to_s.camelize.to_sym
+          status_or_disease_name = tree.values.first.respond_to?(:values) ? tree.values.first.values.first : nil
+          status_or_disease_name = status_or_disease_name.respond_to?(:keys) ? status_or_disease_name.keys.first : status_or_disease_name
+          status_or_disease      = tree.values.first.respond_to?(:keys) ? tree.values.first.keys.first : nil
+          logger(status_or_disease_name)
+          logger(status_or_disease)
+          lambda do
+            children = @stack.last.history.last.try(:childrens_find_by_scene, scene).try(:last) || @stack[-2].try(:history).try(:last).try(:childrens_find_by_scene, scene).try(:last)
+            if children.present?
+              if status_or_disease_name
+                status_or_disease_name.to_s==children[status_or_disease].to_s ? children[:just_after].to_i : 0
+              else
+                children[:just_after].to_i
+              end
+            else
+              0
+            end
+          end
+        end
+        
         def random_number(tree)
           from = try(tree[:from].keys.first, tree[:from].values.first)
           to   = try(  tree[:to].keys.first,   tree[:to].values.first)

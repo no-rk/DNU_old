@@ -6,19 +6,20 @@ module DNU
         
         @@id = 0
         
-        @@status_name = [:HP, :MP, :AT, :MAT, :DF, :MDF, :HIT, :MHIT, :EVA, :MEVA, :SPD,
-                         :FireValue, :FireResist, :WaterValue, :WaterResist,
-                         :WindValue, :WindResist, :EarthValue, :EarthResist,
-                         :LightValue, :LightResist, :DarkValue, :DarkResist,
-                         :PoisonValue, :PoisonResist, :WetValue, :WetResist,
-                         :SleepValue, :SleepResist, :BurnValue, :BurnResist,
-                         :ShineValue, :ShineResist, :PalsyValue, :PalsyResist,
-                         :VacuumValue, :VacuumResist, :MudValue, :MudResist,
-                         :ConfuseValue, :ConfuseResist, :BlackValue, :BlackResist]
-        @@has_max     = [:HP, :MP]
+        @@status_name  = [:HP, :MP, :AT, :MAT, :DF, :MDF, :HIT, :MHIT, :EVA, :MEVA, :SPD,
+                          :FireValue, :FireResist, :WaterValue, :WaterResist,
+                          :WindValue, :WindResist, :EarthValue, :EarthResist,
+                          :LightValue, :LightResist, :DarkValue, :DarkResist,
+                          :PoisonValue, :PoisonResist, :WetValue, :WetResist,
+                          :SleepValue, :SleepResist, :BurnValue, :BurnResist,
+                          :ShineValue, :ShineResist, :PalsyValue, :PalsyResist,
+                          :VacuumValue, :VacuumResist, :MudValue, :MudResist,
+                          :ConfuseValue, :ConfuseResist, :BlackValue, :BlackResist]
+        @@has_max      = [:HP, :MP]
         @@disease_name = [:Poison, :Wet, :Sleep, :Burn, :Shine,
                           :Palsy, :Vacuum, :Mud, :Confuse, :Black]
-
+        @@nexts        = [:scope, :damage]
+        
         attr_reader :name, :team, :id, :parent
         attr_accessor :dead, :turn_end
         
@@ -46,7 +47,11 @@ module DNU
           @Range    = DNU::Fight::State::Range.new(rand(5)+1)
           @effects         = [].extend FindEffects
           @effects_removed = [].extend FindEffects
-          @scope = []
+          @@nexts.each do |n|
+            ['', '_ant'].each do |ant|
+              instance_variable_set("@next_#{n}#{ant}", [])
+            end
+          end
           tree[:settings].try(:each) do |setting|
             add_effects(setting.keys.first, setting.values.first[:name], setting.values.first, tree[:definitions])
           end
@@ -82,12 +87,20 @@ module DNU
           array.present?
         end
         
-        def scope
-          @scope.pop
-        end
-        
-        def scope=(s)
-          @scope.push(s.to_s)
+        @@nexts.each do |n|
+          ['', '_ant'].each do |ant|
+            define_method("next_#{n}#{ant}") do
+              instance_variable_get("@next_#{n}#{ant}").pop
+            end
+            
+            define_method("next_#{n}#{ant}=") do |la|
+              instance_variable_set("@next_#{n}#{ant}", [la])
+            end
+            
+            define_method("next_#{n}#{ant}?") do
+              instance_variable_get("@next_#{n}#{ant}").present?
+            end
+          end
         end
         
       end

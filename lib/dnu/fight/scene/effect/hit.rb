@@ -48,14 +48,36 @@ module DNU
         end
         
         def play_children
-          damage = (@damage || create_damage).call
+          
+          damage_value = (@damage || create_damage).call
+          history[:children] = { :just_after => damage_value }
+          
+          # ダメージ決定前
+          play_(:before, :before, :Damage)
+          play_(:before, :before, :"#{first_name}Damage")
+          last_name.to_s.underscore.split("_").map{|p_or_m| p_or_m.camelize.to_sym }.each do |p_or_m|
+            play_(:before, :before, :"#{p_or_m}Damage")
+            play_(:before, :before, :"#{first_name}#{p_or_m}Damage")
+          end
+          
+          damage_value = 自分.next_damage.call(damage_value)     if 自分.next_damage?
+          damage_value = 対象.next_damage_ant.call(damage_value) if 対象.next_damage_ant?
           
           before_change = 対象.HP.val
-          対象.HP.change_value(-damage)
+          対象.HP.change_value(-damage_value)
           after_change  = 対象.HP.val
           
           history[:children] = { :critical => @tree.values.first[:critical], :element => first_name, :attack_type => last_name, :before_change => before_change, :after_change => after_change }
           logger({ :element => first_name, :attack_type => last_name, :before_change => before_change, :after_change => after_change })
+          
+          # ダメージ決定後
+          last_name.to_s.underscore.split("_").map{|p_or_m| p_or_m.camelize.to_sym }.each do |p_or_m|
+            play_(:after, :after, :"#{first_name}#{p_or_m}Damage")
+            play_(:after, :after, :"#{p_or_m}Damage")
+          end
+          play_(:after, :after, :"#{first_name}Damage")
+          play_(:after,  :after, :Damage)
+          
         end
         
         def play

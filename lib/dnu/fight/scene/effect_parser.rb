@@ -430,7 +430,11 @@ class EffectParser < Parslet::Parser
         (
           str('付加').as(:this) |
           bra >> str('付加') >> ket >> ((str('全て') | str('消滅') | separator | arrow | plus | bra | ket | newline).absent? >> any).repeat(1).as(:name) >> str('全て').as(:all).maybe
-        ).as(:sup)
+        ).as(:sup) |
+        (
+          str('一時効果').as(:this) |
+          bra >> str('一時効果') >> ket >> ((str('全て') | str('消滅') | separator | arrow | plus | bra | ket | newline).absent? >> any).repeat(1).as(:name) >> str('全て').as(:all).maybe
+        ).as(:temporary_effect)
       ) >> str('消滅')
     ).as(:vanish)
   }
@@ -488,6 +492,37 @@ class EffectParser < Parslet::Parser
     ) >> ket
   }
   
+  rule(:next_damage_coeff) {
+    (
+      calculable.as(:coeff_value) >> percent >> (separator >> effect_coeff.as(:change_value)).maybe |
+      effect_coeff.as(:change_value)
+    )
+  }
+  
+  rule(:add_next_damage) {
+    (
+      (str('次に与える') | str('次に受ける').as(:ant))>>
+      attack_timing_options.as(:timing_transform).as(:timing) >>
+      str('ダメージ') >>
+      (str('増加') | str('減少').as(:minus)) >>
+      bra >>
+      next_damage_coeff >>
+      (separator >> str('重複不可').as(:unique)).maybe >>
+      ket
+    ).as(:add_next_damage)
+  }
+  
+  rule(:next_damage) {
+    (
+      str('次の') >> str('被').as(:ant).maybe >>
+      str('ダメージ') >>
+      (str('増加') | str('減少').as(:minus)) >>
+      bra >>
+      next_damage_coeff >>
+      ket
+    ).as(:next_damage)
+  }
+  
   rule(:effect) {
     (
       (
@@ -495,12 +530,14 @@ class EffectParser < Parslet::Parser
         change |
         cost |
         next_scopes |
+        next_damage |
         serif
       ) >> arrow.absent? |
       attack |
       revive |
       disease |
       vanish |
+      add_next_damage |
       add_effects |
       add_character |
       interrupt
@@ -561,6 +598,18 @@ class EffectParser < Parslet::Parser
         (status_name.maybe  >> str('強奪')).as(:rob)
       )
     ).as(:state_effects_just_before_change) |
+    (
+      str('直後') >> (
+        str('ダメージ').as(:attack) |
+        (status_name.maybe  >> str('上昇')).as(:up) |
+        (status_name.maybe  >> str('低下')).as(:down) |
+        (status_name.maybe  >> str('増加')).as(:increase) |
+        (status_name.maybe  >> str('減少')).as(:decrease) |
+        (disease_name.maybe >> str('軽減')).as(:reduce) |
+        (status_name.maybe  >> str('奪取')).as(:steal) |
+        (status_name.maybe  >> str('強奪')).as(:rob)
+      )
+    ).as(:state_effects_just_after_change) |
     (
       (
         str('ダメージ').as(:attack) |
@@ -862,8 +911,8 @@ class EffectParser < Parslet::Parser
     str('優先度') >> natural_number.as(:priority)
   }
   
-  rule(:timing_options) {
-    (element_name >> str('属性')).maybe >>
+  rule(:attack_timing_options) {
+    (element_name.as(:element) >> str('属性')).maybe >>
     (str('物理').as(:physical) | str('魔法').as(:magical)).maybe
   }
   
@@ -877,13 +926,15 @@ class EffectParser < Parslet::Parser
       str('通常攻撃').as(:default_attack) |
       str('効果').as(:effects) |
       str('対象決定').as(:root) |
-      timing_options >> (
+      attack_timing_options >> (
         str('攻撃命中').as(:hit) |
         str('攻撃被弾').as(:hit_ant) |
         str('攻撃空振').as(:miss) |
         str('攻撃回避').as(:miss_ant) |
         str('攻撃').as(:attack) |
-        str('被攻撃').as(:attack_ant)
+        str('被攻撃').as(:attack_ant) |
+        str('ダメージ決定').as(:damage) |
+        str('被ダメージ決定').as(:damage_ant)
       ) |
       str('クリティカル').as(:critical) |
       str('被クリティカル').as(:critical_ant) |
@@ -903,6 +954,13 @@ class EffectParser < Parslet::Parser
   
   rule(:sup_definition) {
     bra >> str('付加') >> ket >> (newline.absent? >> any).repeat(1).as(:name) >> newline >>
+    sup_effects.as(:effects)
+  }
+  
+  # temporary_effect_definition
+  
+  rule(:temporary_effect_definition) {
+    bra >> str('一時効果') >> ket >> (newline.absent? >> any).repeat(1).as(:name) >> newline >>
     sup_effects.as(:effects)
   }
   

@@ -638,6 +638,11 @@
     
     PT編成定義例
 
+- name: PT名
+  caption: |-
+    PTに付けられたラベル。
+    固有の名前じゃなくても良いです。
+
 - name: PT編成定義例
   caption: |-
     [PT]Aチーム
