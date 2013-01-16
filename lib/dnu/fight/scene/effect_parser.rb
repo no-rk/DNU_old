@@ -106,6 +106,7 @@ class EffectParser < Parslet::Parser
       str('M').maybe >> str('HIT') |
       str('M').maybe >> str('EVA') |
       str('SPD') |
+      str('CRI') |
       (
         (disease_name | element_name.as(:element)) >> (str('特性').as(:Value) | str('耐性').as(:Resist))
       ).as(:value_resist)

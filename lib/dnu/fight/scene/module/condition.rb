@@ -5,6 +5,7 @@ module DNU
       module Condition
         include Calculate
         include HitRate
+        include CriRate
         
         def condition_damage(attack_type)
           lambda do
@@ -15,9 +16,9 @@ module DNU
         end
         
         def hit?(tree)
-          attack_type = tree.keys.first
-          min_hit = (tree[attack_type][:min_hit] ||  50).to_f
-          max_hit = (tree[attack_type][:max_hit] || 100).to_f
+          attack_type = @data.keys.first
+          min_hit = (@data[attack_type][:min_hit] ||  50).to_f
+          max_hit = (@data[attack_type][:max_hit] || 100).to_f
           lambda do
             hit_rate = min_hit + (max_hit - min_hit)*try('hit_' + attack_type.to_s).call*hit_element.call
             logger(:hit_rate => hit_rate)
@@ -26,7 +27,14 @@ module DNU
         end
         
         def critical?(tree)
-          lambda{ r=rand; r<0.5 }
+          attack_type = @data.keys.first
+          min_cri = (@data[attack_type][:min_cri] ||  10).to_f
+          max_cri = (@data[attack_type][:max_cri] || 100).to_f
+          lambda do
+            cri_rate = min_cri + (max_cri - min_cri)*try('cri_' + attack_type.to_s).call*cri_element.call
+            logger(:cri_rate => cri_rate)
+            rand(100) < cri_rate
+          end
         end
         
         def add?(tree)

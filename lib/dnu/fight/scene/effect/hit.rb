@@ -11,12 +11,12 @@ module DNU
           @damage = nil
         end
         
-        def first_name
-          @tree[child_name(@tree)][:element].keys.first
+        def element_name
+          @data.values.first[:element].keys.first
         end
         
-        def last_name
-          child_name(@tree).to_s.camelize
+        def attack_type_name
+          child_name(@data).to_s.camelize
         end
         
         def damage(tree)
@@ -28,14 +28,14 @@ module DNU
               logger(:dmg => dmg)
               dmg *= calcu_value(tree[attack_type][:coeff_value]).call
               dmg *= dmg_element.call
-              dmg *= dmg_critical.call if tree[attack_type][:critical]
+              dmg *= dmg_critical.call if tree[:critical]
               dmg.to_i
             end
           elsif tree[attack_type][:change_value]
             lambda do
               dmg  = calcu_value(tree[attack_type][:change_value]).call
               dmg *= dmg_element.call
-              dmg *= dmg_critical.call if tree[attack_type][:critical]
+              dmg *= dmg_critical.call if tree[:critical]
               dmg.to_i
             end
           else
@@ -44,7 +44,7 @@ module DNU
         end
         
         def create_damage
-          @damage ||= damage(@tree)
+          @damage ||= damage(@data)
         end
         
         def play_children
@@ -54,10 +54,10 @@ module DNU
           
           # ダメージ決定前
           play_(:before, :before, :Damage)
-          play_(:before, :before, :"#{first_name}Damage")
-          last_name.to_s.underscore.split("_").map{|p_or_m| p_or_m.camelize.to_sym }.each do |p_or_m|
+          play_(:before, :before, :"#{element_name}Damage")
+          attack_type_name.to_s.underscore.split("_").map{|p_or_m| p_or_m.camelize.to_sym }.each do |p_or_m|
             play_(:before, :before, :"#{p_or_m}Damage")
-            play_(:before, :before, :"#{first_name}#{p_or_m}Damage")
+            play_(:before, :before, :"#{element_name}#{p_or_m}Damage")
           end
           
           damage_value = 自分.next_damage.call(damage_value)     if 自分.next_damage?
@@ -67,15 +67,15 @@ module DNU
           対象.HP.change_value(-damage_value)
           after_change  = 対象.HP.val
           
-          history[:children] = { :critical => @tree.values.first[:critical], :element => first_name, :attack_type => last_name, :before_change => before_change, :after_change => after_change }
-          logger({ :element => first_name, :attack_type => last_name, :before_change => before_change, :after_change => after_change })
+          history[:children] = { :critical => @tree[:critical], :element => element_name, :attack_type => attack_type_name, :before_change => before_change, :after_change => after_change }
+          logger({ :element => element_name, :attack_type => attack_type_name, :before_change => before_change, :after_change => after_change })
           
           # ダメージ決定後
-          last_name.to_s.underscore.split("_").map{|p_or_m| p_or_m.camelize.to_sym }.each do |p_or_m|
-            play_(:after, :after, :"#{first_name}#{p_or_m}Damage")
+          attack_type_name.to_s.underscore.split("_").map{|p_or_m| p_or_m.camelize.to_sym }.each do |p_or_m|
+            play_(:after, :after, :"#{element_name}#{p_or_m}Damage")
             play_(:after, :after, :"#{p_or_m}Damage")
           end
-          play_(:after, :after, :"#{first_name}Damage")
+          play_(:after, :after, :"#{element_name}Damage")
           play_(:after,  :after, :Damage)
           
         end
@@ -83,19 +83,19 @@ module DNU
         def play
           self.each do |scene|
             play_(:before)
-            play_(:before, :before, :"#{first_name}#{scene_name}")
-            last_name.to_s.underscore.split("_").map{|p_or_m| p_or_m.camelize.to_sym }.each do |p_or_m|
+            play_(:before, :before, :"#{element_name}#{scene_name}")
+            attack_type_name.to_s.underscore.split("_").map{|p_or_m| p_or_m.camelize.to_sym }.each do |p_or_m|
               play_(:before, :before, :"#{p_or_m}#{scene_name}")
-              play_(:before, :before, :"#{first_name}#{p_or_m}#{scene_name}")
+              play_(:before, :before, :"#{element_name}#{p_or_m}#{scene_name}")
             end
-            play_(:before, :before, :Critical) if @tree.values.first[:critical]
+            play_(:before, :before, :Critical) if @tree[:critical]
             play_children
-            play_(:after, :after, :Critical) if @tree.values.first[:critical]
-            last_name.to_s.underscore.split("_").map{|p_or_m| p_or_m.camelize.to_sym }.each do |p_or_m|
-              play_(:after, :after, :"#{first_name}#{p_or_m}#{scene_name}")
+            play_(:after, :after, :Critical) if @tree[:critical]
+            attack_type_name.to_s.underscore.split("_").map{|p_or_m| p_or_m.camelize.to_sym }.each do |p_or_m|
+              play_(:after, :after, :"#{element_name}#{p_or_m}#{scene_name}")
               play_(:after, :after, :"#{p_or_m}#{scene_name}")
             end
-            play_(:after, :after, :"#{first_name}#{scene_name}")
+            play_(:after, :after, :"#{element_name}#{scene_name}")
             play_(:after)
           end
           @history.extend Html

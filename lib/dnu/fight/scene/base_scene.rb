@@ -5,7 +5,7 @@ module DNU
       class BaseScene
         include Enumerable
         
-        attr_reader :active, :passive, :label, :pool, :stack
+        attr_reader :active, :passive, :label, :pool, :stack, :data
         
         @@default_tree = {
           :sequence => [
@@ -70,6 +70,7 @@ module DNU
           @label     = nil
           @pool      = nil
           @stack     = nil
+          @data      = nil
           @history   = nil
           @index     = 0
           when_initialize
@@ -85,6 +86,7 @@ module DNU
           @label   = @parent.try(:label) || {}
           @pool    = @parent.try(:pool)
           @stack   = @parent.try(:stack) || []
+          @data    = @parent.try(:data)
           has_next_scene?
         end
         

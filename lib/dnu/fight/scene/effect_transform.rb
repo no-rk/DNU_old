@@ -172,23 +172,23 @@ class EffectTransform < Parslet::Transform
             :do => {
               :if => {
                 :condition => {
-                  :hit? => tree
+                  :hit? => {}
                 },
                 :then => {
                   :if => {
                     :condition => {
-                      :critical? => tree
+                      :critical? => {}
                     },
                     :then => {
-                      :hit => { tree.keys.first => tree.values.first.merge(:critical => true) }
+                      :hit => { :critical => true }
                     },
                     :else => {
-                      :hit => tree
+                      :hit => {}
                     }
                   }
                 },
                 :else => {
-                  :miss => tree
+                  :miss => {}
                 }
               }
             }

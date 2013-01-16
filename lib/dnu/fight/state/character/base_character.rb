@@ -6,7 +6,7 @@ module DNU
         
         @@id = 0
         
-        @@status_name  = [:HP, :MP, :AT, :MAT, :DF, :MDF, :HIT, :MHIT, :EVA, :MEVA, :SPD,
+        @@status_name  = [:HP, :MP, :AT, :MAT, :DF, :MDF, :HIT, :MHIT, :EVA, :MEVA, :SPD, :CRI,
                           :FireValue, :FireResist, :WaterValue, :WaterResist,
                           :WindValue, :WindResist, :EarthValue, :EarthResist,
                           :LightValue, :LightResist, :DarkValue, :DarkResist,
@@ -18,7 +18,7 @@ module DNU
         @@has_max      = [:HP, :MP]
         @@disease_name = [:Poison, :Wet, :Sleep, :Burn, :Shine,
                           :Palsy, :Vacuum, :Mud, :Confuse, :Black]
-        @@nexts        = [:scope, :damage]
+        @@nexts        = [:scope, :damage, :element, :attack_type]
         
         attr_reader :name, :team, :id, :parent
         attr_accessor :dead, :turn_end

@@ -1,5 +1,6 @@
 require_dependency "dnu/fight/scene/module/damage"
 require_dependency "dnu/fight/scene/module/hit_rate"
+require_dependency "dnu/fight/scene/module/cri_rate"
 require_dependency "dnu/fight/scene/module/calculate"
 require_dependency "dnu/fight/scene/module/condition"
 require_dependency "dnu/fight/scene/module/find_history"

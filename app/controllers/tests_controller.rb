@@ -120,7 +120,7 @@ class TestsController < ApplicationController
   
   def parent
     if @parent.nil?
-      @parent = Struct.new(:active,:passive,:label,:history,:pool,:stack).new
+      @parent = Struct.new(:active,:passive,:label,:history,:pool,:stack,:data).new
       active_now = characters.first
       @parent.active = lambda{ active_now }
     end
