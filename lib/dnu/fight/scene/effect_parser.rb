@@ -137,7 +137,8 @@ class EffectParser < Parslet::Parser
     str('風').as(:Wind) |
     str('光').as(:Light) |
     str('闇').as(:Dark) |
-    str('ラ').as(:Random)
+    str('ラ').as(:Random) |
+    str('弱').as(:Weak)
   }
   
   rule(:equip_name) {
@@ -524,6 +525,18 @@ class EffectParser < Parslet::Parser
     ).as(:next_damage)
   }
   
+  rule(:add_next_element) {
+    (
+      str('次の') >> calculable.as(:repeat_value) >> str('回分の攻撃が') >> element_name.as(:element) >> str('属性化') >> (bra >> str('重複不可').as(:unique) >> ket).maybe
+    ).as(:add_next_element)
+  }
+  
+  rule(:next_element) {
+    (
+      str('次の属性') >> element_name.as(:element)
+    ).as(:next_element)
+  }
+  
   rule(:effect) {
     (
       (
@@ -532,6 +545,7 @@ class EffectParser < Parslet::Parser
         cost |
         next_scopes |
         next_damage |
+        next_element |
         serif
       ) >> arrow.absent? |
       attack |
@@ -539,6 +553,7 @@ class EffectParser < Parslet::Parser
       disease |
       vanish |
       add_next_damage |
+      add_next_element |
       add_effects |
       add_character |
       interrupt
@@ -715,11 +730,23 @@ class EffectParser < Parslet::Parser
     ).as(:random_percent)
   }
   
+  rule(:next_not_change) {
+    (
+      str('次の') >>
+      (
+        str('ダメージ').as(:damage) |
+        str('対象範囲').as(:scope) |
+        str('属性').as(:element)
+      ) >> str('未変化')
+    ).as(:next_not_change)
+  }
+  
   rule(:condition_boolean) {
     (
       (
         just_before |
-        random_percent
+        random_percent |
+        next_not_change
       ) >> str('になった').absent?
     )
   }

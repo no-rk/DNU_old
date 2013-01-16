@@ -41,6 +41,11 @@ module DNU
           lambda{ r=rand; r<0.5 }
         end
         
+        def next_not_change(tree)
+          nexts = tree.keys.first
+          lambda{ !自分.send("next_#{nexts}?") }
+        end
+        
         def random_percent(tree)
           val = try(tree.keys.first, tree.values.first)
           lambda{ r=rand(100); r < val.call }
