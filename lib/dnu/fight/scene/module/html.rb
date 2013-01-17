@@ -190,6 +190,13 @@ module DNU
           nested_div(tree[:after])
         end
         
+        def Steal(tree)
+          h = tree[:children]
+          nested_div(tree[:before])   +
+          %Q|\n<span class="passive">#{tree[:passive]}</span>の#{I18n.t(h[:status_name], :scope => "DNU.Fight.Scene")}を#{(h[:after_change]-h[:before_change]).abs}奪取した！（ #{h[:before_change]} ⇒ #{h[:after_change]} ）| +
+          nested_div(tree[:after])
+        end
+        
         def Increase(tree)
           h = tree[:children]
           nested_div(tree[:before])   +
@@ -201,6 +208,20 @@ module DNU
           h = tree[:children]
           nested_div(tree[:before])   +
           %Q|\n<span class="passive">#{tree[:passive]}</span>の#{I18n.t(h[:status_name], :scope => "DNU.Fight.Scene")}が#{(h[:after_change]-h[:before_change]).abs}減少した！（ #{h[:before_change]} ⇒ #{h[:after_change]} ）| +
+          nested_div(tree[:after])
+        end
+        
+        def Rob(tree)
+          h = tree[:children]
+          nested_div(tree[:before])   +
+          %Q|\n<span class="passive">#{tree[:passive]}</span>の#{I18n.t(h[:status_name], :scope => "DNU.Fight.Scene")}を#{(h[:after_change]-h[:before_change]).abs}強奪した！（ #{h[:before_change]} ⇒ #{h[:after_change]} ）| +
+          nested_div(tree[:after])
+        end
+        
+        def Convert(tree)
+          h = tree[:children]
+          nested_div(tree[:before])   +
+          %Q|\n<span class="passive">#{tree[:passive]}</span>の#{I18n.t(h[:status_name], :scope => "DNU.Fight.Scene")}を#{h[:after_change]}にした！（ #{h[:before_change]} ⇒ #{h[:after_change]} ）| +
           nested_div(tree[:after])
         end
         

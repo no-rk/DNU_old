@@ -47,6 +47,10 @@ class EffectParser < Parslet::Parser
     spaces? >> match('[+＋]') >> spaces?
   }
   
+  rule(:minus) {
+    spaces? >> match('[-－]') >> spaces?
+  }
+  
   rule(:multiply) {
     spaces? >> match('[*xX＊ｘＸ×]') >> spaces?
   }
@@ -395,7 +399,7 @@ class EffectParser < Parslet::Parser
       status_name >> str('強奪') >> bra >> effect_coeff.as(:change_value) >> ket
     ).as(:rob) |
     (
-      status_name >> str('変換') >> bra >> effect_coeff.as(:change_to) >> ket
+      status_name >> str('変換') >> bra >> minus.as(:minus).maybe >> effect_coeff.as(:change_to) >> ket
     ).as(:convert) |
     (
       (bra >> str('技') >> ket >> ((str('消費増加') | separator | arrow | plus | bra | ket | newline).absent? >> any).repeat(1).as(:name)).maybe >>

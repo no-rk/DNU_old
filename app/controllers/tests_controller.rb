@@ -14,7 +14,7 @@ class TestsController < ApplicationController
         character = DNU::Fight::State::Character.new(tree)
         battle = DNU::Fight::Scene::Battle.new(character)
         history = battle.play
-        @result = history.to_html + "<pre>#{tree.pretty_inspect}</pre>" + "<pre>#{history.pretty_inspect}</pre>"
+        @result = history.to_html + "<pre>#{history.pretty_inspect}</pre>" + "<pre>#{tree.pretty_inspect}</pre>"
       rescue => msg
         @error = msg
       end
@@ -107,17 +107,6 @@ class TestsController < ApplicationController
     @es ||= "DNU::Fight::State::#{@type.to_s.camelize}".constantize.new(tree)
   end
   
-  def es_effects(tree)
-    if @es_effects.nil?
-      @es_effects = Struct.new(:id,:type,:name,:do,:interrupt,:LV,:history,:definitions).new
-      @es_effects.type    = :"未定義"
-      @es_effects.name    = :"特殊効果内容"
-      @es_effects.do      = tree
-      @es_effects.history = []
-    end
-    @es_effects
-  end
-  
   def parent
     if @parent.nil?
       @parent = Struct.new(:active,:passive,:label,:history,:pool,:stack,:data).new
@@ -127,17 +116,18 @@ class TestsController < ApplicationController
     @parent
   end
   
+  def history_html_character(tree)
+    history = DNU::Fight::Scene::Battle.new(pt_character(tree)).play
+    history.to_html + "<pre>#{history.pretty_inspect}</pre>"
+  end
+  
   def history_html_skill(tree)
     html = ""
     es(tree).each do |e|
-      html += DNU::Fight::Scene::Effects.new(characters, { :effects => e }, parent).play.to_html
+      history = DNU::Fight::Scene::Effects.new(characters, { :effects => e }, parent).play
+      html += history.to_html + "<pre>#{history.pretty_inspect}</pre>"
     end
     html
-  end
-  
-  def history_html_effects(tree)
-    history = DNU::Fight::Scene::Effects.new(characters, { :effects => es_effects(tree) }, parent).play
-    history.to_html + "<pre>#{history.pretty_inspect}</pre>"
   end
   
   def history_html_sup(tree)
@@ -145,7 +135,8 @@ class TestsController < ApplicationController
     lv = rand(6)
     tree.merge!(:lv => lv) if lv>=1
     es(tree).each do |e|
-      html += "DNU::Fight::Scene::#{e.before_after}".constantize.new(characters, { :parent => e.timing, :effects => e, :b_or_a => e.before_after }, parent).play.to_html
+      history = "DNU::Fight::Scene::#{e.before_after}".constantize.new(characters, { :parent => e.timing, :effects => e, :b_or_a => e.before_after }, parent).play
+      html += history.to_html + "<pre>#{history.pretty_inspect}</pre>"
     end
     html
   end
@@ -155,13 +146,20 @@ class TestsController < ApplicationController
     lv = rand(40)+1
     tree.merge!(:lv => lv) if lv>=1
     es(tree).each do |e|
-      html += "DNU::Fight::Scene::#{e.before_after}".constantize.new(characters, { :parent => e.timing, :effects => e, :b_or_a => e.before_after }, parent).play.to_html
+      history = "DNU::Fight::Scene::#{e.before_after}".constantize.new(characters, { :parent => e.timing, :effects => e, :b_or_a => e.before_after }, parent).play
+      html += history.to_html + "<pre>#{history.pretty_inspect}</pre>"
     end
     html
   end
   
-  def history_html_character(tree)
-    DNU::Fight::Scene::Battle.new(pt_character(tree)).play.to_html
+  def history_html_effects(tree)
+    tree = {
+      :name    => :"未定義",
+      :effects => [ { :do => tree } ]
+    }
+    e = DNU::Fight::State::BaseEffects.new(tree).first
+    history = DNU::Fight::Scene::Effects.new(characters, { :effects => e }, parent).play
+    history.to_html + "<pre>#{history.pretty_inspect}</pre>"
   end
   
   def parse_from_text(type, name = :definition)
