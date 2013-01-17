@@ -112,7 +112,7 @@ module DNU
         end
         
         def Children(tree)
-          %Q|\n<span class="active">#{tree[:active]}</span>の#{tree[:name]}「#{tree[:parent].to_s.underscore.split(/_(?!ant)/).map{|s|s.camelize.to_sym}.inject(""){|a,s| a << I18n.t(s, :scope => "DNU.Fight.Scene") }}#{I18n.t(tree[:b_or_a], :scope => "DNU.Fight.Scene")}#{I18n.t(tree[:type], :scope => "DNU.Fight.Scene")}」| +
+          %Q|\n<span class="active">#{tree[:active].first}</span>の#{tree[:name]}「#{tree[:parent].to_s.underscore.split(/_(?!ant)/).map{|s|s.camelize.to_sym}.inject(""){|a,s| a << I18n.t(s, :scope => "DNU.Fight.Scene") }}#{I18n.t(tree[:b_or_a], :scope => "DNU.Fight.Scene")}#{I18n.t(tree[:type], :scope => "DNU.Fight.Scene")}」| +
           nested_div(tree[:children])
         end
         

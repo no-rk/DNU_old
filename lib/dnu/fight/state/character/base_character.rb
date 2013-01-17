@@ -56,6 +56,7 @@ module DNU
           tree[:settings].try(:each) do |setting|
             add_effects(setting.keys.first, setting.values.first[:name], setting.values.first, tree[:definitions])
           end
+          add_disease
         end
         
         def kind
@@ -110,6 +111,14 @@ module DNU
               instance_variable_get("@next_#{n}#{ant}").present?
             end
           end
+        end
+        
+        private
+        
+        def add_disease
+           GameData::Disease.pluck(:name).each do |name|
+            add_effects(:disease, name, {}, {}, parent=nil)
+           end
         end
         
       end

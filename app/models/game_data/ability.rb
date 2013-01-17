@@ -1,3 +1,3 @@
 class GameData::Ability < ActiveRecord::Base
-  attr_accessible :definition, :name
+  attr_accessible :caption, :definition, :name
 end

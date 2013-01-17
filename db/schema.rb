@@ -21,6 +21,7 @@ ActiveRecord::Schema.define(:version => 20130114114052) do
 
   create_table "game_data_abilities", :force => true do |t|
     t.string   "name"
+    t.text     "caption"
     t.text     "definition"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
@@ -60,8 +61,9 @@ ActiveRecord::Schema.define(:version => 20130114114052) do
 
   create_table "game_data_diseases", :force => true do |t|
     t.string   "name"
-    t.text     "caption"
     t.string   "color"
+    t.text     "caption"
+    t.text     "definition"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end

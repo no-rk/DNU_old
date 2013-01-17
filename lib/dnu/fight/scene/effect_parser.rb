@@ -19,6 +19,10 @@ class EffectParser < Parslet::Parser
     match('[0-9０-９]')
   }
   
+  rule(:color) {
+    match('[0-9a-fA-F０-９ａ-ｆＡ-Ｆ]').repeat(6,6)
+  }
+  
   rule(:bra) {
     spaces? >> match('[(\[{（［｛「]') >> spaces?
   }
@@ -1067,7 +1071,8 @@ class EffectParser < Parslet::Parser
   # disease_definition
   
   rule(:disease_definition) {
-    bra >> str('異常') >> ket >> (newline.absent? >> any).repeat(1).as(:name) >> newline >>
+    bra >> str('状態異常') >> ket >> (separator.absent? >> any).repeat(1).as(:name) >> separator >> color.as(:color) >> newline >>
+    partition >> (partition.absent? >> any).repeat(1).as(:caption) >> partition >>
     sup_effects.as(:effects)
   }
   
