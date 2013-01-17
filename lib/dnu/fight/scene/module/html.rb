@@ -279,13 +279,24 @@ module DNU
           nested_div(tree[:after])
         end
         
-        def AddNextElement(tree)
+        def AddNextAttackElement(tree)
           h = tree[:children]
           nested_div(tree[:before])   +
           if h[:success]
             %Q|\n<span class="passive">#{tree[:passive]}</span>の次の#{h[:repeat_value]}回分の攻撃が#{I18n.t(h[:element], :scope => "DNU.Fight.Scene")}属性化！|
           else
             %Q|\n<span class="passive">#{tree[:passive]}</span>の次の#{h[:repeat_value]}回分の攻撃が#{I18n.t(h[:element], :scope => "DNU.Fight.Scene")}属性化はもうできない。|
+          end +
+          nested_div(tree[:after])
+        end
+        
+        def AddReflection(tree)
+          h = tree[:children]
+          nested_div(tree[:before])   +
+          if h[:success]
+            %Q|\n<span class="passive">#{tree[:passive]}</span>は次の#{h[:repeat_value]}回分の攻撃を反射！|
+          else
+            %Q|\n<span class="passive">#{tree[:passive]}</span>は次の#{h[:repeat_value]}回分の攻撃を反射はもうできない。|
           end +
           nested_div(tree[:after])
         end
@@ -365,7 +376,19 @@ module DNU
           nested_div(tree[:after])
         end
         
-        def NextElement(tree)
+        def NextTarget(tree)
+          nested_div(tree[:before])   +
+           %Q|\n<span class="passive">#{tree[:passive]}</span>の次の対象が#{tree[:children][:target]}になった。| +
+          nested_div(tree[:after])
+        end
+        
+        def NextAttackTarget(tree)
+          nested_div(tree[:before])   +
+           %Q|\n<span class="passive">#{tree[:passive]}</span>の次の攻撃対象が#{tree[:children][:target]}になった。| +
+          nested_div(tree[:after])
+        end
+        
+        def NextAttackElement(tree)
           nested_div(tree[:before])   +
            %Q|\n<span class="passive">#{tree[:passive]}</span>の次の属性が#{I18n.t(tree[:children][:element], :scope => "DNU.Fight.Scene")}になった！| +
           nested_div(tree[:after])

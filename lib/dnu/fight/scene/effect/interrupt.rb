@@ -2,7 +2,7 @@
 module DNU
   module Fight
     module Scene
-      class Interrupt < BaseScene
+      class Interrupt < BaseEffect
         
         def play_children
           interrupt_type = @tree.keys.first.to_s.camelize.to_sym

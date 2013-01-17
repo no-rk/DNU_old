@@ -2,7 +2,7 @@
 module DNU
   module Fight
     module Scene
-      class AddNextDamage < BaseScene
+      class AddNextDamage < BaseEffect
         include Calculate
         
         def play_children

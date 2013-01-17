@@ -1,7 +1,7 @@
 module DNU
   module Fight
     module Scene
-      class Nothing < BaseScene
+      class Nothing < BaseEffect
         
         def play_children
         end

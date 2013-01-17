@@ -2,7 +2,7 @@
 module DNU
   module Fight
     module Scene
-      class AddNextElement < BaseScene
+      class AddNextAttackElement < BaseEffect
         include Calculate
         
         def play_children
@@ -16,8 +16,8 @@ module DNU
           effects_name        = %Q|次の攻撃#{element_name}属性化|
           effects_definitions = <<-"DEFINITION"
 [一時効果]#{effects_name}
-[攻撃前]次の属性未変化
-自/{次の属性#{element_name}＋一時効果消滅}
+[攻撃前]自分次の攻撃属性未変化
+自/{次の攻撃属性#{element_name}＋一時効果消滅}
           DEFINITION
           
           parser    = EffectParser.new

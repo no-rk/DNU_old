@@ -2,7 +2,7 @@
 module DNU
   module Fight
     module Scene
-      class Rob < BaseScene
+      class Rob < BaseEffect
         include Calculate
         
         def when_initialize

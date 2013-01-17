@@ -42,8 +42,9 @@ module DNU
         end
         
         def next_not_change(tree)
-          nexts = tree.keys.first
-          lambda{ !自分.send("next_#{nexts}?") }
+          target =(tree[:state_target] || '対象').to_s
+          nexts  = tree[:nexts].keys.first
+          lambda{ !send(target).send("next_#{nexts}?") }
         end
         
         def random_percent(tree)

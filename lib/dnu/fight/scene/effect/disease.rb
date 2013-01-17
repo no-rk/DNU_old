@@ -2,7 +2,7 @@
 module DNU
   module Fight
     module Scene
-      class Disease < BaseScene
+      class Disease < BaseEffect
         
         def create_children
           @children ||= create_from_hash(@tree[:do])

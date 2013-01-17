@@ -498,6 +498,28 @@ class EffectParser < Parslet::Parser
     ) >> ket
   }
   
+  rule(:next_target) {
+    (
+      str('次の対象') >> bra >> (str('自分') | str('対象')).as(:target) >> ket
+    ).as(:next_target)
+  }
+  
+  rule(:next_attack_target) {
+    (
+      str('次の攻撃対象') >> bra >> (str('自分') | str('対象')).as(:target) >> ket
+    ).as(:next_attack_target)
+  }
+  
+  rule(:add_reflection) {
+    (
+      str('反射') >>
+      bra >>
+      effect_coeff.as(:repeat_value) >>
+      (separator >> str('重複不可').as(:unique)).maybe >>
+      ket
+    ).as(:add_reflection)
+  }
+  
   rule(:next_damage_coeff) {
     (
       calculable.as(:coeff_value) >> percent >> (separator >> effect_coeff.as(:change_value)).maybe |
@@ -529,16 +551,16 @@ class EffectParser < Parslet::Parser
     ).as(:next_damage)
   }
   
-  rule(:add_next_element) {
+  rule(:add_next_attack_element) {
     (
       str('次の') >> calculable.as(:repeat_value) >> str('回分の攻撃が') >> element_name.as(:element) >> str('属性化') >> (bra >> str('重複不可').as(:unique) >> ket).maybe
-    ).as(:add_next_element)
+    ).as(:add_next_attack_element)
   }
   
-  rule(:next_element) {
+  rule(:next_attack_element) {
     (
-      str('次の属性') >> element_name.as(:element)
-    ).as(:next_element)
+      str('次の攻撃属性') >> element_name.as(:element)
+    ).as(:next_attack_element)
   }
   
   rule(:effect) {
@@ -548,8 +570,10 @@ class EffectParser < Parslet::Parser
         change |
         cost |
         next_scopes |
+        next_target |
+        next_attack_target |
         next_damage |
-        next_element |
+        next_attack_element |
         serif
       ) >> arrow.absent? |
       attack |
@@ -557,9 +581,10 @@ class EffectParser < Parslet::Parser
       disease |
       vanish |
       add_next_damage |
-      add_next_element |
+      add_next_attack_element |
       add_effects |
       add_character |
+      add_reflection |
       interrupt
     ).as(:effect)
   }
@@ -736,12 +761,15 @@ class EffectParser < Parslet::Parser
   
   rule(:next_not_change) {
     (
+      state_target >>
       str('次の') >>
       (
-        str('ダメージ').as(:damage) |
         str('対象範囲').as(:scope) |
-        str('属性').as(:element)
-      ) >> str('未変化')
+        str('対象').as(:target) |
+        str('攻撃対象').as(:attack_target) |
+        str('攻撃属性').as(:attack_element) |
+        str('ダメージ').as(:damage)
+      ).as(:nexts) >> str('未変化')
     ).as(:next_not_change)
   }
   
@@ -956,7 +984,8 @@ class EffectParser < Parslet::Parser
       str('行動').as(:act) |
       str('追加行動').as(:add_act) |
       str('通常攻撃').as(:default_attack) |
-      str('効果').as(:effects) |
+      str('特殊効果').as(:effects) |
+      str('効果種').as(:effect) |
       str('対象決定').as(:root) |
       attack_timing_options >> (
         str('攻撃命中').as(:hit) |

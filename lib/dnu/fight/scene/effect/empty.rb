@@ -1,7 +1,7 @@
 module DNU
   module Fight
     module Scene
-      class Empty < BaseScene
+      class Empty < BaseEffect
         
         def play_children
           history[:children] = @tree

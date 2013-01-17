@@ -2,7 +2,7 @@
 module DNU
   module Fight
     module Scene
-      class Steal < BaseScene
+      class Steal < BaseEffect
         include Calculate
         
         def when_initialize

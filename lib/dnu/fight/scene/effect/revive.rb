@@ -2,7 +2,7 @@
 module DNU
   module Fight
     module Scene
-      class Revive < BaseScene
+      class Revive < BaseEffect
         include Calculate
         
         def when_initialize

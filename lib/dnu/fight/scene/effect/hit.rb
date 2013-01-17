@@ -2,7 +2,7 @@
 module DNU
   module Fight
     module Scene
-      class Hit < BaseScene
+      class Hit < BaseEffect
         include Calculate
         
         @@min_damage = 10

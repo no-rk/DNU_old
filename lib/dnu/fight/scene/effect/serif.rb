@@ -1,7 +1,7 @@
 module DNU
   module Fight
     module Scene
-      class Serif < BaseScene
+      class Serif < BaseEffect
         
         def play_children
           history[:children] = @tree

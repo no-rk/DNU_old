@@ -2,7 +2,7 @@
 module DNU
   module Fight
     module Scene
-      class Vanish < BaseScene
+      class Vanish < BaseEffect
         include Calculate
         
         def play_children

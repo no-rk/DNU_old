@@ -2,7 +2,7 @@
 module DNU
   module Fight
     module Scene
-      class Heal < BaseScene
+      class Heal < BaseEffect
         include Calculate
         
         def when_initialize

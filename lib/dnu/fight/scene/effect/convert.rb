@@ -2,7 +2,7 @@
 module DNU
   module Fight
     module Scene
-      class Convert < BaseScene
+      class Convert < BaseEffect
         include Calculate
         
         def when_initialize

@@ -2,7 +2,7 @@
 module DNU
   module Fight
     module Scene
-      class Resist < BaseScene
+      class Resist < BaseEffect
         
         def play_children
           disease_name = child_name(@tree[:disease_name])

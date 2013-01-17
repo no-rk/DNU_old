@@ -2,7 +2,7 @@
 module DNU
   module Fight
     module Scene
-      class Miss < BaseScene
+      class Miss < BaseEffect
         
         def element_name
           @data.values.first[:element].keys.first

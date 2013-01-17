@@ -2,7 +2,7 @@
 module DNU
   module Fight
     module Scene
-      class Reduce < BaseScene
+      class Reduce < BaseEffect
         include Calculate
         
         def when_initialize

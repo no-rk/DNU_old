@@ -2,7 +2,7 @@
 module DNU
   module Fight
     module Scene
-      class Down < BaseScene
+      class Down < BaseEffect
         include Calculate
         
         def when_initialize

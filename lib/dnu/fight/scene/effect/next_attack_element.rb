@@ -2,15 +2,15 @@
 module DNU
   module Fight
     module Scene
-      class NextScope < BaseEffect
+      class NextAttackElement < BaseEffect
         include Calculate
         
         def play_children
-          scope = @tree[:scope].to_s
+          element = @tree[:element].to_hash
           
-          対象.next_scope = scope
+          対象.next_attack_element = element
           
-          history[:children] = { :scope => scope }
+          history[:children] = { :element => element.keys.first }
         end
         
         def play_(b_or_a)

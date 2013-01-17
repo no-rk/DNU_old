@@ -2,7 +2,7 @@
 module DNU
   module Fight
     module Scene
-      class Cost < BaseScene
+      class Cost < BaseEffect
         include Calculate
         
         def when_initialize
