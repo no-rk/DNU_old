@@ -172,7 +172,7 @@ module DNU
         def Heal(tree)
           h = tree[:children]
           nested_div(tree[:before])   +
-          %Q|\n<span class="passive">#{tree[:passive]}</span>の#{I18n.t(h[:status_name], :scope => "DNU.Fight.Scene")}は#{h[:change].abs}回復した！（ #{h[:before_change]} ⇒ #{h[:after_change]} ）| +
+          %Q|\n<span class="passive">#{tree[:passive]}</span>の#{I18n.t(h[:status_name], :scope => "DNU.Fight.Scene")}は#{h[:resilience].abs}回復した！（ #{h[:before_change]} ⇒ #{h[:after_change]} ）| +
           nested_div(tree[:after])
         end
         
@@ -414,6 +414,12 @@ module DNU
         def NextDepth(tree)
           nested_div(tree[:before])   +
            %Q|\n<span class="passive">#{tree[:passive]}</span>の次の#{"被" if tree[:children][:ant].present?}追加量が#{tree[:children][:sign]>0 ? "増加" : "減少"}した！（#{"割合：#{tree[:children][:coeff]}％" if tree[:children][:coeff]!=1}#{"固定値：#{tree[:children][:change]}" if tree[:children][:change]!=0}）| +
+          nested_div(tree[:after])
+        end
+        
+        def NextResilience(tree)
+          nested_div(tree[:before])   +
+           %Q|\n<span class="passive">#{tree[:passive]}</span>の次の#{"被" if tree[:children][:ant].present?}回復量が#{tree[:children][:sign]>0 ? "増加" : "減少"}した！（#{"割合：#{tree[:children][:coeff]}％" if tree[:children][:coeff]!=1}#{"固定値：#{tree[:children][:change]}" if tree[:children][:change]!=0}）| +
           nested_div(tree[:after])
         end
         

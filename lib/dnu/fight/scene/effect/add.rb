@@ -17,20 +17,13 @@ module DNU
           
           disease_name = child_name(@tree[:disease_name])
           depth        = (@depth || create_depth).call
-          la = lambda do
-            r = depth
-            r = 自分.next_depth.call(r)     if 自分.next_depth?
-            r = 対象.next_depth_ant.call(r) if 対象.next_depth_ant?
-            r
-          end
-          history[:children] = { :just_after => la }
+          history[:children] = { :just_after => just_after(:depth, depth) }
           
           # 追加量決定前
           play_(:before, :before, :Depth)
           play_(:before, :before, :"#{disease_name}Depth")
           
-          depth = 自分.next_depth!.call(depth)     if 自分.next_depth?
-          depth = 対象.next_depth_ant!.call(depth) if 対象.next_depth_ant?
+          depth = next_change!(:depth, depth)
           
           before_change = 対象.send(disease_name).val
           対象.send(disease_name).change_value(depth)

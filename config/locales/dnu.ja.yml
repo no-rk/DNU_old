@@ -249,9 +249,13 @@ ja:
         Add: 状態異常追加
         Resist: 状態異常抵抗
         Heal: 回復
+        Resilience: 回復量決定
+        ResilienceAnt: 被回復量決定
         HP: HP
+        Hp: HP
         MHP: 最大HP
         MP: MP
+        Mp: MP
         MMP: 最大MP
         AT: 攻撃力
         MAT: 魔法攻撃力

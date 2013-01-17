@@ -572,6 +572,17 @@ class EffectParser < Parslet::Parser
     ).as(:next_depth)
   }
   
+  rule(:next_resilience) {
+    (
+      str('次の') >> str('被').as(:ant).maybe >>
+      str('回復量') >>
+      (str('増加') | str('減少').as(:minus)) >>
+      bra >>
+      next_damage_coeff >>
+      ket
+    ).as(:next_resilience)
+  }
+  
   rule(:add_disease_protect) {
     (
       disease_name >> str('防御') >> bra >>
@@ -604,6 +615,7 @@ class EffectParser < Parslet::Parser
         next_attack_target |
         next_damage |
         next_depth |
+        next_resilience |
         next_attack_element |
         serif
       ) >> arrow.absent? |
@@ -804,7 +816,9 @@ class EffectParser < Parslet::Parser
         str('ダメージ').as(:damage) |
         str('被ダメージ').as(:damage_ant) |
         str('追加量').as(:depth) |
-        str('被追加量').as(:depth_ant)
+        str('被追加量').as(:depth_ant) |
+        str('回復量').as(:resilience) |
+        str('被回復量').as(:resilience_ant)
       ).as(:nexts) >> str('未変化')
     ).as(:next_not_change)
   }
@@ -1016,6 +1030,13 @@ class EffectParser < Parslet::Parser
     disease_type.maybe
   }
   
+  rule(:heal_timing_options) {
+    (
+      str('HP').as(:HP) |
+      str('MP').as(:MP)
+    ).maybe
+  }
+  
   rule(:timing) {
     (
       str('戦闘').as(:battle) |
@@ -1039,6 +1060,10 @@ class EffectParser < Parslet::Parser
       add_timing_options >> (
         str('追加量決定').as(:depth) |
         str('被追加量決定').as(:depth_ant)
+      ) |
+      heal_timing_options >> (
+        str('回復量決定').as(:resilience) |
+        str('被回復量決定').as(:resilience_ant)
       ) |
       str('クリティカル').as(:critical) |
       str('被クリティカル').as(:critical_ant) |
