@@ -539,7 +539,7 @@ class EffectParser < Parslet::Parser
   
   rule(:add_next_damage) {
     (
-      (str('次に与える') | str('次に受ける').as(:ant))>>
+      (str('次に与える') | str('次に受ける').as(:ant)) >>
       attack_timing_options.as(:timing_transform).as(:timing) >>
       str('ダメージ') >>
       (str('増加') | str('減少').as(:minus)) >>
@@ -583,6 +583,34 @@ class EffectParser < Parslet::Parser
     ).as(:next_resilience)
   }
   
+  rule(:add_next_hitrate) {
+    (
+      str('次の') >>
+      attack_timing_options.as(:timing_transform).as(:timing) >> str('攻撃の') >>
+      (
+        str('回避率').as(:ant) | str('命中率')
+      ) >>
+      (str('増加') | str('減少').as(:minus)) >>
+      bra >>
+      next_damage_coeff >>
+      (separator >> str('重複不可').as(:unique)).maybe >>
+      ket
+    ).as(:add_next_hitrate)
+  }
+  
+  rule(:next_hitrate) {
+    (
+      str('次の') >>
+      (
+        str('回避率').as(:ant) | str('命中率')
+      ) >>
+      (str('増加') | str('減少').as(:minus)) >>
+      bra >>
+      next_damage_coeff >>
+      ket
+    ).as(:next_hitrate)
+  }
+  
   rule(:add_disease_protect) {
     (
       disease_name >> str('防御') >> bra >>
@@ -616,6 +644,7 @@ class EffectParser < Parslet::Parser
         next_damage |
         next_depth |
         next_resilience |
+        next_hitrate |
         next_attack_element |
         serif
       ) >> arrow.absent? |
@@ -624,6 +653,7 @@ class EffectParser < Parslet::Parser
       disease |
       vanish |
       add_next_damage |
+      add_next_hitrate |
       add_disease_protect |
       add_next_attack_element |
       add_effects |
@@ -818,7 +848,9 @@ class EffectParser < Parslet::Parser
         str('追加量').as(:depth) |
         str('被追加量').as(:depth_ant) |
         str('回復量').as(:resilience) |
-        str('被回復量').as(:resilience_ant)
+        str('被回復量').as(:resilience_ant) |
+        str('命中率').as(:hitrate) |
+        str('回避率').as(:hitrate_ant)
       ).as(:nexts) >> str('未変化')
     ).as(:next_not_change)
   }
@@ -1055,7 +1087,9 @@ class EffectParser < Parslet::Parser
         str('攻撃').as(:attack) |
         str('被攻撃').as(:attack_ant) |
         str('ダメージ決定').as(:damage) |
-        str('被ダメージ決定').as(:damage_ant)
+        str('被ダメージ決定').as(:damage_ant) |
+        str('命中率決定').as(:hitrate) |
+        str('回避率決定').as(:hitrate_ant)
       ) |
       add_timing_options >> (
         str('追加量決定').as(:depth) |

@@ -241,6 +241,8 @@ ja:
         Element: 属性
         Hit: 攻撃命中
         HitAnt: 攻撃被弾
+        Hitrate: 命中率決定
+        HitrateAnt: 回避率決定
         Miss: 攻撃空振
         MissAnt: 攻撃回避
         Disease: 状態異常

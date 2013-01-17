@@ -21,7 +21,28 @@ module DNU
           max_hit = (@data[attack_type][:max_hit] || 100).to_f
           lambda do
             hit_rate = min_hit + (max_hit - min_hit)*try('hit_' + attack_type.to_s).call*hit_element.call
-            logger(:hit_rate => hit_rate)
+            logger(:hit_rate_before => hit_rate)
+            
+            # 命中率決定前
+            play_(:before, :before, :Hitrate)
+            play_(:before, :before, :"#{element_name}Hitrate")
+            attack_type_name.to_s.underscore.split("_").map{|p_or_m| p_or_m.camelize.to_sym }.each do |p_or_m|
+              play_(:before, :before, :"#{p_or_m}Hitrate")
+              play_(:before, :before, :"#{element_name}#{p_or_m}Hitrate")
+            end
+            
+            hit_rate = 自分.next_hitrate!.call(hit_rate)     if 自分.next_hitrate?
+            hit_rate = 対象.next_hitrate_ant!.call(hit_rate) if 対象.next_hitrate_ant?
+            logger(:hit_rate_after => hit_rate)
+            
+            # 命中率決定後
+            attack_type_name.to_s.underscore.split("_").map{|p_or_m| p_or_m.camelize.to_sym }.each do |p_or_m|
+              play_(:after, :after, :"#{element_name}#{p_or_m}Hitrate")
+              play_(:after, :after, :"#{p_or_m}Hitrate")
+            end
+            play_(:after, :after, :"#{element_name}Hitrate")
+            play_(:after,  :after, :Hitrate)
+            
             rand(100) < hit_rate
           end
         end

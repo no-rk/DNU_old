@@ -4,6 +4,14 @@ module DNU
       class If < BaseScene
         include Condition
         
+        def element_name
+          @data.values.first[:element].keys.first
+        end
+        
+        def attack_type_name
+          child_name(@data).to_s.camelize
+        end
+        
         def when_initialize
           @if = { :then => nil, :else => nil }
           @if_condition = nil
@@ -26,9 +34,6 @@ module DNU
         def create_children
           @tree[@then_or_else] ||= { :nothing => nil }
           @if[@then_or_else] = ( @children ||= create_from_hash(@tree[@then_or_else]) )
-        end
-        
-        def play_(b_or_a)
         end
         
         def history
