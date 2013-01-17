@@ -50,7 +50,13 @@ module DNU
         def play_children
           
           damage_value = (@damage || create_damage).call
-          history[:children] = { :just_after => damage_value }
+          la = lambda do
+            r = damage_value
+            r = 自分.next_damage.call(r)     if 自分.next_damage?
+            r = 対象.next_damage_ant.call(r) if 対象.next_damage_ant?
+            r
+          end
+          history[:children] = { :just_after => la }
           
           # ダメージ決定前
           play_(:before, :before, :Damage)
@@ -60,8 +66,8 @@ module DNU
             play_(:before, :before, :"#{element_name}#{p_or_m}Damage")
           end
           
-          damage_value = 自分.next_damage.call(damage_value)     if 自分.next_damage?
-          damage_value = 対象.next_damage_ant.call(damage_value) if 対象.next_damage_ant?
+          damage_value = 自分.next_damage!.call(damage_value)     if 自分.next_damage?
+          damage_value = 対象.next_damage_ant!.call(damage_value) if 対象.next_damage_ant?
           
           before_change = 対象.HP.val
           対象.HP.change_value(-damage_value)

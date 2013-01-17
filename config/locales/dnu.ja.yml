@@ -225,7 +225,8 @@ ja:
         Act: 行動
         AddAct: 追加行動
         Default: 通常
-        Effects: 効果
+        Effects: 特殊効果
+        Effect: 効果種
         Root: 対象決定
         Cemetery: 墓地埋葬
         Damage: ダメージ決定
@@ -243,6 +244,8 @@ ja:
         Miss: 攻撃空振
         MissAnt: 攻撃回避
         Disease: 状態異常
+        Depth: 追加量決定
+        DepthAnt: 被追加量決定
         Add: 状態異常追加
         Resist: 状態異常抵抗
         Heal: 回復

@@ -18,7 +18,7 @@ module DNU
         @@has_max      = [:HP, :MP]
         @@disease_name = [:Poison, :Wet, :Sleep, :Burn, :Shine,
                           :Palsy, :Vacuum, :Mud, :Confuse, :Black]
-        @@nexts        = [:scope, :target, :damage, :attack_element, :attack_type, :attack_target]
+        @@nexts        = [:scope, :target, :depth, :damage, :attack_element, :attack_type, :attack_target]
         
         attr_reader :name, :team, :id, :parent, :parent_effect
         attr_accessor :dead, :turn_end
@@ -94,8 +94,12 @@ module DNU
         
         @@nexts.each do |n|
           ['', '_ant'].each do |ant|
-            define_method("next_#{n}#{ant}") do
+            define_method("next_#{n}#{ant}!") do
               instance_variable_get("@next_#{n}#{ant}").pop
+            end
+            
+            define_method("next_#{n}#{ant}") do
+              instance_variable_get("@next_#{n}#{ant}").last
             end
             
             define_method("next_#{n}#{ant}=") do |la|

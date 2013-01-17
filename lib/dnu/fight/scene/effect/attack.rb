@@ -22,11 +22,11 @@ module DNU
             play_(:before)
             # 攻撃前に属性と攻撃種を決定する。
             @data = Marshal.load(Marshal.dump(@tree[:attack_type]))
-            @data.values.first[:element] = 自分.next_attack_element if 自分.next_attack_element?
-            @data = { 自分.next_attack_type => @data.values.first } if 自分.next_attack_type?
+            @data.values.first[:element] = 自分.next_attack_element! if 自分.next_attack_element?
+            @data = { 自分.next_attack_type! => @data.values.first } if 自分.next_attack_type?
             # 攻撃対象変化があった場合は適用。
             if 自分.next_attack_target?
-              next_attack_target = 自分.next_attack_target
+              next_attack_target = 自分.next_attack_target!
               @passive = lambda{ next_attack_target }
             end
             

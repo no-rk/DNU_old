@@ -312,6 +312,17 @@ module DNU
           nested_div(tree[:after])
         end
         
+        def AddDiseaseProtect(tree)
+          h = tree[:children]
+          nested_div(tree[:before])   +
+          if h[:success]
+            %Q|\n<span class="passive">#{tree[:passive]}</span>の次の#{h[:repeat_value]}回分の#{I18n.t(h[:disease_name], :scope => "DNU.Fight.Scene")}防御！|
+          else
+            %Q|\n<span class="passive">#{tree[:passive]}</span>の次の#{h[:repeat_value]}回分の#{I18n.t(h[:disease_name], :scope => "DNU.Fight.Scene")}防御はもうできない。|
+          end +
+          nested_div(tree[:after])
+        end
+        
         def AddEffects(tree)
           h = tree[:children]
           nested_div(tree[:before])   +
@@ -397,6 +408,12 @@ module DNU
         def NextDamage(tree)
           nested_div(tree[:before])   +
            %Q|\n<span class="passive">#{tree[:passive]}</span>の次の#{"被" if tree[:children][:ant].present?}ダメージが#{tree[:children][:sign]>0 ? "増加" : "減少"}した！（#{"割合：#{tree[:children][:coeff]}％" if tree[:children][:coeff]!=1}#{"固定値：#{tree[:children][:change]}" if tree[:children][:change]!=0}）| +
+          nested_div(tree[:after])
+        end
+        
+        def NextDepth(tree)
+          nested_div(tree[:before])   +
+           %Q|\n<span class="passive">#{tree[:passive]}</span>の次の#{"被" if tree[:children][:ant].present?}追加量が#{tree[:children][:sign]>0 ? "増加" : "減少"}した！（#{"割合：#{tree[:children][:coeff]}％" if tree[:children][:coeff]!=1}#{"固定値：#{tree[:children][:change]}" if tree[:children][:change]!=0}）| +
           nested_div(tree[:after])
         end
         

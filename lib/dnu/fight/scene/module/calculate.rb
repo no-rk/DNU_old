@@ -167,9 +167,9 @@ module DNU
             children = @stack.last.history.last.try(:childrens_find_by_scene, scene).try(:last) || @stack[-2].try(:history).try(:last).try(:childrens_find_by_scene, scene).try(:last)
             if children.present?
               if status_or_disease_name
-                status_or_disease_name.to_s==children[status_or_disease].to_s ? children[:just_after].to_i : 0
+                status_or_disease_name.to_s==children[status_or_disease].to_s ? children[:just_after].call.to_i : 0
               else
-                children[:just_after].to_i
+                children[:just_after].call.to_i
               end
             else
               0

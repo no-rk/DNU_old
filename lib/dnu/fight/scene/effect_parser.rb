@@ -92,6 +92,10 @@ class EffectParser < Parslet::Parser
     str("#") >> (newline.absent? >> any).repeat(0) >> newline.maybe
   }
   
+  rule(:excepts) {
+    separator | arrow | plus | bra | ket | newline | multiply
+  }
+  
   # name rule
   
   rule(:hp_mp) {
@@ -117,20 +121,22 @@ class EffectParser < Parslet::Parser
     ).as(:status_name)
   }
   
+  rule(:disease_type) {
+    str('猛毒').as(:Poison) |
+    str('麻痺').as(:Palsy) |
+    str('睡眠').as(:Sleep) |
+    str('泥浸').as(:Mud) |
+    str('水濡').as(:Wet) |
+    str('炎纏').as(:Burn) |
+    str('鎌鼬').as(:Vacuum) |
+    str('光身').as(:Shine) |
+    str('暗幕').as(:Black) |
+    str('混濁').as(:Confuse) |
+    str('全状態異常').as(:All)
+  }
+  
   rule(:disease_name) {
-    (
-      str('猛毒').as(:Poison) |
-      str('麻痺').as(:Palsy) |
-      str('睡眠').as(:Sleep) |
-      str('泥浸').as(:Mud) |
-      str('水濡').as(:Wet) |
-      str('炎纏').as(:Burn) |
-      str('鎌鼬').as(:Vacuum) |
-      str('光身').as(:Shine) |
-      str('暗幕').as(:Black) |
-      str('混濁').as(:Confuse) |
-      str('全状態異常').as(:All)
-    ).as(:disease_name)
+    disease_type.as(:disease_name)
   }
   
   rule(:element_name) {
@@ -402,11 +408,11 @@ class EffectParser < Parslet::Parser
       status_name >> str('変換') >> bra >> minus.as(:minus).maybe >> effect_coeff.as(:change_to) >> ket
     ).as(:convert) |
     (
-      (bra >> str('技') >> ket >> ((str('消費増加') | separator | arrow | plus | bra | ket | newline).absent? >> any).repeat(1).as(:name)).maybe >>
+      (bra >> str('技') >> ket >> ((str('消費増加') | excepts).absent? >> any).repeat(1).as(:name)).maybe >>
       str('消費増加') >> bra >> effect_coeff.as(:change_value) >> ket
     ).as(:cost_up) |
     (
-      (bra >> str('技') >> ket >> ((str('消費減少') | separator | arrow | plus | bra | ket | newline).absent? >> any).repeat(1).as(:name)).maybe >>
+      (bra >> str('技') >> ket >> ((str('消費減少') | excepts).absent? >> any).repeat(1).as(:name)).maybe >>
       str('消費減少') >> bra >> effect_coeff.as(:change_value) >> ket
     ).as(:cost_down)
   }
@@ -431,15 +437,15 @@ class EffectParser < Parslet::Parser
       (
         (
           str('技設定').as(:this) |
-          bra >> str('技') >> ket >> ((str('の設定') | separator | arrow | plus | bra | ket | newline).absent? >> any).repeat(1).as(:name) >> str('の設定')
+          bra >> str('技') >> ket >> ((str('の設定') | excepts).absent? >> any).repeat(1).as(:name) >> str('の設定')
         ).as(:skill) |
         (
           str('付加').as(:this) |
-          bra >> str('付加') >> ket >> ((str('全て') | str('消滅') | separator | arrow | plus | bra | ket | newline).absent? >> any).repeat(1).as(:name) >> str('全て').as(:all).maybe
+          bra >> str('付加') >> ket >> ((str('全て') | str('消滅') | excepts).absent? >> any).repeat(1).as(:name) >> str('全て').as(:all).maybe
         ).as(:sup) |
         (
           str('一時効果').as(:this) |
-          bra >> str('一時効果') >> ket >> ((str('全て') | str('消滅') | separator | arrow | plus | bra | ket | newline).absent? >> any).repeat(1).as(:name) >> str('全て').as(:all).maybe
+          bra >> str('一時効果') >> ket >> ((str('全て') | str('消滅') | excepts).absent? >> any).repeat(1).as(:name) >> str('全て').as(:all).maybe
         ).as(:temporary_effect)
       ) >> str('消滅')
     ).as(:vanish)
@@ -449,7 +455,7 @@ class EffectParser < Parslet::Parser
     (
       (
         bra >> str('付加') >> ket >>
-        ((level | separator | arrow | plus | bra | ket | newline).absent? >> any).repeat(1).as(:name) >>
+        ((level | excepts).absent? >> any).repeat(1).as(:name) >>
         (level >> natural_number.as(:lv)).maybe >>
         (bra >> str('重複不可').as(:unique) >> ket).maybe
       ).as(:sup)
@@ -459,7 +465,7 @@ class EffectParser < Parslet::Parser
   rule(:add_character) {
     (
       bra >> character_type.as(:kind) >> ket >>
-      ((separator | arrow | plus | bra | ket | newline).absent? >> any).repeat(1).as(:name) >>
+      (excepts.absent? >> any).repeat(1).as(:name) >>
       (bra >> str('重複不可').as(:unique) >> ket).maybe
     ).as(:add_character)
   }
@@ -551,6 +557,26 @@ class EffectParser < Parslet::Parser
     ).as(:next_damage)
   }
   
+  rule(:next_depth) {
+    (
+      str('次の') >> str('被').as(:ant).maybe >>
+      str('追加量') >>
+      (str('増加') | str('減少').as(:minus)) >>
+      bra >>
+      next_damage_coeff >>
+      ket
+    ).as(:next_depth)
+  }
+  
+  rule(:add_disease_protect) {
+    (
+      disease_name >> str('防御') >> bra >>
+      effect_coeff.as(:repeat_value) >>
+      (separator >> str('重複不可').as(:unique)).maybe >>
+      ket
+    ).as(:add_disease_protect)
+  }
+  
   rule(:add_next_attack_element) {
     (
       str('次の') >> calculable.as(:repeat_value) >> str('回分の攻撃が') >> element_name.as(:element) >> str('属性化') >> (bra >> str('重複不可').as(:unique) >> ket).maybe
@@ -573,6 +599,7 @@ class EffectParser < Parslet::Parser
         next_target |
         next_attack_target |
         next_damage |
+        next_depth |
         next_attack_element |
         serif
       ) >> arrow.absent? |
@@ -581,6 +608,7 @@ class EffectParser < Parslet::Parser
       disease |
       vanish |
       add_next_damage |
+      add_disease_protect |
       add_next_attack_element |
       add_effects |
       add_character |
@@ -646,6 +674,7 @@ class EffectParser < Parslet::Parser
     (
       str('直後') >> (
         str('ダメージ').as(:attack) |
+        str('追加量').as(:disease) |
         (status_name.maybe  >> str('上昇')).as(:up) |
         (status_name.maybe  >> str('低下')).as(:down) |
         (status_name.maybe  >> str('増加')).as(:increase) |
@@ -673,8 +702,8 @@ class EffectParser < Parslet::Parser
     ).as(:state_effects_change) |
     (
       (
-        bra >> str('技')   >> ket >> ((str('発動回数') | separator | arrow | plus | bra | ket | newline).absent? >> any).repeat(1).as(:name).as(:skill) |
-        bra >> str('付加') >> ket >> ((str('発動回数') | separator | arrow | plus | bra | ket | newline).absent? >> any).repeat(1).as(:name).as(:sup)
+        bra >> str('技')   >> ket >> ((str('発動回数') | excepts).absent? >> any).repeat(1).as(:name).as(:skill) |
+        bra >> str('付加') >> ket >> ((str('発動回数') | excepts).absent? >> any).repeat(1).as(:name).as(:sup)
       ) >> str('発動回数')
     ).as(:state_effects_count)
   }
@@ -768,7 +797,10 @@ class EffectParser < Parslet::Parser
         str('対象').as(:target) |
         str('攻撃対象').as(:attack_target) |
         str('攻撃属性').as(:attack_element) |
-        str('ダメージ').as(:damage)
+        str('ダメージ').as(:damage) |
+        str('被ダメージ').as(:damage_ant) |
+        str('追加量').as(:depth) |
+        str('被追加量').as(:depth_ant)
       ).as(:nexts) >> str('未変化')
     ).as(:next_not_change)
   }
@@ -976,6 +1008,10 @@ class EffectParser < Parslet::Parser
     (str('物理').as(:physical) | str('魔法').as(:magical)).maybe
   }
   
+  rule(:add_timing_options) {
+    disease_type.maybe
+  }
+  
   rule(:timing) {
     (
       str('戦闘').as(:battle) |
@@ -985,7 +1021,6 @@ class EffectParser < Parslet::Parser
       str('追加行動').as(:add_act) |
       str('通常攻撃').as(:default_attack) |
       str('特殊効果').as(:effects) |
-      str('効果種').as(:effect) |
       str('対象決定').as(:root) |
       attack_timing_options >> (
         str('攻撃命中').as(:hit) |
@@ -996,6 +1031,10 @@ class EffectParser < Parslet::Parser
         str('被攻撃').as(:attack_ant) |
         str('ダメージ決定').as(:damage) |
         str('被ダメージ決定').as(:damage_ant)
+      ) |
+      add_timing_options >> (
+        str('追加量決定').as(:depth) |
+        str('被追加量決定').as(:depth_ant)
       ) |
       str('クリティカル').as(:critical) |
       str('被クリティカル').as(:critical_ant) |
