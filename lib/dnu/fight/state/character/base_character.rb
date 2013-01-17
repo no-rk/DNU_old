@@ -20,7 +20,7 @@ module DNU
                           :Palsy, :Vacuum, :Mud, :Confuse, :Black]
         @@nexts        = [:scope, :damage, :element, :attack_type]
         
-        attr_reader :name, :team, :id, :parent
+        attr_reader :name, :team, :id, :parent, :parent_effect
         attr_accessor :dead, :turn_end
         
         attr_reader *@@status_name
@@ -40,7 +40,8 @@ module DNU
             instance_variable_set("@#{stat}", "DNU::Fight::State::#{stat}".constantize.new(0, 0))
           end
           @id   = @@id += 1
-          @parent = tree[:parent]
+          @parent        = tree[:parent]
+          @parent_effect = tree[:parent_effect]
           @name = tree[:name].to_s
           @team = tree[:team]
           @Position = DNU::Fight::State::Position.new(rand(3)+1)
@@ -55,6 +56,10 @@ module DNU
           tree[:settings].try(:each) do |setting|
             add_effects(setting.keys.first, setting.values.first[:name], setting.values.first, tree[:definitions])
           end
+        end
+        
+        def kind
+          self.class.name.split("::").last.to_sym
         end
         
         def live

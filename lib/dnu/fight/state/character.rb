@@ -14,7 +14,7 @@ module DNU
           end
         end
         
-        def add_character(kind, name, setting, definitions, parent=nil, turn_end=nil)
+        def add_character(kind, name, setting, definitions, parent=nil, parent_effect=nil, turn_end=nil)
           definition = definitions.try(:find){|d| d[:kind].keys.first==kind and d[:name]==name } || {}
           # 定義されていない場合はデータベースから読み込みを試みる
           if definition.blank?
@@ -26,7 +26,7 @@ module DNU
               definition = transform.apply(tree)
             end
           end
-          definition.merge!(setting).merge!(:parent => parent)
+          definition.merge!(setting).merge!({ :parent => parent, :parent_effect => parent_effect })
           character = "DNU::Fight::State::#{kind}".constantize.new(definition)
           character.turn_end = turn_end
           self << character

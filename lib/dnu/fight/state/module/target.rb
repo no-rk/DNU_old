@@ -52,6 +52,26 @@ module DNU
           self.find_all{ |child| ((child.team==active.team ? -1 : 1)*child.Position + active.Position).abs <= active.Range + 1 }.sample || self.sample
         end
         
+        def find_by_kind(kind)
+          self.find_all{ |child| child.kind.to_s==kind.to_s }.extend Target
+        end
+        
+        def find_by_name(name)
+          self.find_all{ |child| child.name.to_s==name.to_s }.extend Target
+        end
+        
+        def find_by_position(position)
+          self.find_all{ |child| child.Position==position }.extend Target
+        end
+        
+        def find_by_parent(parent)
+          self.find_all{ |child| child.parent==parent }.extend Target
+        end
+        
+        def find_by_parent_effect(parent)
+          self.find_all{ |child| child.parent_effect.type==parent.type and child.parent_effect.name==parent.name }.extend Target
+        end
+        
         def 自(active)
           lambda{ active }
         end
@@ -88,20 +108,12 @@ module DNU
           self.dead
         end
         
-        def find_by_name(name)
-          lambda{ self.live.find_all{ |child| child.name==name }.sample }
-        end
-        
-        def find_by_position(position)
-          lambda{ self.live.find_all{ |child| child.Position==position }.sample }
-        end
-        
         def 単(passive, active, target)
-          target.try(:call) || passive || random(active)
+          target.try(:sample) || passive || random(active)
         end
         
         def ラ(passive, active, target)
-          lambda{ target.try(:call) || random(active) }
+          lambda{ target.try(:sample) || random(active) }
         end
         
         def 全(active, passive, target)
@@ -111,21 +123,40 @@ module DNU
         def 低(tree, active=nil, target=nil)
           status_or_disease_name = tree[:status_name] || tree[:disease_name].keys.first
           ratio = tree[:ratio] ? :ratio : :to_f
-          lambda{ target.try(:call) || self.min{ |a,b| a.send(status_or_disease_name).send(ratio) <=> b.send(status_or_disease_name).send(ratio) } }
+          lambda{ target.try(:sample) || self.min{ |a,b| a.send(status_or_disease_name).send(ratio) <=> b.send(status_or_disease_name).send(ratio) } }
         end
         
         def 高(tree, active=nil, target=nil)
           status_or_disease_name = tree[:status_name] || tree[:disease_name].keys.first
           ratio = tree[:ratio] ? :ratio : :to_f
-          lambda{ target.try(:call) || self.max{ |a,b| a.send(status_or_disease_name).send(ratio) <=> b.send(status_or_disease_name).send(ratio) } }
+          lambda{ target.try(:sample) || self.max{ |a,b| a.send(status_or_disease_name).send(ratio) <=> b.send(status_or_disease_name).send(ratio) } }
         end
         
         def 竜(master)
-          self
+          # 種類が竜でかつ親がmasterであるキャラクターを探す。
+          if master.respond_to?(:call)
+            find_by_kind(:Dragon).find_by_parent(master.call)
+          else
+            master.inject([]){ |s,c| s += find_by_kind(:Dragon).find_by_parent(c) }.extend Target
+          end
         end
         
         def 人形(master)
-          self
+          # 種類が人形でかつ親がmasterであるキャラクターを探す。
+          if master.respond_to?(:call)
+            find_by_kind(:Puppet).find_by_parent(master.call)
+          else
+            master.inject([]){ |s,c| s += find_by_kind(:Puppet).find_by_parent(c) }.extend Target
+          end
+        end
+        
+        def 召喚(master)
+          # 種類が召喚でかつ親がmasterであるキャラクターを探す。
+          if master.respond_to?(:call)
+            find_by_kind(:Summon).find_by_parent(master.call)
+          else
+            master.inject([]){ |s,c| s += find_by_kind(:Summon).find_by_parent(c) }.extend Target
+          end
         end
         
       end
