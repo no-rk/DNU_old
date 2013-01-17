@@ -294,9 +294,9 @@ module DNU
           h = tree[:children]
           nested_div(tree[:before])   +
           if h[:success]
-            %Q|\n<span class="passive">#{tree[:passive]}</span>は次の#{h[:repeat_value]}回分の攻撃を反射！|
+            %Q|\n<span class="passive">#{tree[:passive]}</span>は#{h[:repeat_value]}回分の#{h[:name]}！|
           else
-            %Q|\n<span class="passive">#{tree[:passive]}</span>は次の#{h[:repeat_value]}回分の攻撃を反射はもうできない。|
+            %Q|\n<span class="passive">#{tree[:passive]}</span>は#{h[:repeat_value]}回分の#{h[:name]}はもうできない。|
           end +
           nested_div(tree[:after])
         end

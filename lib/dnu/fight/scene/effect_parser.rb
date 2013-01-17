@@ -522,6 +522,7 @@ class EffectParser < Parslet::Parser
   
   rule(:add_reflection) {
     (
+      attack_timing_options.as(:timing_transform).as(:timing) >>
       str('反射') >>
       bra >>
       effect_coeff.as(:repeat_value) >>

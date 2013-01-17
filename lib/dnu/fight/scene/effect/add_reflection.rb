@@ -7,15 +7,16 @@ module DNU
         
         def play_children
           
+          timing = @tree[:timing].try(:values).try(:first)
           repeat_value = calcu_value(@tree[:repeat_value]).call.to_i
           unique       = @tree[:unique]
           
           effects_type        = :temporary_effect
           effects_setting     = {}
-          effects_name        = %Q|次の攻撃反射|
+          effects_name        = %Q|次の#{timing}攻撃反射|
           effects_definitions = <<-"DEFINITION"
 [一時効果]#{effects_name}
-[被攻撃前]次の攻撃対象未変化
+[#{timing}被攻撃前]次の攻撃対象未変化
 敵単/{次の攻撃対象(対象)＋一時効果消滅}
           DEFINITION
           
@@ -29,7 +30,7 @@ module DNU
             success = true
           end
           
-          history[:children] = { :repeat_value => repeat_value, :success => success }
+          history[:children] = { :name => effects_name, :repeat_value => repeat_value, :success => success }
           
         end
         
