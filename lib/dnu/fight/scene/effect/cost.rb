@@ -3,24 +3,30 @@ module DNU
   module Fight
     module Scene
       class Cost < BaseEffect
-        include Calculate
-        
-        def when_initialize
-          @change = nil
-        end
-        
-        def create_change
-          @change ||= lambda{ calcu_value(@tree[:change_value]).call.to_i }
-        end
         
         def play_children
-          change =-(@change || create_change).call
           
-          before_change = 対象.MP.val
-          対象.MP.change_value(change)
-          after_change  = 対象.MP.val
+          calcu_tree  = @tree[:change_value]
           
-          history[:children] = { :before_change => before_change, :after_change => after_change }
+          # MPをcalcu_treeの計算値分だけ変化させる
+          state_change!(:MP, nil, calcu_tree) do |s,t,c|
+            対象.MP.change_value(-c)
+          end
+          
+        end
+        
+      end
+      class NextCostVal < BaseEffect
+        
+        def play_children
+          
+          sign = @tree[:minus] ?   -1  :  1
+          ant  = @tree[:ant]   ? 'Ant' : ''
+          coeff_tree  = @tree[:coeff_value]
+          change_tree = @tree[:change_value]
+          
+          next_effect_change!(sign, ant, coeff_tree, change_tree)
+          
         end
         
         def play_(b_or_a)

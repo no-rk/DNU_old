@@ -19,7 +19,7 @@ module DNU
         def childrens_find_by_scene(scene)
           self.map do |child|
             if child[scene].try(:fetch, :children).respond_to?(:last)
-              child[scene][:children].last.values.first[:children].presence
+              child[scene][:children].last.respond_to?(:values) ? child[scene][:children].last.values.first[:children].presence : nil
             else
               child[scene].try(:fetch, :children).presence
             end

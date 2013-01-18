@@ -44,7 +44,7 @@ module DNU
             raise @data.to_s
           end
           
-          state_change!(:HP, calcu_tree, attacks) do |s,c|
+          state_change!(:HP, nil, calcu_tree, attacks) do |s,t,c|
             対象.send(s).change_value(-c)
           end
           

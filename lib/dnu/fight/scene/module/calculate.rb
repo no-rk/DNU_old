@@ -8,7 +8,6 @@ module DNU
         def condition_damage(attack_type)
           lambda do
             dmg = try('dmg_' + attack_type.to_s).call
-            logger(attack_type => dmg)
             dmg
           end
         end
@@ -38,7 +37,6 @@ module DNU
               scope_group(tree[:group]).send(type) do |c|
                 r = c.send(tree[:status_name]).send(status_or_equip)
                 r = r.send(ratio)*percent
-                logger(type => r)
                 r
               end
             end
@@ -46,7 +44,6 @@ module DNU
             lambda do
               r = (tree[:group_target] || try(tree[:state_target] || '対象')).send(tree[:status_name]).send(status_or_equip)
               r = r.send(ratio)*percent
-              logger(r)
               r
             end
           end
@@ -62,7 +59,6 @@ module DNU
               scope_group(tree[:group]).send(type) do |c|
                 r = c.send(tree[:status_name]).send(status_or_equip)
                 r = r.history[-2].try(:*, percent).try("/", ((tree[:ratio] and r.max!=0) ? r.max : 1).to_f)
-                logger(type => r)
                 r
               end
             end
@@ -70,7 +66,6 @@ module DNU
             lambda do
               r = (tree[:group_target] || try(tree[:state_target] || '対象')).send(tree[:status_name]).send(status_or_equip)
               r = r.history[-2].try(:*, percent).try("/", ((tree[:ratio] and r.max!=0) ? r.max : 1).to_f)
-              logger(r)
               r
             end
           end
@@ -82,14 +77,12 @@ module DNU
             lambda do
               scope_group(tree[:group]).send(type) do |c|
                 r = c.try(child_name(tree[:disease_name]))
-                logger(type => r)
                 r
               end
             end
           else
             lambda do
               r = (tree[:group_target] || try(tree[:state_target] || '対象')).try(child_name(tree[:disease_name]))
-              logger(r)
               r
             end
           end
@@ -101,7 +94,6 @@ module DNU
             lambda do
               scope_group(tree[:group]).send(type) do |c|
                 r = c.try(child_name(tree[:disease_name]))
-                logger(type => r)
                 r
               end
             end
@@ -109,7 +101,6 @@ module DNU
             lambda do
               r = (tree[:group_target] || try(tree[:state_target] || '対象')).try(child_name(tree[:disease_name]))
               r = r.history[-2]
-              logger(r)
               r
             end
           end
@@ -128,12 +119,10 @@ module DNU
           status_or_disease_name = tree[:scene].values.first.respond_to?(:values) ? tree[:scene].values.first.values.first : nil
           status_or_disease_name = status_or_disease_name.respond_to?(:keys) ? status_or_disease_name.keys.first : status_or_disease_name
           status_or_disease      = tree[:scene].values.first.respond_to?(:keys) ? tree[:scene].values.first.keys.first : nil
-          logger(status_or_disease_name)
-          logger(status_or_disease)
           lambda do
             @stack.last.history.last.childrens_find_by_scene(scene).map do |children|
               if status_or_disease_name
-                status_or_disease_name.to_s==children[status_or_disease].to_s ? (children[:after_change].to_i - children[:before_change].to_i).abs : 0
+                status_or_disease_name.to_sym==children[:status_name].to_sym ? (children[:after_change].to_i - children[:before_change].to_i).abs : 0
               else
                 (children[:after_change].to_i - children[:before_change].to_i).abs
               end
@@ -147,13 +136,11 @@ module DNU
           status_or_disease_name = tree.values.first.respond_to?(:values) ? tree.values.first.values.first : nil
           status_or_disease_name = status_or_disease_name.respond_to?(:keys) ? status_or_disease_name.keys.first : status_or_disease_name
           status_or_disease      = tree.values.first.respond_to?(:keys) ? tree.values.first.keys.first : nil
-          logger(status_or_disease_name)
-          logger(status_or_disease)
           lambda do
             children = @stack.last.history.last.try(:childrens_find_by_scene, scene).try(:last) || @stack[-2].try(:history).try(:last).try(:childrens_find_by_scene, scene).try(:last)
             if children.present?
               if status_or_disease_name
-                status_or_disease_name.to_s==children[status_or_disease].to_s ? (children[:after_change].to_i - children[:before_change].to_i).abs : 0
+                status_or_disease_name.to_sym==children[:status_name].to_sym ? (children[:after_change].to_i - children[:before_change].to_i).abs : 0
               else
                 (children[:after_change].to_i - children[:before_change].to_i).abs
               end
@@ -169,13 +156,11 @@ module DNU
           status_or_disease_name = tree.values.first.respond_to?(:values) ? tree.values.first.values.first : nil
           status_or_disease_name = status_or_disease_name.respond_to?(:keys) ? status_or_disease_name.keys.first : status_or_disease_name
           status_or_disease      = tree.values.first.respond_to?(:keys) ? tree.values.first.keys.first : nil
-          logger(status_or_disease_name)
-          logger(status_or_disease)
           lambda do
             children = @stack.last.history.last.try(:childrens_find_by_scene, scene).try(:last) || @stack[-2].try(:history).try(:last).try(:childrens_find_by_scene, scene).try(:last)
             if children.present?
               if status_or_disease_name
-                status_or_disease_name.to_s==children[status_or_disease].to_s ? children[:just_after].call.to_i : 0
+                status_or_disease_name.to_sym==children[:status_name].to_sym ? children[:just_after].call.to_i : 0
               else
                 children[:just_after].call.to_i
               end
@@ -202,7 +187,6 @@ module DNU
         end
         
         def calcu_value(tree)
-          logger(tree)
           lambda{ try(tree.keys.first, tree.values.first).call.to_f }
         end
         

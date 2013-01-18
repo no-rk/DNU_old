@@ -3,25 +3,31 @@ module DNU
   module Fight
     module Scene
       class Reduce < BaseEffect
-        include Calculate
-        
-        def when_initialize
-          @change = nil
-        end
-        
-        def create_change
-          @change ||= lambda{ calcu_value(@tree[:change_value]).call.to_i }
-        end
         
         def play_children
+          
           disease_name = child_name(@tree[:disease_name])
-          change       =-(@change || create_change).call
+          calcu_tree   = @tree[:change_value]
           
-          before_change = 対象.send(disease_name).val
-          対象.send(disease_name).change_value(change)
-          after_change  = 対象.send(disease_name).val
+          # status_nameをcalcu_treeの計算値分だけ変化させる
+          state_change!(disease_name, nil, calcu_tree, [disease_name]) do |s,t,c|
+            対象.send(s).change_value(-c)
+          end
           
-          history[:children] = { :disease_name => disease_name, :before_change => before_change, :after_change => after_change }
+        end
+        
+      end
+      class NextReduceVal < BaseEffect
+        
+        def play_children
+          
+          sign = @tree[:minus] ?   -1  :  1
+          ant  = @tree[:ant]   ? 'Ant' : ''
+          coeff_tree  = @tree[:coeff_value]
+          change_tree = @tree[:change_value]
+          
+          next_effect_change!(sign, ant, coeff_tree, change_tree)
+          
         end
         
         def play_(b_or_a)

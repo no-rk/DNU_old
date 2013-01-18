@@ -19,7 +19,8 @@ module DNU
         @@disease_name = [:Poison, :Wet, :Sleep, :Burn, :Shine,
                           :Palsy, :Vacuum, :Mud, :Confuse, :Black]
         @@nexts        = [:scope, :target, :hitrate, :attack_element, :attack_type, :attack_target,
-                          :hit_val, :add_val, :heal_val]
+                          :hit_val, :add_val, :heal_val, :convert_val, :cost_val, :rob_val, :steal_val,
+                          :increase_val, :decrease_val, :up_val, :down_val, :reduce_val]
         
         attr_reader :name, :team, :id, :parent, :parent_effect
         attr_accessor :dead, :turn_end

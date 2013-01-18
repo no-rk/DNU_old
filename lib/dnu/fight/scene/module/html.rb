@@ -158,14 +158,14 @@ module DNU
         def Resist(tree)
           h = tree[:children]
           nested_div(tree[:before])   +
-          %Q|\n<span class="passive">#{tree[:passive]}</span>は#{I18n.t(h[:disease_name], :scope => "DNU.Fight.Scene")}に抵抗した！| +
+          %Q|\n<span class="passive">#{tree[:passive]}</span>は#{I18n.t(h[:status_name], :scope => "DNU.Fight.Scene")}に抵抗した！| +
           nested_div(tree[:after])
         end
         
         def Reduce(tree)
           h = tree[:children]
           nested_div(tree[:before])   +
-          %Q|\n<span class="passive">#{tree[:passive]}</span>は#{I18n.t(h[:disease_name], :scope => "DNU.Fight.Scene")}を#{(h[:after_change]-h[:before_change]).abs}軽減した！（ #{h[:before_change]} ⇒ #{h[:after_change]} ）| +
+          %Q|\n<span class="passive">#{tree[:passive]}</span>は#{I18n.t(h[:status_name], :scope => "DNU.Fight.Scene")}を#{(h[:after_change]-h[:before_change]).abs}軽減した！（ #{h[:before_change]} ⇒ #{h[:after_change]} ）| +
           nested_div(tree[:after])
         end
         
@@ -437,6 +437,60 @@ module DNU
         def NextHealVal(tree)
           nested_div(tree[:before])   +
            %Q|\n<span class="passive">#{tree[:passive]}</span>の次の#{"被" if tree[:children][:ant].present?}回復量が#{tree[:children][:sign]>0 ? "増加" : "減少"}した！（#{"割合：#{tree[:children][:coeff]}％" if tree[:children][:coeff]!=0}#{"固定値：#{tree[:children][:change]}" if tree[:children][:change]!=0}）| +
+          nested_div(tree[:after])
+        end
+        
+        def NextIncreaseVal(tree)
+          nested_div(tree[:before])   +
+           %Q|\n<span class="passive">#{tree[:passive]}</span>の次の#{"被" if tree[:children][:ant].present?}増加量が#{tree[:children][:sign]>0 ? "増加" : "減少"}した！（#{"割合：#{tree[:children][:coeff]}％" if tree[:children][:coeff]!=0}#{"固定値：#{tree[:children][:change]}" if tree[:children][:change]!=0}）| +
+          nested_div(tree[:after])
+        end
+        
+        def NextDecreaseVal(tree)
+          nested_div(tree[:before])   +
+           %Q|\n<span class="passive">#{tree[:passive]}</span>の次の#{"被" if tree[:children][:ant].present?}減少量が#{tree[:children][:sign]>0 ? "増加" : "減少"}した！（#{"割合：#{tree[:children][:coeff]}％" if tree[:children][:coeff]!=0}#{"固定値：#{tree[:children][:change]}" if tree[:children][:change]!=0}）| +
+          nested_div(tree[:after])
+        end
+        
+        def NextUpVal(tree)
+          nested_div(tree[:before])   +
+           %Q|\n<span class="passive">#{tree[:passive]}</span>の次の#{"被" if tree[:children][:ant].present?}上昇量が#{tree[:children][:sign]>0 ? "増加" : "減少"}した！（#{"割合：#{tree[:children][:coeff]}％" if tree[:children][:coeff]!=0}#{"固定値：#{tree[:children][:change]}" if tree[:children][:change]!=0}）| +
+          nested_div(tree[:after])
+        end
+        
+        def NextDownVal(tree)
+          nested_div(tree[:before])   +
+           %Q|\n<span class="passive">#{tree[:passive]}</span>の次の#{"被" if tree[:children][:ant].present?}低下量が#{tree[:children][:sign]>0 ? "増加" : "減少"}した！（#{"割合：#{tree[:children][:coeff]}％" if tree[:children][:coeff]!=0}#{"固定値：#{tree[:children][:change]}" if tree[:children][:change]!=0}）| +
+          nested_div(tree[:after])
+        end
+        
+        def NextStealVal(tree)
+          nested_div(tree[:before])   +
+           %Q|\n<span class="passive">#{tree[:passive]}</span>の次の#{"被" if tree[:children][:ant].present?}奪取量が#{tree[:children][:sign]>0 ? "増加" : "減少"}した！（#{"割合：#{tree[:children][:coeff]}％" if tree[:children][:coeff]!=0}#{"固定値：#{tree[:children][:change]}" if tree[:children][:change]!=0}）| +
+          nested_div(tree[:after])
+        end
+        
+        def NextRobVal(tree)
+          nested_div(tree[:before])   +
+           %Q|\n<span class="passive">#{tree[:passive]}</span>の次の#{"被" if tree[:children][:ant].present?}強奪量が#{tree[:children][:sign]>0 ? "増加" : "減少"}した！（#{"割合：#{tree[:children][:coeff]}％" if tree[:children][:coeff]!=0}#{"固定値：#{tree[:children][:change]}" if tree[:children][:change]!=0}）| +
+          nested_div(tree[:after])
+        end
+        
+        def NextReduceVal(tree)
+          nested_div(tree[:before])   +
+           %Q|\n<span class="passive">#{tree[:passive]}</span>の次の#{"被" if tree[:children][:ant].present?}軽減量が#{tree[:children][:sign]>0 ? "増加" : "減少"}した！（#{"割合：#{tree[:children][:coeff]}％" if tree[:children][:coeff]!=0}#{"固定値：#{tree[:children][:change]}" if tree[:children][:change]!=0}）| +
+          nested_div(tree[:after])
+        end
+        
+        def NextCostVal(tree)
+          nested_div(tree[:before])   +
+           %Q|\n<span class="passive">#{tree[:passive]}</span>の次の#{"被" if tree[:children][:ant].present?}消費量が#{tree[:children][:sign]>0 ? "増加" : "減少"}した！（#{"割合：#{tree[:children][:coeff]}％" if tree[:children][:coeff]!=0}#{"固定値：#{tree[:children][:change]}" if tree[:children][:change]!=0}）| +
+          nested_div(tree[:after])
+        end
+        
+        def NextConvertVal(tree)
+          nested_div(tree[:before])   +
+           %Q|\n<span class="passive">#{tree[:passive]}</span>の次の#{"被" if tree[:children][:ant].present?}変換量が#{tree[:children][:sign]>0 ? "増加" : "減少"}した！（#{"割合：#{tree[:children][:coeff]}％" if tree[:children][:coeff]!=0}#{"固定値：#{tree[:children][:change]}" if tree[:children][:change]!=0}）| +
           nested_div(tree[:after])
         end
         

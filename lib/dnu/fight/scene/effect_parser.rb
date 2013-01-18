@@ -112,7 +112,10 @@ class EffectParser < Parslet::Parser
       str('隊列').as(:position) |
       str('射程').as(:range)
     ).as(:status_name) |
-    str('装備').as(:equip).maybe >> (
+    (
+      str('能力').as(:status) |
+      str('装備').as(:equip)
+    ).maybe >> (
       str('M').maybe >> str('AT') |
       str('M').maybe >> str('DF') |
       str('M').maybe >> str('HIT') |
@@ -551,37 +554,28 @@ class EffectParser < Parslet::Parser
     ).as(:add_next_damage)
   }
   
-  rule(:next_hit_val) {
+  rule(:change_next_val) {
     (
       str('次の') >> str('被').as(:ant).maybe >>
-      str('ダメージ') >>
+      (
+        str('ダメージ').as(:next_hit_val) |
+        str('追加量').as(:next_add_val) |
+        str('回復量').as(:next_heal_val) |
+        str('増加量').as(:next_increase_val) |
+        str('減少量').as(:next_decrease_val) |
+        str('上昇量').as(:next_up_val) |
+        str('低下量').as(:next_down_val) |
+        str('奪取量').as(:next_steal_val) |
+        str('強奪量').as(:next_rob_val) |
+        str('軽減量').as(:next_reduce_val) |
+        str('消費量').as(:next_cost_val) |
+        str('変換量').as(:next_convert_val)
+      ).as(:change_next_type) >>
       (str('増加') | str('減少').as(:minus)) >>
       bra >>
       nexts_coeff >>
       ket
-    ).as(:next_hit_val)
-  }
-  
-  rule(:next_add_val) {
-    (
-      str('次の') >> str('被').as(:ant).maybe >>
-      str('追加量') >>
-      (str('増加') | str('減少').as(:minus)) >>
-      bra >>
-      nexts_coeff >>
-      ket
-    ).as(:next_add_val)
-  }
-  
-  rule(:next_heal_val) {
-    (
-      str('次の') >> str('被').as(:ant).maybe >>
-      str('回復量') >>
-      (str('増加') | str('減少').as(:minus)) >>
-      bra >>
-      nexts_coeff >>
-      ket
-    ).as(:next_heal_val)
+    ).as(:change_next_val)
   }
   
   rule(:add_next_hitrate) {
@@ -642,9 +636,7 @@ class EffectParser < Parslet::Parser
         next_scopes |
         next_target |
         next_attack_target |
-        next_hit_val |
-        next_add_val |
-        next_heal_val |
+        change_next_val |
         next_hitrate |
         next_attack_element |
         serif
@@ -709,38 +701,49 @@ class EffectParser < Parslet::Parser
     (
       str('直前') >> (
         str('ダメージ').as(:attack) |
-        (status_name.maybe  >> str('上昇')).as(:up) |
-        (status_name.maybe  >> str('低下')).as(:down) |
-        (status_name.maybe  >> str('増加')).as(:increase) |
-        (status_name.maybe  >> str('減少')).as(:decrease) |
-        (disease_name.maybe >> str('軽減')).as(:reduce) |
-        (status_name.maybe  >> str('奪取')).as(:steal) |
-        (status_name.maybe  >> str('強奪')).as(:rob)
+        (disease_name.maybe >> str('追加量')).as(:disease) |
+        (status_name.maybe  >> str('回復量')).as(:heal) |
+        (status_name.maybe  >> str('上昇量')).as(:up) |
+        (status_name.maybe  >> str('低下量')).as(:down) |
+        (status_name.maybe  >> str('増加量')).as(:increase) |
+        (status_name.maybe  >> str('減少量')).as(:decrease) |
+        (disease_name.maybe >> str('軽減量')).as(:reduce) |
+        (status_name.maybe  >> str('奪取量')).as(:steal) |
+        (status_name.maybe  >> str('強奪量')).as(:rob) |
+        (status_name.maybe  >> str('変換量')).as(:convert) |
+        str('消費量').as(:cost)
       )
     ).as(:state_effects_just_before_change) |
     (
       str('直後') >> (
         str('ダメージ').as(:attack) |
-        str('追加量').as(:disease) |
-        (status_name.maybe  >> str('上昇')).as(:up) |
-        (status_name.maybe  >> str('低下')).as(:down) |
-        (status_name.maybe  >> str('増加')).as(:increase) |
-        (status_name.maybe  >> str('減少')).as(:decrease) |
-        (disease_name.maybe >> str('軽減')).as(:reduce) |
-        (status_name.maybe  >> str('奪取')).as(:steal) |
-        (status_name.maybe  >> str('強奪')).as(:rob)
+        (disease_name.maybe >> str('追加量')).as(:disease) |
+        (status_name.maybe  >> str('回復量')).as(:heal) |
+        (status_name.maybe  >> str('上昇量')).as(:up) |
+        (status_name.maybe  >> str('低下量')).as(:down) |
+        (status_name.maybe  >> str('増加量')).as(:increase) |
+        (status_name.maybe  >> str('減少量')).as(:decrease) |
+        (disease_name.maybe >> str('軽減量')).as(:reduce) |
+        (status_name.maybe  >> str('奪取量')).as(:steal) |
+        (status_name.maybe  >> str('強奪量')).as(:rob) |
+        (status_name.maybe  >> str('変換量')).as(:convert) |
+        str('消費量').as(:cost)
       )
     ).as(:state_effects_just_after_change) |
     (
       (
         str('ダメージ').as(:attack) |
+        (disease_name.maybe >> str('追加')).as(:disease) |
+        (status_name.maybe  >> str('回復')).as(:heal) |
         (status_name.maybe  >> str('上昇')).as(:up) |
         (status_name.maybe  >> str('低下')).as(:down) |
         (status_name.maybe  >> str('増加')).as(:increase) |
         (status_name.maybe  >> str('減少')).as(:decrease) |
         (disease_name.maybe >> str('軽減')).as(:reduce) |
         (status_name.maybe  >> str('奪取')).as(:steal) |
-        (status_name.maybe  >> str('強奪')).as(:rob)
+        (status_name.maybe  >> str('強奪')).as(:rob) |
+        (status_name.maybe  >> str('変換')).as(:convert) |
+        str('消費').as(:cost)
       ).as(:scene) >>
       (
         str('合計').as(:sum) |
@@ -844,14 +847,32 @@ class EffectParser < Parslet::Parser
         str('対象').as(:target) |
         str('攻撃対象').as(:attack_target) |
         str('攻撃属性').as(:attack_element) |
+        str('命中率').as(:hitrate) |
+        str('回避率').as(:hitrate_ant) |
         str('ダメージ').as(:hit_val) |
         str('被ダメージ').as(:hit_val_ant) |
         str('追加量').as(:add_val) |
         str('被追加量').as(:add_val_ant) |
         str('回復量').as(:heal_val) |
         str('被回復量').as(:heal_val_ant) |
-        str('命中率').as(:hitrate) |
-        str('回避率').as(:hitrate_ant)
+        str('増加量').as(:increase_val) |
+        str('被増加量').as(:increase_val_ant) |
+        str('減少量').as(:decrease_val) |
+        str('被減少量').as(:decrease_val_ant) |
+        str('上昇量').as(:up_val) |
+        str('被上昇量').as(:up_val_ant) |
+        str('低下量').as(:down_val) |
+        str('被低下量').as(:down_val_ant) |
+        str('奪取量').as(:steal_val) |
+        str('被奪取量').as(:steal_val_ant) |
+        str('強奪量').as(:rob_val) |
+        str('被強奪量').as(:rob_val_ant) |
+        str('軽減量').as(:reduce_val) |
+        str('被軽減量').as(:reduce_val_ant) |
+        str('消費量').as(:cost_val) |
+        str('被消費量').as(:cost_val_ant) |
+        str('変換量').as(:convert_val) |
+        str('被変換量').as(:convert_val_ant)
       ).as(:nexts) >> str('未変化')
     ).as(:next_not_change)
   }
@@ -1059,7 +1080,7 @@ class EffectParser < Parslet::Parser
     (str('物理').as(:physical) | str('魔法').as(:magical)).maybe
   }
   
-  rule(:add_timing_options) {
+  rule(:disease_timing_options) {
     disease_type.maybe
   }
   
@@ -1068,6 +1089,10 @@ class EffectParser < Parslet::Parser
       str('HP').as(:HP) |
       str('MP').as(:MP)
     ).maybe
+  }
+  
+  rule(:status_timing_options) {
+    status_name.maybe
   }
   
   rule(:timing) {
@@ -1094,7 +1119,27 @@ class EffectParser < Parslet::Parser
         str('命中率決定').as(:hitrate) |
         str('回避率決定').as(:hitrate_ant)
       ) |
-      add_timing_options >> (
+      status_timing_options >> (
+        str('増加量決定').as(:increase_val) |
+        str('被増加量決定').as(:increase_val_ant) |
+        str('減少量決定').as(:decrease_val) |
+        str('被減少量決定').as(:decrease_val_ant) |
+        str('上昇量決定').as(:up_val) |
+        str('被上昇量決定').as(:up_val_ant) |
+        str('低下量決定').as(:down_val) |
+        str('被低下量決定').as(:down_val_ant) |
+        str('奪取量決定').as(:steal_val) |
+        str('被奪取量決定').as(:steal_val_ant) |
+        str('強奪量決定').as(:rob_val) |
+        str('被強奪量決定').as(:rob_val_ant) |
+        str('変換量決定').as(:convert_val) |
+        str('被変換量決定').as(:convert_val_ant)
+      ) |
+      str('消費量決定').as(:cost_val) |
+      str('被消費量決定').as(:cost_val_ant) |
+      disease_timing_options >> (
+        str('軽減量決定').as(:reduce_val) |
+        str('被軽減量決定').as(:reduce_val_ant) |
         str('追加量決定').as(:add_val) |
         str('被追加量決定').as(:add_val_ant)
       ) |

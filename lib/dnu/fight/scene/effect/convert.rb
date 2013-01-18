@@ -3,27 +3,33 @@ module DNU
   module Fight
     module Scene
       class Convert < BaseEffect
-        include Calculate
-        
-        def when_initialize
-          @change = nil
-        end
-        
-        def create_change
-          @change ||= lambda{ calcu_value(@tree[:change_to]).call.to_i }
-        end
         
         def play_children
+          
           status_name     = @tree[:status_name]
           status_or_equip = @tree[:equip].nil? ? :status : :equip
           sign            = @tree[:minus] ? -1 : 1
-          change          = sign*(@change || create_change).call
+          calcu_tree      = @tree[:change_to]
           
-          before_change = 対象.send(status_name).send(status_or_equip).val
-          対象.send(status_name).send(status_or_equip).change_to(change)
-          after_change  = 対象.send(status_name).send(status_or_equip).val
+          # status_nameをcalcu_treeの計算値分だけ変化させる
+          state_change!(status_name, status_or_equip, calcu_tree, [status_name]) do |s,t,c|
+            対象.send(s).send(t).change_to(sign*c)
+          end
           
-          history[:children] = { :status_or_equip => status_or_equip, :status_name => status_name, :before_change => before_change, :after_change => after_change }
+        end
+        
+      end
+      class NextConvertVal < BaseEffect
+        
+        def play_children
+          
+          sign = @tree[:minus] ?   -1  :  1
+          ant  = @tree[:ant]   ? 'Ant' : ''
+          coeff_tree  = @tree[:coeff_value]
+          change_tree = @tree[:change_value]
+          
+          next_effect_change!(sign, ant, coeff_tree, change_tree)
+          
         end
         
         def play_(b_or_a)

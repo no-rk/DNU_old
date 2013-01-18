@@ -10,7 +10,7 @@ module DNU
           calcu_tree  = @tree[:change_value]
           
           # status_nameをcalcu_treeの計算値分だけ変化させる
-          state_change!(status_name, calcu_tree, [status_name]) do |s,c|
+          state_change!(status_name, nil, calcu_tree, [status_name]) do |s,t,c|
             対象.send(s).change_value(c)
           end
           

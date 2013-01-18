@@ -13,9 +13,18 @@ class EffectTransform < Parslet::Transform
     }
     filter[position.to_sym]
   }
-  
+
   rule(:timing_transform => subtree(:timing)) {
-    { timing.map{ |k,v| (k==:element ? v.keys.first : k).to_s.underscore }.join("_").to_sym => timing.map{ |k,v| k==:element ? "#{v.values.first}属性" : v }.join } if timing.respond_to?(:map)
+    def return_timing(k,v)
+      if k==:element
+        v.keys.first
+      elsif k==:status_name
+        v
+      else
+        k
+      end
+    end
+    { timing.map{ |k,v| return_timing(k,v).to_s.underscore }.join("_").to_sym => timing.map{ |k,v| k==:element ? "#{v.values.first}属性" : v }.join } if timing.respond_to?(:map)
   }
   
   rule(:range => simple(:range)) {
@@ -78,6 +87,10 @@ class EffectTransform < Parslet::Transform
     }
   }
   
+  rule(:change_next_val => subtree(:change_next_val)) {
+    { change_next_val.delete(:change_next_type).keys.first => change_next_val }
+  }
+  
   rule(:arrow => simple(:arrow), :arrow_process => subtree(:arrow_process)) {
     {
       :if => {
@@ -96,33 +109,6 @@ class EffectTransform < Parslet::Transform
   rule(:target_sequence => subtree(:target_sequence)) {
     [target_sequence.delete(:target_condition),target_sequence]
   }
-  
-  #rule(:root => { :passive => subtree(:passive), :do => { :each_effect => subtree(:each_effect) } }) {
-  #  {
-  #    :each_effect => {
-  #      :do => {
-  #        :root => {
-  #          :passive => passive,
-  #          :do => each_effect[:do]
-  #        }
-  #      },
-  #      :while => each_effect[:while]
-  #    }
-  #  }
-  #}  
-  #rule(:root => { :passive => subtree(:passive), :do => { :repeat => subtree(:repeat) } }) {
-  #  {
-  #    :repeat => {
-  #      :do => {
-  #        :root => {
-  #          :passive => passive,
-  #          :do => repeat[:do]
-  #        }
-  #      },
-  #      :times => repeat[:times]
-  #    }
-  #  }
-  #}
   
   rule(:fixnum => { :percent => subtree(:percent) } ) {
     {
