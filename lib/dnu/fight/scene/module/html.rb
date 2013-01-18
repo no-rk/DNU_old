@@ -392,6 +392,24 @@ module DNU
           nested_div(tree[:after])
         end
         
+        def NextTurn(tree)
+          nested_div(tree[:before])   +
+           %Q|\n<span class="passive">#{tree[:passive]}</span>の次のターンが変化した！| +
+          nested_div(tree[:after])
+        end
+        
+        def NextAct(tree)
+          nested_div(tree[:before])   +
+           %Q|\n<span class="passive">#{tree[:passive]}</span>の次の行動が変化した！| +
+          nested_div(tree[:after])
+        end
+        
+        def NextAddAct(tree)
+          nested_div(tree[:before])   +
+           %Q|\n<span class="passive">#{tree[:passive]}</span>の次の追加行動が変化した！| +
+          nested_div(tree[:after])
+        end
+        
         def NextScope(tree)
           nested_div(tree[:before])   +
            %Q|\n<span class="passive">#{tree[:passive]}</span>の次の対象範囲が#{tree[:children][:scope]}になった。| +

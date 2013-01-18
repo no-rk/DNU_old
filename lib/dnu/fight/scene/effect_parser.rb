@@ -498,6 +498,24 @@ class EffectParser < Parslet::Parser
     ).as(:revive)
   }
   
+  rule(:next_turn) {
+    (
+      str('次のターン変化') >> bra >> newline.maybe >> root_processes >> ket
+    ).as(:next_turn)
+  }
+  
+  rule(:next_act) {
+    (
+      str('次の行動変化') >> bra >> newline.maybe >> root_processes >> ket
+    ).as(:next_act)
+  }
+  
+  rule(:next_add_act) {
+    (
+      str('次の追加行動変化') >> bra >> newline.maybe >> root_processes >> ket
+    ).as(:next_add_act)
+  }
+  
   rule(:next_scope) {
     (single_scope | multi_scope).as(:scope).as(:next_scope)
   }
@@ -633,6 +651,9 @@ class EffectParser < Parslet::Parser
         heal |
         change |
         cost |
+        next_turn |
+        next_act |
+        next_add_act |
         next_scopes |
         next_target |
         next_attack_target |
@@ -843,6 +864,9 @@ class EffectParser < Parslet::Parser
       state_target >>
       str('次の') >>
       (
+        str('ターン').as(:turn) |
+        str('行動').as(:act) |
+        str('追加行動').as(:add_act) |
         str('対象範囲').as(:scope) |
         str('対象').as(:target) |
         str('攻撃対象').as(:attack_target) |

@@ -25,6 +25,14 @@ module DNU
           end
         end
         
+        def play_children
+          if @active.call.next_turn?
+            create_from_hash(@active.call.next_turn!).play
+          else
+            super
+          end
+        end
+        
         def log_before_each_scene
           super
           history[:HP]  = @active.call.HP.val
