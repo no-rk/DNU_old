@@ -229,8 +229,8 @@ ja:
         Effect: 効果種
         Root: 対象決定
         Cemetery: 墓地埋葬
-        Damage: ダメージ決定
-        DamageAnt: 被ダメージ決定
+        HitVal: ダメージ決定
+        HitValAnt: 被ダメージ決定
         Attack: 攻撃
         AttackAnt: 被攻撃
         Critical: クリティカル
@@ -246,13 +246,13 @@ ja:
         Miss: 攻撃空振
         MissAnt: 攻撃回避
         Disease: 状態異常
-        Depth: 追加量決定
-        DepthAnt: 被追加量決定
         Add: 状態異常追加
+        AddVal: 追加量決定
+        AddValAnt: 被追加量決定
         Resist: 状態異常抵抗
         Heal: 回復
-        Resilience: 回復量決定
-        ResilienceAnt: 被回復量決定
+        HealVal: 回復量決定
+        HealValAnt: 被回復量決定
         HP: HP
         Hp: HP
         MHP: 最大HP

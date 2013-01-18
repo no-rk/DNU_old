@@ -4,35 +4,44 @@ module DNU
     module Scene
       class Miss < BaseEffect
         
-        def element_name
-          @data.values.first[:element].keys.first
+        def attack_element
+          @data.values.first[:element].keys.first.to_s.camelize
         end
         
-        def attack_type_name
+        def attack_type
           child_name(@data).to_s.camelize
         end
         
+        def attack_types
+          child_name(@data).to_s.underscore.split("_").map{ |p_or_m| p_or_m.camelize }
+        end
+        
+        def attack_element_and_types
+          [attack_element].product(attack_types).map{ |a| a.join }
+        end
+        
+        def attacks
+          [attack_element, attack_types, attack_element_and_types].flatten
+        end
+        
         def play_children
-          history[:children] = { :element => element_name, :attack_type => attack_type_name }
+          history[:children] = { :attack_element => attack_element, :attack_type => attack_type }
         end
         
         def play
+          
           self.each do |scene|
-            play_(:before)
-            play_(:before, :before, :"#{element_name}#{scene_name}")
-            attack_type_name.to_s.underscore.split("_").map{|p_or_m| p_or_m.camelize.to_sym }.each do |p_or_m|
-              play_(:before, :before, :"#{p_or_m}#{scene_name}")
-              play_(:before, :before, :"#{element_name}#{p_or_m}#{scene_name}")
+            ["",attacks].flatten.each do |timing|
+              play_(:before, :before, :"#{timing.to_s.underscore.camelize}#{scene_name}")
             end
             play_children
-            attack_type_name.to_s.underscore.split("_").map{|p_or_m| p_or_m.camelize.to_sym }.each do |p_or_m|
-              play_(:after, :after, :"#{element_name}#{p_or_m}#{scene_name}")
-              play_(:after, :after, :"#{p_or_m}#{scene_name}")
+            ["",attacks].flatten.each do |timing|
+              play_(:after, :after, :"#{timing.to_s.underscore.camelize}#{scene_name}")
             end
-            play_(:after, :after, :"#{element_name}#{scene_name}")
-            play_(:after)
           end
+          
           @history.extend Html
+          
         end
         
       end

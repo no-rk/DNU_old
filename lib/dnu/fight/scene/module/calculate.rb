@@ -5,6 +5,14 @@ module DNU
       module Calculate
         include Damage
         
+        def condition_damage(attack_type)
+          lambda do
+            dmg = try('dmg_' + attack_type.to_s).call
+            logger(attack_type => dmg)
+            dmg
+          end
+        end
+        
         def fixnum(val)
           lambda{ val.to_s.to_f }
         end

@@ -531,7 +531,7 @@ class EffectParser < Parslet::Parser
     ).as(:add_reflection)
   }
   
-  rule(:next_damage_coeff) {
+  rule(:nexts_coeff) {
     (
       calculable.as(:coeff_value) >> percent >> (separator >> effect_coeff.as(:change_value)).maybe |
       effect_coeff.as(:change_value)
@@ -545,43 +545,43 @@ class EffectParser < Parslet::Parser
       str('ダメージ') >>
       (str('増加') | str('減少').as(:minus)) >>
       bra >>
-      next_damage_coeff >>
+      nexts_coeff >>
       (separator >> str('重複不可').as(:unique)).maybe >>
       ket
     ).as(:add_next_damage)
   }
   
-  rule(:next_damage) {
+  rule(:next_hit_val) {
     (
       str('次の') >> str('被').as(:ant).maybe >>
       str('ダメージ') >>
       (str('増加') | str('減少').as(:minus)) >>
       bra >>
-      next_damage_coeff >>
+      nexts_coeff >>
       ket
-    ).as(:next_damage)
+    ).as(:next_hit_val)
   }
   
-  rule(:next_depth) {
+  rule(:next_add_val) {
     (
       str('次の') >> str('被').as(:ant).maybe >>
       str('追加量') >>
       (str('増加') | str('減少').as(:minus)) >>
       bra >>
-      next_damage_coeff >>
+      nexts_coeff >>
       ket
-    ).as(:next_depth)
+    ).as(:next_add_val)
   }
   
-  rule(:next_resilience) {
+  rule(:next_heal_val) {
     (
       str('次の') >> str('被').as(:ant).maybe >>
       str('回復量') >>
       (str('増加') | str('減少').as(:minus)) >>
       bra >>
-      next_damage_coeff >>
+      nexts_coeff >>
       ket
-    ).as(:next_resilience)
+    ).as(:next_heal_val)
   }
   
   rule(:add_next_hitrate) {
@@ -593,7 +593,7 @@ class EffectParser < Parslet::Parser
       ) >>
       (str('増加') | str('減少').as(:minus)) >>
       bra >>
-      next_damage_coeff >>
+      nexts_coeff >>
       (separator >> str('重複不可').as(:unique)).maybe >>
       ket
     ).as(:add_next_hitrate)
@@ -607,7 +607,7 @@ class EffectParser < Parslet::Parser
       ) >>
       (str('増加') | str('減少').as(:minus)) >>
       bra >>
-      next_damage_coeff >>
+      nexts_coeff >>
       ket
     ).as(:next_hitrate)
   }
@@ -642,9 +642,9 @@ class EffectParser < Parslet::Parser
         next_scopes |
         next_target |
         next_attack_target |
-        next_damage |
-        next_depth |
-        next_resilience |
+        next_hit_val |
+        next_add_val |
+        next_heal_val |
         next_hitrate |
         next_attack_element |
         serif
@@ -844,12 +844,12 @@ class EffectParser < Parslet::Parser
         str('対象').as(:target) |
         str('攻撃対象').as(:attack_target) |
         str('攻撃属性').as(:attack_element) |
-        str('ダメージ').as(:damage) |
-        str('被ダメージ').as(:damage_ant) |
-        str('追加量').as(:depth) |
-        str('被追加量').as(:depth_ant) |
-        str('回復量').as(:resilience) |
-        str('被回復量').as(:resilience_ant) |
+        str('ダメージ').as(:hit_val) |
+        str('被ダメージ').as(:hit_val_ant) |
+        str('追加量').as(:add_val) |
+        str('被追加量').as(:add_val_ant) |
+        str('回復量').as(:heal_val) |
+        str('被回復量').as(:heal_val_ant) |
         str('命中率').as(:hitrate) |
         str('回避率').as(:hitrate_ant)
       ).as(:nexts) >> str('未変化')
@@ -1083,25 +1083,25 @@ class EffectParser < Parslet::Parser
       attack_timing_options >> (
         str('攻撃命中').as(:hit) |
         str('攻撃被弾').as(:hit_ant) |
+        str('クリティカル').as(:critical) |
+        str('被クリティカル').as(:critical_ant) |
         str('攻撃空振').as(:miss) |
         str('攻撃回避').as(:miss_ant) |
         str('攻撃').as(:attack) |
         str('被攻撃').as(:attack_ant) |
-        str('ダメージ決定').as(:damage) |
-        str('被ダメージ決定').as(:damage_ant) |
+        str('ダメージ決定').as(:hit_val) |
+        str('被ダメージ決定').as(:hit_val_ant) |
         str('命中率決定').as(:hitrate) |
         str('回避率決定').as(:hitrate_ant)
       ) |
       add_timing_options >> (
-        str('追加量決定').as(:depth) |
-        str('被追加量決定').as(:depth_ant)
+        str('追加量決定').as(:add_val) |
+        str('被追加量決定').as(:add_val_ant)
       ) |
       heal_timing_options >> (
-        str('回復量決定').as(:resilience) |
-        str('被回復量決定').as(:resilience_ant)
+        str('回復量決定').as(:heal_val) |
+        str('被回復量決定').as(:heal_val_ant)
       ) |
-      str('クリティカル').as(:critical) |
-      str('被クリティカル').as(:critical_ant) |
       str('墓地埋葬').as(:cemetery)
     ).as(:timing_transform).as(:timing) >> before_after.as(:before_after)
   }

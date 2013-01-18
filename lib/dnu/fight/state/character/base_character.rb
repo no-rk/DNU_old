@@ -18,7 +18,8 @@ module DNU
         @@has_max      = [:HP, :MP]
         @@disease_name = [:Poison, :Wet, :Sleep, :Burn, :Shine,
                           :Palsy, :Vacuum, :Mud, :Confuse, :Black]
-        @@nexts        = [:scope, :target, :depth, :damage, :attack_element, :attack_type, :attack_target, :resilience, :hitrate]
+        @@nexts        = [:scope, :target, :hitrate, :attack_element, :attack_type, :attack_target,
+                          :hit_val, :add_val, :heal_val]
         
         attr_reader :name, :team, :id, :parent, :parent_effect
         attr_accessor :dead, :turn_end

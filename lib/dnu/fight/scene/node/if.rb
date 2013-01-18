@@ -4,12 +4,24 @@ module DNU
       class If < BaseScene
         include Condition
         
-        def element_name
-          @data.values.first[:element].keys.first
+        def attack_element
+          @data.values.first[:element].keys.first.to_s.camelize
         end
         
-        def attack_type_name
+        def attack_type
           child_name(@data).to_s.camelize
+        end
+        
+        def attack_types
+          child_name(@data).to_s.underscore.split("_").map{ |p_or_m| p_or_m.camelize }
+        end
+        
+        def attack_element_and_types
+          [attack_element].product(attack_types).map{ |a| a.join }
+        end
+        
+        def attacks
+          [attack_element, attack_types, attack_element_and_types].flatten
         end
         
         def when_initialize

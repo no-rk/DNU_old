@@ -7,14 +7,6 @@ module DNU
         include HitRate
         include CriRate
         
-        def condition_damage(attack_type)
-          lambda do
-            dmg = try('dmg_' + attack_type.to_s).call
-            logger(attack_type => dmg)
-            dmg
-          end
-        end
-        
         def hit?(tree)
           attack_type = @data.keys.first
           min_hit = (@data[attack_type][:min_hit] ||  50).to_f
@@ -24,11 +16,8 @@ module DNU
             logger(:hit_rate_before => hit_rate)
             
             # 命中率決定前
-            play_(:before, :before, :Hitrate)
-            play_(:before, :before, :"#{element_name}Hitrate")
-            attack_type_name.to_s.underscore.split("_").map{|p_or_m| p_or_m.camelize.to_sym }.each do |p_or_m|
-              play_(:before, :before, :"#{p_or_m}Hitrate")
-              play_(:before, :before, :"#{element_name}#{p_or_m}Hitrate")
+            ["",attacks].flatten.each do |timing|
+              play_(:before, :before, :"#{timing.to_s.underscore.camelize}Hitrate")
             end
             
             hit_rate = 自分.next_hitrate!.call(hit_rate)     if 自分.next_hitrate?
@@ -36,12 +25,9 @@ module DNU
             logger(:hit_rate_after => hit_rate)
             
             # 命中率決定後
-            attack_type_name.to_s.underscore.split("_").map{|p_or_m| p_or_m.camelize.to_sym }.each do |p_or_m|
-              play_(:after, :after, :"#{element_name}#{p_or_m}Hitrate")
-              play_(:after, :after, :"#{p_or_m}Hitrate")
+            ["",attacks].flatten.each do |timing|
+              play_(:after, :after, :"#{timing.to_s.underscore.camelize}Hitrate")
             end
-            play_(:after, :after, :"#{element_name}Hitrate")
-            play_(:after,  :after, :Hitrate)
             
             rand(100) < hit_rate
           end

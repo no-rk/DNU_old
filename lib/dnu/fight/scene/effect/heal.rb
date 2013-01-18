@@ -3,38 +3,34 @@ module DNU
   module Fight
     module Scene
       class Heal < BaseEffect
-        include Calculate
-        
-        def when_initialize
-          @resilience = nil
-        end
-        
-        def create_resilience
-          @resilience ||= lambda{ calcu_value(@tree[:change_value]).call.to_i }
-        end
         
         def play_children
           
           status_name = @tree[:status_name].to_s
-          resilience  = (@resilience || create_resilience).call
-          history[:children] = { :just_after => just_after(:resilience, resilience) }
+          calcu_tree  = @tree[:change_value]
           
-          # 回復力決定前
-          play_(:before, :before, :Resilience)
-          play_(:before, :before, :"#{status_name.underscore.camelize}Resilience")
+          # status_nameをcalcu_treeの計算値分だけ変化させる
+          state_change!(status_name, calcu_tree, [status_name]) do |s,c|
+            対象.send(s).change_value(c)
+          end
           
-          resilience = next_change!(:resilience, resilience)
+        end
+        
+      end
+      class NextHealVal < BaseEffect
+        
+        def play_children
           
-          before_change = 対象.send(status_name).val
-          対象.send(status_name).change_value(resilience)
-          after_change  = 対象.send(status_name).val
+          sign = @tree[:minus] ?   -1  :  1
+          ant  = @tree[:ant]   ? 'Ant' : ''
+          coeff_tree  = @tree[:coeff_value]
+          change_tree = @tree[:change_value]
           
-          history[:children] = { :status_name => status_name, :resilience => resilience, :before_change => before_change, :after_change => after_change }
+          next_effect_change!(sign, ant, coeff_tree, change_tree)
           
-          # 回復力決定後
-          play_(:after, :after, :"#{status_name.underscore.camelize}Resilience")
-          play_(:after, :after, :Resilience)
-          
+        end
+        
+        def play_(b_or_a)
         end
         
       end

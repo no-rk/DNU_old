@@ -3,100 +3,92 @@ module DNU
   module Fight
     module Scene
       class Hit < BaseEffect
-        include Calculate
         
-        @@min_damage = 10
-        
-        def when_initialize
-          @damage = nil
+        def attack_element
+          @data.values.first[:element].keys.first.to_s.camelize
         end
         
-        def element_name
-          @data.values.first[:element].keys.first
-        end
-        
-        def attack_type_name
+        def attack_type
           child_name(@data).to_s.camelize
         end
         
-        def damage(tree)
-          attack_type = tree.keys.first
-          if tree[attack_type][:coeff_value]
-            lambda do
-              dmg  = try('dmg_' + attack_type.to_s).call
-              dmg  = (dmg >= @@min_damage) ? dmg : @@min_damage
-              logger(:dmg => dmg)
-              dmg *= calcu_value(tree[attack_type][:coeff_value]).call
-              dmg *= dmg_element.call
-              dmg *= dmg_critical.call if tree[:critical]
-              dmg.to_i
-            end
-          elsif tree[attack_type][:change_value]
-            lambda do
-              dmg  = calcu_value(tree[attack_type][:change_value]).call
-              dmg *= dmg_element.call
-              dmg *= dmg_critical.call if tree[:critical]
-              dmg.to_i
-            end
-          else
-            raise tree.to_s
-          end
+        def attack_types
+          child_name(@data).to_s.underscore.split("_").map{ |p_or_m| p_or_m.camelize }
         end
         
-        def create_damage
-          @damage ||= damage(@data)
+        def attack_element_and_types
+          [attack_element].product(attack_types).map{ |a| a.join }
+        end
+        
+        def attacks
+          [attack_element, attack_types, attack_element_and_types].flatten
         end
         
         def play_children
           
-          damage = (@damage || create_damage).call
-          history[:children] = { :just_after => just_after(:damage, damage) }
+          critical = @tree[:critical]
+          coeff_tree  = @data.values.first[:coeff_value]
+          change_tree = @data.values.first[:change_value]
           
-          # ダメージ決定前
-          play_(:before, :before, :Damage)
-          play_(:before, :before, :"#{element_name}Damage")
-          attack_type_name.to_s.underscore.split("_").map{|p_or_m| p_or_m.camelize.to_sym }.each do |p_or_m|
-            play_(:before, :before, :"#{p_or_m}Damage")
-            play_(:before, :before, :"#{element_name}#{p_or_m}Damage")
+          # 係数ダメージか固定ダメージかで場合わけ
+          if coeff_tree
+            calcu_tree = {
+              :multi_coeff => [
+                coeff_tree,
+                { :condition_damage => attack_type.underscore }
+              ]
+            }
+          elsif change_tree
+            calcu_tree = change_tree
+          else
+            raise @data.to_s
           end
           
-          damage = next_change!(:damage, damage)
-          
-          before_change = 対象.HP.val
-          対象.HP.change_value(-damage)
-          after_change  = 対象.HP.val
-          
-          history[:children] = { :critical => @tree[:critical], :element => element_name, :attack_type => attack_type_name, :before_change => before_change, :after_change => after_change }
-          
-          # ダメージ決定後
-          attack_type_name.to_s.underscore.split("_").map{|p_or_m| p_or_m.camelize.to_sym }.each do |p_or_m|
-            play_(:after, :after, :"#{element_name}#{p_or_m}Damage")
-            play_(:after, :after, :"#{p_or_m}Damage")
+          state_change!(:HP, calcu_tree, attacks) do |s,c|
+            対象.send(s).change_value(-c)
           end
-          play_(:after, :after, :"#{element_name}Damage")
-          play_(:after,  :after, :Damage)
+          
+          history[:children].merge!(:critical => critical, :attack_element => attack_element, :attack_type => attack_type)
           
         end
         
         def play
+          
           self.each do |scene|
-            play_(:before)
-            play_(:before, :before, :"#{element_name}#{scene_name}")
-            attack_type_name.to_s.underscore.split("_").map{|p_or_m| p_or_m.camelize.to_sym }.each do |p_or_m|
-              play_(:before, :before, :"#{p_or_m}#{scene_name}")
-              play_(:before, :before, :"#{element_name}#{p_or_m}#{scene_name}")
+            ["",attacks].flatten.each do |timing|
+              play_(:before, :before, :"#{timing.to_s.underscore.camelize}#{scene_name}")
             end
-            play_(:before, :before, :Critical) if @tree[:critical]
+            ["",attacks].flatten.each do |timing|
+              play_(:before, :before, :"#{timing.to_s.underscore.camelize}Critical")
+            end if @tree[:critical]
             play_children
-            play_(:after, :after, :Critical) if @tree[:critical]
-            attack_type_name.to_s.underscore.split("_").map{|p_or_m| p_or_m.camelize.to_sym }.each do |p_or_m|
-              play_(:after, :after, :"#{element_name}#{p_or_m}#{scene_name}")
-              play_(:after, :after, :"#{p_or_m}#{scene_name}")
+            ["",attacks].flatten.each do |timing|
+              play_(:after, :after, :"#{timing.to_s.underscore.camelize}Critical")
+            end if @tree[:critical]
+            ["",attacks].flatten.each do |timing|
+              play_(:after, :after, :"#{timing.to_s.underscore.camelize}#{scene_name}")
             end
-            play_(:after, :after, :"#{element_name}#{scene_name}")
-            play_(:after)
           end
+          
           @history.extend Html
+          
+        end
+        
+      end
+      class NextHitVal < BaseEffect
+        
+        def play_children
+          
+          sign = @tree[:minus] ?   -1  :  1
+          ant  = @tree[:ant]   ? 'Ant' : ''
+          coeff_tree  = @tree[:coeff_value]
+          change_tree = @tree[:change_value]
+          
+          next_effect_change!(sign, ant, coeff_tree, change_tree)
+          
+        end
+        
+        def play_(b_or_a)
         end
         
       end

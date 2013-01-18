@@ -3,38 +3,34 @@ module DNU
   module Fight
     module Scene
       class Add < BaseEffect
-        include Calculate
-        
-        def when_initialize
-          @depth = nil
-        end
-        
-        def create_depth
-          @depth ||= lambda{ calcu_value(@tree[:change_value]).call.to_i }
-        end
         
         def play_children
           
           disease_name = child_name(@tree[:disease_name])
-          depth        = (@depth || create_depth).call
-          history[:children] = { :just_after => just_after(:depth, depth) }
+          calcu_tree   = @tree[:change_value]
           
-          # 追加量決定前
-          play_(:before, :before, :Depth)
-          play_(:before, :before, :"#{disease_name}Depth")
+          # disease_nameをcalcu_treeの計算値分だけ変化させる
+          state_change!(disease_name, calcu_tree, [disease_name]) do |s,c|
+            対象.send(s).change_value(c)
+          end
           
-          depth = next_change!(:depth, depth)
+        end
+        
+      end
+      class NextAddVal < BaseEffect
+        
+        def play_children
           
-          before_change = 対象.send(disease_name).val
-          対象.send(disease_name).change_value(depth)
-          after_change  = 対象.send(disease_name).val
+          sign = @tree[:minus] ?   -1  :  1
+          ant  = @tree[:ant]   ? 'Ant' : ''
+          coeff_tree  = @tree[:coeff_value]
+          change_tree = @tree[:change_value]
           
-          history[:children] = { :disease_name => disease_name, :before_change => before_change, :after_change => after_change }
+          next_effect_change!(sign, ant, coeff_tree, change_tree)
           
-          # 追加量決定後
-          play_(:after, :after, :"#{disease_name}Depth")
-          play_(:after, :after, :Depth)
-          
+        end
+        
+        def play_(b_or_a)
         end
         
       end
