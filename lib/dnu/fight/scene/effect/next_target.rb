@@ -4,11 +4,13 @@ module DNU
     module Scene
       class NextTarget < BaseEffect
         include Calculate
+        include FindTarget
         
         def play_children
-          target = send(@tree[:target].to_s)
+          target = @tree.to_hash
           
-          対象.next_target = target
+          target = send(target.keys.first, target.values.first).sample
+          対象.next_target = target.respond_to?(:call) ? target.call : target
           
           history[:children] = { :target => target.name }
         end

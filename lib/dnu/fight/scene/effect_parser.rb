@@ -183,56 +183,124 @@ class EffectParser < Parslet::Parser
     str('オーブ')
   }
   
-  # passive
+  # target
   
-  rule(:target_condition) {
+  rule(:target_set_element) {
+    str('敵').as(:target_other_team) |
+    (str('味') >> str('方').maybe).as(:target_my_team) |
+    (str('自') >> str('分').maybe).as(:target_active) |
+    str('対象').as(:target_passive)
+  }
+  
+  rule(:target_dependency_element) {
+    str('竜').as(:Dragon) |
+    str('人形').as(:Puppet) |
+    str('召喚').as(:Summon) |
+    (str('モ') >> str('ンスター').maybe).as(:Monster)
+  }
+  
+  rule(:target_live_or_dead) {
     (
-      str('高') | str('低')
-    ).as(:target_condition)
+      (
+        (
+          target_complement |
+          target_dependency |
+          target_union |
+          target_set_warp
+        ).as(:set) >>
+        (
+          str('生存').as(:live) |
+          str('墓地').as(:dead)
+        )
+      ) |
+      (
+        (
+          str('生存中').as(:live) |
+          str('墓地中').as(:dead)
+        ) >> str('の').maybe >>
+        (
+          target_complement |
+          target_dependency |
+          target_union |
+          target_set_warp
+        ).as(:set)
+      )
+    ).as(:target_live_or_dead)
   }
   
-  rule(:single_scope) {
-    str('自')
-  }
-  
-  rule(:multi_scope) {
+  rule(:target_complement) {
     (
-      str('敵味') |
-      str('味敵') |
-      str('敵') |
-      str('味')
-    ) >> str('墓地').maybe
+      (
+        target_dependency |
+        target_union |
+        target_set_warp
+      ).as(:right) >>
+      (
+        str('を除く') |
+        str('以外') >> str('の').maybe
+      ) >>
+      (
+        target_dependency |
+        target_union |
+        target_set_warp
+      ).as(:left)
+    ).as(:target_complement)
   }
   
-  rule(:single_sub_scope) {
-    str('竜')
+  rule(:target_dependency) {
+    (
+      (
+        target_union |
+        target_set_warp
+      ).as(:master) >>
+      str('の').maybe >> target_dependency_element.as(:kind)
+    ).as(:target_dependency)
   }
   
-  rule(:multi_sub_scope) {
-    str('人形') | str('召喚')
+  rule(:target_union) {
+    (
+      target_set_warp >> (str('と').maybe >> target_set_warp).repeat(1)
+    ).as(:target_union)
+  }
+  
+  rule(:target_set_warp) {
+    bra >> target >> ket |
+    target_set_element
+  }
+  
+  rule(:target_set) {
+    target_live_or_dead |
+    target_complement |
+    target_dependency |
+    target_union |
+    target_set_warp
   }
   
   rule(:target) {
     (
-      str('単') | str('ラ') | str('全') | (target_condition >> (status_name >> str('割合').as(:ratio).maybe | disease_name) >> str('追尾')).as(:target_sequence)
+      target_set.as(:set) >>
+      (
+        (
+          str('から').maybe >> str('単') >> str('体').maybe
+        ).as(:target_find_single) |
+        (
+          str('から').maybe >> str('ラ') >> str('ンダム').maybe
+        ).as(:target_find_random) |
+        (
+          (
+            str('高').as(:max) |
+            str('低').as(:min)
+          ).as(:target_condition) >>
+          (
+            status_name >> str('割合').as(:ratio).maybe |
+            disease_name
+          ) >> str('追尾')
+        ).as(:target_find_state) |
+        (
+          str('の').maybe >> str('全') >> str('体').maybe
+        ).maybe.as(:target_find_all)
+      ).as(:find)
     ).as(:target)
-  }
-  
-  rule(:sub_scope) {
-    (
-      single_sub_scope | (multi_sub_scope >> target.present?)
-    ).as(:sub_scope)
-  }
-  
-  rule(:scope) {
-    (
-      single_scope >> (single_sub_scope.maybe >> target).absent? |
-      multi_scope >> (sub_scope.maybe >> target).present?
-    ).as(:scope)
-  }
-  
-  rule(:passive) {
-    (scope >> sub_scope.maybe >> target.maybe).as(:passive)
   }
   
   # effect_coeff
@@ -522,28 +590,28 @@ class EffectParser < Parslet::Parser
     ).as(:next_add_act)
   }
   
-  rule(:next_scope) {
-    (single_scope | multi_scope).as(:scope).as(:next_scope)
+  rule(:next_target_set) {
+    target_set.as(:next_target_set)
   }
   
-  rule(:next_scopes) {
+  rule(:next_target_sets) {
     str('次の対象範囲') >> bra >> (
       (
-        next_scope >> (separator >> next_scope).repeat(1)
+        next_target_set >> (separator >> next_target_set).repeat(1)
       ).as(:random) |
-      next_scope
+      next_target_set
     ) >> ket
   }
   
   rule(:next_target) {
     (
-      str('次の対象') >> bra >> (str('自分') | str('対象')).as(:target) >> ket
+      str('次の対象') >> bra >> target >> ket
     ).as(:next_target)
   }
   
   rule(:next_attack_target) {
     (
-      str('次の攻撃対象') >> bra >> (str('自分') | str('対象')).as(:target) >> ket
+      str('次の攻撃対象') >> bra >> target >> ket
     ).as(:next_attack_target)
   }
   
@@ -661,7 +729,7 @@ class EffectParser < Parslet::Parser
         next_turn |
         next_act |
         next_add_act |
-        next_scopes |
+        next_target_sets |
         next_target |
         next_attack_target |
         change_next_val |
@@ -710,10 +778,7 @@ class EffectParser < Parslet::Parser
   }
   
   rule(:state_target_group) {
-    (
-      multi_scope.as(:scope) >> (single_sub_scope | multi_sub_scope).as(:sub_scope).maybe |
-      single_scope.as(:scope) >> multi_sub_scope.as(:sub_scope)
-    ).as(:group)
+    target_set.as(:group)
   }
   
   rule(:group_value) {
@@ -874,7 +939,7 @@ class EffectParser < Parslet::Parser
         str('ターン').as(:turn) |
         str('行動').as(:act) |
         str('追加行動').as(:add_act) |
-        str('対象範囲').as(:scope) |
+        str('対象範囲').as(:target_set) |
         str('対象').as(:target) |
         str('攻撃対象').as(:attack_target) |
         str('攻撃属性').as(:attack_element) |
@@ -1064,7 +1129,7 @@ class EffectParser < Parslet::Parser
   
   rule(:root_process) {
     (
-      passive >> (separator | bra.present?) >> process.as(:do)
+      target >> (separator | bra.present?) >> process.as(:do)
     ).as(:root)
   }
   
@@ -1089,10 +1154,10 @@ class EffectParser < Parslet::Parser
   rule(:root_processes) {
     (
       (
-        (effect_condition.maybe >> passive).present? >> process_wrap >> newline.maybe
+        (effect_condition.maybe >> target).present? >> process_wrap >> newline.maybe
       ).repeat(2)
     ).as(:sequence) |
-    (effect_condition.maybe >> passive).present? >> process_wrap >> newline.maybe
+    (effect_condition.maybe >> target).present? >> process_wrap >> newline.maybe
   }
   
   # sup_effects

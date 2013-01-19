@@ -30,7 +30,10 @@ module DNU
               :sequence => [
                 {
                   :root => {
-                    :passive => { :scope => "自" },
+                    :target => {
+                      :set  => { :target_active   => nil },
+                      :find => { :target_find_all => nil }
+                    },
                     :do => {
                       :effect => {
                         :cost => { :change_value => { :fixnum => cost } }

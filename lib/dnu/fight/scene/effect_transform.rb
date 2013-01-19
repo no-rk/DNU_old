@@ -13,7 +13,7 @@ class EffectTransform < Parslet::Transform
     }
     filter[position.to_sym]
   }
-
+  
   rule(:timing_transform => subtree(:timing)) {
     def return_timing(k,v)
       if k==:element

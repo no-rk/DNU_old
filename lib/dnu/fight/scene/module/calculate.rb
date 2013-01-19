@@ -4,6 +4,7 @@ module DNU
     module Scene
       module Calculate
         include Damage
+        include FindTarget
         
         def condition_damage(attack_type)
           lambda do
@@ -20,10 +21,8 @@ module DNU
           lambda{ @tree[:lv] || @stack.last.try(:LV).to_f }
         end
         
-        def scope_group(tree)
-          scope = @character.try(tree[:scope].to_s, @active.try(:call))
-          scope = @character.try(tree[:sub_scope].to_s, scope) unless tree[:sub_scope].nil?
-          scope
+        def state_target_group(tree)
+          send(tree.keys.first, tree.values.first).map{ |c| c.respond_to?(:call) ? c.call : c }.extend DNU::Fight::State::Target
         end
         
         # 現在の戦闘値
@@ -34,7 +33,7 @@ module DNU
           if tree[:group]
             type = tree[:group_value].keys.first
             lambda do
-              scope_group(tree[:group]).send(type) do |c|
+              state_target_group(tree[:group]).send(type) do |c|
                 r = c.send(tree[:status_name]).send(status_or_equip)
                 r = r.send(ratio)*percent
                 r
@@ -56,7 +55,7 @@ module DNU
           if tree[:group]
             type = tree[:group_value].keys.first
             lambda do
-              scope_group(tree[:group]).send(type) do |c|
+              state_target_group(tree[:group]).send(type) do |c|
                 r = c.send(tree[:status_name]).send(status_or_equip)
                 r = r.history[-2].try(:*, percent).try("/", ((tree[:ratio] and r.max!=0) ? r.max : 1).to_f)
                 r
@@ -75,7 +74,7 @@ module DNU
           if tree[:group]
             type = tree[:group_value].keys.first
             lambda do
-              scope_group(tree[:group]).send(type) do |c|
+              state_target_group(tree[:group]).send(type) do |c|
                 r = c.try(child_name(tree[:disease_name]))
                 r
               end
@@ -92,7 +91,7 @@ module DNU
           if tree[:group]
             type = tree[:group_value].keys.first
             lambda do
-              scope_group(tree[:group]).send(type) do |c|
+              state_target_group(tree[:group]).send(type) do |c|
                 r = c.try(child_name(tree[:disease_name]))
                 r
               end

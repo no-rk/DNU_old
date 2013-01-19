@@ -11,7 +11,7 @@ module DNU
         
         # SPDなどに応じて順番に俺のターン
         def before_each_scene
-          active_now = @character.live.turn_end_not.高(:status_name => :SPD).call
+          active_now = @character.live.turn_end_not.max{ |a,b| a.SPD <=> b.SPD }
           @active = lambda{ active_now }
         end
         

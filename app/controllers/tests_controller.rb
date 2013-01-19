@@ -154,7 +154,7 @@ class TestsController < ApplicationController
   
   def history_html_effects(tree)
     tree = {
-      :name    => :"未定義",
+      :name    => :"名称未定義",
       :effects => [ { :do => tree } ]
     }
     e = DNU::Fight::State::BaseEffects.new(tree).first

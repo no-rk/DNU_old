@@ -78,12 +78,12 @@ module DNU
           if tree[:left]
             lefts = [try(tree[:left].keys.first, tree[:left].values.first)]
           else
-            lefts = scope_group(tree[:lefts][:group]).map{ |c| try(tree[:lefts][:do].keys.first, tree[:lefts][:do].values.first.merge(:group_target => c)) }
+            lefts = state_target_group(tree[:lefts][:group]).map{ |c| try(tree[:lefts][:do].keys.first, tree[:lefts][:do].values.first.merge(:group_target => c)) }
           end
           if tree[:right]
             rights = [try(tree[:right].keys.first, tree[:right].values.first)]
           else
-            rights = scope_group(tree[:rights][:group]).map{ |c| try(tree[:rights][:do].keys.first, tree[:rights][:do].values.first.merge(:group_target => c)) }
+            rights = state_target_group(tree[:rights][:group]).map{ |c| try(tree[:rights][:do].keys.first, tree[:rights][:do].values.first.merge(:group_target => c)) }
           end
           lambda do
             begin
@@ -98,12 +98,12 @@ module DNU
           if tree[:left]
             lefts = [try(tree[:left].keys.first, tree[:left].values.first)]
           else
-            lefts = scope_group(tree[:lefts][:group]).map{ |c| try(tree[:lefts][:do].keys.first, tree[:lefts][:do].values.first.merge(:group_target => c)) }
+            lefts = state_target_group(tree[:lefts][:group]).map{ |c| try(tree[:lefts][:do].keys.first, tree[:lefts][:do].values.first.merge(:group_target => c)) }
           end
           if tree[:right]
             rights = [try(tree[:right].keys.first, tree[:right].values.first)]
           else
-            rights = scope_group(tree[:rights][:group]).map{ |c| try(tree[:rights][:do].keys.first, tree[:rights][:do].values.first.merge(:group_target => c)) }
+            rights = state_target_group(tree[:rights][:group]).map{ |c| try(tree[:rights][:do].keys.first, tree[:rights][:do].values.first.merge(:group_target => c)) }
           end
           lambda do
             lefts.product(rights).any?{ |l,r| l.call == r.call }
@@ -114,12 +114,12 @@ module DNU
           if tree[:left]
             lefts = [try(tree[:left].keys.first, tree[:left].values.first)]
           else
-            lefts = scope_group(tree[:lefts][:group]).map{ |c| try(tree[:lefts][:do].keys.first, tree[:lefts][:do].values.first.merge(:group_target => c)) }
+            lefts = state_target_group(tree[:lefts][:group]).map{ |c| try(tree[:lefts][:do].keys.first, tree[:lefts][:do].values.first.merge(:group_target => c)) }
           end
           if tree[:right]
             rights = [try(tree[:right].keys.first, tree[:right].values.first)]
           else
-            rights = scope_group(tree[:rights][:group]).map{ |c| try(tree[:rights][:do].keys.first, tree[:rights][:do].values.first.merge(:group_target => c)) }
+            rights = state_target_group(tree[:rights][:group]).map{ |c| try(tree[:rights][:do].keys.first, tree[:rights][:do].values.first.merge(:group_target => c)) }
           end
           lambda do
             begin

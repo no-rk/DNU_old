@@ -3,45 +3,36 @@ module DNU
   module Fight
     module Scene
       class Root < BaseScene
-        
-        def when_initialize
-          @root = []
-          @root_passive = nil
-        end
-        
-        def create_passive
-          play_(:before, :children) unless @tree[:passive][:scope].to_s=="自"
-          
-          next_scope = @active.try(:call).try(:next_scope)
-          scope = @character.send(next_scope || @tree[:passive][:scope].to_s, @active.try(:call))
-          scope = @character.send(@tree[:passive][:sub_scope].to_s, scope) unless @tree[:passive][:sub_scope].nil?
-          return scope if scope.respond_to?(:call)
-          target1 = @stack.last.respond_to?(:target) ? @stack.last.target : nil
-          target1 = (target1.nil? ? nil : scope.try(target1.keys.first, target1.values.first))
-          target2 = [@tree[:passive][:target] || "ラ"].flatten
-          @root_passive= scope.try(target2[0].to_s, target2[1] || @passive.try(:call), @active.try(:call), target1)
-          
-          play_(:after, :children) unless @tree[:passive][:scope].to_s=="自"
-          @root_passive
-        end
-        
-        def has_next_scene?
-          ([@root_passive ||= create_passive].flatten - @root).present?
-        end
+        include FindTarget
         
         def before_all_scene
           @root = []
         end
         
+        def root_passive
+          if @root_passive.nil?
+            play_(:before, :children)
+            
+            @root_passive = target(@tree[:target])
+            
+            play_(:after, :children)
+          end
+          @root_passive
+        end
+        
+        def has_next_scene?
+          (root_passive - @root).present?
+        end
+        
         def before_each_scene
-          @root << ([@root_passive].flatten - @root).sample
+          @root << (root_passive - @root).sample
           passive_now = @root.last
           passive_now = passive_now.respond_to?(:call) ? passive_now.call : passive_now
           @passive = lambda{ passive_now }
         end
         
         def create_children
-          @children ||= create_from_hash(@passive.call.nil? ? { :empty => @tree[:passive] } : @tree[:do])
+          @children ||= create_from_hash(@passive.call.nil? ? { :empty => @tree[:target] } : @tree[:do])
         end
         
         def history
