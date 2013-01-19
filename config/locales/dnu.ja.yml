@@ -289,10 +289,10 @@ ja:
         Df: 防御力
         MDF: 魔法防御力
         Mdf: 魔法防御力
-        HIT: 命中力
-        Hit: 命中力
-        MHIT: 魔法命中力
-        Mhit: 魔法命中力
+        HIT: 命中
+        Hit: 命中
+        MHIT: 魔法命中
+        Mhit: 魔法命中
         EVA: 回避力
         Eva: 回避力
         MEVA: 魔法回避力

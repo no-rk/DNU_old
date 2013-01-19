@@ -392,6 +392,13 @@ module DNU
           nested_div(tree[:after])
         end
         
+        def NextStatus(tree)
+          h = tree[:children]
+          nested_div(tree[:before])   +
+           %Q|\n<span class="passive">#{h[:state_target]}</span>の次の#{I18n.t(h[:status_name], :scope => "DNU.Fight.Scene")}を#{h[:change_to]}にした！| +
+          nested_div(tree[:after])
+        end
+        
         def NextTurn(tree)
           nested_div(tree[:before])   +
            %Q|\n<span class="passive">#{tree[:passive]}</span>の次のターンが変化した！| +

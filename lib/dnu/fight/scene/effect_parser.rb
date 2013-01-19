@@ -498,6 +498,12 @@ class EffectParser < Parslet::Parser
     ).as(:revive)
   }
   
+  rule(:next_status) {
+    (
+      str('次の') >> state_target >> status_name >> str('を') >> effect_coeff.as(:change_to) >> str('にする')
+    ).as(:next_status)
+  }
+  
   rule(:next_turn) {
     (
       str('次のターン変化') >> bra >> newline.maybe >> root_processes >> ket
@@ -554,7 +560,7 @@ class EffectParser < Parslet::Parser
   
   rule(:nexts_coeff) {
     (
-      calculable.as(:coeff_value) >> percent >> (separator >> effect_coeff.as(:change_value)).maybe |
+      effect_coeff.as(:coeff_value) >> percent >> (separator >> effect_coeff.as(:change_value)).maybe |
       effect_coeff.as(:change_value)
     )
   }
@@ -635,7 +641,7 @@ class EffectParser < Parslet::Parser
   
   rule(:add_next_attack_element) {
     (
-      str('次の') >> calculable.as(:repeat_value) >> str('回分の攻撃が') >> element_name.as(:element) >> str('属性化') >> (bra >> str('重複不可').as(:unique) >> ket).maybe
+      str('次の') >> effect_coeff.as(:repeat_value) >> str('回分の攻撃が') >> element_name.as(:element) >> str('属性化') >> (bra >> str('重複不可').as(:unique) >> ket).maybe
     ).as(:add_next_attack_element)
   }
   
@@ -651,6 +657,7 @@ class EffectParser < Parslet::Parser
         heal |
         change |
         cost |
+        next_status |
         next_turn |
         next_act |
         next_add_act |

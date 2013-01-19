@@ -12,6 +12,26 @@ module DNU
           self
         end
         
+        def next!
+          @next.pop
+        end
+        
+        def status_next!
+          @next.pop
+        end
+        
+        def status_next=(val)
+          @next = [val]
+        end
+        
+        def equip_next!
+          @next.pop
+        end
+        
+        def equip_next=(val)
+          @next = [val]
+        end
+        
         def min_val(n)
           n/5
         end
@@ -28,6 +48,7 @@ module DNU
           validate_value
           @ini = val
           @history = [val]
+          @next = []
           super val
         end
         
