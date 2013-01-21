@@ -32,6 +32,8 @@ DNU::Application.routes.draw do
   get "helps(/:name)"     => 'help#index', :as => 'helps'
   get "help/:model(/:id)" => 'help#show' , :as => 'help'
 
+  get  "tests/parse/:type(/:text)" => 'tests#parse', :as => 'tests_parse'
+  post "tests/parse/:type(/:text)" => 'tests#parse', :as => 'tests_parse'
   get  "tests/battle"
   post "tests/battle"
   get  "tests/character"

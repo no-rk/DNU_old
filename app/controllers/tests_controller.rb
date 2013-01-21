@@ -3,6 +3,22 @@ require 'pp'
 class TestsController < ApplicationController
   layout "no_side"
   
+  def parse
+    @words = [I18n.t(params[:type].to_s.camelize, :scope => "DNU.Fight.Scene")]
+    @type  = :parse
+    @text  = params[:text]
+    if @text.present?
+      begin
+        tree = parser.send(params[:type]).parse(@text)
+        tree = transform.apply(tree)
+        @result = "<pre>#{tree.pretty_inspect}</pre>"
+      rescue => msg
+        @error = msg
+      end
+    end
+    render 'test'
+  end
+  
   def battle
     @words = ["PT編成定義"]
     @text  = params[:text]
