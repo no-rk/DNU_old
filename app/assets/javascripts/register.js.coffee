@@ -2,6 +2,15 @@
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://jashkenas.github.com/coffee-script/
 $ ->
+  
+  $('body').delegate 'textarea.text', 'keyup', (event) ->
+    val = $(this).val()
+    val = parser.parse(val,"text")
+    $(this).prev('.result').html(val)
+  $('body').delegate 'textarea.message', 'keyup', (event) ->
+    val = $(this).val()
+    val = parser.parse(val,"messages")
+    $(this).prev('.result').html(val)
   #メニュー書き換え
   $.cleditor.defaultOptions.controls =
     "bold italic underline strikethrough size color removeformat | ruby icon | " +

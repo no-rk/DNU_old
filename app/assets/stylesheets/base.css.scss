@@ -114,3 +114,161 @@ div.Result{
 .popover{
   width: 500px;
 }
+
+div.result {
+  min-width:650px;
+}
+div.icon_test {
+  background: #666666;
+  width:  60px;
+  height: 60px;
+}
+div.imag_test {
+  background: #666666;
+  width:  100%;
+  height: 400px;
+}
+div.serif {
+  overflow: hidden;
+  div.icon {
+    max-width:120px;
+  }
+  div.balloon {
+    max-width:500px;
+    position: relative;
+    background: #ffffff;
+    border: 4px solid #000000;
+    margin: 0px 20px 20px 20px;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.6);
+  }
+  &.left {
+    div.icon {
+      float:left;
+    }
+    div.balloon {
+      float:left;
+      &:before, &:after {
+        right: 100%;
+        border: solid transparent;
+        content: " ";
+        height: 0;
+        width: 0;
+        position: absolute;
+        pointer-events: none;
+      }
+      &:before {
+        border-color: rgba(0, 0, 0, 0);
+        border-right-color: #000000;
+        border-width: 16px;
+        top: 20px;
+        margin-top: -16px;
+      }
+      &:after {
+        border-color: rgba(255, 255, 255, 0);
+        border-right-color: #ffffff;
+        border-width: 10px;
+        top: 20px;
+        margin-top: -10px;
+      }
+    }
+  }
+  &.right {
+    div.balloon {
+      float:right;
+      &:before, &:after {
+        left: 100%;
+        border: solid transparent;
+        content: " ";
+        height: 0;
+        width: 0;
+        position: absolute;
+        pointer-events: none;
+      }
+      &:before {
+        border-color: rgba(255, 255, 255, 0);
+        border-left-color: #ffffff;
+        border-width: 10px;
+        top: 20px;
+        margin-top: -10px;
+      }
+      &:after {
+        border-color: rgba(0, 0, 0, 0);
+        border-left-color: #000000;
+        border-width: 16px;
+        top: 20px;
+        margin-top: -16px;
+      }
+    }
+    div.icon {
+      float:right;
+    }
+  }
+}
+div{
+  &.multicols_2 {
+    width:100%;
+    overflow: hidden;
+    div:nth-child(1) {
+      width:50%;
+      float:left;
+    }
+    div:nth-child(2) {
+      width:50%;
+      float:right;
+    }
+  }
+  &.multicols_3 {
+    width:100%;
+    overflow: hidden;
+    div:nth-child(1) {
+      width:33%;
+      float:left;
+    }
+    div:nth-child(2) {
+      width:33%;
+      float:left;
+    }
+    div:nth-child(3) {
+      width:33%;
+      float:right;
+    }
+  }
+  &.align_left {
+    text-align: left;
+  }
+  &.align_center {
+    text-align: center;
+  }
+  &.align_right {
+    text-align: right;
+  }
+  &.align_justify {
+    text-align: justify;
+    text-justify: distribute-all-lines;
+  }
+}
+.ruby {
+  display:inline-table !important;
+  text-align:center !important;
+  white-space:nowrap !important;
+  text-indent:0 !important;
+  margin:0 !important;
+  vertical-align:text-bottom !important;
+  line-height:1 !important;
+}
+.ruby > .rb {
+  display:table-row-group !important;
+  line-height:1.0 !important;
+}
+.ruby > .rt {
+  display:table-header-group !important;
+  font-size:71% !important;
+  line-height:1.0 !important;
+  letter-spacing:0 !important;
+}
+ 
+.ruby > .rp {
+  display: none !important;
+}
