@@ -1,12 +1,12 @@
 class Register::Profile < ActiveRecord::Base
   belongs_to :character
 
-  validates :name        , :length => { :maximum => Settings.profile.name.max         }, :presence => true
-  validates :nickname    , :length => { :maximum => Settings.profile.nickname.max     }, :presence => true
-  validates :race        , :length => { :maximum => Settings.profile.race.max         }
-  validates :gender      , :length => { :maximum => Settings.profile.gender.max       }
-  validates :age         , :length => { :maximum => Settings.profile.age.max          }
-  validates :introduction, :length => { :maximum => Settings.profile.introduction.max, :tokenizer => DNU::Sanitize.counter }
+  validates :name        , :length => { :maximum => Settings.profile.name.maximum         }, :presence => true
+  validates :nickname    , :length => { :maximum => Settings.profile.nickname.maximum     }, :presence => true
+  validates :race        , :length => { :maximum => Settings.profile.race.maximum         }
+  validates :gender      , :length => { :maximum => Settings.profile.gender.maximum       }
+  validates :age         , :length => { :maximum => Settings.profile.age.maximum          }
+  validates :introduction, :length => { :maximum => Settings.profile.introduction.maximum, :tokenizer => DNU::Sanitize.counter }
 
   attr_accessible :name, :nickname, :race, :gender, :age, :introduction
 

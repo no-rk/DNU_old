@@ -1,12 +1,6 @@
 require File.expand_path('../boot', __FILE__)
 
-# Pick the frameworks you want:
-require "active_record/railtie"
-require "action_controller/railtie"
-require "action_mailer/railtie"
-require "active_resource/railtie"
-require "sprockets/railtie"
-# require "rails/test_unit/railtie"
+require 'rails/all'
 
 if defined?(Bundler)
   # If you precompile assets before deploying to production, use this line
@@ -64,14 +58,5 @@ module DNU
 
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
-
-    # Rails' default error field may break layout. The followings treats that.
-    ActionView::Base.field_error_proc = Proc.new do |html_tag, instance|
-      if html_tag.sub!(/class="/, 'class="field_with_errors ').nil?
-        html_tag.sub! /(\/?>)/, ' class="field_with_errors"\1'
-      end
-      html_tag.html_safe
-    end
-
   end
 end

@@ -1,23 +1,22 @@
 profile:
   name:
-    max: 20
+    maximum: 20
   nickname:
-    max: 10
+    maximum: 10
   race:
-    max: 20
+    maximum: 20
   gender:
-    max: 20
+    maximum: 20
   age:
-    max: 20
+    maximum: 20
   introduction:
-    max: 800
+    maximum: 800
 
 init_status:
-  count:
-    each: 5
+  counter:
+    each_value: 5
     total: 15
 
 register:
   history:
     per: 3
-
