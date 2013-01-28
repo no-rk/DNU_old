@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130114114052) do
+ActiveRecord::Schema.define(:version => 20130128085536) do
 
   create_table "conversations", :force => true do |t|
     t.string   "subject",    :default => ""
@@ -90,6 +90,18 @@ ActiveRecord::Schema.define(:version => 20130114114052) do
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
+
+  create_table "game_data_learning_conditions", :force => true do |t|
+    t.integer  "learnable_id"
+    t.string   "learnable_type"
+    t.integer  "condition_group"
+    t.string   "name"
+    t.integer  "lv"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
+  end
+
+  add_index "game_data_learning_conditions", ["learnable_id"], :name => "index_game_data_learning_conditions_on_learnable_id"
 
   create_table "game_data_products", :force => true do |t|
     t.string   "name"

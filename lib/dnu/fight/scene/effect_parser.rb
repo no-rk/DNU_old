@@ -1283,8 +1283,7 @@ class EffectParser < Parslet::Parser
   # learning_conditions
   
   rule(:learning_condition) {
-    (job_name | art_name).as(:name) >> level >> natural_number.as(:lv) |
-    bra >> learning_condition_wrap >> ket
+    (job_name | art_name).as(:name) >> level >> natural_number.as(:lv)
   }
   
   rule(:learning_condition_wrap) {
