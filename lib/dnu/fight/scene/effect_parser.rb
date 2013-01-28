@@ -183,6 +183,31 @@ class EffectParser < Parslet::Parser
     str('オーブ')
   }
   
+  rule(:art_name) {
+    equip_name |
+    str('火魂') |
+    str('水魂') |
+    str('地魂') |
+    str('風魂') |
+    str('光魂') |
+    str('闇魂')
+  }
+  
+  rule(:job_name) {
+    str('竜騎士') |
+    str('魔剣士') |
+    str('芸術家') |
+    str('ウォリアー') |
+    str('サムライ') |
+    str('レンジャー') |
+    str('ガンナー') |
+    str('モンク') |
+    str('祈祷師') |
+    str('魔術師') |
+    str('人形師') |
+    str('呪術師')
+  }
+  
   # target
   
   rule(:target_set_element) {
@@ -1255,6 +1280,41 @@ class EffectParser < Parslet::Parser
     sup_effect.repeat(1)
   }
   
+  # learning_conditions
+  
+  rule(:learning_condition) {
+    (job_name | art_name).as(:name) >> level >> natural_number.as(:lv) |
+    bra >> learning_condition_wrap >> ket
+  }
+  
+  rule(:learning_condition_wrap) {
+    learning_or |
+    learning_and |
+    learning_condition
+  }
+  
+  rule(:learning_or) {
+    (
+      (learning_and | learning_condition) >>
+      (
+        (op_or | separator) >>
+        (learning_and | learning_condition)
+      ).repeat(1)
+    ).as(:or)
+  }
+  
+  rule(:learning_and) {
+    (
+      learning_condition.repeat(2)
+    ).as(:and)
+  }
+  
+  rule(:learning_conditions) {
+    (
+      learning_condition_wrap >> newline.maybe
+    ).as(:learning_conditions)
+  }
+  
   # sup_definition
   
   rule(:sup_definition) {
@@ -1296,6 +1356,7 @@ class EffectParser < Parslet::Parser
   
   rule(:skill_definition) {
     bra >> str('技') >> ket >> ((skill_options | newline).absent? >> any).repeat(1).as(:name) >> skill_options >>
+    learning_conditions.maybe >>
     (partition >> sup_definition.as(:sup).repeat(1).as(:definitions) >> partition).maybe >>
     root_processes.as(:do).repeat(1).as(:effects)
   }
@@ -1321,6 +1382,7 @@ class EffectParser < Parslet::Parser
   
   rule(:ability_definition) {
     bra >> str('アビリティ') >> ket >> (newline.absent? >> any).repeat(1).as(:name) >> newline >>
+    learning_conditions.maybe >>
     partition >> (partition.absent? >> any).repeat(1).as(:caption) >> partition >>
     sup_effects.as(:effects) >>
     (
