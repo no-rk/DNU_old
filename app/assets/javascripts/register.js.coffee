@@ -12,119 +12,119 @@ $ ->
     val = parser.parse(val,"messages")
     $(this).prev('.result').html(val)
   #メニュー書き換え
-  $.cleditor.defaultOptions.controls =
-    "bold italic underline strikethrough size color removeformat | ruby icon | " +
-    "undo redo | cut copy paste pastetext | source"
-  $.cleditor.buttons.bold.title          = "太字"
-  $.cleditor.buttons.italic.title        = "斜体"
-  $.cleditor.buttons.underline.title     = "下線"
-  $.cleditor.buttons.strikethrough.title = "打消"
-  $.cleditor.buttons.removeformat.title  = "タグ消去"
-  $.cleditor.buttons.size.title          = "フォントサイズ"
-  $.cleditor.buttons.color.title         = "フォントカラー"
-  $.cleditor.buttons.undo.title          = "元に戻す"
-  $.cleditor.buttons.redo.title          = "やり直し"
-  #iframeのBodyStyle
-  $.cleditor.defaultOptions.docCSSFile = $("link[type='text/css']").attr("href")
-  $.cleditor.defaultOptions.bodyStyle = "cursor:text;background-color:#FFF;"
+  #$.cleditor.defaultOptions.controls =
+  #  "bold italic underline strikethrough size color removeformat | ruby icon | " +
+  #  "undo redo | cut copy paste pastetext | source"
+  #$.cleditor.buttons.bold.title          = "太字"
+  #$.cleditor.buttons.italic.title        = "斜体"
+  #$.cleditor.buttons.underline.title     = "下線"
+  #$.cleditor.buttons.strikethrough.title = "打消"
+  #$.cleditor.buttons.removeformat.title  = "タグ消去"
+  #$.cleditor.buttons.size.title          = "フォントサイズ"
+  #$.cleditor.buttons.color.title         = "フォントカラー"
+  #$.cleditor.buttons.undo.title          = "元に戻す"
+  #$.cleditor.buttons.redo.title          = "やり直し"
+  ##iframeのBodyStyle
+  #$.cleditor.defaultOptions.docCSSFile = $("link[type='text/css']").attr("href")
+  #$.cleditor.defaultOptions.bodyStyle = "cursor:text;background-color:#FFF;"
 
   #htmlを特殊タグに書き換える
-  $.cleditor.defaultOptions.updateTextArea = (html) ->
-    if html
-      console.log("html_to")
-      console.log(html)
-      $.ajaxSetup({async: false})
-      $.post DNU.AJAX_HTML_TO_URL,{
-        "html": html
-      }, (data) ->
-        html = data.code
-      ,"json"
-      $.ajaxSetup({async: true})
-      console.log(html)
-    return html
+  #$.cleditor.defaultOptions.updateTextArea = (html) ->
+  #  if html
+  #    console.log("html_to")
+  #    console.log(html)
+  #    $.ajaxSetup({async: false})
+  #    $.post DNU.AJAX_HTML_TO_URL,{
+  #      "html": html
+  #    }, (data) ->
+  #      html = data.code
+  #    ,"json"
+  #    $.ajaxSetup({async: true})
+  #    console.log(html)
+  #  return html
 
   #特殊タグをhtmlに書き換える
-  $.cleditor.defaultOptions.updateFrame = (code) ->
-    if code
-      console.log("to_html")
-      console.log(code)
-      $.ajaxSetup({async: false})
-      $.post DNU.AJAX_TO_HTML_URL,{
-        "code": code
-      }, (data) ->
-        code = data.html
-      ,"json"
-      $.ajaxSetup({async: true})
-      console.log(code)
-    return code
+  #$.cleditor.defaultOptions.updateFrame = (code) ->
+  #  if code
+  #    console.log("to_html")
+  #    console.log(code)
+  #    $.ajaxSetup({async: false})
+  #    $.post DNU.AJAX_TO_HTML_URL,{
+  #      "code": code
+  #    }, (data) ->
+  #      code = data.html
+  #    ,"json"
+  #    $.ajaxSetup({async: true})
+  #    console.log(code)
+  #  return code
 
   #ルビボタン動作定義
-  rubyButtonClick = (e, data) ->
-    editor = data.editor
-    buttonDiv = e.target
-    if editor.selectedText(editor) == ""
-      editor.showMessage("ルビを振りたい文字列を選択してから押してください。", buttonDiv)
-      return false
-    $(data.popup).children(":button").unbind("click").bind "click", (e) ->
-      editor = data.editor
-      $text = $(data.popup).find(":text")
-      ruby = $text[0].value
-      if ruby
-        html = '<ruby><rb>' + editor.selectedText(editor) + '</rb><rt>' + ruby + '</rt></ruby>'
-      if (html)
-        editor.execCommand(data.command, html, null, data.button)
-      $text.val("")
-      editor.hidePopups()
-      editor.focus()
+  #rubyButtonClick = (e, data) ->
+  #  editor = data.editor
+  #  buttonDiv = e.target
+  #  if editor.selectedText(editor) == ""
+  #    editor.showMessage("ルビを振りたい文字列を選択してから押してください。", buttonDiv)
+  #    return false
+  #  $(data.popup).children(":button").unbind("click").bind "click", (e) ->
+  #    editor = data.editor
+  #    $text = $(data.popup).find(":text")
+  #    ruby = $text[0].value
+  #    if ruby
+  #      html = '<ruby><rb>' + editor.selectedText(editor) + '</rb><rt>' + ruby + '</rt></ruby>'
+  #    if (html)
+  #      editor.execCommand(data.command, html, null, data.button)
+  #    $text.val("")
+  #    editor.hidePopups()
+  #    editor.focus()
   #ルビボタン内容定義
-  $.cleditor.buttons.ruby = {
-    stripIndex: 5
-    name: "ruby"
-    title: "ルビ"
-    command: "inserthtml"
-    popupName: "ruby"
-    popupClass: "cleditorPrompt"
-    popupContent: '<input type="text"><input type="button" value="Submit"><br>表示はブラウザに依存するので使うときは注意。'
-    buttonClick: rubyButtonClick
-  }
+  #$.cleditor.buttons.ruby = {
+  #  stripIndex: 5
+  #  name: "ruby"
+  #  title: "ルビ"
+  #  command: "inserthtml"
+  #  popupName: "ruby"
+  #  popupClass: "cleditorPrompt"
+  #  popupContent: '<input type="text"><input type="button" value="Submit"><br>表示はブラウザに依存するので使うときは注意。'
+  #  buttonClick: rubyButtonClick
+  #}
 
   #アイコンボタン動作定義
-  iconButtonClick = (e, data) ->
-    editor = data.editor
-    buttonDiv = e.target
-    unless DNU.ICONS
-      editor.showMessage("アイコンがありません。", buttonDiv)
-      return false
+  #iconButtonClick = (e, data) ->
+  #  editor = data.editor
+  #  buttonDiv = e.target
+  #  unless DNU.ICONS
+  #    editor.showMessage("アイコンがありません。", buttonDiv)
+  #    return false
   #アイコンボタン内容定義
-  $content = $('<div>')
-  if DNU.ICONS
-    count = 0
-    $.each DNU.ICONS, (idx, icon) ->
-      $('<div>').data("icon-no": idx).css({
-        width:  DNU.ICON_WIDTH
-        height: DNU.ICON_HEIGHT
-        backgroundImage: 'url(' + icon + ')'
-        cursor: "pointer"
-      }).css("float", "left").appendTo($content)
-      console.log(idx+":"+icon)
-      count++
-    DNU.ICON_COUNT = count if DNU.ICON_COUNT > count
-  $.cleditor.buttons.icon = {
-    stripIndex: 23
-    name: "icon"
-    title: "アイコン"
-    command: "inserthtml"
-    popupName: "icon"
-    popupContent: $content.css("width": DNU.ICON_WIDTH*DNU.ICON_COUNT)
-    buttonClick: iconButtonClick
-    popupClick: (e,data) ->
-      icon_no = $(e.target).data("icon-no")
-      data.value = '<img no="' + icon_no + '" src="' + DNU.ICONS[icon_no] + '" class="icon">'
-  }
+  #$content = $('<div>')
+  #if DNU.ICONS
+  #  count = 0
+  #  $.each DNU.ICONS, (idx, icon) ->
+  #    $('<div>').data("icon-no": idx).css({
+  #      width:  DNU.ICON_WIDTH
+  #      height: DNU.ICON_HEIGHT
+  #      backgroundImage: 'url(' + icon + ')'
+  #      cursor: "pointer"
+  #    }).css("float", "left").appendTo($content)
+  #    console.log(idx+":"+icon)
+  #    count++
+  #  DNU.ICON_COUNT = count if DNU.ICON_COUNT > count
+  #$.cleditor.buttons.icon = {
+  #  stripIndex: 23
+  #  name: "icon"
+  #  title: "アイコン"
+  #  command: "inserthtml"
+  #  popupName: "icon"
+  #  popupContent: $content.css("width": DNU.ICON_WIDTH*DNU.ICON_COUNT)
+  #  buttonClick: iconButtonClick
+  #  popupClick: (e,data) ->
+  #    icon_no = $(e.target).data("icon-no")
+  #    data.value = '<img no="' + icon_no + '" src="' + DNU.ICONS[icon_no] + '" class="icon">'
+  #}
 
   #初期化
   $(':text[data-maxlength]').charCount()
-  $('textarea[data-maxlength]').cleditor()
+  #$('textarea[data-maxlength]').cleditor()
   $('textarea[data-maxlength]').charCount({text: true})
   #セレクトでサブミット
   $('body.register').delegate 'form.select_submit select', 'change.rails', (event) ->

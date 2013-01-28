@@ -1309,13 +1309,23 @@ class EffectParser < Parslet::Parser
   
   # ability_definition
   
+  rule(:lv_effects) {
+    level >> natural_number.as(:lv) >> separator >> (newline.absent? >> any).repeat(1).as(:caption) >> newline >>
+    sup_effects.as(:effects)
+  }
+  
+  rule(:pull_down_effects) {
+    str('プルダウン') >> level >> natural_number.as(:lv) >> separator >> (newline.absent? >> any).repeat(1).as(:pull_down) >> newline >>
+    sup_effects.as(:effects)
+  }
+  
   rule(:ability_definition) {
     bra >> str('アビリティ') >> ket >> (newline.absent? >> any).repeat(1).as(:name) >> newline >>
     partition >> (partition.absent? >> any).repeat(1).as(:caption) >> partition >>
     sup_effects.as(:effects) >>
     (
-      level >> natural_number.as(:lv) >> separator >> (newline.absent? >> any).repeat(1).as(:caption) >> newline >>
-      sup_effects.as(:effects)
+      lv_effects |
+      pull_down_effects
     ).repeat(0).as(:definitions)
   }
   

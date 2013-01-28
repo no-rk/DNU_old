@@ -35,7 +35,9 @@ DNU::Application.configure do
   # Expands the lines which load the assets
   config.assets.debug = true
 
-  #アプリケーションを設置するurlを設定する。
+  # アプリケーションを設置するurlを設定する。
   config.action_mailer.default_url_options = { :host => 'dnu.dip.jp:3000' }
   Rails.application.routes.default_url_options[:host] = 'dnu.dip.jp:3000'
+  
+  RequireReloader.watch :dnu, :path => 'lib'
 end

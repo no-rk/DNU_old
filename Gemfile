@@ -50,7 +50,6 @@ end
 gem "haml"
 gem "haml-rails"
 gem 'simple_form'
-gem 'country_select'
 gem 'devise'
 gem 'mailboxer'
 gem "acts-as-taggable-on", "~> 2.3.3"
@@ -64,3 +63,4 @@ gem "deep_cloneable", "~> 1.4.1"
 gem "sanitize", "~> 2.0.3"
 gem "parslet", "~> 1.4.0"
 gem "tx", "~> 0.0.5"
+gem 'require_reloader'
