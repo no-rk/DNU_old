@@ -95,6 +95,7 @@ ActiveRecord::Schema.define(:version => 20130128085536) do
     t.integer  "learnable_id"
     t.string   "learnable_type"
     t.integer  "condition_group"
+    t.integer  "group_count"
     t.string   "name"
     t.integer  "lv"
     t.datetime "created_at",      :null => false

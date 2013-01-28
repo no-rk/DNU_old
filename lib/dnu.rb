@@ -3,6 +3,7 @@ require_dependency "dnu/sanitizer"
 require_dependency "dnu/map_gsub"
 require_dependency "dnu/fight"
 require_dependency "dnu/event"
+require_dependency "dnu/process"
 
 if defined?(ActiveRecord::Base)
   ActiveRecord::Base.extend DNU::Sanitizer

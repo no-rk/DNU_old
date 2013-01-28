@@ -51,24 +51,28 @@ ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_learning_conditi
         if tree[:learning_conditions][:or].present?
           tree[:learning_conditions][:or].each do |condition_or|
             if condition_or[:and].present?
+              group_count = condition_or[:and].count
               condition_or[:and].each do |condition|
                 condition[:name] = condition[:name].to_s
-                model.learning_conditions.build(condition.merge(:condition_group => condition_group))
+                model.learning_conditions.build(condition.merge({ :condition_group => condition_group, :group_count => group_count }))
               end
             else
+              group_count = 1
               condition_or[:name] = condition_or[:name].to_s
-              model.learning_conditions.build(condition_or.merge(:condition_group => condition_group))
+              model.learning_conditions.build(condition_or.merge({ :condition_group => condition_group, :group_count => group_count }))
             end
             condition_group = condition_group + 1
           end
         elsif tree[:learning_conditions][:and].present?
+          group_count = tree[:learning_conditions][:and].count
           tree[:learning_conditions][:and].each do |condition|
             condition[:name] = condition[:name].to_s
-            model.learning_conditions.build(condition.merge(:condition_group => condition_group))
+            model.learning_conditions.build(condition.merge({ :condition_group => condition_group, :group_count => group_count }))
           end
         else
+          group_count = 1
           tree[:learning_conditions][:name] = tree[:learning_conditions][:name].to_s
-          model.learning_conditions.build(tree[:learning_conditions].merge(:condition_group => condition_group))
+          model.learning_conditions.build(tree[:learning_conditions].merge({ :condition_group => condition_group, :group_count => group_count }))
         end
       end
       model.save!

@@ -3,6 +3,7 @@ class CreateGameDataLearningConditions < ActiveRecord::Migration
     create_table :game_data_learning_conditions do |t|
       t.references :learnable, :polymorphic => true
       t.integer :condition_group
+      t.integer :group_count
       t.string :name
       t.integer :lv
 
