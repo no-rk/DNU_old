@@ -25,9 +25,9 @@ art_types.each do |art_type|
   art_type_model.save!
 end
 
-# 技, 付加, アビリティ, キャラクター, 状態異常
+# 武器, 技, 付加, アビリティ, キャラクター, 状態異常
 ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_learning_conditions")
-[:skill, :sup, :ability, :character, :disease].each do |table|
+[:weapon, :skill, :sup, :ability, :character, :disease].each do |table|
   ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_#{table.to_s.tableize}")
   list = YAML.load(ERB.new(File.read("#{Rails.root}/db/game_data/#{table}.yml")).result)
   parser    = EffectParser.new

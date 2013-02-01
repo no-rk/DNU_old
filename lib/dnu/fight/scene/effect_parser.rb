@@ -334,10 +334,15 @@ class EffectParser < Parslet::Parser
     match('[LＬ]') >> match('[VＶ]')
   }
   
+  rule(:equip_strength) {
+    str('装備強さ')
+  }
+  
   rule(:calculable) {
     state |
     decimal.as(:fixnum) |
     level.as(:lv) |
+    equip_strength.as(:equip_strength) |
     position_to_fixnum.as(:fixnum) |
     bra >> (
       random_number |
@@ -1321,6 +1326,23 @@ class EffectParser < Parslet::Parser
     sup_effects.as(:effects)
   }
   
+  # default_attack_definition
+  
+  rule(:default_attack_definition) {
+    bra >> str('通常攻撃') >> ket >> newline >>
+    root_processes.as(:do).repeat(1).as(:effects)
+  }
+  
+  # weapon_definition
+  
+  rule(:weapon_definition) {
+    bra >> str('武器') >> ket >>
+    (separator.absent? >> any).repeat(1).as(:name) >> separator >>
+    str('射程') >> natural_number.as(:range) >> newline >>
+    sup_effects.as(:effects) >>
+    (default_attack_definition.as(:default_attack)).maybe
+  }
+  
   # temporary_effect_definition
   
   rule(:temporary_effect_definition) {
@@ -1421,6 +1443,18 @@ class EffectParser < Parslet::Parser
     ).repeat(1).as(:name) >> newline.maybe
   }
   
+  # weapon_setting
+  
+  rule(:weapon_setting) {
+    bra >> str('武器') >> ket >> (
+      (separator | newline).absent? >> any
+    ).repeat(1).as(:name) >> separator >>
+    natural_number.as(:equip_strength) >>
+    (
+      newline >> partition >> sup_setting.as(:sup).repeat(1).as(:settings) >> partition
+    ).maybe >> newline.maybe
+  }
+  
   # skill_setting
   
   rule(:position_to_fixnum) {
@@ -1467,6 +1501,7 @@ class EffectParser < Parslet::Parser
     (
       comment |
       ability_setting.as(:ability) |
+      weapon_setting.as(:weapon) |
       sup_setting.as(:sup) |
       disease_setting.as(:disease) |
       skill_setting.as(:skill) |

@@ -4,8 +4,14 @@ module DNU
     module Scene
       class SetEffects < BaseScene
         
+        def default_default_attack
+          @default_default_attack ||= DNU::Fight::State::DefaultAttack.new({
+            :effects => [ { :do => EffectTransform.new.apply(EffectParser.new.root_processes.parse("敵単/SW物魔攻撃(1.0)")) } ]
+          }).first
+        end
+        
         def default_attack
-          @default_attack ||= EffectTransform.new.apply(EffectParser.new.root_processes.parse("敵単/SW物魔攻撃(1.0)"))
+          @active.call.effects.type(:Weapon).sample.try(:default_attack) || default_default_attack
         end
         
         # @activeが所持している技を優先順位順にif elseで繋げる
@@ -13,10 +19,7 @@ module DNU
           temp = []
           tree = {
                    :default_attack => {
-                     :effects => (DNU::Fight::State::DefaultAttack.new({
-                       :name => :"通常攻撃",
-                       :effects => [ { :do => default_attack } ]
-                     }).first)
+                     :effects => default_attack
                    }
                  }
           while effects = @active.call.effects.type(:Skill).done_not.low_priority

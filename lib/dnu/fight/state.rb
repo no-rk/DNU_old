@@ -13,6 +13,7 @@ require_dependency "dnu/fight/state/character/summon"
 
 require_dependency "dnu/fight/state/effects/base_effects"
 require_dependency "dnu/fight/state/effects/default_attack"
+require_dependency "dnu/fight/state/effects/weapon"
 require_dependency "dnu/fight/state/effects/skill"
 require_dependency "dnu/fight/state/effects/sup"
 require_dependency "dnu/fight/state/effects/temporary_effect"

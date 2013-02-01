@@ -14,9 +14,9 @@ module DNU
         end
         
         def initialize(tree)
-          tree = Marshal.load(Marshal.dump(tree))
           @parent = tree[:parent]
-          @name = tree[:name].to_sym
+          tree = Marshal.load(Marshal.dump(tree)) # parentはcloneしない
+          @name = tree[:name].try(:to_sym)
           @LV = tree[:lv].nil? ? nil : DNU::Fight::State::LV.new(tree[:lv])
           @history = []
           when_initialize(tree)

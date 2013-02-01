@@ -32,8 +32,16 @@ module DNU
           super val
         end
         
+        def next
+          mix (status_next || @status.val), (equip_next || @equip.val)
+        end
+        
         def next!
           mix (status_next! || @status.val), (equip_next! || @equip.val)
+        end
+        
+        def status_next
+          @status_next.last
         end
         
         def status_next!
@@ -42,6 +50,10 @@ module DNU
         
         def status_next=(val)
           @status_next = [val]
+        end
+        
+        def equip_next
+          @equip_next.last
         end
         
         def equip_next!

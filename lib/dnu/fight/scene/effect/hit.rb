@@ -35,7 +35,7 @@ module DNU
             calcu_tree = {
               :multi_coeff => [
                 coeff_tree,
-                { :condition_damage => attack_type.underscore }
+                { :condition_damage => "#{attack_type.underscore}!" }
               ]
             }
           elsif change_tree

@@ -47,7 +47,6 @@ module DNU
           @name = tree[:name].to_s
           @team = tree[:team]
           @Position = DNU::Fight::State::Position.new(rand(3)+1)
-          @Range    = DNU::Fight::State::Range.new(rand(5)+1)
           @effects         = [].extend FindEffects
           @effects_removed = [].extend FindEffects
           @@nexts.each do |n|
@@ -56,8 +55,10 @@ module DNU
             end
           end
           tree[:settings].try(:each) do |setting|
-            add_effects(setting.keys.first, setting.values.first[:name], setting.values.first, tree[:definitions])
+            add_effects(setting.keys.first, setting.values.first[:name], setting.values.first, tree[:definitions], self)
           end
+          # 武器なかったら素手にする処理をここに入れる if effects.type(:Weapon).blank?
+          @Range = DNU::Fight::State::Range.new(effects.type(:Weapon).first.try(:range) || 1) # 射程は武器に依存
           add_disease
         end
         

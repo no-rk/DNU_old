@@ -21,6 +21,10 @@ module DNU
           lambda{ @tree[:lv] || @stack.last.try(:LV).to_f }
         end
         
+        def equip_strength(val)
+          lambda{ @tree[:equip_strength] || @stack.last.try(:equip_strength).to_f }
+        end
+        
         def state_target_group(tree)
           send(tree.keys.first, tree.values.first).map{ |c| c.respond_to?(:call) ? c.call : c }.extend DNU::Fight::State::Target
         end

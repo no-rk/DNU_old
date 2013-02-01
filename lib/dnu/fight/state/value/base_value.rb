@@ -12,8 +12,16 @@ module DNU
           self
         end
         
+        def next
+          @next.last
+        end
+        
         def next!
           @next.pop
+        end
+        
+        def status_next
+          @next.last
         end
         
         def status_next!
@@ -22,6 +30,10 @@ module DNU
         
         def status_next=(val)
           @next = [val]
+        end
+        
+        def equip_next
+          @next.last
         end
         
         def equip_next!

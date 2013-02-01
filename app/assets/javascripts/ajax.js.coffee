@@ -36,8 +36,8 @@ $ ->
       console.log("no ajax")
 
   #ローディング表示
-  $("*[data-ajax-loading]").bind("ajaxSend", ->
-    $(this).show()
+  $(document).bind("ajaxSend", ->
+    $("*[data-ajax-loading]").show()
   ).bind("ajaxComplete", ->
     setTimeout ->
       $("*[data-ajax-loading]").hide()
