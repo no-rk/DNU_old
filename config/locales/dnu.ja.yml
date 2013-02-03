@@ -204,6 +204,7 @@ ja:
     Fight:
       Scene:
         Before: 前
+        Children: 時
         After: 後
         Skill: 技
         Sup: 付加
@@ -216,6 +217,7 @@ ja:
         Summon: 召喚
         Dragon: 竜
         Puppet: 人形
+        BattleVal: 戦闘値決定
         Battle: *battle
         Duel: *duel
         Competition: *competition

@@ -22,6 +22,7 @@ require_dependency "dnu/fight/scene/node/before"
 require_dependency "dnu/fight/scene/node/children"
 require_dependency "dnu/fight/scene/node/after"
 
+require_dependency "dnu/fight/scene/node/set_battle_value"
 require_dependency "dnu/fight/scene/node/battle"
 require_dependency "dnu/fight/scene/node/duel"
 require_dependency "dnu/fight/scene/node/competition"

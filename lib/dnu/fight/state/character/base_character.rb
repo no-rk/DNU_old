@@ -33,7 +33,7 @@ module DNU
         
         def initialize(tree)
           @@status_name.each do |stat|
-            instance_variable_set("@#{stat}", "DNU::Fight::State::#{stat}".constantize.new(450+rand(100), 450+rand(100)))
+            instance_variable_set("@#{stat}", "DNU::Fight::State::#{stat}".constantize.new(0, 0))
           end
           @@has_max.each do |stat|
             instance_variable_set("@M#{stat}", instance_variable_get("@#{stat}").max)
@@ -60,6 +60,12 @@ module DNU
           # 武器なかったら素手にする処理をここに入れる if effects.type(:Weapon).blank?
           @Range = DNU::Fight::State::Range.new(effects.type(:Weapon).first.try(:range) || 1) # 射程は武器に依存
           add_disease
+        end
+        
+        def set_min_max
+          @@status_name.each do |stat|
+            instance_variable_get("@#{stat}").set_min_max
+          end
         end
         
         def kind

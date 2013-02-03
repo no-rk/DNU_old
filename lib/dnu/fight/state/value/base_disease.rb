@@ -13,11 +13,7 @@ module DNU
         
         def initialize(status_val, equip_val)
           mix = status_val + equip_val
-          @ini = mix
-          @val = mix
-          @min = min_val(mix)
-          @max = max_val(mix)
-          super val
+          super mix
         end
         
       end

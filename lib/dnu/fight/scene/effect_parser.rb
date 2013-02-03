@@ -1274,7 +1274,10 @@ class EffectParser < Parslet::Parser
         str('被回復量決定').as(:heal_val_ant)
       ) |
       str('墓地埋葬').as(:cemetery)
-    ).as(:timing_transform).as(:timing) >> before_after.as(:before_after)
+    ).as(:timing_transform).as(:timing) >> before_after.as(:before_after) |
+    (
+      str('戦闘値決定時').as(:battle_val)
+    ).as(:timing)
   }
   
   rule(:sup_effect) {

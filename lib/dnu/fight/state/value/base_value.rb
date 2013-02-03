@@ -52,22 +52,28 @@ module DNU
           n*5
         end
         
+        def set_min_max
+          @min = min_val(val)
+          @max = max_val(val)
+          @validate = true
+          validate_value
+          @ini = val
+        end
+        
         def initialize(n, parent = nil)
           @parent = parent
           @val = n.to_i
-          @min = min_val(val)
-          @max = max_val(val)
-          validate_value
-          @ini = val
           @history = [val]
           @next = []
           super val
         end
         
         def validate_value
-          @val = @min if @val < @min
-          @val = @max if @val > @max
-          @val = @val.to_i
+          if @validate.present?
+            @val = min if @val < min
+            @val = max if @val > max
+            @val = @val.to_i
+          end
         end
         
         def history_value

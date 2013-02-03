@@ -4,6 +4,13 @@ module DNU
     module Scene
       module Html
         
+        def SetBattleValue(tree)
+          %Q|\n戦闘値決定| +
+          nested_div(tree[:before])   +
+          nested_div(tree[:children]) +
+          nested_div(tree[:after])
+        end
+        
         def Battle(tree)
           %Q|\n通常戦| +
           nested_div(tree[:before])   +

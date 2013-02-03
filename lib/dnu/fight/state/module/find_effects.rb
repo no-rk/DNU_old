@@ -16,6 +16,10 @@ module DNU
           self.find_all{ |child| child.before_after.to_sym == :Before }.extend FindEffects
         end
         
+        def children
+          self.find_all{ |child| child.before_after.nil? }.extend FindEffects
+        end
+        
         def after
           self.find_all{ |child| child.before_after.to_sym == :After }.extend FindEffects
         end

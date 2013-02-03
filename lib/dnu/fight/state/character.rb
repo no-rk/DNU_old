@@ -12,6 +12,12 @@ module DNU
               add_character(character[:kind].keys.first, character[:name], character.merge(:team => team), tree[:definitions])
             end
           end
+          # 戦闘値決定時の特殊効果適用
+          DNU::Fight::Scene::SetBattleValue.new(self).play
+          # この時点での戦闘値を元に最大値と最小値を決定する
+          each do |chara|
+            chara.set_min_max
+          end
         end
         
         def add_character(kind, name, setting, definitions, parent=nil, parent_effect=nil, turn_end=nil)

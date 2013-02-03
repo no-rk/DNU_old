@@ -198,7 +198,7 @@ class TestsController < ApplicationController
     lv = rand(6)
     tree.merge!(:lv => lv) if lv>=1
     es(tree).each do |e|
-      history = "DNU::Fight::Scene::#{e.before_after}".constantize.new(characters, { :parent => e.timing, :effects => e, :b_or_a => e.before_after }, parent).play
+      history = "DNU::Fight::Scene::#{e.before_after || :Children}".constantize.new(characters, { :parent => e.timing, :effects => e, :b_or_a => (e.before_after || :Children) }, parent).play
       html += history.to_html + "<pre>#{history.pretty_inspect}</pre>"
     end
     html
@@ -209,7 +209,7 @@ class TestsController < ApplicationController
     lv = rand(40)+1
     tree.merge!(:lv => lv) if lv>=1
     es(tree).each do |e|
-      history = "DNU::Fight::Scene::#{e.before_after}".constantize.new(characters, { :parent => e.timing, :effects => e, :b_or_a => e.before_after }, parent).play
+      history = "DNU::Fight::Scene::#{e.before_after || :Children}".constantize.new(characters, { :parent => e.timing, :effects => e, :b_or_a => (e.before_after || :Children) }, parent).play
       html += history.to_html + "<pre>#{history.pretty_inspect}</pre>"
     end
     html

@@ -24,6 +24,14 @@ module DNU
           mix(@status.max, @equip.max)
         end
         
+        def set_min_max
+          @status.set_min_max
+          @equip.set_min_max
+          @validate = true
+          validate_value
+          @ini = val
+        end
+        
         def initialize(status_val, equip_val)
           @status = Status.new(status_val, self)
           @equip  =  Equip.new( equip_val, self)
