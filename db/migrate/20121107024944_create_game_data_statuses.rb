@@ -3,6 +3,7 @@ class CreateGameDataStatuses < ActiveRecord::Migration
     create_table :game_data_statuses do |t|
       t.string :name
       t.text :caption
+      t.text :definition
 
       t.timestamps
     end

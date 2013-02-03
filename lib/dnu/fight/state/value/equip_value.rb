@@ -1,7 +1,7 @@
 module DNU
   module Fight
     module State
-      class Equip < BaseValue
+      class EquipValue < BaseValue
       end
     end
   end

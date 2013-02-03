@@ -33,8 +33,8 @@ module DNU
         end
         
         def initialize(status_val, equip_val)
-          @status = Status.new(status_val, self)
-          @equip  =  Equip.new( equip_val, self)
+          @status = StatusValue.new(status_val, self)
+          @equip  =  EquipValue.new( equip_val, self)
           @status_next = []
           @equip_next  = []
           super val

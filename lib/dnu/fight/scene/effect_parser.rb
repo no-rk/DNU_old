@@ -338,10 +338,15 @@ class EffectParser < Parslet::Parser
     str('装備強さ')
   }
   
+  rule(:status_strength) {
+    str('能力値')
+  }
+  
   rule(:calculable) {
     state |
     decimal.as(:fixnum) |
     level.as(:lv) |
+    status_strength.as(:status_strength) |
     equip_strength.as(:equip_strength) |
     position_to_fixnum.as(:fixnum) |
     bra >> (
@@ -1346,6 +1351,15 @@ class EffectParser < Parslet::Parser
     (default_attack_definition.as(:default_attack)).maybe
   }
   
+  # status_definition
+  
+  rule(:status_definition) {
+    bra >> str('能力') >> ket >>
+    (newline.absent? >> any).repeat(1).as(:name) >> newline >>
+    partition >> (partition.absent? >> any).repeat(1).as(:caption) >> partition >>
+    sup_effects.as(:effects)
+  }
+  
   # temporary_effect_definition
   
   rule(:temporary_effect_definition) {
@@ -1458,6 +1472,15 @@ class EffectParser < Parslet::Parser
     ).maybe >> newline.maybe
   }
   
+  # status_setting
+  
+  rule(:status_setting) {
+    bra >> str('能力') >> ket >> (
+      (natural_number | newline).absent? >> any
+    ).repeat(1).as(:name) >>
+    natural_number.as(:status_strength) >> newline.maybe
+  }
+  
   # skill_setting
   
   rule(:position_to_fixnum) {
@@ -1504,6 +1527,7 @@ class EffectParser < Parslet::Parser
     (
       comment |
       ability_setting.as(:ability) |
+      status_setting.as(:status) |
       weapon_setting.as(:weapon) |
       sup_setting.as(:sup) |
       disease_setting.as(:disease) |

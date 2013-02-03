@@ -21,6 +21,10 @@ module DNU
           lambda{ @tree[:lv] || @stack.last.try(:LV).to_f }
         end
         
+        def status_strength(val)
+          lambda{ @tree[:status_strength] || @stack.last.try(:status_strength).to_f }
+        end
+        
         def equip_strength(val)
           lambda{ @tree[:equip_strength] || @stack.last.try(:equip_strength).to_f }
         end
