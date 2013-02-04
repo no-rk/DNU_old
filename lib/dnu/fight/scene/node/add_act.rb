@@ -8,6 +8,10 @@ module DNU
           @active.call.SPD > 1000*(@index+1)
         end
         
+        def before_each_scene
+          @active.call.ActCount.change_value(1)
+        end
+        
         def play_children
           history[:index] = @index + 1
           super

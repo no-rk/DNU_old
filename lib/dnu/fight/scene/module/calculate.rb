@@ -17,6 +17,16 @@ module DNU
           lambda{ val.to_s.to_f }
         end
         
+        def distance(val)
+          lambda do
+            if 対象.team == 自分.team
+              (対象.Position - 自分.Position).abs.to_f
+            else
+              (対象.Position + 自分.Position - 1).abs.to_f
+            end
+          end
+        end
+        
         def lv(val)
           lambda{ @tree[:lv] || @stack.last.try(:LV).to_f }
         end

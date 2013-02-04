@@ -274,6 +274,9 @@ ja:
         CostValAnt: 被消費量決定
         ConvertVal: 変換量決定
         ConvertValAnt: 被変換量決定
+        Range: 射程
+        Position: 隊列
+        ActCount: 行動数
         Status: 能力
         Equip: 装備
         HP: HP

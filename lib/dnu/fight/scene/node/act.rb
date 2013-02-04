@@ -3,6 +3,10 @@ module DNU
     module Scene
       class Act < BaseScene
         
+        def before_each_scene
+          @active.call.ActCount.change_value(1)
+        end
+        
         def play_children
           if @active.call.next_act?
             create_from_hash(@active.call.next_act!).play

@@ -29,7 +29,7 @@ module DNU
         attr_reader *@@disease_name
         attr_reader *@@has_max.inject([]){ |a,s| a<<('M'+s.to_s).to_sym }
         
-        attr_reader :Position, :Range, :effects
+        attr_reader :Position, :Range, :ActCount, :effects
         
         def initialize(tree)
           @@status_name.each do |stat|
@@ -47,6 +47,7 @@ module DNU
           @name = tree[:name].to_s
           @team = tree[:team]
           @Position = DNU::Fight::State::Position.new(rand(3)+1)
+          @ActCount = DNU::Fight::State::ActCount.new(0)
           @effects         = [].extend FindEffects
           @effects_removed = [].extend FindEffects
           @@nexts.each do |n|

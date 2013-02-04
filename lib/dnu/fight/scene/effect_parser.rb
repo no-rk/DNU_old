@@ -110,6 +110,7 @@ class EffectParser < Parslet::Parser
     (
       (hp_mp.absent? >> str('M')).maybe >> hp_mp |
       str('隊列').as(:position) |
+      str('行動数').as(:act_count) |
       str('射程').as(:range)
     ).as(:status_name) |
     (
@@ -342,12 +343,17 @@ class EffectParser < Parslet::Parser
     str('能力値')
   }
   
+  rule(:distance) {
+    str('対象') >> str('との距離')
+  }
+  
   rule(:calculable) {
     state |
     decimal.as(:fixnum) |
     level.as(:lv) |
     status_strength.as(:status_strength) |
     equip_strength.as(:equip_strength) |
+    distance.as(:distance) |
     position_to_fixnum.as(:fixnum) |
     bra >> (
       random_number |

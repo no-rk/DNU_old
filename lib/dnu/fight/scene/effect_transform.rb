@@ -35,6 +35,10 @@ class EffectTransform < Parslet::Transform
     "Position"
   }
   
+  rule(:act_count => simple(:act_count)) {
+    "ActCount"
+  }
+  
   rule(:just_before => { :hit => "命中" }) {
     { :just_before => :Hit }
   }
