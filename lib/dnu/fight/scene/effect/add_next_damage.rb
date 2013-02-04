@@ -19,9 +19,9 @@ module DNU
           effects_name        = %Q|次#{ant.present? ? "に受ける" : "に与える"}#{timing}ダメージ#{sign}|
           effects_definitions = <<-"DEFINITION"
 [一時効果]#{effects_name}
-[#{timing}#{ant}ダメージ決定前]100%
+[#{timing}#{ant}ダメージ決定前]
 自/{次の#{ant}ダメージ#{sign}(#{[coeff, change].compact.join('/')})＋一時効果消滅}
-[#{timing}攻撃#{ant.present? ? "回避" : "空振" }後]100%
+[#{timing}攻撃#{ant.present? ? "回避" : "空振" }後]
 自/一時効果消滅
           DEFINITION
           

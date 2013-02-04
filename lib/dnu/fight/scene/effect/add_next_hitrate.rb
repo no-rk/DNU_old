@@ -19,7 +19,7 @@ module DNU
           effects_name        = %Q|次の#{timing}攻撃の#{ant}#{sign}|
           effects_definitions = <<-"DEFINITION"
 [一時効果]#{effects_name}
-[#{timing}#{ant}決定前]100%
+[#{timing}#{ant}決定前]
 自/{次の#{ant}#{sign}(#{[coeff, change].compact.join('/')})＋一時効果消滅}
           DEFINITION
           

@@ -1292,7 +1292,12 @@ class EffectParser < Parslet::Parser
   }
   
   rule(:sup_effect) {
-    bra >> timing >> ket >> (priority >> separator).maybe >> (conditions | condition).as(:condition) >> newline >> root_processes.as(:do)
+    bra >> timing >> ket >>
+    (priority >> separator).maybe >>
+    (
+      (conditions | condition).as(:condition) >> newline |
+      newline.as(:condition_default).as(:condition)
+    ) >> root_processes.as(:do)
   }
   
   rule(:sup_effects) {

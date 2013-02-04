@@ -39,6 +39,10 @@ class EffectTransform < Parslet::Transform
     "ActCount"
   }
   
+  rule(:condition_default => simple(:condition_default)) {
+    { :random_percent => { :fixnum => "100" } }
+  }
+  
   rule(:just_before => { :hit => "命中" }) {
     { :just_before => :Hit }
   }
