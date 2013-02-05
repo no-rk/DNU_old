@@ -64,3 +64,4 @@ gem "sanitize", "~> 2.0.3"
 gem "parslet", "~> 1.4.0"
 gem "tx", "~> 0.0.5"
 gem 'require_reloader'
+gem 'execjs'

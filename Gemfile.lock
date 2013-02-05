@@ -227,6 +227,7 @@ DEPENDENCIES
   deep_cloneable (~> 1.4.1)
   devise
   erb2haml
+  execjs
   haml
   haml-rails
   i18n_generators

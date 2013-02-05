@@ -358,3 +358,5 @@ ja:
         WindResist: 風耐性
         LightResist: 光耐性
         DarkResist: 闇耐性
+        SkillDefinition: 技定義
+        SupDefinition: 付加定義
