@@ -1,4 +1,8 @@
-.rule.result
-= text_area_tag :text, "", :size => "60x15", :class => "span12 text"
+%label テキスト1
+.controls
+  = text_area_tag :text, "", :size => "60x15", :class => "span12 text", :'data-maxlength' => 800
+%label テキスト2
+.controls
+  = text_area_tag :text, "", :size => "60x15", :class => "span12 text", :'data-maxlength' => 800
 以下、入力例
 %pre= @example

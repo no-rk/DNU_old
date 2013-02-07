@@ -76,12 +76,15 @@ parser = (function(){
         "font_color6": parse_font_color6,
         "font_color7": parse_font_color7,
         "bold_tag": parse_bold_tag,
+        "thin_tag": parse_thin_tag,
         "italic_tag": parse_italic_tag,
         "delete_tag": parse_delete_tag,
         "under_tag": parse_under_tag,
         "small_tag": parse_small_tag,
+        "middle_tag": parse_middle_tag,
         "big_tag": parse_big_tag,
         "font_color_tag": parse_font_color_tag,
+        "font_color0_tag": parse_font_color0_tag,
         "font_color1_tag": parse_font_color1_tag,
         "font_color2_tag": parse_font_color2_tag,
         "font_color3_tag": parse_font_color3_tag,
@@ -95,16 +98,18 @@ parser = (function(){
         "ket": parse_ket,
         "n1_9": parse_n1_9,
         "n0_9": parse_n0_9,
-        "m": parse_m,
+        "multi": parse_multi,
         "l": parse_l,
         "r": parse_r,
         "c": parse_c,
         "j": parse_j,
         "b": parse_b,
+        "t": parse_t,
         "i": parse_i,
         "d": parse_d,
         "u": parse_u,
         "s": parse_s,
+        "m": parse_m,
         "bg": parse_bg,
         "n": parse_n,
         "any": parse_any
@@ -293,7 +298,7 @@ parser = (function(){
         pos1 = pos;
         result0 = parse_bra();
         if (result0 !== null) {
-          result1 = parse_m();
+          result1 = parse_multi();
           if (result1 !== null) {
             if (/^[2\uFF12]/.test(input.charAt(pos))) {
               result2 = input.charAt(pos);
@@ -367,7 +372,7 @@ parser = (function(){
         pos1 = pos;
         result0 = parse_bra();
         if (result0 !== null) {
-          result1 = parse_m();
+          result1 = parse_multi();
           if (result1 !== null) {
             if (/^[3\uFF13]/.test(input.charAt(pos))) {
               result2 = input.charAt(pos);
@@ -1106,7 +1111,15 @@ parser = (function(){
         pos1 = pos;
         result0 = parse_bra();
         if (result0 !== null) {
-          result1 = parse_l();
+          if (input.charCodeAt(pos) === 24038) {
+            result1 = "\u5DE6";
+            pos++;
+          } else {
+            result1 = null;
+            if (reportFailures === 0) {
+              matchFailed("\"\\u5DE6\"");
+            }
+          }
           result1 = result1 !== null ? result1 : "";
           if (result1 !== null) {
             result2 = parse_num();
@@ -1147,7 +1160,15 @@ parser = (function(){
         pos1 = pos;
         result0 = parse_bra();
         if (result0 !== null) {
-          result1 = parse_r();
+          if (input.charCodeAt(pos) === 21491) {
+            result1 = "\u53F3";
+            pos++;
+          } else {
+            result1 = null;
+            if (reportFailures === 0) {
+              matchFailed("\"\\u53F3\"");
+            }
+          }
           if (result1 !== null) {
             result2 = parse_num();
             if (result2 !== null) {
@@ -1352,7 +1373,16 @@ parser = (function(){
                           if (result0 === null) {
                             result0 = parse_font_color();
                             if (result0 === null) {
-                              result0 = parse_normal_tag();
+                              result0 = parse_thin_tag();
+                              if (result0 === null) {
+                                result0 = parse_middle_tag();
+                                if (result0 === null) {
+                                  result0 = parse_font_color0_tag();
+                                  if (result0 === null) {
+                                    result0 = parse_normal_tag();
+                                  }
+                                }
+                              }
                             }
                           }
                         }
@@ -1489,7 +1519,7 @@ parser = (function(){
           if (result2 === null) {
             result2 = parse_normal_tag();
             if (result2 === null) {
-              result2 = parse_bold_tag();
+              result2 = parse_thin_tag();
             }
           }
           reportFailures--;
@@ -1525,7 +1555,7 @@ parser = (function(){
               if (result2 === null) {
                 result2 = parse_normal_tag();
                 if (result2 === null) {
-                  result2 = parse_bold_tag();
+                  result2 = parse_thin_tag();
                 }
               }
               reportFailures--;
@@ -1555,26 +1585,22 @@ parser = (function(){
             result1 = null;
           }
           if (result1 !== null) {
-            result2 = parse_bold_tag();
+            pos2 = pos;
+            reportFailures++;
+            result2 = parse_thin_tag();
+            if (result2 === null) {
+              result2 = parse_normal_tag();
+            }
             result2 = result2 !== null ? result2 : "";
+            reportFailures--;
             if (result2 !== null) {
-              pos2 = pos;
-              reportFailures++;
-              result3 = parse_normal_tag();
-              result3 = result3 !== null ? result3 : "";
-              reportFailures--;
-              if (result3 !== null) {
-                result3 = "";
-                pos = pos2;
-              } else {
-                result3 = null;
-              }
-              if (result3 !== null) {
-                result0 = [result0, result1, result2, result3];
-              } else {
-                result0 = null;
-                pos = pos1;
-              }
+              result2 = "";
+              pos = pos2;
+            } else {
+              result2 = null;
+            }
+            if (result2 !== null) {
+              result0 = [result0, result1, result2];
             } else {
               result0 = null;
               pos = pos1;
@@ -1976,6 +2002,9 @@ parser = (function(){
           result2 = parse_text_tags();
           if (result2 === null) {
             result2 = parse_normal_tag();
+            if (result2 === null) {
+              result2 = parse_middle_tag();
+            }
           }
           reportFailures--;
           if (result2 === null) {
@@ -2009,6 +2038,9 @@ parser = (function(){
               result2 = parse_text_tags();
               if (result2 === null) {
                 result2 = parse_normal_tag();
+                if (result2 === null) {
+                  result2 = parse_middle_tag();
+                }
               }
               reportFailures--;
               if (result2 === null) {
@@ -2039,7 +2071,10 @@ parser = (function(){
           if (result1 !== null) {
             pos2 = pos;
             reportFailures++;
-            result2 = parse_normal_tag();
+            result2 = parse_middle_tag();
+            if (result2 === null) {
+              result2 = parse_normal_tag();
+            }
             result2 = result2 !== null ? result2 : "";
             reportFailures--;
             if (result2 !== null) {
@@ -2085,6 +2120,9 @@ parser = (function(){
           result2 = parse_text_tags();
           if (result2 === null) {
             result2 = parse_normal_tag();
+            if (result2 === null) {
+              result2 = parse_middle_tag();
+            }
           }
           reportFailures--;
           if (result2 === null) {
@@ -2118,6 +2156,9 @@ parser = (function(){
               result2 = parse_text_tags();
               if (result2 === null) {
                 result2 = parse_normal_tag();
+                if (result2 === null) {
+                  result2 = parse_middle_tag();
+                }
               }
               reportFailures--;
               if (result2 === null) {
@@ -2148,7 +2189,10 @@ parser = (function(){
           if (result1 !== null) {
             pos2 = pos;
             reportFailures++;
-            result2 = parse_normal_tag();
+            result2 = parse_middle_tag();
+            if (result2 === null) {
+              result2 = parse_normal_tag();
+            }
             result2 = result2 !== null ? result2 : "";
             reportFailures--;
             if (result2 !== null) {
@@ -2512,7 +2556,10 @@ parser = (function(){
             if (result2 !== null) {
               pos2 = pos;
               reportFailures++;
-              result3 = parse_normal_tag();
+              result3 = parse_font_color0_tag();
+              if (result3 === null) {
+                result3 = parse_normal_tag();
+              }
               result3 = result3 !== null ? result3 : "";
               reportFailures--;
               if (result3 !== null) {
@@ -2634,7 +2681,10 @@ parser = (function(){
             if (result2 !== null) {
               pos2 = pos;
               reportFailures++;
-              result3 = parse_normal_tag();
+              result3 = parse_font_color0_tag();
+              if (result3 === null) {
+                result3 = parse_normal_tag();
+              }
               result3 = result3 !== null ? result3 : "";
               reportFailures--;
               if (result3 !== null) {
@@ -2756,7 +2806,10 @@ parser = (function(){
             if (result2 !== null) {
               pos2 = pos;
               reportFailures++;
-              result3 = parse_normal_tag();
+              result3 = parse_font_color0_tag();
+              if (result3 === null) {
+                result3 = parse_normal_tag();
+              }
               result3 = result3 !== null ? result3 : "";
               reportFailures--;
               if (result3 !== null) {
@@ -2878,7 +2931,10 @@ parser = (function(){
             if (result2 !== null) {
               pos2 = pos;
               reportFailures++;
-              result3 = parse_normal_tag();
+              result3 = parse_font_color0_tag();
+              if (result3 === null) {
+                result3 = parse_normal_tag();
+              }
               result3 = result3 !== null ? result3 : "";
               reportFailures--;
               if (result3 !== null) {
@@ -3000,7 +3056,10 @@ parser = (function(){
             if (result2 !== null) {
               pos2 = pos;
               reportFailures++;
-              result3 = parse_normal_tag();
+              result3 = parse_font_color0_tag();
+              if (result3 === null) {
+                result3 = parse_normal_tag();
+              }
               result3 = result3 !== null ? result3 : "";
               reportFailures--;
               if (result3 !== null) {
@@ -3122,7 +3181,10 @@ parser = (function(){
             if (result2 !== null) {
               pos2 = pos;
               reportFailures++;
-              result3 = parse_normal_tag();
+              result3 = parse_font_color0_tag();
+              if (result3 === null) {
+                result3 = parse_normal_tag();
+              }
               result3 = result3 !== null ? result3 : "";
               reportFailures--;
               if (result3 !== null) {
@@ -3244,7 +3306,10 @@ parser = (function(){
             if (result2 !== null) {
               pos2 = pos;
               reportFailures++;
-              result3 = parse_normal_tag();
+              result3 = parse_font_color0_tag();
+              if (result3 === null) {
+                result3 = parse_normal_tag();
+              }
               result3 = result3 !== null ? result3 : "";
               reportFailures--;
               if (result3 !== null) {
@@ -3302,6 +3367,40 @@ parser = (function(){
           }
         } else {
           result0 = null;
+          pos = pos0;
+        }
+        return result0;
+      }
+      
+      function parse_thin_tag() {
+        var result0, result1, result2;
+        var pos0, pos1;
+        
+        pos0 = pos;
+        pos1 = pos;
+        result0 = parse_bra();
+        if (result0 !== null) {
+          result1 = parse_t();
+          if (result1 !== null) {
+            result2 = parse_ket();
+            if (result2 !== null) {
+              result0 = [result0, result1, result2];
+            } else {
+              result0 = null;
+              pos = pos1;
+            }
+          } else {
+            result0 = null;
+            pos = pos1;
+          }
+        } else {
+          result0 = null;
+          pos = pos1;
+        }
+        if (result0 !== null) {
+          result0 = (function(offset) { return ''; })(pos0);
+        }
+        if (result0 === null) {
           pos = pos0;
         }
         return result0;
@@ -3415,6 +3514,40 @@ parser = (function(){
         return result0;
       }
       
+      function parse_middle_tag() {
+        var result0, result1, result2;
+        var pos0, pos1;
+        
+        pos0 = pos;
+        pos1 = pos;
+        result0 = parse_bra();
+        if (result0 !== null) {
+          result1 = parse_m();
+          if (result1 !== null) {
+            result2 = parse_ket();
+            if (result2 !== null) {
+              result0 = [result0, result1, result2];
+            } else {
+              result0 = null;
+              pos = pos1;
+            }
+          } else {
+            result0 = null;
+            pos = pos1;
+          }
+        } else {
+          result0 = null;
+          pos = pos1;
+        }
+        if (result0 !== null) {
+          result0 = (function(offset) { return ''; })(pos0);
+        }
+        if (result0 === null) {
+          pos = pos0;
+        }
+        return result0;
+      }
+      
       function parse_big_tag() {
         var result0, result1, result2;
         var pos0;
@@ -3445,24 +3578,69 @@ parser = (function(){
       function parse_font_color_tag() {
         var result0;
         
-        result0 = parse_font_color1_tag();
+        result0 = parse_font_color0_tag();
         if (result0 === null) {
-          result0 = parse_font_color2_tag();
+          result0 = parse_font_color1_tag();
           if (result0 === null) {
-            result0 = parse_font_color3_tag();
+            result0 = parse_font_color2_tag();
             if (result0 === null) {
-              result0 = parse_font_color4_tag();
+              result0 = parse_font_color3_tag();
               if (result0 === null) {
-                result0 = parse_font_color5_tag();
+                result0 = parse_font_color4_tag();
                 if (result0 === null) {
-                  result0 = parse_font_color6_tag();
+                  result0 = parse_font_color5_tag();
                   if (result0 === null) {
-                    result0 = parse_font_color7_tag();
+                    result0 = parse_font_color6_tag();
+                    if (result0 === null) {
+                      result0 = parse_font_color7_tag();
+                    }
                   }
                 }
               }
             }
           }
+        }
+        return result0;
+      }
+      
+      function parse_font_color0_tag() {
+        var result0, result1, result2;
+        var pos0, pos1;
+        
+        pos0 = pos;
+        pos1 = pos;
+        result0 = parse_bra();
+        if (result0 !== null) {
+          if (input.charCodeAt(pos) === 40658) {
+            result1 = "\u9ED2";
+            pos++;
+          } else {
+            result1 = null;
+            if (reportFailures === 0) {
+              matchFailed("\"\\u9ED2\"");
+            }
+          }
+          if (result1 !== null) {
+            result2 = parse_ket();
+            if (result2 !== null) {
+              result0 = [result0, result1, result2];
+            } else {
+              result0 = null;
+              pos = pos1;
+            }
+          } else {
+            result0 = null;
+            pos = pos1;
+          }
+        } else {
+          result0 = null;
+          pos = pos1;
+        }
+        if (result0 !== null) {
+          result0 = (function(offset) { return ''; })(pos0);
+        }
+        if (result0 === null) {
+          pos = pos0;
         }
         return result0;
       }
@@ -3474,13 +3652,13 @@ parser = (function(){
         pos0 = pos;
         result0 = parse_bra();
         if (result0 !== null) {
-          if (/^[\u8D64]/.test(input.charAt(pos))) {
-            result1 = input.charAt(pos);
+          if (input.charCodeAt(pos) === 36196) {
+            result1 = "\u8D64";
             pos++;
           } else {
             result1 = null;
             if (reportFailures === 0) {
-              matchFailed("[\\u8D64]");
+              matchFailed("\"\\u8D64\"");
             }
           }
           if (result1 !== null) {
@@ -3509,13 +3687,13 @@ parser = (function(){
         pos0 = pos;
         result0 = parse_bra();
         if (result0 !== null) {
-          if (/^[\u6A59]/.test(input.charAt(pos))) {
-            result1 = input.charAt(pos);
+          if (input.charCodeAt(pos) === 27225) {
+            result1 = "\u6A59";
             pos++;
           } else {
             result1 = null;
             if (reportFailures === 0) {
-              matchFailed("[\\u6A59]");
+              matchFailed("\"\\u6A59\"");
             }
           }
           if (result1 !== null) {
@@ -3544,13 +3722,13 @@ parser = (function(){
         pos0 = pos;
         result0 = parse_bra();
         if (result0 !== null) {
-          if (/^[\u9EC4]/.test(input.charAt(pos))) {
-            result1 = input.charAt(pos);
+          if (input.charCodeAt(pos) === 40644) {
+            result1 = "\u9EC4";
             pos++;
           } else {
             result1 = null;
             if (reportFailures === 0) {
-              matchFailed("[\\u9EC4]");
+              matchFailed("\"\\u9EC4\"");
             }
           }
           if (result1 !== null) {
@@ -3579,13 +3757,13 @@ parser = (function(){
         pos0 = pos;
         result0 = parse_bra();
         if (result0 !== null) {
-          if (/^[\u7DD1]/.test(input.charAt(pos))) {
-            result1 = input.charAt(pos);
+          if (input.charCodeAt(pos) === 32209) {
+            result1 = "\u7DD1";
             pos++;
           } else {
             result1 = null;
             if (reportFailures === 0) {
-              matchFailed("[\\u7DD1]");
+              matchFailed("\"\\u7DD1\"");
             }
           }
           if (result1 !== null) {
@@ -3614,13 +3792,13 @@ parser = (function(){
         pos0 = pos;
         result0 = parse_bra();
         if (result0 !== null) {
-          if (/^[\u9752]/.test(input.charAt(pos))) {
-            result1 = input.charAt(pos);
+          if (input.charCodeAt(pos) === 38738) {
+            result1 = "\u9752";
             pos++;
           } else {
             result1 = null;
             if (reportFailures === 0) {
-              matchFailed("[\\u9752]");
+              matchFailed("\"\\u9752\"");
             }
           }
           if (result1 !== null) {
@@ -3649,13 +3827,13 @@ parser = (function(){
         pos0 = pos;
         result0 = parse_bra();
         if (result0 !== null) {
-          if (/^[\u85CD]/.test(input.charAt(pos))) {
-            result1 = input.charAt(pos);
+          if (input.charCodeAt(pos) === 34253) {
+            result1 = "\u85CD";
             pos++;
           } else {
             result1 = null;
             if (reportFailures === 0) {
-              matchFailed("[\\u85CD]");
+              matchFailed("\"\\u85CD\"");
             }
           }
           if (result1 !== null) {
@@ -3684,13 +3862,13 @@ parser = (function(){
         pos0 = pos;
         result0 = parse_bra();
         if (result0 !== null) {
-          if (/^[\u7D2B]/.test(input.charAt(pos))) {
-            result1 = input.charAt(pos);
+          if (input.charCodeAt(pos) === 32043) {
+            result1 = "\u7D2B";
             pos++;
           } else {
             result1 = null;
             if (reportFailures === 0) {
-              matchFailed("[\\u7D2B]");
+              matchFailed("\"\\u7D2B\"");
             }
           }
           if (result1 !== null) {
@@ -3846,16 +4024,16 @@ parser = (function(){
         return result0;
       }
       
-      function parse_m() {
+      function parse_multi() {
         var result0;
         
-        if (/^[mM\uFF4D\uFF2D\u8907]/.test(input.charAt(pos))) {
-          result0 = input.charAt(pos);
+        if (input.charCodeAt(pos) === 35079) {
+          result0 = "\u8907";
           pos++;
         } else {
           result0 = null;
           if (reportFailures === 0) {
-            matchFailed("[mM\\uFF4D\\uFF2D\\u8907]");
+            matchFailed("\"\\u8907\"");
           }
         }
         return result0;
@@ -3864,13 +4042,13 @@ parser = (function(){
       function parse_l() {
         var result0;
         
-        if (/^[lL\uFF4C\uFF2C\u5DE6]/.test(input.charAt(pos))) {
-          result0 = input.charAt(pos);
-          pos++;
+        if (input.substr(pos, 2) === "\u5DE6\u5BC4") {
+          result0 = "\u5DE6\u5BC4";
+          pos += 2;
         } else {
           result0 = null;
           if (reportFailures === 0) {
-            matchFailed("[lL\\uFF4C\\uFF2C\\u5DE6]");
+            matchFailed("\"\\u5DE6\\u5BC4\"");
           }
         }
         return result0;
@@ -3879,13 +4057,13 @@ parser = (function(){
       function parse_r() {
         var result0;
         
-        if (/^[rR\uFF52\uFF32\u53F3]/.test(input.charAt(pos))) {
-          result0 = input.charAt(pos);
-          pos++;
+        if (input.substr(pos, 2) === "\u53F3\u5BC4") {
+          result0 = "\u53F3\u5BC4";
+          pos += 2;
         } else {
           result0 = null;
           if (reportFailures === 0) {
-            matchFailed("[rR\\uFF52\\uFF32\\u53F3]");
+            matchFailed("\"\\u53F3\\u5BC4\"");
           }
         }
         return result0;
@@ -3894,13 +4072,13 @@ parser = (function(){
       function parse_c() {
         var result0;
         
-        if (/^[cC\uFF43\uFF23\u4E2D]/.test(input.charAt(pos))) {
-          result0 = input.charAt(pos);
-          pos++;
+        if (input.substr(pos, 2) === "\u4E2D\u5BC4") {
+          result0 = "\u4E2D\u5BC4";
+          pos += 2;
         } else {
           result0 = null;
           if (reportFailures === 0) {
-            matchFailed("[cC\\uFF43\\uFF23\\u4E2D]");
+            matchFailed("\"\\u4E2D\\u5BC4\"");
           }
         }
         return result0;
@@ -3909,13 +4087,13 @@ parser = (function(){
       function parse_j() {
         var result0;
         
-        if (/^[jJ\uFF4A\uFF2A\u5747]/.test(input.charAt(pos))) {
-          result0 = input.charAt(pos);
+        if (input.charCodeAt(pos) === 22343) {
+          result0 = "\u5747";
           pos++;
         } else {
           result0 = null;
           if (reportFailures === 0) {
-            matchFailed("[jJ\\uFF4A\\uFF2A\\u5747]");
+            matchFailed("\"\\u5747\"");
           }
         }
         return result0;
@@ -3924,13 +4102,28 @@ parser = (function(){
       function parse_b() {
         var result0;
         
-        if (/^[bB\uFF42\uFF22\u592A]/.test(input.charAt(pos))) {
-          result0 = input.charAt(pos);
+        if (input.charCodeAt(pos) === 22826) {
+          result0 = "\u592A";
           pos++;
         } else {
           result0 = null;
           if (reportFailures === 0) {
-            matchFailed("[bB\\uFF42\\uFF22\\u592A]");
+            matchFailed("\"\\u592A\"");
+          }
+        }
+        return result0;
+      }
+      
+      function parse_t() {
+        var result0;
+        
+        if (input.charCodeAt(pos) === 32048) {
+          result0 = "\u7D30";
+          pos++;
+        } else {
+          result0 = null;
+          if (reportFailures === 0) {
+            matchFailed("\"\\u7D30\"");
           }
         }
         return result0;
@@ -3939,13 +4132,13 @@ parser = (function(){
       function parse_i() {
         var result0;
         
-        if (/^[iI\uFF49\uFF29\u659C]/.test(input.charAt(pos))) {
-          result0 = input.charAt(pos);
+        if (input.charCodeAt(pos) === 26012) {
+          result0 = "\u659C";
           pos++;
         } else {
           result0 = null;
           if (reportFailures === 0) {
-            matchFailed("[iI\\uFF49\\uFF29\\u659C]");
+            matchFailed("\"\\u659C\"");
           }
         }
         return result0;
@@ -3954,13 +4147,13 @@ parser = (function(){
       function parse_d() {
         var result0;
         
-        if (/^[dD\uFF44\uFF24\u6D88]/.test(input.charAt(pos))) {
-          result0 = input.charAt(pos);
+        if (input.charCodeAt(pos) === 28040) {
+          result0 = "\u6D88";
           pos++;
         } else {
           result0 = null;
           if (reportFailures === 0) {
-            matchFailed("[dD\\uFF44\\uFF24\\u6D88]");
+            matchFailed("\"\\u6D88\"");
           }
         }
         return result0;
@@ -3969,13 +4162,13 @@ parser = (function(){
       function parse_u() {
         var result0;
         
-        if (/^[uU\uFF55\uFF35\u4E0B]/.test(input.charAt(pos))) {
-          result0 = input.charAt(pos);
+        if (input.charCodeAt(pos) === 19979) {
+          result0 = "\u4E0B";
           pos++;
         } else {
           result0 = null;
           if (reportFailures === 0) {
-            matchFailed("[uU\\uFF55\\uFF35\\u4E0B]");
+            matchFailed("\"\\u4E0B\"");
           }
         }
         return result0;
@@ -3984,13 +4177,28 @@ parser = (function(){
       function parse_s() {
         var result0;
         
-        if (/^[sS\uFF53\uFF33\u5C0F]/.test(input.charAt(pos))) {
-          result0 = input.charAt(pos);
+        if (input.charCodeAt(pos) === 23567) {
+          result0 = "\u5C0F";
           pos++;
         } else {
           result0 = null;
           if (reportFailures === 0) {
-            matchFailed("[sS\\uFF53\\uFF33\\u5C0F]");
+            matchFailed("\"\\u5C0F\"");
+          }
+        }
+        return result0;
+      }
+      
+      function parse_m() {
+        var result0;
+        
+        if (input.charCodeAt(pos) === 20013) {
+          result0 = "\u4E2D";
+          pos++;
+        } else {
+          result0 = null;
+          if (reportFailures === 0) {
+            matchFailed("\"\\u4E2D\"");
           }
         }
         return result0;
@@ -3999,13 +4207,13 @@ parser = (function(){
       function parse_bg() {
         var result0;
         
-        if (/^[\u5927]/.test(input.charAt(pos))) {
-          result0 = input.charAt(pos);
+        if (input.charCodeAt(pos) === 22823) {
+          result0 = "\u5927";
           pos++;
         } else {
           result0 = null;
           if (reportFailures === 0) {
-            matchFailed("[\\u5927]");
+            matchFailed("\"\\u5927\"");
           }
         }
         return result0;
@@ -4014,13 +4222,13 @@ parser = (function(){
       function parse_n() {
         var result0;
         
-        if (/^[nN\uFF4E\uFF2E\u5143]/.test(input.charAt(pos))) {
-          result0 = input.charAt(pos);
+        if (input.charCodeAt(pos) === 20803) {
+          result0 = "\u5143";
           pos++;
         } else {
           result0 = null;
           if (reportFailures === 0) {
-            matchFailed("[nN\\uFF4E\\uFF2E\\u5143]");
+            matchFailed("\"\\u5143\"");
           }
         }
         return result0;
