@@ -45,6 +45,24 @@ module DNU
           nested_div(tree[:after])
         end
         
+        def PrepareTurn(tree)
+          %Q|\n<span class="active">#{tree[:active].first}</span>の準備ターン<br>| +
+          %Q|\nHP#{tree[:HP]}/#{tree[:MHP]}<br>| +
+          %Q|\nMP#{tree[:MP]}/#{tree[:MMP]}<br>| +
+          nested_div(tree[:before])   +
+          nested_div(tree[:children]) +
+          nested_div(tree[:after])
+        end
+        
+        def LeadoffTurn(tree)
+          %Q|\n<span class="active">#{tree[:active].first}</span>の先制ターン<br>| +
+          %Q|\nHP#{tree[:HP]}/#{tree[:MHP]}<br>| +
+          %Q|\nMP#{tree[:MP]}/#{tree[:MMP]}<br>| +
+          nested_div(tree[:before])   +
+          nested_div(tree[:children]) +
+          nested_div(tree[:after])
+        end
+        
         def Phase(tree)
           %Q|\nフェイズ#{tree[:index]}<br>| +
           tree[:active].inject("") do |t,h|
@@ -529,7 +547,7 @@ module DNU
         def nested_div(tree)
           if tree.respond_to?(:keys)
             class_name = tree.keys.first
-            %Q|\n<div class="#{class_name}">#{try(class_name, tree[class_name])}\n</div>|
+            tree[class_name][:children].present? ? %Q|\n<div class="#{class_name}">#{try(class_name, tree[class_name])}\n</div>| : ''
           elsif tree.respond_to?(:inject)
             tree.inject(""){|s,v| s + nested_div(v) }
           else

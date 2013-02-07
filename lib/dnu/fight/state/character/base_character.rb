@@ -77,7 +77,7 @@ module DNU
           !@dead
         end
         
-        def add_effects(type, name, setting, definitions, parent=nil)
+        def add_effects(type, name, setting, definitions, parent_obj=nil)
           effects = definitions.try(:find){|d| d.keys.first==type and d[type][:name] == name }
           # 定義されていない場合はデータベースから読み込みを試みる
           if effects.nil?
@@ -90,7 +90,7 @@ module DNU
             end
           end
           raise "[#{I18n.t(type.to_s.camelize, :scope => 'DNU.Fight.Scene')}]#{name}は定義されてない" if effects.nil?
-          effects = effects[type].merge(setting).merge(:parent => parent)
+          effects = effects[type].merge(setting).merge(:parent => parent_obj)
           es = "DNU::Fight::State::#{type.to_s.camelize}".constantize.new(effects)
           es.each do |e|
             @effects << e

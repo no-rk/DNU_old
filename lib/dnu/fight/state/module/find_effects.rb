@@ -9,11 +9,11 @@ module DNU
         end
         
         def type(name)
-          self.find_all{ |child| child.type.to_sym == name.to_sym }.extend FindEffects
+          self.find_all{ |child| child.type.try(:to_sym) == name.to_sym }.extend FindEffects
         end
         
         def before
-          self.find_all{ |child| child.before_after.to_sym == :Before }.extend FindEffects
+          self.find_all{ |child| child.before_after.try(:to_sym) == :Before }.extend FindEffects
         end
         
         def children
@@ -21,7 +21,7 @@ module DNU
         end
         
         def after
-          self.find_all{ |child| child.before_after.to_sym == :After }.extend FindEffects
+          self.find_all{ |child| child.before_after.try(:to_sym) == :After }.extend FindEffects
         end
         
         def done_not
@@ -42,6 +42,10 @@ module DNU
         
         def low_priority
           self.sort_by{rand}.max{ |a,b| a.priority <=> b.priority }
+        end
+        
+        def high_priority
+          self.sort_by{rand}.min{ |a,b| a.priority <=> b.priority }
         end
         
       end

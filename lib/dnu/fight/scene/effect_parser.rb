@@ -1212,6 +1212,10 @@ class EffectParser < Parslet::Parser
     str('優先度') >> natural_number.as(:priority)
   }
   
+  rule(:pre_phase) {
+    str('非接触').as(:pre_phase)
+  }
+  
   rule(:attack_timing_options) {
     (element_name.as(:element) >> str('属性')).maybe >>
     (str('物理').as(:physical) | str('魔法').as(:magical)).maybe
@@ -1388,7 +1392,7 @@ class EffectParser < Parslet::Parser
   
   # skill_definition
   
-  rule(:pre_phase) {
+  rule(:pre_phasable) {
     str('遠')
   }
   
@@ -1399,7 +1403,7 @@ class EffectParser < Parslet::Parser
   rule(:skill_options) {
     separator >> positive_integer.as(:cost) >>
     (separator >> equip_name.as(:require)).maybe >>
-    (separator >> pre_phase.as(:pre_phase)).maybe >>
+    (separator >> pre_phasable.as(:pre_phasable)).maybe >>
     (separator >> targetable.as(:targetable)).maybe >> newline
   }
   
@@ -1509,7 +1513,7 @@ class EffectParser < Parslet::Parser
     ).repeat(1).as(:name) >> (
       level >> natural_number.as(:lv)
     ).maybe >> newline >>
-    priority >> separator >> (conditions | condition).as(:condition) >> (
+    priority >> separator >> pre_phase.as(:timing).maybe >> (conditions | condition).as(:condition) >> (
       (newline | separator) >> str('対象') >> separator >> skill_target.as(:target)
     ).maybe >> (
       newline >> root_processes.as(:serif)

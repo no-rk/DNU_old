@@ -2,38 +2,23 @@
 module DNU
   module Fight
     module Scene
-      class SetEffects < BaseScene
+      class SetLeadoffEffects < BaseScene
         
-        def default_default_attack
-          @default_default_attack ||= DNU::Fight::State::DefaultAttack.new({
-            :effects => [ { :do => EffectTransform.new.apply(EffectParser.new.root_processes.parse("敵単/SW物魔攻撃(1.0)")) } ]
-          }).first
-        end
-        
-        def default_attack
-          @active.call.effects.type(:Weapon).sample.try(:default_attack) || default_default_attack
-        end
-        
-        # @activeが所持している技を優先順位順にif elseで繋げる
+        # @activeが所持している非接触技を優先順位順にsequenceで繋げる
         def create_tree
           temp = []
-          tree = {
-                   :default_attack => {
-                     :effects => default_attack
-                   }
-                 }
-          while effects = @active.call.effects.type(:Skill).done_not.low_priority
+          tree = { :sequence => [] }
+          while effects = @active.call.effects.type(:Skill).timing(:PrePhase).children.done_not.high_priority
             effects.off
             temp << effects
-            tree = {
+            tree[:sequence] << {
               :if => {
                 :condition => effects.condition,
                 :then => {
                   :effects => {
                     :effects => effects
                   }
-                },
-                :else => tree
+                }
               }
             }
           end

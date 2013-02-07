@@ -84,6 +84,12 @@ div.Battle{
 div.PrePhase{
   @include shaded_box;
 }
+div.PrepareTurn{
+  @include shaded_box;
+}
+div.LeadoffTurn{
+  @include shaded_box;
+}
 div.Phase{
   @include shaded_box;
 }
