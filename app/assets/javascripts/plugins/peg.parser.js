@@ -168,6 +168,7 @@ parser = (function(){
         var pos0;
         
         pos0 = pos;
+        result0 = [];
         result1 = parse_text_tags();
         if (result1 === null) {
           result1 = parse_tags();
@@ -175,20 +176,15 @@ parser = (function(){
             result1 = parse_any();
           }
         }
-        if (result1 !== null) {
-          result0 = [];
-          while (result1 !== null) {
-            result0.push(result1);
-            result1 = parse_text_tags();
+        while (result1 !== null) {
+          result0.push(result1);
+          result1 = parse_text_tags();
+          if (result1 === null) {
+            result1 = parse_tags();
             if (result1 === null) {
-              result1 = parse_tags();
-              if (result1 === null) {
-                result1 = parse_any();
-              }
+              result1 = parse_any();
             }
           }
-        } else {
-          result0 = null;
         }
         if (result0 !== null) {
           result0 = (function(offset, text) { return peg_flatten(text).join(''); })(pos0, result0);
@@ -959,6 +955,7 @@ parser = (function(){
         if (result0 === null) {
           result0 = parse_message();
         }
+        result0 = result0 !== null ? result0 : "";
         if (result0 !== null) {
           result0 = (function(offset, messages) { return peg_flatten(messages).join(''); })(pos0, result0);
         }

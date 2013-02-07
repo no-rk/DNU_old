@@ -1,6 +1,6 @@
 root = text
 
-text = text:(text_tags / tags / any)+ { return peg_flatten(text).join(''); }
+text = text:(text_tags / tags / any)* { return peg_flatten(text).join(''); }
 
 text_tags = imag / multicols / center / left / right / justify / serif
 imag    = bra '絵' num:num ket newline? { return '<div class="imag"><div class="imag_test">' + num + '</div></div>' + "\n"; }
@@ -15,7 +15,7 @@ justify = bra j ket newline? inner:(!text_tags (tags / any))+ { return '<div cla
 
 serif = &(icon_l / icon_r) message newline?
 
-messages = messages:(message newline? serif+ / message) { return peg_flatten(messages).join(''); }
+messages = messages:(message newline? serif+ / message)? { return peg_flatten(messages).join(''); }
 message = icon:icon speaker:speaker balloon:balloon newline? message:(!text_tags (tags / any))+ {
   if(icon[0]=='l') {
     return '<div class="serif left"><div class="icon"><div class="icon_test">'  + icon[1] + '</div>' + speaker + '</div>' + '<div class="balloon' + balloon + '">' + peg_flatten(message).join('') + '</div></div>' + "\n";

@@ -3,14 +3,14 @@
 # You can use CoffeeScript in this file: http://jashkenas.github.com/coffee-script/
 $ ->
   
-  $('body').delegate 'textarea.text', 'keyup', (event) ->
+  $('body').delegate 'textarea[data-maxlength].text', 'keyup', (event) ->
     val = $(this).val()
     val = parser.parse(val,"text")
     $(this).prev('.result').html(val)
-  $('body').delegate 'textarea.message', 'keyup', (event) ->
+  $('body').delegate 'textarea[data-maxlength].message', 'keyup', (event) ->
     val = $(this).val()
     val = parser.parse(val,"messages")
-    $(this).prev('.result').html(val)
+    $(this).next('.result').html(val)
   #メニュー書き換え
   #$.cleditor.defaultOptions.controls =
   #  "bold italic underline strikethrough size color removeformat | ruby icon | " +
@@ -124,7 +124,72 @@ $ ->
 
   #初期化
   $(':text[data-maxlength]').charCount()
-  #$('textarea[data-maxlength]').cleditor()
+  $('textarea[data-maxlength].message').each (i) ->
+    $strong = $('<button>').html('太').addClass('btn btn-danger').click (event) ->
+      $(this).closest('.editor' + (i+1)).next()
+        .selection('insert', {text: '<太>', mode: 'before'})
+        .selection('insert', {text: '<太>', mode: 'after'}).trigger('keyup')
+    $italic = $('<button>').html('斜').addClass('btn btn-danger').click (event) ->
+      $(this).closest('.editor' + (i+1)).next()
+        .selection('insert', {text: '<斜>', mode: 'before'})
+        .selection('insert', {text: '<斜>', mode: 'after'}).trigger('keyup')
+    $under = $('<button>').html('下').addClass('btn btn-danger').click (event) ->
+      $(this).closest('.editor' + (i+1)).next()
+        .selection('insert', {text: '<下>', mode: 'before'})
+        .selection('insert', {text: '<下>', mode: 'after'}).trigger('keyup')
+    $del = $('<button>').html('消').addClass('btn btn-danger').click (event) ->
+      $(this).closest('.editor' + (i+1)).next()
+        .selection('insert', {text: '<消>', mode: 'before'})
+        .selection('insert', {text: '<消>', mode: 'after'}).trigger('keyup')
+    $big = $('<button>').html('大').addClass('btn btn-danger').click (event) ->
+      $(this).closest('.editor' + (i+1)).next()
+        .selection('insert', {text: '<大>', mode: 'before'}).trigger('keyup')
+    $small = $('<button>').html('小').addClass('btn btn-danger').click (event) ->
+      $(this).closest('.editor' + (i+1)).next()
+        .selection('insert', {text: '<小>', mode: 'before'}).trigger('keyup')
+    $ruby = $('<button>').html('ルビ').addClass('btn btn-danger').click (event) ->
+      selText = $(this).closest('.editor' + (i+1)).next().selection();
+      $(this).closest('.editor' + (i+1)).next()
+        .selection('insert', {text: '<'+selText+'>^<', mode: 'before'})
+        .selection('replace', {text: ''})
+        .selection('insert', {text: '>', mode: 'after'}).trigger('keyup')
+    $color1 = $('<button>').html('赤').addClass('btn btn-danger').click (event) ->
+      $(this).closest('.editor' + (i+1)).next()
+        .selection('insert', {text: '<赤>', mode: 'before'})
+        .selection('insert', {text: '<赤>', mode: 'after'}).trigger('keyup')
+    $color2 = $('<button>').html('橙').addClass('btn btn-danger').click (event) ->
+      $(this).closest('.editor' + (i+1)).next()
+        .selection('insert', {text: '<橙>', mode: 'before'})
+        .selection('insert', {text: '<橙>', mode: 'after'}).trigger('keyup')
+    $color3 = $('<button>').html('黄').addClass('btn btn-danger').click (event) ->
+      $(this).closest('.editor' + (i+1)).next()
+        .selection('insert', {text: '<黄>', mode: 'before'})
+        .selection('insert', {text: '<黄>', mode: 'after'}).trigger('keyup')
+    $color4 = $('<button>').html('緑').addClass('btn btn-danger').click (event) ->
+      $(this).closest('.editor' + (i+1)).next()
+        .selection('insert', {text: '<緑>', mode: 'before'})
+        .selection('insert', {text: '<緑>', mode: 'after'}).trigger('keyup')
+    $color5 = $('<button>').html('青').addClass('btn btn-danger').click (event) ->
+      $(this).closest('.editor' + (i+1)).next()
+        .selection('insert', {text: '<青>', mode: 'before'})
+        .selection('insert', {text: '<青>', mode: 'after'}).trigger('keyup')
+    $color6 = $('<button>').html('藍').addClass('btn btn-danger').click (event) ->
+      $(this).closest('.editor' + (i+1)).next()
+        .selection('insert', {text: '<藍>', mode: 'before'})
+        .selection('insert', {text: '<藍>', mode: 'after'}).trigger('keyup')
+    $color7 = $('<button>').html('紫').addClass('btn btn-danger').click (event) ->
+      $(this).closest('.editor' + (i+1)).next()
+        .selection('insert', {text: '<紫>', mode: 'before'})
+        .selection('insert', {text: '<紫>', mode: 'after'}).trigger('keyup')
+    $editor = $('<div>').addClass('editor' + (i+1))
+      .append($strong).append($italic).append($under).append($del).append($big).append($small).append($ruby)
+      .append($color1).append($color2).append($color3).append($color4).append($color5).append($color6).append($color7).hide()
+    $button = $('<button>').html('エディタ').addClass('btn btn-success').click (event) ->
+      $('.editor' + (i+1)).toggle('fast')
+    $result = $('<div>').addClass('result editor' + (i+1)).hide()
+    $(this).before($editor)
+    $(this).after($button).after($result)
+    #$(this).attr('id': 'editor' + (i+1))
   $('textarea[data-maxlength]').charCount({text: true})
   #セレクトでサブミット
   $('body.register').delegate 'form.select_submit select', 'change.rails', (event) ->

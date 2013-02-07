@@ -1,3 +1,13 @@
-.rule.result
-= text_area_tag :text, "", :size => "60x15", :class => "span12 message"
-頭で<1>などと指定したらそのアイコンで発言し、頭じゃないところで指定したらメッセージ区切れる。
+.rule
+  頭で<1>などと指定したらそのアイコンで発言し、頭じゃないところで指定したらメッセージ区切れる。
+%label メッセージ1
+.controls
+  = text_area_tag :text, "", :size => "60x15", :class => "span9 message", :'data-maxlength' => 800
+
+%label メッセージ3
+.controls
+  = text_area_tag :text, "", :size => "60x15", :class => "span9 message", :'data-maxlength' => 800
+
+%label メッセージ3
+.controls
+  = text_area_tag :text, "", :size => "60x15", :class => "span9 message", :'data-maxlength' => 800
