@@ -221,8 +221,7 @@ class EffectParser < Parslet::Parser
   rule(:target_dependency_element) {
     str('竜').as(:Dragon) |
     str('人形').as(:Puppet) |
-    str('召喚').as(:Summon) |
-    (str('モ') >> str('ンスター').maybe).as(:Monster)
+    str('召喚').as(:Summon)
   }
   
   rule(:target_live_or_dead) {
@@ -290,7 +289,7 @@ class EffectParser < Parslet::Parser
   }
   
   rule(:target_set_warp) {
-    bra >> target >> ket |
+    bra >> target_set >> ket |
     target_set_element
   }
   
@@ -302,30 +301,48 @@ class EffectParser < Parslet::Parser
     target_set_warp
   }
   
+  rule(:target_find_single) {
+    (
+      str('から').maybe >> str('単') >> str('体').maybe
+    ).as(:target_find_single)
+  }
+  
+  rule(:target_find_random) {
+    (
+      str('から').maybe >> str('ラ') >> str('ンダム').maybe
+    ).as(:target_find_random)
+  }
+  
+  rule(:target_find_state) {
+    (
+      (
+        str('高').as(:max) |
+        str('低').as(:min)
+      ).as(:target_condition) >>
+      (
+        status_name >> str('割合').as(:ratio).maybe |
+        disease_name
+      ) >> str('追尾')
+    ).as(:target_find_state)
+  }
+  
+  rule(:target_find_all) {
+    (
+      str('の').maybe >> str('全') >> str('体').maybe
+    ).maybe.as(:target_find_all)
+  }
+  
+  rule(:target_find) {
+    target_find_single |
+    target_find_random |
+    target_find_state |
+    target_find_all
+  }
+  
   rule(:target) {
     (
       target_set.as(:set) >>
-      (
-        (
-          str('から').maybe >> str('単') >> str('体').maybe
-        ).as(:target_find_single) |
-        (
-          str('から').maybe >> str('ラ') >> str('ンダム').maybe
-        ).as(:target_find_random) |
-        (
-          (
-            str('高').as(:max) |
-            str('低').as(:min)
-          ).as(:target_condition) >>
-          (
-            status_name >> str('割合').as(:ratio).maybe |
-            disease_name
-          ) >> str('追尾')
-        ).as(:target_find_state) |
-        (
-          str('の').maybe >> str('全') >> str('体').maybe
-        ).maybe.as(:target_find_all)
-      ).as(:find)
+      target_find.as(:find)
     ).as(:target)
   }
   

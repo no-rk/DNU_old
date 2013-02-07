@@ -6,47 +6,48 @@ module DNU
         
         # 集合要素
         
-        def target_active(tree)
+        def target_active(tree, l_or_d=[])
           [@active.call]
         end
         
-        def target_passive(tree)
+        def target_passive(tree, l_or_d=[])
           [@passive.try(:call) || @active.call]
         end
         
-        def target_my_team(tree)
+        def target_my_team(tree, l_or_d=[])
           @character.find_by_team(@active.call.team)
         end
         
-        def target_other_team(tree)
+        def target_other_team(tree, l_or_d=[])
           @character.find_by_team_not(@active.call.team)
         end
         
         # 集合演算
         
-        def target_union(tree)
-          tree.inject([]){ |a,h| a = a | send(h.keys.first, h.values.first) }
+        def target_union(tree, l_or_d=[])
+          tree.inject([]){ |a,h| a = a | send(h.keys.first, h.values.first, l_or_d) }
         end
         
-        def target_complement(tree)
-          left  = send(tree[:left ].keys.first, tree[:left ].values.first)
-          right = send(tree[:right].keys.first, tree[:right].values.first)
+        def target_complement(tree, l_or_d=[])
+          left  = send(tree[:left ].keys.first, tree[:left ].values.first, l_or_d)
+          right = send(tree[:right].keys.first, tree[:right].values.first, l_or_d)
           left - right
         end
         
-        def target_dependency(tree)
-          master = send(tree[:master].keys.first, tree[:master].values.first)
+        def target_dependency(tree, l_or_d=[])
+          master = send(tree[:master].keys.first, tree[:master].values.first, l_or_d)
           kind   = tree[:kind].keys.first.to_s.camelize.to_sym
           master.inject([]){ |a,c| a = a | @character.find_by_kind(kind).find_by_parent(c) }
         end
         
-        # 集合検索
-        
-        def target_live_or_dead(tree)
-          set = send(tree[:set].keys.first, tree[:set].values.first)
+        def target_live_or_dead(tree, l_or_d=[])
+          set = send(tree[:set].keys.first, tree[:set].values.first, l_or_d)
           live_or_dead = tree[:dead] ? "dead" : "live"
+          l_or_d << live_or_dead
           set.find_all{ |child|  child.send(live_or_dead) }
         end
+        
+        # 集合検索
         
         def random(set)
           set.find_all{ |child| ((child.team == @active.call.team ? -1 : 1)*child.Position + @active.call.Position).abs <= @active.call.Range + 1 }.sample || set.sample
@@ -72,8 +73,11 @@ module DNU
         end
         
         def target(tree)
+          l_or_d = []
           set = @active.call.next_target_set! || tree[:set]
-          set = send(set.keys.first, set.values.first)
+          set = send(set.keys.first, set.values.first, l_or_d)
+          # 生存中や墓地中の表記が一度もなければ省略されたとし生存中として扱う
+          set = set.find_all{ |child|  child.live } if l_or_d.blank?
           send(tree[:find].keys.first, tree[:find].values.first, set)
         end
         
