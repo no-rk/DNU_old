@@ -15,7 +15,7 @@ module DNU
           @min = min_val(val)
           @max.set_min_max
           @validate = true
-          validate_value
+          set_val
           @ini = val
         end
         

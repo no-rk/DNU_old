@@ -44,19 +44,23 @@ module DNU
           @next = [val]
         end
         
+        def larger_of(a,b)
+          a > b ? a : b
+        end
+        
         def min_val(n)
-          n/5
+          larger_of(n/4, 50)
         end
         
         def max_val(n)
-          n*5
+          larger_of(n*4, 200)
         end
         
         def set_min_max
           @min = min_val(val)
           @max = max_val(val)
           @validate = true
-          validate_value
+          set_val
           @ini = val
         end
         

@@ -8,7 +8,7 @@ module DNU
         def create_tree
           temp = []
           tree = { :sequence => [] }
-          while effects = @active.call.effects.type(:Skill).timing(:PrePhase).children.done_not.high_priority
+          while effects = @active.call.effects.type(:Skill).timing(:PrePhase).children.pre_phasable.leadoff.done_not.high_priority
             effects.off
             temp << effects
             tree[:sequence] << {
@@ -23,6 +23,9 @@ module DNU
             }
           end
           temp.each{ |effects| effects.on }
+          # 敵に効果を及ぼす技はmax_leadoff回まで
+          max_leadoff = 1
+          tree[:sequence] = tree[:sequence].slice(0..(max_leadoff-1))
           tree
         end
         

@@ -28,7 +28,7 @@ module DNU
           @status.set_min_max
           @equip.set_min_max
           @validate = true
-          validate_value
+          set_val
           @ini = val
         end
         

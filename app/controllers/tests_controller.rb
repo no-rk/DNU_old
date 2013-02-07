@@ -187,6 +187,7 @@ class TestsController < ApplicationController
   def history_html_skill(tree)
     html = ""
     es(tree).each do |e|
+      html += %Q|<span class="badge">#{e.hostility ? "敵に影響を与える技" : "敵に影響を与えない技"}</span>|
       history = DNU::Fight::Scene::Effects.new(characters, { :effects => e }, parent).play
       html += history.to_html + "<pre>#{history.pretty_inspect}</pre>"
     end

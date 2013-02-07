@@ -40,6 +40,22 @@ module DNU
           self.find_all{ |child| child.parent.type == parent.type and child.parent.name == parent.name }.extend FindEffects
         end
         
+        def pre_phasable
+          self.find_all{ |child|  child.pre_phasable }.extend FindEffects
+        end
+        
+        def phase
+          self.find_all{ |child| !child.timing }.extend FindEffects
+        end
+        
+        def leadoff
+          self.find_all{ |child|  child.hostility }.extend FindEffects
+        end
+        
+        def prepare
+          self.find_all{ |child| !child.hostility }.extend FindEffects
+        end
+        
         def low_priority
           self.sort_by{rand}.max{ |a,b| a.priority <=> b.priority }
         end

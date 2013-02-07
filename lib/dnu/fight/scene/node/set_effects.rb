@@ -22,7 +22,7 @@ module DNU
                      :effects => default_attack
                    }
                  }
-          while effects = @active.call.effects.type(:Skill).done_not.low_priority
+          while effects = @active.call.effects.type(:Skill).phase.done_not.low_priority
             effects.off
             temp << effects
             tree = {
