@@ -49,19 +49,19 @@ end
 
 gem "haml"
 gem "haml-rails"
-gem 'simple_form'
-gem 'devise'
-gem 'mailboxer'
+gem 'i18n_generators'
+gem 'execjs'
+gem 'simple_form', "~> 2.0.4"
+gem 'devise', "~> 2.2.3"
+gem 'mailboxer', "~> 0.9.0"
 gem "acts-as-taggable-on", "~> 2.3.3"
 gem "rmagick", "~> 2.13.1"
-gem 'carrierwave'
-gem "kaminari"
+gem 'carrierwave', "~> 0.8.0"
+gem "kaminari", "~> 0.14.1"
 gem "rails3-active_form", "~> 2.0.0"
-gem 'i18n_generators'
-gem 'rails_config'
+gem 'rails_config', "~> 0.3.2"
 gem "deep_cloneable", "~> 1.4.1"
 gem "sanitize", "~> 2.0.3"
 gem "parslet", "~> 1.4.0"
 gem "tx", "~> 0.0.5"
-gem 'require_reloader'
-gem 'execjs'
+gem 'require_reloader', "~> 0.1.5"

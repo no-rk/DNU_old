@@ -1,9 +1,9 @@
 %br
-= form_character.simple_fields_for :icons, :defaults => { :as => (:plain if @read_only), :user => current_user } do |form_icons|
+= form_character.simple_fields_for :icons, :defaults => { :as => (:plain if @read_only), :user => current_user, :input_html => { :class => :'span6' } } do |form_icons|
   - no = form_icons.object[:number]
   アイコンNo.#{no}#{"（デフォルト）" if no==1}
   = form_icons.input :number, :as => :hidden, :input_html => { :value => no }
-  = form_icons.input :upload_icon_id, :collection => icons.invert, :input_html => { :'data-url' => ajax_img_path(:upload_icons), :'data-remote' => true, :'data-params' => ("id=#{form_icons.object.upload_icon_id}" if form_icons.object.upload_icon_id), :'data-type' => :json, :'data-help-path' => ajax_img_path(:upload_icons), :class => "span3" }
+  = form_icons.input :upload_icon_id, :collection => icons.invert, :input_html => { :'data-url' => ajax_img_path(:upload_icons), :'data-remote' => true, :'data-params' => ("id=#{form_icons.object.upload_icon_id}" if form_icons.object.upload_icon_id), :'data-type' => :json, :'data-help-path' => ajax_img_path(:upload_icons) }
   = form_icons.input :url
   =# form_icons.input :name
   =# form_icons.input :caption

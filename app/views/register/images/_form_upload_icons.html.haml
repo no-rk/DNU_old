@@ -1,4 +1,4 @@
-= form_image.simple_fields_for :upload_icons, :defaults => { :as => (:plain if @read_only), :user => current_user } do |form_upload_icons|
+= form_image.simple_fields_for :upload_icons, :defaults => { :as => (:plain if @read_only), :user => current_user, :input_html => { :class => :'span6' } } do |form_upload_icons|
   %br
   = form_upload_icons.input :icon
   = form_upload_icons.input :remote_icon_url
@@ -8,4 +8,4 @@
     = (form_upload_icons.input :icon_cache, :as => :hidden, :input_html => { :value => form_upload_icons.object.icon_cache }) if form_upload_icons.object.icon_cache
   = form_upload_icons.input :name
   = form_upload_icons.input :user_tag
-  = form_upload_icons.input :caption
+  = form_upload_icons.input :caption, :input_html => { :class => :'document span9' }

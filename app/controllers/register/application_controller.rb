@@ -155,8 +155,15 @@ class Register::ApplicationController < ApplicationController
 
   private
   def clone_record(record)
-    nested_attr = record.nested_attributes_options.map{|key,value| key}
-    return record.dup(:include=>nested_attr)
+    names = self.class.controller_name
+    record_c = "Register::#{names.classify}".constantize.new
+    nested_attr = record.nested_attributes_options.map{ |key,value| key }
+    #record.dup(:include => nested_attr)
+    nested_attr.each do |attr|
+      record_c.send(attr) << record.send(attr)
+      record_c.send(attr).each{|r|r.id=nil}
+    end
+    record_c
   end
   def changed?(record)
     last_record = current_user.try(record.class.model_name.split('::').last.downcase)

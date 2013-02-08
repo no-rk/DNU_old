@@ -1,6 +1,7 @@
 = simple_form_for(register_battle) do |form_battle|
   = register_battle.updated_at
-  = render 'register/error', { :register_error => register_battle }
+  = render 'register/error',      { :register_error  => register_battle }
+  = render 'form_battle_setting', { :register_battle => register_battle, :form_battle => form_battle }
   - unless @read_only
     .actions
       %button.btn.btn-large.btn-warning{"data-remote" => "true"} 確認する

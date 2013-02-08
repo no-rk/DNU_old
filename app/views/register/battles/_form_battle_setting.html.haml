@@ -1,0 +1,11 @@
+%br
+= form_battle.simple_fields_for :battle_settings, :defaults => { :as => (:plain if @read_only), :user => current_user, :input_html => { :class => :'span6' } } do |form_battle_setting|
+  = form_battle_setting.input :usable_id
+  = form_battle_setting.input :usable_type
+  = form_battle_setting.input :priority, :input_html => { :class => :'span1' }
+  = form_battle_setting.input :use_condition
+  = form_battle_setting.input :use_condition_variable
+  = form_battle_setting.input :frequency
+  = form_battle_setting.input :target
+  = form_battle_setting.input :target_variable
+  = form_battle_setting.input :message, :input_html => { :class => :'message span9', :rows => 10 }

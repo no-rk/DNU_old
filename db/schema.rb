@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130201120733) do
+ActiveRecord::Schema.define(:version => 20130208095558) do
 
   create_table "conversations", :force => true do |t|
     t.string   "subject",    :default => ""
@@ -178,6 +178,24 @@ ActiveRecord::Schema.define(:version => 20130201120733) do
   end
 
   add_index "receipts", ["notification_id"], :name => "index_receipts_on_notification_id"
+
+  create_table "register_battle_settings", :force => true do |t|
+    t.integer  "battle_id"
+    t.integer  "usable_id"
+    t.string   "usable_type"
+    t.integer  "priority"
+    t.string   "use_condition"
+    t.string   "use_condition_variable"
+    t.string   "frequency"
+    t.string   "target"
+    t.string   "target_variable"
+    t.text     "message"
+    t.datetime "created_at",             :null => false
+    t.datetime "updated_at",             :null => false
+  end
+
+  add_index "register_battle_settings", ["battle_id"], :name => "index_register_battle_settings_on_battle_id"
+  add_index "register_battle_settings", ["usable_id"], :name => "index_register_battle_settings_on_usable_id"
 
   create_table "register_battles", :force => true do |t|
     t.integer  "user_id"

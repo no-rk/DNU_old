@@ -1,6 +1,6 @@
-= simple_form_for communication, :html => { :class => "no_diff" } do |form_message|
+= simple_form_for communication, :html => { :class => "no_diff" }, :defaults => { :input_html => { :class => :'span6' } }  do |form_message|
   = form_message.input :recipients, :as => :id
   = form_message.input :subject
-  = form_message.input :body
+  = form_message.input :body, :input_html => { :class => :'document span9' }
   .actions
     = form_message.submit :class => "btn btn-large btn-success"

@@ -3,8 +3,8 @@
 %br
 = form_initial.label :status
 .row-fluid{:'data-check-total' => (Settings.init_status.counter.total unless @read_only)}
-  = form_initial.simple_fields_for :init_statuses, :defaults => { :as => (:plain if @read_only), :user => current_user } do |form_init_statuses|
+  = form_initial.simple_fields_for :init_statuses, :defaults => { :as => (:plain if @read_only), :user => current_user, :input_html => { :class => "span12" } } do |form_init_statuses|
     = form_init_statuses.input :status_id, :as => :hidden, :input_html => { :value => statuses[i][:id] }
     .span3
-      = form_init_statuses.input :count, :wrapper_html => { :class => 'form-inline' }, :label => statuses[i][:name], :label_html => {:'data-help-path'=>help_path(:statuses), :'data-params'=>"id=#{statuses[i][:id]}"}, :collection => Array.new(Settings.init_status.counter.each_value + 1){|i| i }.inject({}){|h,v|h[v]=v;h}, :include_blank => false, :input_html => { :class => "span12" }
+      = form_init_statuses.input :count, :wrapper_html => { :class => 'form-inline' }, :label => statuses[i][:name], :label_html => {:'data-help-path'=>help_path(:statuses), :'data-params'=>"id=#{statuses[i][:id]}"}, :collection => Array.new(Settings.init_status.counter.each_value + 1){|i| i }.inject({}){|h,v|h[v]=v;h}, :include_blank => false
     - i += 1

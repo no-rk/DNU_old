@@ -3,7 +3,7 @@
 # You can use CoffeeScript in this file: http://jashkenas.github.com/coffee-script/
 $ ->
   
-  $('body').delegate 'textarea[data-maxlength].text', 'keyup', (event) ->
+  $('body').delegate 'textarea[data-maxlength].document', 'keyup', (event) ->
     val = $(this).val()
     val = parser.parse(val,"text")
     $(this).next('.result').html(val)
@@ -262,15 +262,17 @@ $ ->
       .append($strong).append($italic).append($under).append($del).append($big).append($small).append($ruby)
       .append($color1).append($color2).append($color3).append($color4).append($color5).append($color6).append($color7).append($default).hide()
     $button = $('<button>').html('エディタ').addClass('btn btn-success').click (event) ->
+      event.preventDefault()
       $('.editor' + (i+1)).toggle('fast')
-    $result = $('<div>').addClass('result editor' + (i+1)).hide()
+    $result = $('<div>').addClass('span9 result editor' + (i+1)).hide()
     $(this).before($editor)
     $(this).after($button).after($result)
   $('textarea[data-maxlength]').charCount({text: true})
-  $('textarea[data-maxlength].text').each (i) ->
+  $('textarea[data-maxlength].document').each (i) ->
     $button = $('<button>').html('エディタ').addClass('btn btn-success').click (event) ->
+      event.preventDefault()
       $('.editor' + (i+1)).toggle('fast')
-    $result = $('<div>').addClass('result rule editor' + (i+1)).hide()
+    $result = $('<div>').addClass('span9 result rule editor' + (i+1)).hide()
     $(this).after($button).after($result)
   #セレクトでサブミット
   $('body.register').delegate 'form.select_submit select', 'change.rails', (event) ->
