@@ -11,6 +11,7 @@ ja:
       game_data/battle_value: 戦闘値
       game_data/product: 生産行動
       game_data/element: 属性
+      game_data/battle_setting: 戦闘設定
 
       register/main: &main
         基本行動
@@ -42,6 +43,17 @@ ja:
       register/init_art: 初期技能
 
     attributes:
+      register/battle_setting: &battle_setting
+        skill_id: 技
+        priority: 優先度
+        use_condition: 使用条件
+        use_condition_variable: (A)
+        frequency: 使用頻度
+        target: 対象指定
+        target_variable: (B)
+        message: 技発動時セリフ
+      register/battle/battle_settings: *battle_setting
+      
       register/profile: &profile
         age: 年齢
         gender: 性別

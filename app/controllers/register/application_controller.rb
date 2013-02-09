@@ -37,6 +37,7 @@ class Register::ApplicationController < ApplicationController
 
     self.instance_variable_set("@register_#{name}",register)
     @read_only = true
+    set_instance_variables
 
     respond_to do |format|
       format.html # show.html.erb
@@ -55,6 +56,7 @@ class Register::ApplicationController < ApplicationController
     register.try("build_#{name}")
 
     self.instance_variable_set("@register_#{name}",register)
+    set_instance_variables
 
     respond_to do |format|
       format.html # new.html.erb
@@ -71,6 +73,7 @@ class Register::ApplicationController < ApplicationController
     register.try("build_#{name}")
 
     self.instance_variable_set("@register_#{name}",register)
+    set_instance_variables
   end
 
   # POST /register/controller_name
@@ -84,6 +87,7 @@ class Register::ApplicationController < ApplicationController
 
     self.instance_variable_set("@register_#{name}",register)
     @read_only = true if request.xhr?
+    set_instance_variables
 
     respond_to do |format|
       #Ajaxの場合はバリデートのみ行う
@@ -116,6 +120,7 @@ class Register::ApplicationController < ApplicationController
 
     self.instance_variable_set("@register_#{name}",register)
     @read_only = true if request.xhr?
+    set_instance_variables
 
     respond_to do |format|
       #Ajaxの場合はバリデートのみ行う
@@ -146,6 +151,7 @@ class Register::ApplicationController < ApplicationController
     register.destroy
 
     self.instance_variable_set("@register_#{name}",register)
+    set_instance_variables
 
     respond_to do |format|
       format.html { redirect_to send("register_#{names}_url") }
@@ -180,5 +186,7 @@ class Register::ApplicationController < ApplicationController
     "edit"
   end
   def save_success(register)
+  end
+  def set_instance_variables
   end
 end

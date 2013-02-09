@@ -16,6 +16,8 @@ $ ->
       ).html('<i class="icon-search"></i>')
       help.hide() unless $(this).data('params')
       help.popover()
+      if $(this).css("float")=="left"
+        help.css("float":"left")
       $(this).after(help)
 
   $.fn.noAjax = ->

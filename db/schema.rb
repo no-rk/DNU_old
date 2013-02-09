@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130208095558) do
+ActiveRecord::Schema.define(:version => 20130209071241) do
 
   create_table "conversations", :force => true do |t|
     t.string   "subject",    :default => ""
@@ -43,6 +43,14 @@ ActiveRecord::Schema.define(:version => 20130208095558) do
   end
 
   add_index "game_data_arts", ["art_type_id"], :name => "index_game_data_arts_on_art_type_id"
+
+  create_table "game_data_battle_settings", :force => true do |t|
+    t.string   "kind"
+    t.string   "name"
+    t.text     "caption"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
 
   create_table "game_data_battle_values", :force => true do |t|
     t.string   "name"
@@ -180,9 +188,9 @@ ActiveRecord::Schema.define(:version => 20130208095558) do
   add_index "receipts", ["notification_id"], :name => "index_receipts_on_notification_id"
 
   create_table "register_battle_settings", :force => true do |t|
-    t.integer  "battle_id"
-    t.integer  "usable_id"
-    t.string   "usable_type"
+    t.integer  "battlable_id"
+    t.string   "battlable_type"
+    t.integer  "skill_id"
     t.integer  "priority"
     t.string   "use_condition"
     t.string   "use_condition_variable"
@@ -194,8 +202,8 @@ ActiveRecord::Schema.define(:version => 20130208095558) do
     t.datetime "updated_at",             :null => false
   end
 
-  add_index "register_battle_settings", ["battle_id"], :name => "index_register_battle_settings_on_battle_id"
-  add_index "register_battle_settings", ["usable_id"], :name => "index_register_battle_settings_on_usable_id"
+  add_index "register_battle_settings", ["battlable_id"], :name => "index_register_battle_settings_on_battlable_id"
+  add_index "register_battle_settings", ["skill_id"], :name => "index_register_battle_settings_on_skill_id"
 
   create_table "register_battles", :force => true do |t|
     t.integer  "user_id"

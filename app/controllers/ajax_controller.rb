@@ -9,10 +9,10 @@ class AjaxController < ApplicationController
         @ajax = "Register::#{params[:model].classify}".constantize.all
       end
       model = @ajax.class.model_name.human.downcase
-      img_path   = @ajax.icon_url(:icon)
+      img_path   = @ajax.icon_url(:icon).to_s
       @ajax = @ajax.attributes
       @ajax.store(:model,model)
-      @ajax.store(:img_path,img_path)
+      @ajax.store(:img_path, File.join(root_path, img_path))
     rescue
       @ajax = {
         "model"   => I18n.t("model"  , :scope => "ajax.message"),

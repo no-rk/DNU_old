@@ -1,7 +1,7 @@
 # encoding: UTF-8
 
-# ジョブ, 守護, 言葉, 戦闘値, 生産, 属性
-[:job, :guardian, :word, :battle_value, :product, :element].each do |table|
+# ジョブ, 守護, 言葉, 戦闘値, 生産, 属性, 戦闘設定
+[:job, :guardian, :word, :battle_value, :product, :element, :battle_setting].each do |table|
   ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_#{table.to_s.tableize}")
   list = YAML.load(ERB.new(File.read("#{Rails.root}/db/game_data/#{table}.yml")).result)
   list.each do |data|
