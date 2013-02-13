@@ -21,9 +21,9 @@
             %strong 注意
             = alert
       .row-fluid
-        .span3
+        .span3.well
           = render :partial => 'layouts/nav_register'
-        .span9
+        .span9.well
           = yield
     %div{"data-errors" => "true"}
     = javascript_include_tag "application"

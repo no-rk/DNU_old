@@ -18,7 +18,16 @@
 #= require_self
 #= require_tree .
 $ ->
+  $.fn.popover.defaults = $.extend({} , $.fn.tooltip.defaults, {
+    placement: 'right'
+    trigger: 'manual'
+    content: ''
+    template: '<div class="popover"><div class="arrow"></div><div class="popover-inner"><a class="close icon-remove-sign" href="#"></a><h3 class="popover-title"></h3><div class="popover-content"></div></div></div>'
+    html: true
+  })
   $('body').delegate 'a[href=#]', 'click', (event) ->
     event.preventDefault()
+  $('body').delegate 'a.close', 'click', (event) ->
+    $('a[rel*=popover]').popover('hide')
   $('a[rel*=tooltip]').tooltip()
   $('a[rel*=popover]').popover()

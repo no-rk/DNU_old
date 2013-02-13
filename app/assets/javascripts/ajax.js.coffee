@@ -10,8 +10,6 @@ $ ->
         "data-remote": true
         "data-params": $(this).data('params')
         "data-type": "json"
-        "data-html": true
-        "data-trigger": "manual"
         "rel": "popover"
       ).html('<i class="icon-search"></i>')
       help.hide() unless $(this).data('params')

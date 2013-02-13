@@ -13,6 +13,7 @@ class Register::ApplicationController < ApplicationController
     self.instance_variable_set("@register_#{names}",registers)
     @read_only = true
     @update_time = true
+    set_instance_variables
 
     if registers.blank?
       respond_to do |format|

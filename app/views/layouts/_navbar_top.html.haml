@@ -9,17 +9,18 @@
       - if user_signed_in?
         %ul.nav.nav-pills.pull-right
           %li
-            %a{:href => "#"}
+            %a{"data-placement" => "bottom", :href => "#", :rel => "tooltip", :title => "ENo.#{current_user.id}の結果"}
+              %i.icon-user
               ENo.#{current_user.id}
           %li
-            %a{"data-placement" => "bottom", :href => register_index_path, :rel => "tooltip", :title => "各種登録"}
-              %i.icon-book
+            %a{"data-placement" => "bottom", :href => register_index_path, :rel => "tooltip", :title => "宣言トップ"}
+              %i.icon-file-alt
           %li
             %a{"data-placement" => "bottom", :href => edit_user_registration_path, :rel => "tooltip", :title => "ユーザー設定"}
-              %i.icon-wrench
+              %i.icon-cog
           %li
             = link_to(destroy_user_session_path, method: :delete, :rel => "tooltip", 'data-placement' => "bottom", :title => "ログアウト") do
-              %i.icon-off
+              %i.icon-signout
       - else
         = form_for("user", :url => user_session_path, :html => {:class => "navbar-form pull-right"}) do |f|
           = f.text_field :login, :class => "span2", :placeholder => "Eno or Email"

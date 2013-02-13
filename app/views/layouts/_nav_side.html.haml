@@ -1,4 +1,4 @@
-.well.sidebar-nav
+.sidebar-nav
   %ul.nav.nav-list
     %li.nav-header Sidebar
     %li{:class => active_current(root_path)}
@@ -16,3 +16,16 @@
       %a{:href => "#"} Link
     %li
       %a{:href => "#"} Link
+    - if user_signed_in?
+      %li.nav-header 各種登録
+      %li
+        %a{:href => register_index_path} 宣言トップ
+      %li
+        %a{:href => edit_user_registration_path} ユーザー設定
+      %li.nav-header ログアウト
+      %li
+        = link_to 'ログアウト', destroy_user_session_path, :method => :delete
+    - else
+      %li.nav-header ログイン
+      %li
+        %a{:href => user_session_path} ログイン

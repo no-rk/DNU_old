@@ -126,6 +126,7 @@ $ ->
   $(':text[data-maxlength]').charCount()
   $('textarea[data-maxlength].message').each (i) ->
     $strong = $('<button>').html('太').addClass('btn btn-danger').click (event) ->
+      event.preventDefault()
       selText = $(this).closest('.editor' + (i+1)).next().selection()
       if selText
         $(this).closest('.editor' + (i+1)).next()
@@ -135,6 +136,7 @@ $ ->
         $(this).closest('.editor' + (i+1)).next()
           .selection('insert', {text: '<太>', mode: 'before'}).trigger('keyup')
     $italic = $('<button>').html('斜').addClass('btn btn-danger').click (event) ->
+      event.preventDefault()
       selText = $(this).closest('.editor' + (i+1)).next().selection()
       if selText
         $(this).closest('.editor' + (i+1)).next()
@@ -144,6 +146,7 @@ $ ->
         $(this).closest('.editor' + (i+1)).next()
           .selection('insert', {text: '<斜>', mode: 'before'}).trigger('keyup')
     $under = $('<button>').html('下').addClass('btn btn-danger').click (event) ->
+      event.preventDefault()
       selText = $(this).closest('.editor' + (i+1)).next().selection()
       if selText
         $(this).closest('.editor' + (i+1)).next()
@@ -153,6 +156,7 @@ $ ->
         $(this).closest('.editor' + (i+1)).next()
           .selection('insert', {text: '<下>', mode: 'before'}).trigger('keyup')
     $del = $('<button>').html('消').addClass('btn btn-danger').click (event) ->
+      event.preventDefault()
       selText = $(this).closest('.editor' + (i+1)).next().selection()
       if selText
         $(this).closest('.editor' + (i+1)).next()
@@ -162,6 +166,7 @@ $ ->
         $(this).closest('.editor' + (i+1)).next()
           .selection('insert', {text: '<消>', mode: 'before'}).trigger('keyup')
     $big = $('<button>').html('大').addClass('btn btn-danger').click (event) ->
+      event.preventDefault()
       selText = $(this).closest('.editor' + (i+1)).next().selection()
       if selText
         $(this).closest('.editor' + (i+1)).next()
@@ -171,6 +176,7 @@ $ ->
         $(this).closest('.editor' + (i+1)).next()
           .selection('insert', {text: '<大>', mode: 'before'}).trigger('keyup')
     $small = $('<button>').html('小').addClass('btn btn-danger').click (event) ->
+      event.preventDefault()
       selText = $(this).closest('.editor' + (i+1)).next().selection()
       if selText
         $(this).closest('.editor' + (i+1)).next()
@@ -180,6 +186,7 @@ $ ->
         $(this).closest('.editor' + (i+1)).next()
           .selection('insert', {text: '<小>', mode: 'before'}).trigger('keyup')
     $ruby = $('<button>').html('ルビ').addClass('btn btn-danger').click (event) ->
+      event.preventDefault()
       selText = $(this).closest('.editor' + (i+1)).next().selection()
       if selText
         $(this).closest('.editor' + (i+1)).next()
@@ -192,6 +199,7 @@ $ ->
           .selection('replace', {text: ''})
           .selection('insert', {text: '>', mode: 'after'}).trigger('keyup')
     $color1 = $('<button>').html('赤').addClass('btn btn-danger').click (event) ->
+      event.preventDefault()
       selText = $(this).closest('.editor' + (i+1)).next().selection()
       if selText
         $(this).closest('.editor' + (i+1)).next()
@@ -201,6 +209,7 @@ $ ->
         $(this).closest('.editor' + (i+1)).next()
           .selection('insert', {text: '<赤>', mode: 'before'}).trigger('keyup')
     $color2 = $('<button>').html('橙').addClass('btn btn-danger').click (event) ->
+      event.preventDefault()
       selText = $(this).closest('.editor' + (i+1)).next().selection()
       if selText
         $(this).closest('.editor' + (i+1)).next()
@@ -210,6 +219,7 @@ $ ->
         $(this).closest('.editor' + (i+1)).next()
           .selection('insert', {text: '<橙>', mode: 'before'}).trigger('keyup')
     $color3 = $('<button>').html('黄').addClass('btn btn-danger').click (event) ->
+      event.preventDefault()
       selText = $(this).closest('.editor' + (i+1)).next().selection()
       if selText
         $(this).closest('.editor' + (i+1)).next()
@@ -219,6 +229,7 @@ $ ->
         $(this).closest('.editor' + (i+1)).next()
           .selection('insert', {text: '<黄>', mode: 'before'}).trigger('keyup')
     $color4 = $('<button>').html('緑').addClass('btn btn-danger').click (event) ->
+      event.preventDefault()
       selText = $(this).closest('.editor' + (i+1)).next().selection()
       if selText
         $(this).closest('.editor' + (i+1)).next()
@@ -228,6 +239,7 @@ $ ->
         $(this).closest('.editor' + (i+1)).next()
           .selection('insert', {text: '<緑>', mode: 'before'}).trigger('keyup')
     $color5 = $('<button>').html('青').addClass('btn btn-danger').click (event) ->
+      event.preventDefault()
       selText = $(this).closest('.editor' + (i+1)).next().selection()
       if selText
         $(this).closest('.editor' + (i+1)).next()
@@ -237,6 +249,7 @@ $ ->
         $(this).closest('.editor' + (i+1)).next()
           .selection('insert', {text: '<青>', mode: 'before'}).trigger('keyup')
     $color6 = $('<button>').html('藍').addClass('btn btn-danger').click (event) ->
+      event.preventDefault()
       selText = $(this).closest('.editor' + (i+1)).next().selection()
       if selText
         $(this).closest('.editor' + (i+1)).next()
@@ -246,6 +259,7 @@ $ ->
         $(this).closest('.editor' + (i+1)).next()
           .selection('insert', {text: '<藍>', mode: 'before'}).trigger('keyup')
     $color7 = $('<button>').html('紫').addClass('btn btn-danger').click (event) ->
+      event.preventDefault()
       selText = $(this).closest('.editor' + (i+1)).next().selection()
       if selText
         $(this).closest('.editor' + (i+1)).next()
@@ -255,6 +269,7 @@ $ ->
         $(this).closest('.editor' + (i+1)).next()
           .selection('insert', {text: '<紫>', mode: 'before'}).trigger('keyup')
     $default = $('<button>').html('元').addClass('btn btn-danger').click (event) ->
+      event.preventDefault()
       $(this).closest('.editor' + (i+1)).next()
         .selection('insert', {text: '<元>', mode: 'before'}).trigger('keyup')
     
