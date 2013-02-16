@@ -66,6 +66,6 @@ DNU::Application.configure do
   # config.active_record.auto_explain_threshold_in_seconds = 0.5
 
   #アプリケーションを設置するurlを設定する。
-  config.action_mailer.default_url_options = { :host => 'dnu.dip.jp/dnu' }
-  Rails.application.routes.default_url_options[:host] = 'dnu.dip.jp/dnu'
+  config.action_mailer.default_url_options = { :host => 'dnu.dip.jp' }
+  Rails.application.routes.default_url_options[:host] = 'dnu.dip.jp'
 end

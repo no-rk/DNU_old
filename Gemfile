@@ -54,6 +54,7 @@ gem 'i18n_generators'
 gem 'execjs'
 gem 'simple_form', "~> 2.0.4"
 gem 'devise', "~> 2.2.3"
+gem "rails_admin", "~> 0.4.4"
 gem 'mailboxer', "~> 0.9.0"
 gem "acts-as-taggable-on", "~> 2.3.3"
 gem "rmagick", "~> 2.13.1"

@@ -1,5 +1,9 @@
 DNU::Application.routes.draw do
+  devise_for :admins
+
   devise_for :users
+
+  mount RailsAdmin::Engine => '/admin', :as => 'rails_admin'
 
   namespace :communication do resources :messages, :only => [ :index, :new, :create, :update ] end
   namespace :communication do resources :conversations end

@@ -6,11 +6,11 @@ $ ->
   $('body').delegate 'textarea[data-maxlength].document', 'keyup', (event) ->
     val = $(this).val()
     val = parser.parse(val,"text")
-    $(this).next('.result').html(val)
+    $(this).next('.preview').html(val)
   $('body').delegate 'textarea[data-maxlength].message', 'keyup', (event) ->
     val = $(this).val()
     val = parser.parse(val,"messages")
-    $(this).next('.result').html(val)
+    $(this).next('.preview').html(val)
   #メニュー書き換え
   #$.cleditor.defaultOptions.controls =
   #  "bold italic underline strikethrough size color removeformat | ruby icon | " +
@@ -272,23 +272,22 @@ $ ->
       event.preventDefault()
       $(this).closest('.editor' + (i+1)).next()
         .selection('insert', {text: '<元>', mode: 'before'}).trigger('keyup')
-    
-    $editor = $('<div>').addClass('editor' + (i+1))
+    $editor = $('<div>').addClass('span9 editor' + (i+1))
       .append($strong).append($italic).append($under).append($del).append($big).append($small).append($ruby)
       .append($color1).append($color2).append($color3).append($color4).append($color5).append($color6).append($color7).append($default).hide()
     $button = $('<button>').html('エディタ').addClass('btn btn-success').click (event) ->
       event.preventDefault()
-      $('.editor' + (i+1)).toggle('fast')
-    $result = $('<div>').addClass('span9 result editor' + (i+1)).hide()
+      $('.editor' + (i+1)).toggle()
+    $preview = $('<div>').addClass('span9 preview editor' + (i+1)).hide()
     $(this).before($editor)
-    $(this).after($button).after($result)
+    $(this).after($button).after($preview)
   $('textarea[data-maxlength]').charCount({text: true})
   $('textarea[data-maxlength].document').each (i) ->
     $button = $('<button>').html('エディタ').addClass('btn btn-success').click (event) ->
       event.preventDefault()
-      $('.editor' + (i+1)).toggle('fast')
-    $result = $('<div>').addClass('span9 result rule editor' + (i+1)).hide()
-    $(this).after($button).after($result)
+      $('.editor' + (i+1)).toggle()
+    $preview = $('<div>').addClass('span9 preview editor' + (i+1)).hide()
+    $(this).after($button).after($preview)
   #セレクトでサブミット
   $('body.register').delegate 'form.select_submit select', 'change.rails', (event) ->
     #親要素のフォームを取得

@@ -3,11 +3,11 @@
     %li.nav-header Sidebar
     %li{:class => active_current(root_path)}
       %a{:href => root_path} ホーム
-    %li
+    %li{:class => active_current(helps_path)}
       %a{:href => helps_path} ルール
     %li
       %a{:href => "#"} 結果
-    %li
+    %li{:class => active_current(gallerys_path(:all))}
       %a{:href => gallerys_path(:all)} ギャラリー
     %li.nav-header 掲示板
     %li
