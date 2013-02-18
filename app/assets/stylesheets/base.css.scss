@@ -58,6 +58,12 @@ div.Children{
 div.After{
   @include shaded_box;
 }
+div.Cemetery{
+  @include shaded_box;
+}
+div.Formation{
+  @include shaded_box;
+}
 div.Result{
   @include shaded_box;
 }

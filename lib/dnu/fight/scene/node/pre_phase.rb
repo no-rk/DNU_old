@@ -3,6 +3,18 @@ module DNU
     module Scene
       class PrePhase < BaseScene
         
+        def create_after_each
+          @after_each ||= create_from_hash({ :append => @tree[:after_each]})
+        end
+        
+        def after_each_scene
+          @after_each.try(:play) || create_after_each.play
+        end
+        
+        def create_children
+          @children ||= create_from_hash(@tree[:do])
+        end
+        
         def log_before_each_scene
           super
           history[:active] = []
