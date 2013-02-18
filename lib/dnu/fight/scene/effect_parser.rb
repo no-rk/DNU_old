@@ -591,7 +591,12 @@ class EffectParser < Parslet::Parser
         ((level | excepts).absent? >> any).repeat(1).as(:name) >>
         (level >> natural_number.as(:lv)).maybe >>
         (bra >> str('重複不可').as(:unique) >> ket).maybe
-      ).as(:sup)
+      ).as(:sup) |
+      (
+        bra >> str('罠') >> ket >>
+        (excepts.absent? >> any).repeat(1).as(:name) >>
+        (bra >> str('重複不可').as(:unique) >> ket).maybe
+      ).as(:trap)
     ).as(:add_effects)
   }
   
@@ -1366,6 +1371,13 @@ class EffectParser < Parslet::Parser
     sup_effects.as(:effects)
   }
   
+  # trap_definition
+  
+  rule(:trap_definition) {
+    bra >> str('罠') >> ket >> (newline.absent? >> any).repeat(1).as(:name) >> newline >>
+    sup_effects.as(:effects)
+  }
+  
   # default_attack_definition
   
   rule(:default_attack_definition) {
@@ -1427,7 +1439,14 @@ class EffectParser < Parslet::Parser
   rule(:skill_definition) {
     bra >> str('技') >> ket >> ((skill_options | newline).absent? >> any).repeat(1).as(:name) >> skill_options >>
     learning_conditions.maybe >>
-    (partition >> sup_definition.as(:sup).repeat(1).as(:definitions) >> partition).maybe >>
+    (
+      partition >>
+      (
+        sup_definition.as(:sup) |
+        trap_definition.as(:trap)
+      ).repeat(1).as(:definitions) >>
+      partition
+    ).maybe >>
     root_processes.as(:do).repeat(1).as(:effects)
   }
   

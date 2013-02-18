@@ -1,6 +1,15 @@
 ja:
   activerecord:
     models:
+      admin: 糞管理者
+
+      game_data/weapon: 武器
+      game_data/learning_condition: 習得条件
+      game_data/ability: アビリティー
+      game_data/character: キャラクター
+      game_data/sup: 付加
+      game_data/trap: 罠
+      game_data/skill: 技
       game_data/job: 職業
       game_data/guardian: 守護竜
       game_data/status: 能力値
@@ -36,11 +45,14 @@ ja:
       register/make: &make
         キャラ作成
 
+      register/battle_setting: 戦闘設定
       register/profile: プロフィール
       register/upload_icon: アップロードアイコン
+      register/icon: アイコン
       register/init_job: 初期職業
       register/init_status: 初期能力
       register/init_art: 初期技能
+      register/init_guardian: 初期守護竜
 
     attributes:
       register/battle_setting: &battle_setting
@@ -62,16 +74,8 @@ ja:
         nickname: 愛称
         race: 種族
       register/icon: &icon
-        upload_icon_id: |-
-          アップロードアイコン
-          <a href="#" rel="tooltip" data-original-title="「設定＞画像アップローダ」のアイコンを使用可能。">
-          <i class="icon-question-sign"></i>
-          </a>
-        url: |-
-          アイコンURL
-          <a href="#" rel="tooltip" data-original-title="URLでの指定も可能。両方指定した場合はこちらが優先されます。">
-          <i class="icon-question-sign"></i>
-          </a>
+        upload_icon_id: アップロードアイコン
+        url: アイコンURL
         name: 名前
         caption: 説明
       register/character/profile: *profile
@@ -79,31 +83,11 @@ ja:
 
       register/upload_icon: &upload_icon
         icon: アイコン
-        remote_icon_url: |-
-          アイコンURL
-          <a href="#" rel="tooltip" data-original-title="画像URLからのアップロードも可能。両方指定した場合はファイル選択が優先されます。">
-          <i class="icon-question-sign"></i>
-          </a>
-        name: |-
-          名前
-          <a href="#" rel="tooltip" data-original-title="「設定＞キャラクター」などでアイコンを設定する際の識別名。">
-          <i class="icon-question-sign"></i>
-          </a>
-        user_tag: |-
-          タグ
-          <a href="#" rel="tooltip" data-original-title="タグを入力するとギャラリーで公開されます。コンマ区切りで複数指定可能。">
-          <i class="icon-question-sign"></i>
-          </a>
-        caption: |-
-          説明
-          <a href="#" rel="tooltip" data-original-title="ギャラリーに表示される説明文。">
-          <i class="icon-question-sign"></i>
-          </a>
-        _destroy: |-
-          削除
-          <a href="#" rel="tooltip" data-original-title="関連項目も全て削除されます。">
-          <i class="icon-question-sign"></i>
-          </a>
+        remote_icon_url: アイコンURL
+        name: 名前
+        user_tag: タグ
+        caption: 説明
+        _destroy: 削除
       register/image/upload_icons: *upload_icon
 
       register/init_job: &init_job
@@ -121,11 +105,7 @@ ja:
   activemodel:
     attributes:
       communication/message:
-        recipients: |-
-          送信先
-          <a href="#" rel="tooltip" data-original-title="コンマ区切りで複数人に同時送信可能。">
-          <i class="icon-question-sign"></i>
-          </a>
+        recipients: 送信先
         subject: 件名
         body: 本文
 
@@ -146,11 +126,7 @@ ja:
       from: From
       subject: 件名
       body: 本文
-      to: |-
-        To
-        <a href="#" rel="tooltip" data-original-title="送信時は送ったENo.が、受信時は自分以外に受け取ったENo.が表示されます。">
-        <i class="icon-question-sign"></i>
-        </a>
+      to: 宛先
       time: 時間
 
   register:
@@ -220,6 +196,7 @@ ja:
         After: 後
         Skill: 技
         Sup: 付加
+        Trap: 罠
         Serif: セリフ
         Ability: アビリティ
         TemporaryEffect: 一時効果
@@ -372,3 +349,4 @@ ja:
         DarkResist: 闇耐性
         SkillDefinition: 技定義
         SupDefinition: 付加定義
+        TrapDefinition: 罠定義
