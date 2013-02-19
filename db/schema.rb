@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130218102536) do
+ActiveRecord::Schema.define(:version => 20130219075052) do
 
   create_table "admins", :force => true do |t|
     t.string   "email",               :default => "", :null => false
@@ -32,6 +32,13 @@ ActiveRecord::Schema.define(:version => 20130218102536) do
     t.string   "subject",    :default => ""
     t.datetime "created_at",                 :null => false
     t.datetime "updated_at",                 :null => false
+  end
+
+  create_table "days", :force => true do |t|
+    t.integer  "day"
+    t.integer  "state",      :default => 0
+    t.datetime "created_at",                :null => false
+    t.datetime "updated_at",                :null => false
   end
 
   create_table "game_data_abilities", :force => true do |t|
@@ -242,10 +249,12 @@ ActiveRecord::Schema.define(:version => 20130218102536) do
 
   create_table "register_battles", :force => true do |t|
     t.integer  "user_id"
+    t.integer  "day_id"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
 
+  add_index "register_battles", ["day_id"], :name => "index_register_battles_on_day_id"
   add_index "register_battles", ["user_id"], :name => "index_register_battles_on_user_id"
 
   create_table "register_characters", :force => true do |t|
@@ -258,18 +267,22 @@ ActiveRecord::Schema.define(:version => 20130218102536) do
 
   create_table "register_competitions", :force => true do |t|
     t.integer  "user_id"
+    t.integer  "day_id"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
 
+  add_index "register_competitions", ["day_id"], :name => "index_register_competitions_on_day_id"
   add_index "register_competitions", ["user_id"], :name => "index_register_competitions_on_user_id"
 
   create_table "register_duels", :force => true do |t|
     t.integer  "user_id"
+    t.integer  "day_id"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
 
+  add_index "register_duels", ["day_id"], :name => "index_register_duels_on_day_id"
   add_index "register_duels", ["user_id"], :name => "index_register_duels_on_user_id"
 
   create_table "register_icons", :force => true do |t|
@@ -345,10 +358,12 @@ ActiveRecord::Schema.define(:version => 20130218102536) do
 
   create_table "register_mains", :force => true do |t|
     t.integer  "user_id"
+    t.integer  "day_id"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
 
+  add_index "register_mains", ["day_id"], :name => "index_register_mains_on_day_id"
   add_index "register_mains", ["user_id"], :name => "index_register_mains_on_user_id"
 
   create_table "register_makes", :force => true do |t|
@@ -361,10 +376,12 @@ ActiveRecord::Schema.define(:version => 20130218102536) do
 
   create_table "register_products", :force => true do |t|
     t.integer  "user_id"
+    t.integer  "day_id"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
 
+  add_index "register_products", ["day_id"], :name => "index_register_products_on_day_id"
   add_index "register_products", ["user_id"], :name => "index_register_products_on_user_id"
 
   create_table "register_profiles", :force => true do |t|
@@ -383,10 +400,12 @@ ActiveRecord::Schema.define(:version => 20130218102536) do
 
   create_table "register_trades", :force => true do |t|
     t.integer  "user_id"
+    t.integer  "day_id"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
 
+  add_index "register_trades", ["day_id"], :name => "index_register_trades_on_day_id"
   add_index "register_trades", ["user_id"], :name => "index_register_trades_on_user_id"
 
   create_table "register_upload_icons", :force => true do |t|

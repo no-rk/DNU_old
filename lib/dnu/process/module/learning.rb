@@ -3,7 +3,7 @@ module DNU
     module Learning
       
       def learning
-        
+        p :learning
       end
       
     end

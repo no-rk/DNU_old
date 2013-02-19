@@ -15,7 +15,7 @@ class ApplicationController < ActionController::Base
     @conversations ||= mailbox.conversations
   end
   def make_check
-    if current_user.makes.count == 0
+    if current_user.make.nil?
       redirect_to new_register_make_path, :alert => I18n.t("make_check", :scope => "register.message")
       return false
     end

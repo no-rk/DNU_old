@@ -2,6 +2,7 @@ ja:
   activerecord:
     models:
       admin: 糞管理者
+      day: 日数
 
       game_data/weapon: 武器
       game_data/learning_condition: 習得条件

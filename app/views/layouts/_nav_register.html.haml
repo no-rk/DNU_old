@@ -4,28 +4,29 @@
       ENo.#{current_user.id}
     %li{:class => active_current(register_index_path)}
       %a{:href => register_index_path} 宣言トップ
-    %li.nav-header 行動設定
-    %li{:class => active_current(new_register_main_path)}
-      %a{:href => new_register_main_path}= Register::Main.model_name.human.downcase
-    %li{:class => active_current(new_register_trade_path)}
-      %a{:href => new_register_trade_path}= Register::Trade.model_name.human.downcase
-    %li{:class => active_current(new_register_product_path)}
-      %a{:href => new_register_product_path}= Register::Product.model_name.human.downcase
-    %li.nav-header 戦闘設定
-    %li{:class => active_current(new_register_battle_path)}
-      %a{:href => new_register_battle_path}= Register::Battle.model_name.human.downcase
-    %li{:class => active_current(new_register_duel_path)}
-      %a{:href => new_register_duel_path}= Register::Duel.model_name.human.downcase
-    %li{:class => active_current(new_register_competition_path)}
-      %a{:href => new_register_competition_path}= Register::Competition.model_name.human.downcase
-    %li.nav-header 設定
-    %li{:class => active_current(new_register_character_path)}
-      %a{:href => new_register_character_path}= Register::Character.model_name.human.downcase
-    %li{:class => active_current(new_register_image_path)}
-      %a{:href => new_register_image_path}= Register::Image.model_name.human.downcase
-    %li.nav-header 初心者救済
-    %li{:class => active_current(new_register_initial_path)}
-      %a{:href => new_register_initial_path}= Register::Initial.model_name.human.downcase
+    - unless Day.updating?
+      %li.nav-header 行動設定
+      %li{:class => active_current(new_register_main_path)}
+        %a{:href => new_register_main_path}= Register::Main.model_name.human.downcase
+      %li{:class => active_current(new_register_trade_path)}
+        %a{:href => new_register_trade_path}= Register::Trade.model_name.human.downcase
+      %li{:class => active_current(new_register_product_path)}
+        %a{:href => new_register_product_path}= Register::Product.model_name.human.downcase
+      %li.nav-header 戦闘設定
+      %li{:class => active_current(new_register_battle_path)}
+        %a{:href => new_register_battle_path}= Register::Battle.model_name.human.downcase
+      %li{:class => active_current(new_register_duel_path)}
+        %a{:href => new_register_duel_path}= Register::Duel.model_name.human.downcase
+      %li{:class => active_current(new_register_competition_path)}
+        %a{:href => new_register_competition_path}= Register::Competition.model_name.human.downcase
+      %li.nav-header 設定
+      %li{:class => active_current(new_register_character_path)}
+        %a{:href => new_register_character_path}= Register::Character.model_name.human.downcase
+      %li{:class => active_current(new_register_image_path)}
+        %a{:href => new_register_image_path}= Register::Image.model_name.human.downcase
+      %li.nav-header 初心者救済
+      %li{:class => active_current(new_register_initial_path)}
+        %a{:href => new_register_initial_path}= Register::Initial.model_name.human.downcase
     %li.nav-header 履歴一覧
     %li
       = form_tag(register_history_path, :class => "no_diff select_submit") do

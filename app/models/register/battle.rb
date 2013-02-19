@@ -1,5 +1,6 @@
 class Register::Battle < ActiveRecord::Base
-  belongs_to :user, :class_name => "User"
+  belongs_to :user
+  belongs_to :day
 
   has_many :battle_settings, :order => "priority ASC", :dependent => :destroy, :as => :battlable
   accepts_nested_attributes_for :battle_settings, :allow_destroy => true, :reject_if => :no_change_from_default
