@@ -3,7 +3,6 @@ module DNU
   module Fight
     module Scene
       class AddCharacter < BaseEffect
-        include Calculate
         
         def play_children
           character_kind        = @tree[:kind].keys.first

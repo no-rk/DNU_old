@@ -381,6 +381,17 @@ module DNU
           nested_div(tree[:after])
         end
         
+        def AddDouble(tree)
+          h = tree[:children]
+          nested_div(tree[:before])   +
+          if h[:success]
+            %Q|\n<span class="passive">#{tree[:passive]}</span>は分身した！|
+          else
+            %Q|\n<span class="passive">#{tree[:passive]}</span>はもう分身できない！|
+          end +
+          nested_div(tree[:after])
+        end
+        
         def Interrupt(tree)
           h = tree[:children]
           nested_div(tree[:before])   +

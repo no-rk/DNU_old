@@ -22,8 +22,7 @@ module DNU
                           :hit_val, :add_val, :heal_val, :convert_val, :cost_val, :rob_val, :steal_val,
                           :increase_val, :decrease_val, :up_val, :down_val, :reduce_val]
         
-        attr_reader :name, :team, :id, :parent, :parent_effect
-        attr_accessor :dead, :turn_end
+        attr_accessor :id, :name, :team, :parent, :parent_effect, :double, :dead, :turn_end
         
         attr_reader *@@status_name
         attr_reader *@@disease_name
@@ -121,6 +120,12 @@ module DNU
               instance_variable_get("@next_#{n}#{ant}").present?
             end
           end
+        end
+        
+        def build_double
+          double = Marshal.load(Marshal.dump(self))
+          double.id = @@id += 1
+          double
         end
         
         private

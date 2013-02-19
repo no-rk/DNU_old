@@ -608,6 +608,14 @@ class EffectParser < Parslet::Parser
     ).as(:add_character)
   }
   
+  rule(:add_double) {
+    (
+      bra >> str('分身') >> ket >>
+      str('が出現') >>
+      (bra >> str('重複不可') >> ket).maybe.as(:unique)
+    ).as(:add_double)
+  }
+  
   rule(:cost) {
     (
       str('消費') >> bra >> effect_coeff.as(:change_value) >> ket
@@ -810,6 +818,7 @@ class EffectParser < Parslet::Parser
       add_next_attack_element |
       add_effects |
       add_character |
+      add_double |
       add_reflection |
       interrupt
     ).as(:effect)

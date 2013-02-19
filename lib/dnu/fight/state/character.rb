@@ -36,6 +36,17 @@ module DNU
           self << character
         end
         
+        def add_double(target, parent_effect=nil, turn_end=nil)
+          character = target.build_double
+          character.double        = true
+          character.team          = target.team
+          character.name          = "#{target.name}[分身]"
+          character.parent        = target
+          character.parent_effect = parent_effect
+          character.turn_end      = turn_end
+          self << character
+        end
+        
       end
     end
   end

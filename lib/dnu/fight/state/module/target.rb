@@ -36,6 +36,10 @@ module DNU
           self.find_all{ |child| !child.turn_end }.extend Target
         end
         
+        def double
+          self.find_all{ |child|  child.double }.extend Target
+        end
+        
         def find_by_team(team)
           self.find_all{ |child| child.team == team }.extend Target
         end
