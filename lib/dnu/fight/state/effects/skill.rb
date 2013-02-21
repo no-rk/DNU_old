@@ -73,6 +73,10 @@ module DNU
               throw :hostility
             when :target_complement
               apply(v[:left])
+            when :if
+              unless v[:condition].keys.first.to_sym == :in_phase
+                apply(v)
+              end
             else
               apply(v)
             end

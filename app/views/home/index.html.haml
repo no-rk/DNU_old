@@ -4,4 +4,5 @@
   - unless user_signed_in?
     %p
       %a.btn.btn-primary.btn-large{:href => new_user_registration_path} 新規登録 &raquo;
-RUBY_VERSION#{RUBY_VERSION}
+- Time::DATE_FORMATS[:jp] = "%Y年%m月%d日%H時%M分%S秒"
+%p #{1.years.from_now.to_s(:jp)}完成予定！

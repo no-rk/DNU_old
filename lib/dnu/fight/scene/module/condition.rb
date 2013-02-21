@@ -48,6 +48,14 @@ module DNU
           lambda{ r=rand; r<0.5 }
         end
         
+        def in_pre_phase(tree)
+          lambda{ true }
+        end
+        
+        def in_phase(tree)
+          lambda{ true }
+        end
+        
         def next_not_change(tree)
           target =(tree[:state_target] || '対象').to_s
           nexts  = tree[:nexts].keys.first

@@ -24,11 +24,11 @@ class EffectParser < Parslet::Parser
   }
   
   rule(:bra) {
-    spaces? >> match('[(\[{（［｛「]') >> spaces?
+    spaces? >> match('[(\[{（［｛「【]') >> spaces?
   }
   
   rule(:ket) {
-    spaces? >> match('[)\]}）］｝」]') >> spaces?
+    spaces? >> match('[)\]}）］｝」】]') >> spaces?
   }
   
   rule(:separator) {
@@ -917,9 +917,13 @@ class EffectParser < Parslet::Parser
     ).as(:state_effects_change) |
     (
       (
-        bra >> str('技')   >> ket >> ((str('発動回数') | excepts).absent? >> any).repeat(1).as(:name).as(:skill) |
-        bra >> str('付加') >> ket >> ((str('発動回数') | excepts).absent? >> any).repeat(1).as(:name).as(:sup)
-      ) >> str('発動回数')
+        (
+          bra >> str('技')   >> ket >> ((str('発動回数') | excepts).absent? >> any).repeat(1).as(:name)
+        ).as(:skill) |
+        (
+          bra >> str('付加') >> ket >> ((str('発動回数') | excepts).absent? >> any).repeat(1).as(:name)
+        ).as(:sup)
+      ).maybe >> str('発動回数')
     ).as(:state_effects_count)
   }
   
@@ -1045,12 +1049,22 @@ class EffectParser < Parslet::Parser
     ).as(:next_not_change)
   }
   
+  rule(:in_pre_phase) {
+    str('非接触フェイズ').as(:in_pre_phase)
+  }
+  
+  rule(:in_phase) {
+    str('通常フェイズ').as(:in_phase)
+  }
+  
   rule(:condition_boolean) {
     (
       (
         just_before |
         random_percent |
-        next_not_change
+        next_not_change |
+        in_pre_phase |
+        in_phase
       ) >> str('になった').absent?
     )
   }

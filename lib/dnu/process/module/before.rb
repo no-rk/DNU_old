@@ -4,12 +4,12 @@ module DNU
       
       def before
         now_day = Day.maximum(:day) || 0
-        # ÄXV‚¶‚á‚È‚¢ê‡‚Í“ú•ti‚ß‚é
+        # æ–°æ›´æ–°ã®å ´åˆã¯æ—¥ä»˜é€²ã‚ã‚‹
         now_day += 1 if @new_day
         
         now_day = Day.create!(:day => now_day)
         
-        # ƒLƒƒƒ‰ì¬Ï‚İ‚ÌŠeƒ†[ƒU[‚ÌÅVéŒ¾‚É“ú”‚Ìî•ñ‚ğ•t—^‚·‚é
+        # ã‚­ãƒ£ãƒ©ä½œæˆæ¸ˆã¿ã®å„ãƒ¦ãƒ¼ã‚¶ãƒ¼ã®æœ€æ–°å®£è¨€ã«æ—¥æ•°ã®æƒ…å ±ã‚’ä»˜ä¸ã™ã‚‹
         User.find_each do |user|
           if user.make
             [:main, :trade, :product, :battle, :duel, :competition].each do |form_name|
@@ -19,7 +19,7 @@ module DNU
                   user_form.day = now_day
                   user_form.save!
                 elsif [:battle, :duel, :competition].any?{ |f| f==form_name }
-                  # “ú”‚ª•t—^‚³‚ê‚Ä‚½‚çƒNƒ[ƒ“‚·‚é
+                  # æ—¥æ•°ãŒä»˜ä¸ã•ã‚Œã¦ãŸã‚‰ã‚¯ãƒ­ãƒ¼ãƒ³ã™ã‚‹
                   user_form = clone_record(user_form, form_name)
                   user_form.user = user
                   user_form.day  = now_day

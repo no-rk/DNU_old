@@ -124,9 +124,13 @@ module DNU
         end
         
         def state_effects_count(tree)
-          effects_type = tree.keys.first.to_s.camelize.to_sym
-          effects_name = tree.values.first.values.first.to_s
-          lambda{ 対象.effects.type(effects_type).find_by_name(effects_name).map{ |e| e.history.count }.sum.to_i }
+          if tree.respond_to?(:keys)
+            effects_type = tree.keys.first.to_s.camelize.to_sym
+            effects_name = tree.values.first.values.first.to_s
+            lambda{ 対象.effects.type(effects_type).find_by_name(effects_name).map{ |e| e.history.count }.sum.to_i }
+          else
+            lambda{ @stack.last.history.count.to_i }
+          end
         end
         
         # sceneによるstatus_or_disease_nameの変化量合計

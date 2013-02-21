@@ -5,8 +5,10 @@ module DNU
       def after
         now_day = Day.last
         
-        # �����X�e�[�^�X�𖢊m��ɂ���
+        # 日数ステータスを未確定にする。
         now_day.state = 1
+        # 動作が安定したら即確定にする。
+        # now_day.state = 2
         now_day.save!
       end
       
