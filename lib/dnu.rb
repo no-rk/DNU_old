@@ -1,3 +1,4 @@
+require_dependency "dnu/deep_clone"
 require_dependency "dnu/sanitize"
 require_dependency "dnu/sanitizer"
 require_dependency "dnu/map_gsub"
