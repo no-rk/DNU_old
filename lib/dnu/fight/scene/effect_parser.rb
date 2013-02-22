@@ -85,7 +85,7 @@ class EffectParser < Parslet::Parser
   }
   
   rule(:op_and) {
-    str('かつ') | str('and')
+    str('かつ') | str('に') | str('のとき') | str('and')
   }
   
   rule(:op_or) {
@@ -599,7 +599,7 @@ class EffectParser < Parslet::Parser
           str('どれか').as(:random) |
           str('全て').as(:all)
         ).as(:find) >>
-        (conditions | condition).as(:condition) >>
+        bra >> (conditions | condition).as(:condition) >> ket >>
         str('に変更')
       ).as(:skill)
     ).as(:change_setting)
@@ -1029,6 +1029,13 @@ class EffectParser < Parslet::Parser
     ).as(:random_percent)
   }
   
+  rule(:wrap_random_percent) {
+    (
+      str('頻度') >> match('[1-5１-５]').as(:number).as(:frequency) |
+      str('通常時').as(:normal)
+    ).as(:wrap_random_percent)
+  }
+  
   rule(:next_not_change) {
     (
       state_target >>
@@ -1084,6 +1091,7 @@ class EffectParser < Parslet::Parser
       (
         just_before |
         random_percent |
+        wrap_random_percent |
         next_not_change |
         in_pre_phase |
         in_phase

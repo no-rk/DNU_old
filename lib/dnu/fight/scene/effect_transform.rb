@@ -39,6 +39,22 @@ class EffectTransform < Parslet::Transform
     "ActCount"
   }
   
+  rule(:wrap_random_percent => subtree(:wrap_random_percent)) {
+    case wrap_random_percent.keys.first.to_sym
+    when :frequency
+      {
+        :random_percent => {
+          :multi_coeff => [
+            { :fixnum => "20" },
+            { :fixnum => wrap_random_percent[:frequency] }
+          ]
+        }
+      }
+    when :normal
+      { :random_percent => { :fixnum => "50" } }
+    end
+  }
+  
   rule(:condition_default => simple(:condition_default)) {
     { :random_percent => { :fixnum => "100" } }
   }
