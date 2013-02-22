@@ -117,7 +117,12 @@ class Register::ApplicationController < ApplicationController
 
     register = "Register::#{names.classify}".constantize.find(params[:id])
     register.assign_attributes(params[:"register_#{name}"])
-    register.touch
+    if register.day.nil?
+      register.touch
+    else
+      register = clone_record(register)
+      register.day = nil
+    end
 
     self.instance_variable_set("@register_#{name}",register)
     @read_only = true if request.xhr?

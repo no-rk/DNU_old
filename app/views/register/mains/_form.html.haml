@@ -1,5 +1,5 @@
 = simple_form_for(register_main) do |form_main|
-  = register_main.updated_at
+  = register_main.updated_at.try(:to_s, :jp)
   = render 'register/error', { :register_error => register_main }
   - unless @read_only
     .actions

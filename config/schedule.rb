@@ -22,6 +22,7 @@
 set :output, "log/whenever.log"
 
 # 水曜日の夜七時に更新作業開始
-every :wednesday, :at => '19:00pm' do
+#every :wednesday, :at => '7:00pm' do
+every 1.hours do
   runner "DNU::Process::Update.start(true)"
 end

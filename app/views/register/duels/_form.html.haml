@@ -1,5 +1,5 @@
 = simple_form_for(register_duel) do |form_duel|
-  = register_duel.updated_at
+  = register_duel.updated_at.try(:to_s, :jp)
   = render 'register/error', { :register_error => register_duel }
   - unless @read_only
     .actions
