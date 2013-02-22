@@ -584,6 +584,27 @@ class EffectParser < Parslet::Parser
     ).as(:vanish)
   }
   
+  rule(:change_setting) {
+    (
+      (
+        (
+          str('技設定を') |
+          (
+            bra >> str('技') >> ket >>
+            ((str('の設定を') | excepts).absent? >> any).repeat(1).as(:name) >>
+            str('の設定を')
+          )
+        ) >>
+        (
+          str('どれか').as(:random) |
+          str('全て').as(:all)
+        ).as(:find) >>
+        (conditions | condition).as(:condition) >>
+        str('に変更')
+      ).as(:skill)
+    ).as(:change_setting)
+  }
+  
   rule(:add_effects) {
     (
       (
@@ -812,6 +833,7 @@ class EffectParser < Parslet::Parser
       revive |
       disease |
       vanish |
+      change_setting |
       add_next_damage |
       add_next_hitrate |
       add_disease_protect |

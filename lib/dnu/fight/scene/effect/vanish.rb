@@ -3,7 +3,6 @@ module DNU
   module Fight
     module Scene
       class Vanish < BaseEffect
-        include Calculate
         
         def play_children
           effects_type = @stack.last.try(:type)

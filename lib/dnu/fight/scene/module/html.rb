@@ -304,6 +304,26 @@ module DNU
           nested_div(tree[:after])
         end
         
+        def ChangeSetting(tree)
+          h = tree[:children]
+          nested_div(tree[:before])   +
+          if h[:success]
+            case h[:change_setting_find].try(:to_sym)
+            when :random
+              %^\n<span class="passive">#{tree[:passive]}</span>の[#{I18n.t(h[:change_setting_type], :scope => "DNU.Fight.Scene")}]#{h[:change_setting_name] || h[:name]}の設定が変更された！^
+            when :all
+              if h[:change_setting_name].present?
+                %|\n<span class="passive">#{tree[:passive]}</span>の[#{I18n.t(h[:change_setting_type], :scope => "DNU.Fight.Scene")}]#{h[:change_setting_name]}の設定が全て変更された！|
+              else
+                %|\n<span class="passive">#{tree[:passive]}</span>の#{I18n.t(h[:change_setting_type], :scope => "DNU.Fight.Scene")}設定が全て変更された！|
+              end
+            end
+          else
+            %|\n変更の対象となる#{I18n.t(h[:change_setting_type], :scope => "DNU.Fight.Scene")}設定は存在しない。|
+          end +
+          nested_div(tree[:after])
+        end
+        
         def AddNextAttackElement(tree)
           h = tree[:children]
           nested_div(tree[:before])   +
