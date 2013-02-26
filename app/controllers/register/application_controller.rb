@@ -117,11 +117,11 @@ class Register::ApplicationController < ApplicationController
 
     register = "Register::#{names.classify}".constantize.find(params[:id])
     register.assign_attributes(params[:"register_#{name}"])
-    if register.day.nil?
-      register.touch
-    else
+    if register.respond_to?(:day) and register.day.present?
       register = clone_record(register)
       register.day = nil
+    else
+      register.touch
     end
 
     self.instance_variable_set("@register_#{name}",register)

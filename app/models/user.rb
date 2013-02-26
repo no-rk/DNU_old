@@ -14,14 +14,14 @@ class User < ActiveRecord::Base
   has_many :competitions, :order => "updated_at DESC", :class_name => "Register::Competition"
 
   has_one  :character   , :order => "updated_at DESC", :class_name => "Register::Character"
-  #has_many :characters  , :order => "updated_at DESC", :class_name => "Register::Character"
+  has_many :characters  , :order => "updated_at DESC", :class_name => "Register::Character"
   has_one  :image       , :order => "updated_at DESC", :class_name => "Register::Image"
-  #has_many :images      , :order => "updated_at DESC", :class_name => "Register::Image"
+  has_many :images      , :order => "updated_at DESC", :class_name => "Register::Image"
   has_one  :initial     , :order => "updated_at DESC", :class_name => "Register::Initial"
-  #has_many :initials    , :order => "updated_at DESC", :class_name => "Register::Initial"
+  has_many :initials    , :order => "updated_at DESC", :class_name => "Register::Initial"
 
   has_one  :make        , :order => "updated_at DESC", :class_name => "Register::Make"
-  #has_many :makes       , :order => "updated_at DESC", :class_name => "Register::Make"
+  has_many :makes       , :order => "updated_at DESC", :class_name => "Register::Make"
 
   acts_as_tagger
   acts_as_messageable
@@ -54,5 +54,9 @@ class User < ActiveRecord::Base
     rescue
       nil
     end
+  end
+  
+  def name
+    self.character.profile.name
   end
 end
