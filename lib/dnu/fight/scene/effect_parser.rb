@@ -140,7 +140,11 @@ class EffectParser < Parslet::Parser
     str('光身').as(:Shine) |
     str('暗幕').as(:Black) |
     str('混濁').as(:Confuse) |
-    str('全状態異常').as(:All)
+    (
+      str('全') >>
+      str('状態').maybe >>
+      str('異常')
+    ).as(:All)
   }
   
   rule(:disease_name) {
@@ -156,7 +160,8 @@ class EffectParser < Parslet::Parser
     str('光').as(:Light) |
     str('闇').as(:Dark) |
     str('ラ').as(:Random) |
-    str('弱').as(:Weak)
+    str('弱').as(:Weak) |
+    str('全').as(:All)
   }
   
   rule(:equip_name) {
@@ -207,6 +212,44 @@ class EffectParser < Parslet::Parser
     str('魔術師') |
     str('人形師') |
     str('呪術師')
+  }
+  
+  # disease_name_set
+  
+  rule(:disease_name_complement) {
+    (
+      (
+        disease_name_union |
+        disease_name_set_warp
+      ).as(:right) >>
+      (
+        str('を除く') |
+        str('以外') >> str('の').maybe
+      ) >>
+      (
+        disease_name_union |
+        disease_name_set_warp
+      ).as(:left)
+    ).as(:disease_name_complement)
+  }
+  
+  rule(:disease_name_union) {
+    (
+      disease_name_set_warp >> (match('[&＆と]').maybe >> disease_name_set_warp).repeat(1)
+    ).as(:disease_name_union)
+  }
+  
+  rule(:disease_name_set_warp) {
+    bra >> disease_name_set >> ket |
+    disease_name
+  }
+  
+  rule(:disease_name_set) {
+    (
+      disease_name_complement |
+      disease_name_union |
+      disease_name_set_warp
+    ).as(:disease_name_set)
   }
   
   # target
