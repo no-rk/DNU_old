@@ -11,12 +11,13 @@ module DNU
         
         # SPDなどに応じて順番に俺のターン
         def before_each_scene
-          active_now = @character.live.turn_end_not.max{ |a,b| a.SPD <=> b.SPD }
+          active_now = @character.live.turn_end_not.max{ |a,b| (a.TurnPriority<=>b.TurnPriority).nonzero? or (a.SPD <=> b.SPD)}
           @active = lambda{ active_now }
         end
         
         def after_each_scene
           @active.call.turn_end = true
+          @active.call.TurnPriority.change_to(0)
         end
         
         def after_all_scene

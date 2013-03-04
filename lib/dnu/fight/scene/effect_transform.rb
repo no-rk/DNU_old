@@ -39,6 +39,10 @@ class EffectTransform < Parslet::Transform
     "ActCount"
   }
   
+  rule(:turn_priority => simple(:turn_priority)) {
+    "TurnPriority"
+  }
+  
   rule(:wrap_random_percent => subtree(:wrap_random_percent)) {
     case wrap_random_percent.keys.first.to_sym
     when :frequency

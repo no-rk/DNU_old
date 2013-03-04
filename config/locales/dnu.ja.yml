@@ -267,6 +267,7 @@ ja:
         Range: 射程
         Position: 隊列
         ActCount: 行動数
+        TurnPriority: ターン優先度
         Status: 能力
         Equip: 装備
         HP: HP

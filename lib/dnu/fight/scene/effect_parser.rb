@@ -111,6 +111,7 @@ class EffectParser < Parslet::Parser
       (hp_mp.absent? >> str('M')).maybe >> hp_mp |
       str('隊列').as(:position) |
       str('行動数').as(:act_count) |
+      str('ターン優先度').as(:turn_priority) |
       str('射程').as(:range)
     ).as(:status_name) |
     (

@@ -18,6 +18,7 @@ module DNU
         @@has_max      = [:HP, :MP]
         @@disease_name = [:Poison, :Wet, :Sleep, :Burn, :Shine,
                           :Palsy, :Vacuum, :Mud, :Confuse, :Black]
+        @@status_init  = [:Position, :TurnPriority, :ActCount, :Range]
         @@nexts        = [:target_set, :target, :hitrate, :attack_element, :attack_type, :attack_target, :turn, :act, :add_act,
                           :hit_val, :add_val, :heal_val, :convert_val, :cost_val, :rob_val, :steal_val,
                           :increase_val, :decrease_val, :up_val, :down_val, :reduce_val]
@@ -27,8 +28,9 @@ module DNU
         attr_reader *@@status_name
         attr_reader *@@disease_name
         attr_reader *@@has_max.inject([]){ |a,s| a<<('M'+s.to_s).to_sym }
+        attr_reader *@@status_init
         
-        attr_reader :Position, :Range, :ActCount, :effects
+        attr_reader :effects
         
         def initialize(tree)
           @@status_name.each do |stat|
@@ -46,6 +48,7 @@ module DNU
           @name = tree[:name].to_s
           @team = tree[:team]
           @Position = DNU::Fight::State::Position.new(rand(3)+1)
+          @TurnPriority = DNU::Fight::State::TurnPriority.new(0)
           @ActCount = DNU::Fight::State::ActCount.new(0)
           @effects         = [].extend FindEffects
           @effects_removed = [].extend FindEffects
@@ -64,6 +67,12 @@ module DNU
         
         def set_min_max
           @@status_name.each do |stat|
+            instance_variable_get("@#{stat}").set_min_max
+          end
+          @@disease_name.each do |stat|
+            instance_variable_get("@#{stat}").set_min_max
+          end
+          @@status_init.each do |stat|
             instance_variable_get("@#{stat}").set_min_max
           end
         end
