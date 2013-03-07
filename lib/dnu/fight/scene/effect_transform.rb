@@ -5,6 +5,17 @@ class EffectTransform < Parslet::Transform
     number.to_s.tr("０-９．","0-9.")
   }
   
+  rule(:alphabet => simple(:alphabet)) {
+    offset_num = 'A'.ord - 1
+    
+    alphabet.to_s.tr!("Ａ-Ｚ．","A-Z.")
+    alphabet.to_s.ord - offset_num
+  }
+  
+  rule(:inner_text => simple(:inner_text)) {
+    inner_text
+  }
+  
   rule(:position_to_fixnum => simple(:position)) {
     filter = {
       :"前" => 1,

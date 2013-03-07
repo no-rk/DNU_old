@@ -100,6 +100,30 @@ class EffectParser < Parslet::Parser
     separator | arrow | plus | bra | ket | newline | multiply
   }
   
+  rule(:alphabet) {
+    match('[A-ZＡ-Ｚ]').as(:alphabet)
+  }
+  
+  rule(:variable) {
+    bra >> (ket.absent? >> any).repeat(1).as(:name) >> ket
+  }
+  
+  rule(:place) {
+    (
+      variable >> alphabet.as(:X) >> natural_number.as(:Y)
+    ).as(:place)
+  }
+  
+  rule(:string) {
+    str('"') >> 
+    (
+      str('\\') >> any |
+      str('"').absent? >> any
+    ).repeat.as(:inner_text) >> 
+    str('"') |
+    partition >> (partition.absent? >> any).repeat(1).as(:inner_text) >> partition
+  }
+  
   # name rule
   
   rule(:hp_mp) {
@@ -461,7 +485,7 @@ class EffectParser < Parslet::Parser
   
   # effect
   
-  rule(:positive_integer) {
+  rule(:non_negative_integer) {
     (
       num_1_to_9 >> num_0_to_9.repeat(1) | num_0_to_9
     ).as(:number)
@@ -509,11 +533,11 @@ class EffectParser < Parslet::Parser
   }
   
   rule(:effect_hit) {
-    str('命中').maybe   >> (positive_integer >> percent).as(:min_hit) >> (from_to >> (positive_integer >> percent).as(:max_hit)).maybe
+    str('命中').maybe   >> (non_negative_integer >> percent).as(:min_hit) >> (from_to >> (non_negative_integer >> percent).as(:max_hit)).maybe
   }
   
   rule(:effect_cri) {
-    str('クリティカル') >> (positive_integer >> percent).as(:min_cri) >> (from_to >> (positive_integer >> percent).as(:max_cri)).maybe
+    str('クリティカル') >> (non_negative_integer >> percent).as(:min_cri) >> (from_to >> (non_negative_integer >> percent).as(:max_cri)).maybe
   }
   
   rule(:physical) {
@@ -1005,8 +1029,8 @@ class EffectParser < Parslet::Parser
   
   rule(:state_character) {
     (
-      state_target       >> status_name >> (str('の') >> positive_integer.as(:percent) >> percent | str('割合').as(:ratio)).maybe |
-      state_target_group >> status_name >> (str('の') >> positive_integer.as(:percent) >> percent | str('割合').as(:ratio)).maybe >> group_value
+      state_target       >> status_name >> (str('の') >> non_negative_integer.as(:percent) >> percent | str('割合').as(:ratio)).maybe |
+      state_target_group >> status_name >> (str('の') >> non_negative_integer.as(:percent) >> percent | str('割合').as(:ratio)).maybe >> group_value
     ).as(:state_character)
   }
   
@@ -1030,7 +1054,7 @@ class EffectParser < Parslet::Parser
             hp_mp.as(:status_name).as(:state_character).as(:do)
           ).as(:lefts)
         ) >>
-        positive_integer.as(:percent).as(:fixnum).as(:right) >>
+        non_negative_integer.as(:percent).as(:fixnum).as(:right) >>
         percent >> str('以上')
       ).as(:condition_ge) |
       (
@@ -1044,7 +1068,7 @@ class EffectParser < Parslet::Parser
             hp_mp.as(:status_name).as(:state_character).as(:do)
           ).as(:lefts)
         ) >>
-        positive_integer.as(:percent).as(:fixnum).as(:right) >>
+        non_negative_integer.as(:percent).as(:fixnum).as(:right) >>
         percent >> str('以下')
       ).as(:condition_le) |
       (
@@ -1058,7 +1082,7 @@ class EffectParser < Parslet::Parser
             hp_mp.as(:status_name).as(:state_character).as(:do)
           ).as(:lefts)
         ) >>
-        positive_integer.as(:percent).as(:fixnum).as(:right) >>
+        non_negative_integer.as(:percent).as(:fixnum).as(:right) >>
         percent
       ).as(:condition_eq)
     ).as(:hp_mp_percent)
@@ -1067,7 +1091,7 @@ class EffectParser < Parslet::Parser
   rule(:random_percent) {
     (
       (
-        positive_integer.as(:fixnum) |
+        non_negative_integer.as(:fixnum) |
         bra >> effect_coeff >> ket
       ) >> percent >> str('の確率').maybe
     ).as(:random_percent)
@@ -1153,7 +1177,7 @@ class EffectParser < Parslet::Parser
     state_target_group >> (
       (
         status_name >> (
-          str('の') >> positive_integer.as(:percent) >> percent |
+          str('の') >> non_negative_integer.as(:percent) >> percent |
           str('割合').as(:ratio)
         ).maybe
       ).as(:state_character).as(:do) |
@@ -1527,7 +1551,7 @@ class EffectParser < Parslet::Parser
   }
   
   rule(:skill_options) {
-    separator >> positive_integer.as(:cost) >>
+    separator >> non_negative_integer.as(:cost) >>
     (separator >> equip_name.as(:require)).maybe >>
     (separator >> pre_phasable.as(:pre_phasable)).maybe >>
     (separator >> targetable.as(:targetable)).maybe >> newline
@@ -1727,6 +1751,142 @@ class EffectParser < Parslet::Parser
   rule(:pt_settings) {
     character_definitions.as(:definitions).maybe >>
     pt_setting.repeat(2).as(:settings)
+  }
+  
+  # event_timing
+  
+  rule(:event_timing) {
+    (
+      str('通過').as(:pass) |
+      str('移動').as(:move)
+    ).as(:timing) >> before_after.as(:before_after)
+  }
+  
+  # event_condition
+  
+  rule(:on) {
+    str('オン') | str('済') | str('達成')
+  }
+  
+  rule(:off) {
+    str('オフ') | str('未達成')
+  }
+  
+  rule(:present_place) {
+    place.as(:present_place)
+  }
+  
+  rule(:get_flag) {
+    (
+      variable >>
+      (
+        on.as(:on) |
+        off.as(:off)
+      )
+    ).as(:get_flag)
+  }
+  
+  rule(:event_condition_wrap) {
+    bra >> event_condition >> ket |
+    present_place |
+    get_flag
+  }
+  
+  rule(:event_condition_or) {
+    (
+      (
+        event_condition_and |
+        event_condition_wrap
+      ).as(:right) >>
+      op_or >>
+      (
+        event_condition_and |
+        event_condition_wrap
+      ).as(:left)
+    ).as(:condition_or)
+  }
+  
+  rule(:event_condition_and) {
+    (
+      event_condition_wrap >> (op_and >> event_condition_wrap).repeat(1)
+    ).as(:condition_and)
+  }
+  
+  rule(:event_condition) {
+    (
+      event_condition_or |
+      event_condition_and |
+      event_condition_wrap
+    ).as(:condition)
+  }
+  
+  # event_contents
+  
+  rule(:text) {
+    string.as(:text)
+  }
+  
+  rule(:set_flag) {
+    (
+      variable >> str('を').maybe >>
+      (
+        on.as(:on) |
+        off.as(:off)
+      )
+    ).as(:set_flag)
+  }
+  
+  rule(:set_integer) {
+    (
+      variable >> str('を').maybe >>
+      non_negative_integer.as(:integer) >> str('に').maybe
+    ).as(:set_integer)
+  }
+  
+  rule(:end_step) {
+    str('終了').as(:end_step)
+  }
+  
+  rule(:end_event) {
+    str('イベント終了').as(:end_event)
+  }
+  
+  rule(:event_content) {
+    text |
+    set_flag |
+    set_integer |
+    end_step |
+    end_event
+  }
+  
+  rule(:event_separator) {
+    newline | plus | arrow
+  }
+  
+  rule(:event_contents) {
+    (
+      event_separator.absent? >> (event_separator.maybe >> event_content).repeat(1)
+      #event_content >> (event_separator >> event_content).repeat(0)
+    ).as(:contents)
+  }
+  
+  # event_steps
+  
+  rule(:event_step) {
+    bra >> event_timing >> ket >> event_condition >> newline >>
+    event_contents >> newline.maybe
+  }
+  
+  rule(:event_steps) {
+    event_step.repeat(1).as(:steps)
+  }
+  
+  # event_definition
+  
+  rule(:event_definition) {
+    bra >> str('イベント') >> ket >> (newline.absent? >> any).repeat(1).as(:name) >> newline >>
+    string.as(:caption).maybe >>
+    event_steps
   }
   
   # root
