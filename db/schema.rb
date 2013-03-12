@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130312042049) do
+ActiveRecord::Schema.define(:version => 20130312090256) do
 
   create_table "admins", :force => true do |t|
     t.string   "email",               :default => "", :null => false
@@ -162,6 +162,16 @@ ActiveRecord::Schema.define(:version => 20130312042049) do
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
+
+  create_table "game_data_trains", :force => true do |t|
+    t.integer  "trainable_id"
+    t.string   "trainable_type"
+    t.boolean  "visible"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+  end
+
+  add_index "game_data_trains", ["trainable_id"], :name => "index_game_data_trains_on_trainable_id"
 
   create_table "game_data_traps", :force => true do |t|
     t.string   "name"

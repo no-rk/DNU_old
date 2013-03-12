@@ -5,6 +5,7 @@ ja:
       day: 日数
 
       game_data/weapon: 武器
+      game_data/train: 訓練
       game_data/learning_condition: 習得条件
       game_data/ability: アビリティー
       game_data/character: キャラクター

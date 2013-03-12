@@ -80,6 +80,17 @@ ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_learning_conditi
   end
 end
 
+# 訓練可能なものをまとめる
+ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_trains")
+[:Job, :Status, :Art, :Product, :Ability].each do |class_name|
+  "GameData::#{class_name}".constantize.find_each do |trainable|
+    train = GameData::Train.new
+    train.trainable = trainable
+    train.visible = [:Job].any?{ |f| f==class_name } ? false : true
+    train.save!
+  end
+end
+
 # 単語自動リンク用のインデックス保存
 tx_map = []
 [:Job, :Guardian, :Status, :ArtType, :Art, :Word, :Disease, :BattleValue, :Product, :Element].each do |class_name|
