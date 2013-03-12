@@ -30,7 +30,7 @@ module DNU
                   # この時点で日数の情報が付いていない登録は削除
                   user.send(form_name.to_s.pluralize).where(:day_id => nil).destroy_all
                 # 再更新の場合は新更新で採用した登録を使いまわす
-                elsif user_form.day.day == now_day.day
+                elsif user_form.day.try(:day) == now_day.day
                   user_form.day  = now_day
                   user_form.save!
                 end

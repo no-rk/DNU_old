@@ -3,8 +3,12 @@ class EffectParser < Parslet::Parser
   
   # single character rules
   
+  rule(:spaces) {
+    match('[ \t　]').repeat(1)
+  }
+  
   rule(:spaces?) {
-    match('[ \t　]').repeat(1).maybe
+    spaces.maybe
   }
   
   rule(:newline) {
@@ -29,6 +33,10 @@ class EffectParser < Parslet::Parser
   
   rule(:ket) {
     spaces? >> match('[)\]}）］｝」】]') >> spaces?
+  }
+  
+  rule(:at) {
+    match('[@＠]')
   }
   
   rule(:separator) {
@@ -85,11 +93,22 @@ class EffectParser < Parslet::Parser
   }
   
   rule(:op_and) {
-    str('かつ') | str('に') | str('のとき') | str('and')
+    spaces? >>
+    (
+      str('かつ') |
+      str('に') |
+      str('のとき') |
+      str('and')
+    ) >>
+    spaces?
   }
   
   rule(:op_or) {
-    str('または') | str('or')
+    spaces? >>
+    (
+      str('または') | str('or')
+    ) >>
+    spaces?
   }
   
   rule(:comment) {
@@ -105,7 +124,8 @@ class EffectParser < Parslet::Parser
   }
   
   rule(:variable) {
-    bra >> (ket.absent? >> any).repeat(1).as(:name) >> ket
+    at >> bra >> (ket.absent? >> any).repeat(1).as(:name) >> ket >> spaces? |
+    at >> (spaces.absent? >> any).repeat(1).as(:name) >> spaces
   }
   
   rule(:place) {
@@ -537,7 +557,7 @@ class EffectParser < Parslet::Parser
   }
   
   rule(:effect_cri) {
-    str('クリティカル') >> (non_negative_integer >> percent).as(:min_cri) >> (from_to >> (non_negative_integer >> percent).as(:max_cri)).maybe
+    str('クリティカル').maybe >> (non_negative_integer >> percent).as(:min_cri) >> (from_to >> (non_negative_integer >> percent).as(:max_cri)).maybe
   }
   
   rule(:physical) {

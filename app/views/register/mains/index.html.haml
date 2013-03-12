@@ -1,6 +1,8 @@
 %h1= @register_mains.first.class.model_name.human.downcase
 - @register_mains.each do |register_main|
   .alert
+    - if register_main.day.present?
+      %span.badge.badge-important #{register_main.day.day}日
     = render 'form', { :register_main => register_main }
     = link_to 'Show', register_main
 = paginate @register_mains

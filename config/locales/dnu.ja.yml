@@ -46,6 +46,7 @@ ja:
       register/make: &make
         キャラ作成
 
+      register/move: 移動
       register/battle_setting: 戦闘設定
       register/profile: プロフィール
       register/upload_icon: アップロードアイコン
@@ -56,6 +57,12 @@ ja:
       register/init_guardian: 初期守護竜
 
     attributes:
+      register/move: &move
+        direction: 方向
+      register/main:
+        moves: 移動
+      register/main/moves: *move
+      
       register/battle_setting: &battle_setting
         skill_id: 技
         priority: 優先度

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130226095631) do
+ActiveRecord::Schema.define(:version => 20130312042049) do
 
   create_table "admins", :force => true do |t|
     t.string   "email",               :default => "", :null => false
@@ -373,6 +373,15 @@ ActiveRecord::Schema.define(:version => 20130226095631) do
   end
 
   add_index "register_makes", ["user_id"], :name => "index_register_makes_on_user_id"
+
+  create_table "register_moves", :force => true do |t|
+    t.integer  "main_id"
+    t.integer  "direction"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "register_moves", ["main_id"], :name => "index_register_moves_on_main_id"
 
   create_table "register_products", :force => true do |t|
     t.integer  "user_id"
