@@ -29,7 +29,7 @@ class HelpController < ApplicationController
     model = params[:model]
     id    = params[:id]
     begin
-      @data    = "GameData::#{model.classify}".constantize.select([:name, :caption]).find(id)
+      @data    = "GameData::#{model.classify}".constantize.find(id)
       @word    = @data.name
       @caption = @data.caption
     rescue

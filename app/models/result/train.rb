@@ -1,4 +1,4 @@
-class Result::Trainable < ActiveRecord::Base
+class Result::Train < ActiveRecord::Base
   belongs_to :user
   belongs_to :day
   belongs_to :trainable, :polymorphic => true

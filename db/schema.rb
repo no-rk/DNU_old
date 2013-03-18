@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130312090256) do
+ActiveRecord::Schema.define(:version => 20130318044808) do
 
   create_table "admins", :force => true do |t|
     t.string   "email",               :default => "", :null => false
@@ -427,6 +427,16 @@ ActiveRecord::Schema.define(:version => 20130312090256) do
   add_index "register_trades", ["day_id"], :name => "index_register_trades_on_day_id"
   add_index "register_trades", ["user_id"], :name => "index_register_trades_on_user_id"
 
+  create_table "register_trains", :force => true do |t|
+    t.integer  "main_id"
+    t.integer  "train_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "register_trains", ["main_id"], :name => "index_register_trains_on_main_id"
+  add_index "register_trains", ["train_id"], :name => "index_register_trains_on_train_id"
+
   create_table "register_upload_icons", :force => true do |t|
     t.integer  "image_id"
     t.string   "icon"
@@ -451,7 +461,7 @@ ActiveRecord::Schema.define(:version => 20130312090256) do
   add_index "result_statuses", ["status_id"], :name => "index_result_statuses_on_status_id"
   add_index "result_statuses", ["user_id"], :name => "index_result_statuses_on_user_id"
 
-  create_table "result_trainables", :force => true do |t|
+  create_table "result_trains", :force => true do |t|
     t.integer  "user_id"
     t.integer  "day_id"
     t.integer  "trainable_id"
@@ -461,9 +471,9 @@ ActiveRecord::Schema.define(:version => 20130312090256) do
     t.datetime "updated_at",     :null => false
   end
 
-  add_index "result_trainables", ["day_id"], :name => "index_result_trainables_on_day_id"
-  add_index "result_trainables", ["trainable_id"], :name => "index_result_trainables_on_trainable_id"
-  add_index "result_trainables", ["user_id"], :name => "index_result_trainables_on_user_id"
+  add_index "result_trains", ["day_id"], :name => "index_result_trains_on_day_id"
+  add_index "result_trains", ["trainable_id"], :name => "index_result_trains_on_trainable_id"
+  add_index "result_trains", ["user_id"], :name => "index_result_trains_on_user_id"
 
   create_table "taggings", :force => true do |t|
     t.integer  "tag_id"

@@ -24,6 +24,9 @@ ja:
       game_data/element: 属性
       game_data/battle_setting: 戦闘設定
 
+      result/status: 能力
+      result/train: 訓練
+
       register/main: &main
         基本行動
       register/trade: &trade
@@ -48,6 +51,7 @@ ja:
         キャラ作成
 
       register/move: 移動
+      register/train: 訓練
       register/battle_setting: 戦闘設定
       register/profile: プロフィール
       register/upload_icon: アップロードアイコン
@@ -62,6 +66,7 @@ ja:
         direction: 方向
       register/main:
         moves: 移動
+        trains: 訓練
       register/main/moves: *move
       
       register/battle_setting: &battle_setting
