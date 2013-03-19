@@ -1,0 +1,51 @@
+下のほうにある「ツールボックス」で地形種類をクリックして選択。
+%br
+マップ内でマウスを押しっぱなしにして動かすと書き換えられる。
+%br
+それ以外は全部未実装。
+%br
+- map_size = 26
+%input#map_size{ :type => :text, :value => map_size }
+%button.btn.btn-warning リセット
+%table#map
+  - map_size.times do
+    %tr
+      - map_size.times do
+        %td.plain
+%table#map_tool
+  %caption
+    ツールボックス
+  %tr
+    %td 地形種類
+    %td 衝突判定
+    %td 視界妨害
+  %tr#water
+    %td.water 水辺
+    %td
+      %input{ :type => :checkbox, :checked => :checked }
+    %td
+      %input{ :type => :number, :value => 0 }
+  %tr#plain.selected
+    %td.plain 平原
+    %td
+      %input{ :type => :checkbox }
+    %td
+      %input{ :type => :number, :value => 0 }
+  %tr#forest
+    %td.forest 森林
+    %td
+      %input{ :type => :checkbox }
+    %td
+      %input{ :type => :number, :value => 2 }
+  %tr#mountain
+    %td.mountain 山岳
+    %td
+      %input{ :type => :checkbox }
+    %td
+      %input{ :type => :number, :value => 3 }
+  %tr#wall
+    %td.wall 壁
+    %td
+      %input{ :type => :checkbox, :checked => :checked }
+    %td
+      %input{ :type => :number, :value => 10 }

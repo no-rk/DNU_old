@@ -1,4 +1,6 @@
 DNU::Application.routes.draw do
+  get "editors/map"
+
   devise_for :admins
 
   devise_for :users
