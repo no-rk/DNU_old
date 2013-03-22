@@ -1,37 +1,188 @@
-// Place all the styles related to the editors controller here.
-// They will automatically be included in application.css.
-// You can use Sass (SCSS) here: http://sass-lang.com/
-@mixin map_tip($bg-color : #fff, $font-color : #000) {
+// マップ
+$tip_size: 16px;
+@mixin map_tip($map-type, $bg-color : #fff, $font-color : #000) {
   background-color: $bg-color;
   color: $font-color;
-  width:30px;
-  height:30px;
+  border: 1px #2b2b2b solid;
   padding: 0px;
   margin: 0px;
   cursor: pointer;
+  div{
+    &.map_ur, &.map_lr, &.map_ll, &.map_ul{
+      background-image: image-url($map-type + ".png");
+    }
+    &.map_ur{
+      &.map4_tip_0{
+        background-position:-1*$tip_size -8*$tip_size;
+      }
+      &.map4_tip_1{
+        background-position:-1*$tip_size -4*$tip_size;
+      }
+      &.map4_tip_2{
+        background-position:-1*$tip_size -2*$tip_size;
+      }
+      &.map4_tip_3{
+        background-position:-1*$tip_size -0*$tip_size;
+      }
+      &.map4_tip_4{
+        background-position:-1*$tip_size -6*$tip_size;
+      }
+    }
+    &.map_lr{
+      &.map4_tip_0{
+        background-position:-1*$tip_size -9*$tip_size;
+      }
+      &.map4_tip_1{
+        background-position:-1*$tip_size -3*$tip_size;
+      }
+      &.map4_tip_2{
+        background-position:-1*$tip_size -5*$tip_size;
+      }
+      &.map4_tip_3{
+        background-position:-1*$tip_size -1*$tip_size;
+      }
+      &.map4_tip_4{
+        background-position:-1*$tip_size -7*$tip_size;
+      }
+    }
+    &.map_ll{
+      &.map4_tip_0{
+        background-position:-0*$tip_size -9*$tip_size;
+      }
+      &.map4_tip_1{
+        background-position:-0*$tip_size -5*$tip_size;
+      }
+      &.map4_tip_2{
+        background-position:-0*$tip_size -3*$tip_size;
+      }
+      &.map4_tip_3{
+        background-position:-0*$tip_size -1*$tip_size;
+      }
+      &.map4_tip_4{
+        background-position:-0*$tip_size -7*$tip_size;
+      }
+    }
+    &.map_ul{
+      &.map4_tip_0{
+        background-position:-0*$tip_size -8*$tip_size;
+      }
+      &.map4_tip_1{
+        background-position:-0*$tip_size -2*$tip_size;
+      }
+      &.map4_tip_2{
+        background-position:-0*$tip_size -4*$tip_size;
+      }
+      &.map4_tip_3{
+        background-position:-0*$tip_size -0*$tip_size;
+      }
+      &.map4_tip_4{
+        background-position:-0*$tip_size -6*$tip_size;
+      }
+    }
+  }
 }
 
-table#map td,th{
-  border: 2px #2b2b2b solid;
-}
-table#map td.enlighten{
-  opacity: 0.5;
-}
 table#map_tool tr.selected{
   background-color: #700;
 }
+table#map{
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  td{
+    background-image: image-url("base.png");
+    z-index: 0;
+  }
+  div.map_base{
+    &.enlighten{
+      opacity: 0.5;
+    }
+    position:relative;
+    left:0px;
+    top:0px;
+    width:2*$tip_size;
+    height:2*$tip_size;
+    div{
+      &.map_inner{
+        position:absolute;
+        left:0px;
+        top:0px;
+        width:2*$tip_size;
+        height:2*$tip_size;
+        font-size:10pt;
+        z-index: 1;
+      }
+      &.map_collision{
+        position:absolute;
+        left:0px;
+        top:0px;
+        width:2*$tip_size;
+        height:2*$tip_size;
+        font-size:10pt;
+        z-index: 2;
+        &.true{
+          background-image: image-url("collision.png");
+        }
+      }
+      &.map_opacity{
+        position:absolute;
+        left:0px;
+        top:0px;
+        width:2*$tip_size;
+        height:2*$tip_size;
+        font-size:10pt;
+        z-index: 3;
+        text-align: center;
+        p{
+          line-height:2*$tip_size;
+        }
+      }
+      &.map_ur{
+        position:absolute;
+        left:$tip_size;
+        top:0px;
+        width:$tip_size;
+        height:$tip_size;
+      }
+      &.map_lr{
+        position:absolute;
+        left:$tip_size;
+        top:$tip_size;
+        width:$tip_size;
+        height:$tip_size;
+      }
+      &.map_ll{
+        position:absolute;
+        left:0px;
+        top:$tip_size;
+        width:$tip_size;
+        height:$tip_size;
+      }
+      &.map_ul{
+        position:absolute;
+        left:0px;
+        top:0px;
+        width:$tip_size;
+        height:$tip_size;
+      }
+    }
+  }
+}
 td.plain{
-  @include map_tip(#006666);
+  @include map_tip("plain", #006666);
 }
 td.forest{
-  @include map_tip(#99CC99);
+  @include map_tip("forest", #99CC99);
 }
 td.mountain{
-  @include map_tip(#FFCC99);
+  @include map_tip("mountain", #FFCC99);
 }
 td.water{
-  @include map_tip(#9999FF);
+  @include map_tip("water", #9999FF);
 }
 td.wall{
-  @include map_tip(#666666);
+  @include map_tip("wall", #666666);
 }
