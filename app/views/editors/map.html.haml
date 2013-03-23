@@ -35,6 +35,12 @@
       %input{ :type => :checkbox }
     %td
       %input{ :type => :number, :value => 0 }
+  %tr#desert
+    %td.desert 砂地
+    %td
+      %input{ :type => :checkbox }
+    %td
+      %input{ :type => :number, :value => 0 }
   %tr#forest
     %td.forest 森林
     %td
@@ -53,6 +59,10 @@
       %input{ :type => :checkbox, :checked => :checked }
     %td
       %input{ :type => :number, :value => 10 }
+%select#map_draw
+  %option{ :value => :pen, :selected => :selected } ペン
+  %option{ :value => :rectangle } 塗りつぶし
+%br
 %input#vision_size{ :type => :number, :value => vision_size }
 %button#map_vision.btn.btn-warning 視界表示オフ
 %br

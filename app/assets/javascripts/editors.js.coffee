@@ -2,6 +2,7 @@
 $ ->
   is_draw   = false
   is_vision = false
+  start_cell = undefined
   $.fn.changeTip = (is_recursion) ->
     $map0 = $(this)
     if $map0.is('div')
@@ -41,7 +42,12 @@ $ ->
         $map1.changeTip()
         $map2.changeTip()
         $map3.changeTip()
-  $.fn.drawMap = () ->
+  $.fn.simpleTip = () ->
+    $map0 = $(this)
+    if $map0.is('div')
+      map4_class = $map0.data('map4_class')
+      $(this).removeClass().addClass(map4_class).addClass('map4_tip_0')
+  $.fn.drawMap = (is_simple) ->
     map_tip       = $('#map_tool tr.selected').attr('id')
     map_collision = $('#map_tool tr.selected').find(':checkbox').is(':checked')
     map_opacity   = $('#map_tool tr.selected').find('input[type=number]').val()
@@ -56,10 +62,16 @@ $ ->
       $(this).find('div.map_opacity').empty()
     $(this).data('map_collision', map_collision)
     $(this).data('map_opacity', map_opacity)
-    $(this).find('div.map_ur').changeTip(true)
-    $(this).find('div.map_lr').changeTip(true)
-    $(this).find('div.map_ll').changeTip(true)
-    $(this).find('div.map_ul').changeTip(true)
+    if is_simple
+      $(this).find('div.map_ur').simpleTip()
+      $(this).find('div.map_lr').simpleTip()
+      $(this).find('div.map_ll').simpleTip()
+      $(this).find('div.map_ul').simpleTip()
+    else
+      $(this).find('div.map_ur').changeTip(true)
+      $(this).find('div.map_lr').changeTip(true)
+      $(this).find('div.map_ll').changeTip(true)
+      $(this).find('div.map_ul').changeTip(true)
   $.fn.aroundMap = (next_vision) ->
     arrounds = []
     map_x = $(this).data('map_x')
@@ -133,11 +145,38 @@ $ ->
     $map.mouseup ->
       is_draw = false
     $map.find('td').mousedown ->
-      $(this).drawMap()
+      switch $('#map_draw').val()
+        when 'pen'
+          $(this).drawMap()
+        when 'rectangle'
+          start_cell = $(this)
+    $map.find('td').mouseup ->
+      switch $('#map_draw').val()
+        when 'rectangle'
+          if start_cell?
+            $td = $(this)
+            bb = []
+            for x in [start_cell.data('map_x')..$td.data('map_x')]
+              for y in [start_cell.data('map_y')..$td.data('map_y')]
+                if x==start_cell.data('map_x') or x==$td.data('map_x') or y==start_cell.data('map_y') or y==$td.data('map_y')
+                  bb.push($('td#map_' + x + '_' +  y))
+                else
+                  $('td#map_' + x + '_' +  y).drawMap(true)
+            # 最後に枠を描く
+            for $b in bb
+              $b.drawMap()
+      start_cell = undefined
     $map.find('td').hover ->
       if is_draw
-        $(this).drawMap()
-      if is_vision
+        switch $('#map_draw').val()
+          when 'pen'
+            $(this).drawMap()
+          when 'rectangle'
+            if start_cell?
+              for x in [start_cell.data('map_x')..$(this).data('map_x')]
+                for y in [start_cell.data('map_y')..$(this).data('map_y')]
+                  $('td#map_' + x + '_' +  y).children('div.map_base').addClass('enlighten')
+      if is_vision and !start_cell?
         enlighten = ($center, vision, map_opacity = $center.data('map_opacity') ? 0) ->
           $center.data('map_vision', vision)
           $center.children('div.map_base').addClass('enlighten')
