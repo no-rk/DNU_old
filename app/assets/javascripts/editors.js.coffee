@@ -47,10 +47,7 @@ $ ->
     if $map0.is('div')
       map4_class = $map0.data('map4_class')
       $(this).removeClass().addClass(map4_class).addClass('map4_tip_0')
-  $.fn.drawMap = (is_simple) ->
-    map_tip       = $('#map_tool tr.selected').attr('id')
-    map_collision = $('#map_tool tr.selected').find(':checkbox').is(':checked')
-    map_opacity   = $('#map_tool tr.selected').find('input[type=number]').val()
+  $.fn.drawMap = (is_simple, map_tip = $('#map_tool tr.selected').attr('id'), map_collision = $('#map_tool tr.selected').find(':checkbox').is(':checked'), map_opacity = $('#map_tool tr.selected').find('input[type=number]').val()) ->
     $(this).removeClass()
     $(this).addClass(map_tip)
     $(this).find('div.map_collision').removeClass('true')
@@ -217,3 +214,9 @@ $ ->
     $('#map_text').val(output)
   $('#map_text').click ->
     $(this).select()
+  $('#map_input').click ->
+    map = jsyaml.load($('#map_text').val())[0]
+    $('#map_name').val(map.name)
+    $('#map_caption').val(map.caption)
+    for tip in map.attributes
+      $('td#map_' + tip.x + '_' +  tip.y).drawMap(false, tip.landform, tip.collision, tip.opacity)
