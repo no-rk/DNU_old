@@ -96,6 +96,22 @@ table#map{
     background-image: image-url("base.png");
     z-index: 0;
   }
+  th{
+    padding: 0px;
+    margin: 0px;
+    div{
+      position:relative;
+      left:0px;
+      top:0px;
+      width:2*$tip_size;
+      height:2*$tip_size;
+      font-size:10pt;
+      text-align: center;
+      p{
+        line-height:2*$tip_size;
+      }
+    }
+  }
   div.map_base{
     &.enlighten{
       opacity: 0.5;

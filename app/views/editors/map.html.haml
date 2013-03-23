@@ -2,19 +2,20 @@
 %br
 マップ内でマウスを押しっぱなしにして動かすと書き換えられる。
 %br
-視界表示オンにすると視界が表示される（動作が重いので要注意）
+視界表示オンにすると視界が表示される。
 %br
-それ以外は全部未実装。
+アプトプットボタンを押せばテキスト形式で出力。
 %br
 - map_size = 26
 - vision_size = 5
+%input#map_name{ :type => :text, :value => :'マップの名前' }
 %input#map_size{ :type => :number, :value => map_size }
-%button.btn.btn-warning リセット
+%button#map_reset.btn.btn-warning リセット
+%br
+%textarea#map_caption.span9{ :rows => 3 }
+  マップの説明
+%br
 %table#map
-  - map_size.times do
-    %tr
-      - map_size.times do
-        %td.plain
 %table#map_tool
   %caption
     ツールボックス
@@ -54,3 +55,7 @@
       %input{ :type => :number, :value => 10 }
 %input#vision_size{ :type => :number, :value => vision_size }
 %button#map_vision.btn.btn-warning 視界表示オフ
+%br
+%button#map_output.btn.btn-warning アプトプット
+%br
+%textarea#map_text.span9{ :rows => 10 }
