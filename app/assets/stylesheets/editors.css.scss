@@ -193,6 +193,9 @@ td.plain{
 td.desert{
   @include map_tip("desert", #FFFFEE);
 }
+td.town{
+  @include map_tip("town", #FFFFFF);
+}
 td.forest{
   @include map_tip("forest", #99CC99);
 }

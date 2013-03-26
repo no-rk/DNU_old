@@ -512,7 +512,7 @@ class EditorsController < ApplicationController
       opacity: 0
     - x: 4
       y: 24
-      landform: desert
+      landform: town
       collision: false
       opacity: 0
     - x: 4
@@ -842,9 +842,9 @@ class EditorsController < ApplicationController
       opacity: 2
     - x: 7
       y: 12
-      landform: mountain
+      landform: town
       collision: false
-      opacity: 2
+      opacity: 0
     - x: 7
       y: 13
       landform: mountain
@@ -1017,9 +1017,9 @@ class EditorsController < ApplicationController
       opacity: 0
     - x: 8
       y: 21
-      landform: forest
+      landform: town
       collision: false
-      opacity: 1
+      opacity: 0
     - x: 8
       y: 22
       landform: forest
@@ -1447,7 +1447,7 @@ class EditorsController < ApplicationController
       opacity: 0
     - x: 12
       y: 3
-      landform: plain
+      landform: town
       collision: false
       opacity: 0
     - x: 12
@@ -2022,7 +2022,7 @@ class EditorsController < ApplicationController
       opacity: 0
     - x: 16
       y: 14
-      landform: desert
+      landform: town
       collision: false
       opacity: 0
     - x: 16
