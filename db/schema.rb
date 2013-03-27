@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130327021136) do
+ActiveRecord::Schema.define(:version => 20130327030607) do
 
   create_table "admins", :force => true do |t|
     t.string   "email",               :default => "", :null => false
@@ -468,6 +468,18 @@ ActiveRecord::Schema.define(:version => 20130327021136) do
   end
 
   add_index "register_upload_icons", ["image_id"], :name => "index_register_upload_icons_on_image_id"
+
+  create_table "result_places", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "day_id"
+    t.integer  "map_tip_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "result_places", ["day_id"], :name => "index_result_places_on_day_id"
+  add_index "result_places", ["map_tip_id"], :name => "index_result_places_on_map_tip_id"
+  add_index "result_places", ["user_id"], :name => "index_result_places_on_user_id"
 
   create_table "result_statuses", :force => true do |t|
     t.integer  "user_id"
