@@ -4,6 +4,7 @@ class CreateResultLearns < ActiveRecord::Migration
       t.references :character, :polymorphic => true
       t.references :day
       t.references :learnable, :polymorphic => true
+      t.integer :exp
       t.boolean :forget
 
       t.timestamps

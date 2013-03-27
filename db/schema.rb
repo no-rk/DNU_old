@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130327063424) do
+ActiveRecord::Schema.define(:version => 20130327083115) do
 
   create_table "admins", :force => true do |t|
     t.string   "email",               :default => "", :null => false
@@ -469,12 +469,29 @@ ActiveRecord::Schema.define(:version => 20130327063424) do
 
   add_index "register_upload_icons", ["image_id"], :name => "index_register_upload_icons_on_image_id"
 
+  create_table "result_items", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "day_id"
+    t.integer  "makable_id"
+    t.string   "makable_type"
+    t.boolean  "protect"
+    t.integer  "item_id"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
+  end
+
+  add_index "result_items", ["day_id"], :name => "index_result_items_on_day_id"
+  add_index "result_items", ["item_id"], :name => "index_result_items_on_item_id"
+  add_index "result_items", ["makable_id"], :name => "index_result_items_on_makable_id"
+  add_index "result_items", ["user_id"], :name => "index_result_items_on_user_id"
+
   create_table "result_learns", :force => true do |t|
     t.integer  "character_id"
     t.string   "character_type"
     t.integer  "day_id"
     t.integer  "learnable_id"
     t.string   "learnable_type"
+    t.integer  "exp"
     t.boolean  "forget"
     t.datetime "created_at",     :null => false
     t.datetime "updated_at",     :null => false
@@ -496,33 +513,20 @@ ActiveRecord::Schema.define(:version => 20130327063424) do
   add_index "result_places", ["map_tip_id"], :name => "index_result_places_on_map_tip_id"
   add_index "result_places", ["user_id"], :name => "index_result_places_on_user_id"
 
-  create_table "result_statuses", :force => true do |t|
+  create_table "result_trains", :force => true do |t|
     t.integer  "character_id"
     t.string   "character_type"
     t.integer  "day_id"
-    t.integer  "status_id"
+    t.integer  "trainable_id"
+    t.string   "trainable_type"
     t.integer  "count"
     t.datetime "created_at",     :null => false
     t.datetime "updated_at",     :null => false
   end
 
-  add_index "result_statuses", ["character_id"], :name => "index_result_statuses_on_character_id"
-  add_index "result_statuses", ["day_id"], :name => "index_result_statuses_on_day_id"
-  add_index "result_statuses", ["status_id"], :name => "index_result_statuses_on_status_id"
-
-  create_table "result_trains", :force => true do |t|
-    t.integer  "user_id"
-    t.integer  "day_id"
-    t.integer  "trainable_id"
-    t.string   "trainable_type"
-    t.integer  "lv"
-    t.datetime "created_at",     :null => false
-    t.datetime "updated_at",     :null => false
-  end
-
+  add_index "result_trains", ["character_id"], :name => "index_result_trains_on_character_id"
   add_index "result_trains", ["day_id"], :name => "index_result_trains_on_day_id"
   add_index "result_trains", ["trainable_id"], :name => "index_result_trains_on_trainable_id"
-  add_index "result_trains", ["user_id"], :name => "index_result_trains_on_user_id"
 
   create_table "taggings", :force => true do |t|
     t.integer  "tag_id"
