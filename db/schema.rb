@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130327091048) do
+ActiveRecord::Schema.define(:version => 20130327093112) do
 
   create_table "admins", :force => true do |t|
     t.string   "email",               :default => "", :null => false
@@ -512,6 +512,28 @@ ActiveRecord::Schema.define(:version => 20130327091048) do
   add_index "result_learns", ["character_id"], :name => "index_result_learns_on_character_id"
   add_index "result_learns", ["day_id"], :name => "index_result_learns_on_day_id"
   add_index "result_learns", ["learnable_id"], :name => "index_result_learns_on_learnable_id"
+
+  create_table "result_parties", :force => true do |t|
+    t.integer  "day_id"
+    t.string   "kind"
+    t.string   "name"
+    t.text     "caption"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "result_parties", ["day_id"], :name => "index_result_parties_on_day_id"
+
+  create_table "result_party_members", :force => true do |t|
+    t.integer  "party_id"
+    t.integer  "character_id"
+    t.string   "character_type"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+  end
+
+  add_index "result_party_members", ["character_id"], :name => "index_result_party_members_on_character_id"
+  add_index "result_party_members", ["party_id"], :name => "index_result_party_members_on_party_id"
 
   create_table "result_places", :force => true do |t|
     t.integer  "user_id"
