@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130327030607) do
+ActiveRecord::Schema.define(:version => 20130327063424) do
 
   create_table "admins", :force => true do |t|
     t.string   "email",               :default => "", :null => false
@@ -469,6 +469,21 @@ ActiveRecord::Schema.define(:version => 20130327030607) do
 
   add_index "register_upload_icons", ["image_id"], :name => "index_register_upload_icons_on_image_id"
 
+  create_table "result_learns", :force => true do |t|
+    t.integer  "character_id"
+    t.string   "character_type"
+    t.integer  "day_id"
+    t.integer  "learnable_id"
+    t.string   "learnable_type"
+    t.boolean  "forget"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+  end
+
+  add_index "result_learns", ["character_id"], :name => "index_result_learns_on_character_id"
+  add_index "result_learns", ["day_id"], :name => "index_result_learns_on_day_id"
+  add_index "result_learns", ["learnable_id"], :name => "index_result_learns_on_learnable_id"
+
   create_table "result_places", :force => true do |t|
     t.integer  "user_id"
     t.integer  "day_id"
@@ -482,17 +497,18 @@ ActiveRecord::Schema.define(:version => 20130327030607) do
   add_index "result_places", ["user_id"], :name => "index_result_places_on_user_id"
 
   create_table "result_statuses", :force => true do |t|
-    t.integer  "user_id"
+    t.integer  "character_id"
+    t.string   "character_type"
     t.integer  "day_id"
     t.integer  "status_id"
     t.integer  "count"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
   end
 
+  add_index "result_statuses", ["character_id"], :name => "index_result_statuses_on_character_id"
   add_index "result_statuses", ["day_id"], :name => "index_result_statuses_on_day_id"
   add_index "result_statuses", ["status_id"], :name => "index_result_statuses_on_status_id"
-  add_index "result_statuses", ["user_id"], :name => "index_result_statuses_on_user_id"
 
   create_table "result_trains", :force => true do |t|
     t.integer  "user_id"
