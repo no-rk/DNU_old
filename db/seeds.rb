@@ -25,6 +25,20 @@ art_types.each do |art_type|
   art_type_model.save!
 end
 
+# マップ
+ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_maps")
+ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_map_tips")
+map_names = YAML.load(ERB.new(File.read("#{Rails.root}/db/game_data/map.yml")).result)
+map_names.each do |map_name|
+  #p map_name.except("attributes")
+  map_name_model = GameData::Map.new(map_name.except("attributes"))
+  map_name["attributes"].each do |map_tip|
+    #p map
+    map_name_model.map_tips.build(map_tip)
+  end
+  map_name_model.save!
+end
+
 # 能力, 武器, 技, 付加, 罠, アビリティ, キャラクター, 状態異常
 ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_learning_conditions")
 [:status, :weapon, :skill, :sup, :trap, :ability, :character, :disease].each do |table|
