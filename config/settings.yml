@@ -1,3 +1,7 @@
+party_slogan:
+  slogan:
+    maximum: 20
+
 profile:
   name:
     maximum: 20

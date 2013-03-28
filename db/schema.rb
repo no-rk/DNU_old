@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130327093112) do
+ActiveRecord::Schema.define(:version => 20130328102909) do
 
   create_table "admins", :force => true do |t|
     t.string   "email",               :default => "", :null => false
@@ -413,6 +413,16 @@ ActiveRecord::Schema.define(:version => 20130327093112) do
   end
 
   add_index "register_moves", ["main_id"], :name => "index_register_moves_on_main_id"
+
+  create_table "register_party_slogans", :force => true do |t|
+    t.integer  "main_id"
+    t.string   "kind"
+    t.string   "slogan"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "register_party_slogans", ["main_id"], :name => "index_register_party_slogans_on_main_id"
 
   create_table "register_products", :force => true do |t|
     t.integer  "user_id"

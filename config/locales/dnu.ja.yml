@@ -4,6 +4,8 @@ ja:
       admin: 糞管理者
       day: 日数
 
+      game_data/map: マップ
+      game_data/map_tip: マップデータ
       game_data/weapon: 武器
       game_data/train: 訓練
       game_data/learning_condition: 習得条件
@@ -24,7 +26,12 @@ ja:
       game_data/element: 属性
       game_data/battle_setting: 戦闘設定
 
-      result/status: 能力
+      result/inventory: 所持品
+      result/item: アイテム
+      result/learn: 習得
+      result/party: パーティー
+      result/party_member: パーティーメンバー
+      result/place: 現在地
       result/train: 訓練
 
       register/main: &main
@@ -52,6 +59,7 @@ ja:
 
       register/move: 移動
       register/train: 訓練
+      register/party_slogan: 合言葉
       register/battle_setting: 戦闘設定
       register/profile: プロフィール
       register/upload_icon: アップロードアイコン
@@ -64,10 +72,13 @@ ja:
     attributes:
       register/move: &move
         direction: 方向
+      register/party_slogan: &party_slogan
+        slogan: 合言葉
       register/main:
         moves: 移動
         trains: 訓練
       register/main/moves: *move
+      register/main/party_slogan: *party_slogan
       
       register/battle_setting: &battle_setting
         skill_id: 技
