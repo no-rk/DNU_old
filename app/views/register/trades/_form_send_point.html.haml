@@ -1,0 +1,5 @@
+%br
+= form_trade.simple_fields_for :send_points, :defaults => { :as => (:plain if @read_only), :user => current_user, :input_html => { :class => :'span6' } } do |form_send_point|
+  = form_send_point.input :user_id
+  = form_send_point.input :value
+  = form_send_point.input :message

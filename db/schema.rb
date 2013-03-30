@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130330093300) do
+ActiveRecord::Schema.define(:version => 20130330102832) do
 
   create_table "admins", :force => true do |t|
     t.string   "email",               :default => "", :null => false
@@ -456,6 +456,20 @@ ActiveRecord::Schema.define(:version => 20130330093300) do
   end
 
   add_index "register_profiles", ["character_id"], :name => "index_register_profiles_on_character_id"
+
+  create_table "register_send_points", :force => true do |t|
+    t.integer  "trade_id"
+    t.integer  "point_id"
+    t.integer  "user_id"
+    t.integer  "value"
+    t.text     "message"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "register_send_points", ["point_id"], :name => "index_register_send_points_on_point_id"
+  add_index "register_send_points", ["trade_id"], :name => "index_register_send_points_on_trade_id"
+  add_index "register_send_points", ["user_id"], :name => "index_register_send_points_on_user_id"
 
   create_table "register_trades", :force => true do |t|
     t.integer  "user_id"

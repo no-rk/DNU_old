@@ -1,6 +1,7 @@
 = simple_form_for(register_trade) do |form_trade|
   = register_trade.updated_at.try(:to_s, :jp)
   = render 'register/error', { :register_error => register_trade }
+  = render 'form_send_point', { :register_trade => register_trade, :form_trade => form_trade }
   - unless @read_only
     .actions
       %button.btn.btn-large.btn-warning{"data-remote" => "true"} 確認する

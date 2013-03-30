@@ -1,5 +1,5 @@
 class Register::Initial < ActiveRecord::Base
-  belongs_to :user, :class_name => "User"
+  belongs_to :user
 
   has_one  :init_job     , :dependent => :destroy
   has_one  :init_guardian, :dependent => :destroy
