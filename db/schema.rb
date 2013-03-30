@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130328102909) do
+ActiveRecord::Schema.define(:version => 20130330093300) do
 
   create_table "admins", :force => true do |t|
     t.string   "email",               :default => "", :null => false
@@ -153,6 +153,15 @@ ActiveRecord::Schema.define(:version => 20130328102909) do
     t.string   "base"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+  end
+
+  create_table "game_data_points", :force => true do |t|
+    t.string   "name"
+    t.text     "caption"
+    t.boolean  "non_negative"
+    t.boolean  "protect"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
   end
 
   create_table "game_data_products", :force => true do |t|
@@ -556,6 +565,20 @@ ActiveRecord::Schema.define(:version => 20130328102909) do
   add_index "result_places", ["day_id"], :name => "index_result_places_on_day_id"
   add_index "result_places", ["map_tip_id"], :name => "index_result_places_on_map_tip_id"
   add_index "result_places", ["user_id"], :name => "index_result_places_on_user_id"
+
+  create_table "result_points", :force => true do |t|
+    t.integer  "character_id"
+    t.string   "character_type"
+    t.integer  "day_id"
+    t.integer  "point_id"
+    t.integer  "value"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+  end
+
+  add_index "result_points", ["character_id"], :name => "index_result_points_on_character_id"
+  add_index "result_points", ["day_id"], :name => "index_result_points_on_day_id"
+  add_index "result_points", ["point_id"], :name => "index_result_points_on_point_id"
 
   create_table "result_trains", :force => true do |t|
     t.integer  "character_id"
