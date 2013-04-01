@@ -13,7 +13,6 @@ class User < ActiveRecord::Base
   has_one  :competition , :order => "updated_at DESC", :class_name => "Register::Competition"
   has_many :competitions, :order => "updated_at DESC", :class_name => "Register::Competition"
 
-  has_one  :character   , :order => "updated_at DESC", :class_name => "Register::Character"
   has_many :characters  , :order => "updated_at DESC", :class_name => "Register::Character"
   has_one  :image       , :order => "updated_at DESC", :class_name => "Register::Image"
   has_many :images      , :order => "updated_at DESC", :class_name => "Register::Image"
@@ -47,7 +46,23 @@ class User < ActiveRecord::Base
       where(conditions).first
     end
   end
-
+  
+  def make?
+    self.creation_day.present? and self.creation_day < Day.last_day_i
+  end
+  
+  def character(day_i = nil)
+    if day_i.nil? or (self.creation_day == Day.last_day_i and self.creation_day == day_i)
+      self.characters.first
+    else
+      user_arel = User.arel_table
+      day_arel  = Day.arel_table
+      character_arel = Register::Character.arel_table
+      
+      Register::Character.where(user_arel[:id].eq(self.id)).where(day_arel[:day].eq(day_i)).includes(:user).includes(:day).order(character_arel[:id].desc).limit(1).first
+    end
+  end
+  
   def icons
     begin
       self.character.icons.select([:number,:url,:upload_icon_id]).includes(:upload_icon).inject({}){|h,v| h[v.number]=v.url.blank? ? v.upload_icon.icon_url(:icon) : v.url;h}

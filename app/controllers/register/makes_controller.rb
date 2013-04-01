@@ -50,7 +50,7 @@ class Register::MakesController < Register::ApplicationController
               #全て成功しなかった場合は例外発生
               raise unless @register_make.save & @register_character.save & @register_initial.save
               # キャラ作成した日付を保存
-              current_user.creation_day = Day.last_day_num
+              current_user.creation_day = Day.last_day_i
               raise unless current_user.save
             end
             format.html { redirect_to register_index_path, notice: I18n.t("create", :scope => "register.message", :model_name => Register::Character.model_name.human) }

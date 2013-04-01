@@ -1,5 +1,6 @@
 class Register::Character < ActiveRecord::Base
-  belongs_to :user, :class_name => "User"
+  belongs_to :user
+  belongs_to :day
 
   has_one  :profile, :dependent => :destroy
   has_many :icons  , :order => "number ASC", :dependent => :destroy

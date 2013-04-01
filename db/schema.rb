@@ -299,10 +299,12 @@ ActiveRecord::Schema.define(:version => 20130401041727) do
 
   create_table "register_characters", :force => true do |t|
     t.integer  "user_id"
+    t.integer  "day_id"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
 
+  add_index "register_characters", ["day_id"], :name => "index_register_characters_on_day_id"
   add_index "register_characters", ["user_id"], :name => "index_register_characters_on_user_id"
 
   create_table "register_competitions", :force => true do |t|
