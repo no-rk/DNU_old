@@ -33,6 +33,8 @@ class DeviseCreateUsers < ActiveRecord::Migration
       ## Token authenticatable
       # t.string :authentication_token
 
+      ## Character creation day
+      t.integer :creation_day
 
       t.timestamps
     end

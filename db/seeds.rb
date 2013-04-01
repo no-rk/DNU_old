@@ -1,5 +1,10 @@
 # encoding: UTF-8
 
+# 日付
+if Day.last.nil?
+  Day.create!(:day => 0, :state => 2)
+end
+
 # ジョブ, 守護, 言葉, 戦闘値, 生産, 属性, 戦闘設定, ポイント
 [:job, :guardian, :word, :battle_value, :product, :element, :battle_setting, :point].each do |table|
   ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_#{table.to_s.tableize}")

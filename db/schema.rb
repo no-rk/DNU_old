@@ -714,6 +714,7 @@ ActiveRecord::Schema.define(:version => 20130401041727) do
     t.integer  "failed_attempts",        :default => 0
     t.string   "unlock_token"
     t.datetime "locked_at"
+    t.integer  "creation_day"
     t.datetime "created_at",                             :null => false
     t.datetime "updated_at",                             :null => false
   end
