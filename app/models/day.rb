@@ -1,6 +1,11 @@
 class Day < ActiveRecord::Base
   attr_accessible :day, :state
   
+  def self.last_day_num
+    last_day = self.last
+    last_day.try(:day) || 0
+  end
+  
   def self.toggle_settled_pending
     last_day = self.last
     

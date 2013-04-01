@@ -1,4 +1,6 @@
 class EditorsController < ApplicationController
+  layout "no_side"
+  
   def map
     @rokume = <<'ROKUME'
 - name: MAP1

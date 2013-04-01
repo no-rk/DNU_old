@@ -1,6 +1,4 @@
 DNU::Application.routes.draw do
-  get "editors/map"
-
   devise_for :admins
 
   devise_for :users
@@ -26,6 +24,10 @@ DNU::Application.routes.draw do
 
   get 'register' => 'register#index'  , :as => 'register_index'
   post 'history' => 'register#history', :as => 'register_history'
+
+  get "result(/:day)/eno/:id" => 'result#eno' , :as => 'result_eno'
+
+  get "editors/map"
 
   get  "gallery/:model(/:tag/tag)"   => 'gallery#index' , :as => 'gallerys'
   get  "gallery/:model/:id"          => 'gallery#show'  , :as => 'gallery'

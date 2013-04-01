@@ -7,7 +7,7 @@
     = stylesheet_link_tag "application"
     = csrf_meta_tags
   %body{:class => "#{controller.controller_name}_body #{controller.controller_name}_#{controller.action_name}_body"}
-    = render :partial => 'layouts/navbar_top'
+    = render 'layouts/navbar_top'
     .container-fluid
       .row-fluid
         - if notice
@@ -22,7 +22,7 @@
             = alert
       .row-fluid
         .span3.well
-          = render :partial => 'layouts/nav_side'
+          = render 'layouts/nav_side'
         .span9.well
           = yield
     = javascript_include_tag "application"

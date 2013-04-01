@@ -9,7 +9,7 @@
       - if user_signed_in?
         %ul.nav.nav-pills.pull-right
           %li
-            %a{"data-placement" => "bottom", :href => "#", :rel => "tooltip", :title => "ENo.#{current_user.id}の結果"}
+            %a{"data-placement" => "bottom", :href => result_eno_path(nil, current_user.id), :rel => "tooltip", :title => "ENo.#{current_user.id}の結果"}
               %i.icon-user
               ENo.#{current_user.id}
           %li
