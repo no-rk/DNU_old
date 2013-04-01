@@ -6,6 +6,7 @@ class CreateResultItemElements < ActiveRecord::Migration
       t.references :day
       t.references :makable, :polymorphic => true
       t.references :element
+      t.references :source
 
       t.timestamps
     end
@@ -14,5 +15,6 @@ class CreateResultItemElements < ActiveRecord::Migration
     add_index :result_item_elements, :day_id
     add_index :result_item_elements, :makable_id
     add_index :result_item_elements, :element_id
+    add_index :result_item_elements, :source_id
   end
 end
