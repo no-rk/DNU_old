@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130401032341) do
+ActiveRecord::Schema.define(:version => 20130401033638) do
 
   create_table "admins", :force => true do |t|
     t.string   "email",               :default => "", :null => false
@@ -513,6 +513,23 @@ ActiveRecord::Schema.define(:version => 20130401032341) do
   add_index "result_inventories", ["day_id"], :name => "index_result_inventories_on_day_id"
   add_index "result_inventories", ["item_id"], :name => "index_result_inventories_on_item_id"
   add_index "result_inventories", ["user_id"], :name => "index_result_inventories_on_user_id"
+
+  create_table "result_item_elements", :force => true do |t|
+    t.integer  "item_id"
+    t.integer  "user_id"
+    t.integer  "day_id"
+    t.integer  "makable_id"
+    t.string   "makable_type"
+    t.integer  "element_id"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
+  end
+
+  add_index "result_item_elements", ["day_id"], :name => "index_result_item_elements_on_day_id"
+  add_index "result_item_elements", ["element_id"], :name => "index_result_item_elements_on_element_id"
+  add_index "result_item_elements", ["item_id"], :name => "index_result_item_elements_on_item_id"
+  add_index "result_item_elements", ["makable_id"], :name => "index_result_item_elements_on_makable_id"
+  add_index "result_item_elements", ["user_id"], :name => "index_result_item_elements_on_user_id"
 
   create_table "result_item_strengths", :force => true do |t|
     t.integer  "item_id"
