@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130402022356) do
+ActiveRecord::Schema.define(:version => 20130402031950) do
 
   create_table "admins", :force => true do |t|
     t.string   "email",               :default => "", :null => false
@@ -730,6 +730,23 @@ ActiveRecord::Schema.define(:version => 20130402022356) do
   add_index "result_skills", ["character_id"], :name => "index_result_skills_on_character_id"
   add_index "result_skills", ["day_id"], :name => "index_result_skills_on_day_id"
   add_index "result_skills", ["skill_id"], :name => "index_result_skills_on_skill_id"
+
+  create_table "result_statuses", :force => true do |t|
+    t.integer  "character_id"
+    t.string   "character_type"
+    t.integer  "day_id"
+    t.integer  "status_id"
+    t.string   "name"
+    t.text     "caption"
+    t.integer  "count"
+    t.integer  "bonus"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+  end
+
+  add_index "result_statuses", ["character_id"], :name => "index_result_statuses_on_character_id"
+  add_index "result_statuses", ["day_id"], :name => "index_result_statuses_on_day_id"
+  add_index "result_statuses", ["status_id"], :name => "index_result_statuses_on_status_id"
 
   create_table "taggings", :force => true do |t|
     t.integer  "tag_id"
