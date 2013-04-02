@@ -31,6 +31,54 @@ class Register::Initial < ActiveRecord::Base
   end
   
   def save_result
-    
+    # 初期ステータスを結果に反映
+    result_status_id = Result::Status.where(:character_type => self.user.class.name).
+                                      where(:character_id => self.user.id).pluck(:id)
+    self.init_statuses.each do |init_status|
+      result_status = Result::Status.where(:id => result_status_id.shift).first_or_initialize
+      result_status.character = self.user
+      result_status.day = Day.last
+      result_status.status = init_status.status
+      result_status.count = 0
+      result_status.bonus = init_status.count.to_i*5
+      result_status.save!
+    end
+    # 初期技能を結果に反映
+    result_art_id = Result::Art.where(:character_type => self.user.class.name).
+                                where(:character_id => self.user.id).pluck(:id)
+    self.init_arts.each do |init_art|
+      result_art = Result::Art.where(:id => result_art_id.shift).first_or_initialize
+      result_art.character = self.user
+      result_art.day = Day.last
+      result_art.art = init_art.art
+      result_art.lv     = 5
+      result_art.lv_exp = 0
+      result_art.lv_cap     = 5
+      result_art.lv_cap_exp = 0
+      result_art.forget = false
+      result_art.save!
+    end
+    # 守護竜に対応した竜魂を結果に反映
+    dragon_souls = GameData::ArtType.where(:name => "竜魂").first.arts
+    result_art = Result::Art.where(:id => result_art_id.shift).first_or_initialize
+    result_art.character = self.user
+    result_art.day = Day.last
+    result_art.art = dragon_souls[self.init_guardian.guardian.id.to_i-1]
+    result_art.lv     = 5
+    result_art.lv_exp = 0
+    result_art.lv_cap     = 5
+    result_art.lv_cap_exp = 0
+    result_art.forget = false
+    result_art.save!
+    # 初期職業を結果に反映
+    result_job = Result::Job.where(:character_type => self.user.class.name).
+                             where(:character_id => self.user.id).first_or_initialize
+    result_job.character = self.user
+    result_job.day = Day.last
+    result_job.job = self.init_job.job
+    result_job.lv     = 1
+    result_job.lv_exp = 0
+    result_job.forget = false
+    result_job.save!
   end
 end

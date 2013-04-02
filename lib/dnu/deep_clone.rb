@@ -16,5 +16,9 @@ module DNU
       end
       record_c
     end
+    
+    def self.result(record)
+      record.class.new.send(:initialize_dup, record)
+    end
   end
 end

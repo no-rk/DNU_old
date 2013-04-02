@@ -13,6 +13,7 @@ class User < ActiveRecord::Base
   has_one  :competition , :order => "updated_at DESC", :class_name => "Register::Competition"
   has_many :competitions, :order => "updated_at DESC", :class_name => "Register::Competition"
 
+  has_one  :character   , :order => "updated_at DESC", :class_name => "Register::Character"
   has_many :characters  , :order => "updated_at DESC", :class_name => "Register::Character"
   has_one  :image       , :order => "updated_at DESC", :class_name => "Register::Image"
   has_many :images      , :order => "updated_at DESC", :class_name => "Register::Image"
@@ -21,6 +22,12 @@ class User < ActiveRecord::Base
 
   has_one  :make        , :order => "updated_at DESC", :class_name => "Register::Make"
   has_many :makes       , :order => "updated_at DESC", :class_name => "Register::Make"
+
+  has_many :result_statuses, :as => :character, :class_name => "Result::Status"
+  has_many :result_jobs,     :as => :character, :class_name => "Result::Job"
+  has_many :result_arts,     :as => :character, :class_name => "Result::Art"
+
+  scope :already_make, lambda{ where(arel_table[:creation_day].lt(Day.last_day_i)) }
 
   acts_as_tagger
   acts_as_messageable
@@ -47,14 +54,12 @@ class User < ActiveRecord::Base
     end
   end
   
-  def make?
-    self.creation_day.present? and self.creation_day < Day.last_day_i
-  end
-  
-  def character(day_i = nil)
-    if day_i.nil? or (self.creation_day == Day.last_day_i and self.creation_day == day_i)
-      self.characters.first
+  def result_character(day_i = Day.last_day_i)
+    if self.creation_day == Day.last_day_i
+      character
     else
+      day_i += 1 if self.creation_day == day_i
+      
       user_arel = User.arel_table
       day_arel  = Day.arel_table
       character_arel = Register::Character.arel_table
@@ -63,6 +68,12 @@ class User < ActiveRecord::Base
                           where(day_arel[:day].eq(day_i)).includes(:day).
                           order(character_arel[:id].desc).limit(1).first
     end
+  end
+  
+  def result(type, day_i = Day.last_day_i)
+    day_arel  = Day.arel_table
+    
+    self.send("result_#{type.to_s.pluralize}").where(day_arel[:day].eq(day_i)).includes(:day)
   end
   
   def icons

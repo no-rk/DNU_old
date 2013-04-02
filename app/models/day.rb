@@ -31,4 +31,8 @@ class Day < ActiveRecord::Base
     self.last.try(:state)==2 or self.last.nil?
   end
   
+  def before_i
+    self.day.to_i - 1
+  end
+  
 end

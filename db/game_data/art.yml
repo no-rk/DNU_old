@@ -123,12 +123,12 @@
     - name: 水魂
       caption: |-
         <b><font color="#3366ff">水属性攻撃はこの色で表されます。</font></b>
-    - name: 風魂
-      caption: |-
-        <b><font color="#66cc66">風属性攻撃はこの色で表されます。</font></b>
     - name: 地魂
       caption: |-
         <b><font color="#cc9966">地属性攻撃はこの色で表されます。</font></b>
+    - name: 風魂
+      caption: |-
+        <b><font color="#66cc66">風属性攻撃はこの色で表されます。</font></b>
     - name: 光魂
       caption: |-
         <b><font color="#cccc00">光属性攻撃はこの色で表されます。</font></b>
