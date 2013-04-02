@@ -59,7 +59,9 @@ class User < ActiveRecord::Base
       day_arel  = Day.arel_table
       character_arel = Register::Character.arel_table
       
-      Register::Character.where(user_arel[:id].eq(self.id)).where(day_arel[:day].eq(day_i)).includes(:user).includes(:day).order(character_arel[:id].desc).limit(1).first
+      Register::Character.where(user_arel[:id].eq(self.id)).includes(:user).
+                          where(day_arel[:day].eq(day_i)).includes(:day).
+                          order(character_arel[:id].desc).limit(1).first
     end
   end
   

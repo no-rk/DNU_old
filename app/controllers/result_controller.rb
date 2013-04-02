@@ -8,6 +8,6 @@ class ResultController < ApplicationController
     
     this_user = User.find(@id)
     @passed_day = @day - this_user.creation_day.to_i
-    @name = this_user.character(@day).profile.name
+    @profile = this_user.character(@day).profile
   end
 end

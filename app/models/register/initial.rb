@@ -14,6 +14,8 @@ class Register::Initial < ActiveRecord::Base
 
   after_validation :check_total_value
 
+  after_save :save_result
+
   def build_initial
     self.build_init_job if self.init_job.nil?
     self.build_init_guardian if self.init_guardian.nil?
@@ -26,5 +28,9 @@ class Register::Initial < ActiveRecord::Base
       self.init_statuses[0].class.model_name.human + " ",
       I18n.t("status.total", :scope => "register.initials", :total=>Settings.init_status.counter.total.to_s, :now=>total_value.to_s)
     ) if total_value != Settings.init_status.counter.total
+  end
+  
+  def save_result
+    
   end
 end

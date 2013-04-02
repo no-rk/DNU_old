@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130401041727) do
+ActiveRecord::Schema.define(:version => 20130402014413) do
 
   create_table "admins", :force => true do |t|
     t.string   "email",               :default => "", :null => false
@@ -593,22 +593,6 @@ ActiveRecord::Schema.define(:version => 20130401041727) do
   add_index "result_items", ["source_id"], :name => "index_result_items_on_source_id"
   add_index "result_items", ["user_id"], :name => "index_result_items_on_user_id"
 
-  create_table "result_learns", :force => true do |t|
-    t.integer  "character_id"
-    t.string   "character_type"
-    t.integer  "day_id"
-    t.integer  "learnable_id"
-    t.string   "learnable_type"
-    t.integer  "exp"
-    t.boolean  "forget"
-    t.datetime "created_at",     :null => false
-    t.datetime "updated_at",     :null => false
-  end
-
-  add_index "result_learns", ["character_id"], :name => "index_result_learns_on_character_id"
-  add_index "result_learns", ["day_id"], :name => "index_result_learns_on_day_id"
-  add_index "result_learns", ["learnable_id"], :name => "index_result_learns_on_learnable_id"
-
   create_table "result_notices", :force => true do |t|
     t.integer  "party_id"
     t.integer  "day_id"
@@ -670,20 +654,22 @@ ActiveRecord::Schema.define(:version => 20130401041727) do
   add_index "result_points", ["day_id"], :name => "index_result_points_on_day_id"
   add_index "result_points", ["point_id"], :name => "index_result_points_on_point_id"
 
-  create_table "result_trains", :force => true do |t|
+  create_table "result_skills", :force => true do |t|
     t.integer  "character_id"
     t.string   "character_type"
     t.integer  "day_id"
-    t.integer  "trainable_id"
-    t.string   "trainable_type"
-    t.integer  "count"
+    t.integer  "skill_id"
+    t.string   "name"
+    t.text     "caption"
+    t.integer  "exp"
+    t.boolean  "forget"
     t.datetime "created_at",     :null => false
     t.datetime "updated_at",     :null => false
   end
 
-  add_index "result_trains", ["character_id"], :name => "index_result_trains_on_character_id"
-  add_index "result_trains", ["day_id"], :name => "index_result_trains_on_day_id"
-  add_index "result_trains", ["trainable_id"], :name => "index_result_trains_on_trainable_id"
+  add_index "result_skills", ["character_id"], :name => "index_result_skills_on_character_id"
+  add_index "result_skills", ["day_id"], :name => "index_result_skills_on_day_id"
+  add_index "result_skills", ["skill_id"], :name => "index_result_skills_on_skill_id"
 
   create_table "taggings", :force => true do |t|
     t.integer  "tag_id"
