@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130402031950) do
+ActiveRecord::Schema.define(:version => 20130402033534) do
 
   create_table "admins", :force => true do |t|
     t.string   "email",               :default => "", :null => false
@@ -632,6 +632,26 @@ ActiveRecord::Schema.define(:version => 20130402031950) do
   add_index "result_items", ["makable_id"], :name => "index_result_items_on_makable_id"
   add_index "result_items", ["source_id"], :name => "index_result_items_on_source_id"
   add_index "result_items", ["user_id"], :name => "index_result_items_on_user_id"
+
+  create_table "result_jobs", :force => true do |t|
+    t.integer  "character_id"
+    t.string   "character_type"
+    t.integer  "day_id"
+    t.integer  "job_id"
+    t.string   "name"
+    t.text     "caption"
+    t.integer  "lv"
+    t.integer  "lv_exp"
+    t.integer  "lv_cap"
+    t.integer  "lv_cap_exp"
+    t.boolean  "forget"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+  end
+
+  add_index "result_jobs", ["character_id"], :name => "index_result_jobs_on_character_id"
+  add_index "result_jobs", ["day_id"], :name => "index_result_jobs_on_day_id"
+  add_index "result_jobs", ["job_id"], :name => "index_result_jobs_on_job_id"
 
   create_table "result_notices", :force => true do |t|
     t.integer  "party_id"
