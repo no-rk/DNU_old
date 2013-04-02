@@ -66,10 +66,21 @@ class Register::Initial < ActiveRecord::Base
     result_art.art = dragon_souls[self.init_guardian.guardian.id.to_i-1]
     result_art.lv     = 5
     result_art.lv_exp = 0
-    result_art.lv_cap     = 5
-    result_art.lv_cap_exp = 0
     result_art.forget = false
     result_art.save!
+    # 初期生産を結果に反映
+    result_product_id = Result::Product.where(:character_type => self.user.class.name).
+                                        where(:character_id => self.user.id).pluck(:id)
+    GameData::Product.find_each do |product|
+      result_product = Result::Product.where(:id => result_product_id.shift).first_or_initialize
+      result_product.character = self.user
+      result_product.day = Day.last
+      result_product.product = product
+      result_product.lv     = 1
+      result_product.lv_exp = 0
+      result_product.forget = false
+      result_product.save!
+    end
     # 初期職業を結果に反映
     result_job = Result::Job.where(:character_type => self.user.class.name).
                              where(:character_id => self.user.id).first_or_initialize

@@ -1,3 +1,6 @@
+=link_to :"前日", result_eno_path(@day_i-1, @id) if @passed_day > 0
+=link_to :"後日", result_eno_path(@day_i+1, @id) if @day_i < Day.last_day_i
+=link_to :"最新", result_eno_path(nil, @id)
 .row-fluid
   #day.span12.well
     #{@passed_day}日目

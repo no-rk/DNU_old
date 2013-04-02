@@ -1,3 +1,27 @@
 ENo.#{@id} #{@profile.name}
 %br
-職業 #{@job.job.name}
+%br
+愛称 #{@profile.nickname}
+%br
+職業 #{@job.nickname} LV#{@job.lv}
+%br
+守護竜 #{@guardian.name}
+%br
+%br
+能力
+%br
+- @statuses.each do |status|
+  #{status.nickname} #{status.value}+#{status.bonus}
+  %br
+%br
+技能
+%br
+- @arts.each do |art|
+  #{art.nickname} LV#{art.lv}#{"(熟練#{art.lv_cap})" if art.lv_cap.present?}
+  %br
+%br
+生産
+%br
+- @products.each do |product|
+  #{product.nickname} LV#{product.lv}#{"(熟練#{product.lv_cap})" if product.lv_cap.present?}
+  %br

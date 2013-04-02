@@ -655,14 +655,12 @@ ActiveRecord::Schema.define(:version => 20130402033534) do
 
   create_table "result_notices", :force => true do |t|
     t.integer  "party_id"
-    t.integer  "day_id"
     t.string   "kind"
     t.integer  "enemy_id"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
 
-  add_index "result_notices", ["day_id"], :name => "index_result_notices_on_day_id"
   add_index "result_notices", ["enemy_id"], :name => "index_result_notices_on_enemy_id"
   add_index "result_notices", ["party_id"], :name => "index_result_notices_on_party_id"
 

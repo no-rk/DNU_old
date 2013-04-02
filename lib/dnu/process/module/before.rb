@@ -31,7 +31,7 @@ module DNU
           end
           
           # 前日の結果を初期値としてコピー
-          [:status, :job, :art].each do |result_name|
+          [:place, :inventory, :point, :status, :job, :art, :product, :ability, :skill].each do |result_name|
             # 再更新の場合は結果クリア
             unless @new_day
               user.result(result_name, now_day.day).destroy_all

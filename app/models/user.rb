@@ -23,9 +23,18 @@ class User < ActiveRecord::Base
   has_one  :make        , :order => "updated_at DESC", :class_name => "Register::Make"
   has_many :makes       , :order => "updated_at DESC", :class_name => "Register::Make"
 
-  has_many :result_statuses, :as => :character, :class_name => "Result::Status"
-  has_many :result_jobs,     :as => :character, :class_name => "Result::Job"
-  has_many :result_arts,     :as => :character, :class_name => "Result::Art"
+  has_many :through_party_members, :as => :character, :class_name => "Result::PartyMember"
+  has_many :result_parties, :through => :through_party_members, :class_name => "Result::Party", :source => :party
+  
+  has_many :result_places,      :class_name => "Result::Place"
+  has_many :result_inventories, :class_name => "Result::Inventory"
+  has_many :result_points,    :as => :character, :class_name => "Result::Point"
+  has_many :result_statuses,  :as => :character, :class_name => "Result::Status"
+  has_many :result_jobs,      :as => :character, :class_name => "Result::Job"
+  has_many :result_arts,      :as => :character, :class_name => "Result::Art"
+  has_many :result_products,  :as => :character, :class_name => "Result::Product"
+  has_many :result_abilities, :as => :character, :class_name => "Result::Ability"
+  has_many :result_skills,    :as => :character, :class_name => "Result::Skill"
 
   scope :already_make, lambda{ where(arel_table[:creation_day].lt(Day.last_day_i)) }
 
@@ -68,6 +77,10 @@ class User < ActiveRecord::Base
                           where(day_arel[:day].eq(day_i)).includes(:day).
                           order(character_arel[:id].desc).limit(1).first
     end
+  end
+  
+  def result_guardian
+    initial.init_guardian.guardian
   end
   
   def result(type, day_i = Day.last_day_i)
