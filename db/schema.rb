@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130402014413) do
+ActiveRecord::Schema.define(:version => 20130402020736) do
 
   create_table "admins", :force => true do |t|
     t.string   "email",               :default => "", :null => false
@@ -503,6 +503,26 @@ ActiveRecord::Schema.define(:version => 20130402014413) do
   end
 
   add_index "register_upload_icons", ["image_id"], :name => "index_register_upload_icons_on_image_id"
+
+  create_table "result_arts", :force => true do |t|
+    t.integer  "character_id"
+    t.string   "character_type"
+    t.integer  "day_id"
+    t.integer  "art_id"
+    t.string   "name"
+    t.text     "caption"
+    t.integer  "lv"
+    t.integer  "lv_exp"
+    t.integer  "lv_cap"
+    t.integer  "lv_cap_exp"
+    t.boolean  "forget"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+  end
+
+  add_index "result_arts", ["art_id"], :name => "index_result_arts_on_art_id"
+  add_index "result_arts", ["character_id"], :name => "index_result_arts_on_character_id"
+  add_index "result_arts", ["day_id"], :name => "index_result_arts_on_day_id"
 
   create_table "result_inventories", :force => true do |t|
     t.integer  "user_id"
