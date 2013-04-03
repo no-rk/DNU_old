@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130402033534) do
+ActiveRecord::Schema.define(:version => 20130403020705) do
 
   create_table "admins", :force => true do |t|
     t.string   "email",               :default => "", :null => false
@@ -547,6 +547,7 @@ ActiveRecord::Schema.define(:version => 20130402033534) do
   create_table "result_inventories", :force => true do |t|
     t.integer  "user_id"
     t.integer  "day_id"
+    t.integer  "number"
     t.integer  "item_id"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
@@ -560,78 +561,99 @@ ActiveRecord::Schema.define(:version => 20130402033534) do
     t.integer  "item_id"
     t.integer  "user_id"
     t.integer  "day_id"
-    t.integer  "makable_id"
-    t.string   "makable_type"
+    t.integer  "way_id"
+    t.string   "way_type"
     t.integer  "element_id"
     t.integer  "source_id"
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   add_index "result_item_elements", ["day_id"], :name => "index_result_item_elements_on_day_id"
   add_index "result_item_elements", ["element_id"], :name => "index_result_item_elements_on_element_id"
   add_index "result_item_elements", ["item_id"], :name => "index_result_item_elements_on_item_id"
-  add_index "result_item_elements", ["makable_id"], :name => "index_result_item_elements_on_makable_id"
   add_index "result_item_elements", ["source_id"], :name => "index_result_item_elements_on_source_id"
   add_index "result_item_elements", ["user_id"], :name => "index_result_item_elements_on_user_id"
+  add_index "result_item_elements", ["way_id"], :name => "index_result_item_elements_on_way_id"
+
+  create_table "result_item_names", :force => true do |t|
+    t.integer  "item_id"
+    t.integer  "user_id"
+    t.integer  "day_id"
+    t.integer  "way_id"
+    t.string   "way_type"
+    t.string   "name"
+    t.text     "caption"
+    t.integer  "source_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "result_item_names", ["day_id"], :name => "index_result_item_names_on_day_id"
+  add_index "result_item_names", ["item_id"], :name => "index_result_item_names_on_item_id"
+  add_index "result_item_names", ["source_id"], :name => "index_result_item_names_on_source_id"
+  add_index "result_item_names", ["user_id"], :name => "index_result_item_names_on_user_id"
+  add_index "result_item_names", ["way_id"], :name => "index_result_item_names_on_way_id"
 
   create_table "result_item_strengths", :force => true do |t|
     t.integer  "item_id"
     t.integer  "user_id"
     t.integer  "day_id"
-    t.integer  "makable_id"
-    t.string   "makable_type"
+    t.integer  "way_id"
+    t.string   "way_type"
     t.integer  "strength"
     t.integer  "source_id"
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   add_index "result_item_strengths", ["day_id"], :name => "index_result_item_strengths_on_day_id"
   add_index "result_item_strengths", ["item_id"], :name => "index_result_item_strengths_on_item_id"
-  add_index "result_item_strengths", ["makable_id"], :name => "index_result_item_strengths_on_makable_id"
   add_index "result_item_strengths", ["source_id"], :name => "index_result_item_strengths_on_source_id"
   add_index "result_item_strengths", ["user_id"], :name => "index_result_item_strengths_on_user_id"
+  add_index "result_item_strengths", ["way_id"], :name => "index_result_item_strengths_on_way_id"
 
   create_table "result_item_sups", :force => true do |t|
     t.integer  "item_id"
     t.integer  "user_id"
     t.integer  "day_id"
-    t.integer  "makable_id"
-    t.string   "makable_type"
+    t.integer  "way_id"
+    t.string   "way_type"
     t.string   "kind"
     t.integer  "sup_id"
     t.integer  "source_id"
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   add_index "result_item_sups", ["day_id"], :name => "index_result_item_sups_on_day_id"
   add_index "result_item_sups", ["item_id"], :name => "index_result_item_sups_on_item_id"
-  add_index "result_item_sups", ["makable_id"], :name => "index_result_item_sups_on_makable_id"
   add_index "result_item_sups", ["source_id"], :name => "index_result_item_sups_on_source_id"
   add_index "result_item_sups", ["sup_id"], :name => "index_result_item_sups_on_sup_id"
   add_index "result_item_sups", ["user_id"], :name => "index_result_item_sups_on_user_id"
+  add_index "result_item_sups", ["way_id"], :name => "index_result_item_sups_on_way_id"
 
   create_table "result_items", :force => true do |t|
     t.integer  "user_id"
     t.integer  "day_id"
-    t.integer  "makable_id"
-    t.string   "makable_type"
-    t.string   "name"
-    t.text     "caption"
+    t.integer  "way_id"
+    t.string   "way_type"
+    t.integer  "plan_id"
+    t.string   "plan_type"
     t.integer  "type_id"
     t.string   "type_type"
     t.boolean  "protect"
     t.integer  "source_id"
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   add_index "result_items", ["day_id"], :name => "index_result_items_on_day_id"
-  add_index "result_items", ["makable_id"], :name => "index_result_items_on_makable_id"
+  add_index "result_items", ["plan_id"], :name => "index_result_items_on_plan_id"
   add_index "result_items", ["source_id"], :name => "index_result_items_on_source_id"
+  add_index "result_items", ["type_id"], :name => "index_result_items_on_type_id"
   add_index "result_items", ["user_id"], :name => "index_result_items_on_user_id"
+  add_index "result_items", ["way_id"], :name => "index_result_items_on_way_id"
 
   create_table "result_jobs", :force => true do |t|
     t.integer  "character_id"

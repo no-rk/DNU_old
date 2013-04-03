@@ -4,7 +4,7 @@ class CreateResultItemStrengths < ActiveRecord::Migration
       t.references :item
       t.references :user
       t.references :day
-      t.references :makable, :polymorphic => true
+      t.references :way, :polymorphic => true
       t.integer :strength
       t.references :source
 
@@ -13,7 +13,7 @@ class CreateResultItemStrengths < ActiveRecord::Migration
     add_index :result_item_strengths, :item_id
     add_index :result_item_strengths, :user_id
     add_index :result_item_strengths, :day_id
-    add_index :result_item_strengths, :makable_id
+    add_index :result_item_strengths, :way_id
     add_index :result_item_strengths, :source_id
   end
 end

@@ -91,5 +91,16 @@ class Register::Initial < ActiveRecord::Base
     result_job.lv_exp = 0
     result_job.forget = false
     result_job.save!
+    # 初期ポイントを結果に反映
+    result_point_id = Result::Point.where(:character_type => self.user.class.name).
+                                    where(:character_id => self.user.id).pluck(:id)
+    GameData::Point.find_each do |point|
+      result_point = Result::Point.where(:id => result_point_id.shift).first_or_initialize
+      result_point.character = self.user
+      result_point.day = Day.last
+      result_point.point = point
+      result_point.value = 30
+      result_point.save!
+    end
   end
 end

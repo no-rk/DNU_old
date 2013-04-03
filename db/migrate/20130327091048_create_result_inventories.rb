@@ -3,6 +3,7 @@ class CreateResultInventories < ActiveRecord::Migration
     create_table :result_inventories do |t|
       t.references :user
       t.references :day
+      t.integer :number
       t.references :item
 
       t.timestamps

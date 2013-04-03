@@ -8,6 +8,12 @@ ENo.#{@id} #{@profile.name}
 守護竜 #{@guardian.name}
 %br
 %br
+ポイント
+%br
+- @points.each do |point|
+  #{point.nickname} #{point.value}
+  %br
+%br
 能力
 %br
 - @statuses.each do |status|
