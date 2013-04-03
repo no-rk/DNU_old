@@ -25,7 +25,8 @@ DNU::Application.routes.draw do
   get 'register' => 'register#index'  , :as => 'register_index'
   post 'history' => 'register#history', :as => 'register_history'
 
-  get "result(/:day)/eno/:id" => 'result#eno' , :as => 'result_eno'
+  get "result(/:day)/eno/:id"   => 'result#eno' , :as => 'result_eno'
+  get "result(/:day)/map/:name" => 'result#map' , :as => 'result_map'
 
   get "editors/map"
 

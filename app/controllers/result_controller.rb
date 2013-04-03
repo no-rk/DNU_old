@@ -18,4 +18,10 @@ class ResultController < ApplicationController
     @products = this_user.result(:product, @day_i).all
     @skills   = this_user.result(:skill,   @day_i).all
   end
+  
+  # GET result(/:day)/map/:name
+  def map
+    @name = params[:name]
+    @day_i = (params[:day] || Day.last_day_i).to_i
+  end
 end

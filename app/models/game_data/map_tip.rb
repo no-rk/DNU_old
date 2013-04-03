@@ -2,6 +2,8 @@ class GameData::MapTip < ActiveRecord::Base
   belongs_to :map
   attr_accessible :collision, :landform, :opacity, :x, :y
   
+  has_many :places, :class_name => "Result::Place"
+  
   def up
     map.map_tips.where(:x=>x-1, :y=>y  ).includes(:map).first
   end
