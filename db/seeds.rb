@@ -44,6 +44,11 @@ map_names.each do |map_name|
   map_name_model.save!
 end
 
+# マップ画像生成
+GameData::Map.find_each do |map|
+  DNU::GenerateMap.apply(map)
+end
+
 # 能力, 武器, 技, 付加, 罠, アビリティ, キャラクター, 状態異常
 ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_learning_conditions")
 [:status, :weapon, :skill, :sup, :trap, :ability, :character, :disease].each do |table|

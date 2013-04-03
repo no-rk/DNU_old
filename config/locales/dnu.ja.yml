@@ -214,6 +214,15 @@ ja:
       truncate: "..."
 
   DNU:
+    Result:
+      Place:
+        water: 水辺
+        plain: 平原
+        desert: 砂地
+        town: 街
+        forest: 森林
+        mountain: 山岳
+        wall: 壁
     Fight:
       Scene:
         Before: 前

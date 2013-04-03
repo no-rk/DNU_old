@@ -114,5 +114,12 @@ class Register::Initial < ActiveRecord::Base
       result_skill.forget = false
       result_skill.save!
     end
+    # 現在地を結果に反映
+    result_place_id = Result::Place.where(:user_id => self.user.id).pluck(:id)
+    result_place = Result::Place.where(:id => result_place_id.shift).first_or_initialize
+    result_place.user = self.user
+    result_place.day = Day.last
+    result_place.map_tip = GameData::Map.find_by_name("MAP1").map_tips.where(:x => 4, :y => 24).first
+    result_place.save!
   end
 end

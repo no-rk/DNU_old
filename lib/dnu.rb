@@ -1,4 +1,5 @@
 require_dependency "dnu/deep_clone"
+require_dependency "dnu/generate_map"
 require_dependency "dnu/serif_parser"
 require_dependency "dnu/sanitize"
 require_dependency "dnu/sanitizer"
