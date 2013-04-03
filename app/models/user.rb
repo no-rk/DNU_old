@@ -69,13 +69,10 @@ class User < ActiveRecord::Base
     else
       day_i += 1 if self.creation_day == day_i
       
-      user_arel = User.arel_table
       day_arel  = Day.arel_table
       character_arel = Register::Character.arel_table
       
-      Register::Character.where(user_arel[:id].eq(self.id)).includes(:user).
-                          where(day_arel[:day].eq(day_i)).includes(:day).
-                          order(character_arel[:id].desc).limit(1).first
+      self.characters.except(:order).where(day_arel[:day].eq(day_i)).includes(:day).first
     end
   end
   
@@ -86,16 +83,27 @@ class User < ActiveRecord::Base
   def result(type, day_i = Day.last_day_i)
     day_arel  = Day.arel_table
     
-    self.send("result_#{type.to_s.pluralize}").where(day_arel[:day].eq(day_i)).includes(:day).includes(type)
+    self.send("result_#{type.to_s.pluralize}").where(day_arel[:day].eq(day_i)).includes(:day)
   end
   
   def result_state(day_i = Day.last_day_i)
     state = {}
-    state = result(:job,     day_i).inject(state){ |h,r| h.tap{ h[r.job.name]     = r.lv_cap.nil? ? r.lv : [r.lv, r.lv_cap].min } }
-    state = result(:art,     day_i).inject(state){ |h,r| h.tap{ h[r.art.name]     = r.lv_cap.nil? ? r.lv : [r.lv, r.lv_cap].min } }
-    state = result(:product, day_i).inject(state){ |h,r| h.tap{ h[r.product.name] = r.lv_cap.nil? ? r.lv : [r.lv, r.lv_cap].min } }
-    state = result(:ability, day_i).inject(state){ |h,r| h.tap{ h[r.ability.name] = r.lv_cap.nil? ? r.lv : [r.lv, r.lv_cap].min } }
+    state = result(:job,     day_i).includes(:job    ).inject(state){ |h,r| h.tap{ h[r.job.name]     = r.lv_cap.nil? ? r.lv : [r.lv, r.lv_cap].min } }
+    state = result(:art,     day_i).includes(:art    ).inject(state){ |h,r| h.tap{ h[r.art.name]     = r.lv_cap.nil? ? r.lv : [r.lv, r.lv_cap].min } }
+    state = result(:product, day_i).includes(:product).inject(state){ |h,r| h.tap{ h[r.product.name] = r.lv_cap.nil? ? r.lv : [r.lv, r.lv_cap].min } }
+    state = result(:ability, day_i).includes(:ability).inject(state){ |h,r| h.tap{ h[r.ability.name] = r.lv_cap.nil? ? r.lv : [r.lv, r.lv_cap].min } }
     state
+  end
+  
+  def result_train(day_i = Day.last_day_i)
+    train_arel = GameData::Train.arel_table
+    train = {}
+    train = result(:status,  day_i).where(train_arel[:visible].eq(true)).includes(:status,  :train).inject(train){ |h,r| h.tap{ h[r.nickname] = r.train.id } }
+    train = result(:job,     day_i).where(train_arel[:visible].eq(true)).includes(:job,     :train).inject(train){ |h,r| h.tap{ h[r.nickname] = r.train.id } }
+    train = result(:art,     day_i).where(train_arel[:visible].eq(true)).includes(:art,     :train).inject(train){ |h,r| h.tap{ h[r.nickname] = r.train.id } }
+    train = result(:product, day_i).where(train_arel[:visible].eq(true)).includes(:product, :train).inject(train){ |h,r| h.tap{ h[r.nickname] = r.train.id } }
+    train = result(:ability, day_i).where(train_arel[:visible].eq(true)).includes(:ability, :train).inject(train){ |h,r| h.tap{ h[r.nickname] = r.train.id } }
+    train
   end
   
   def icons

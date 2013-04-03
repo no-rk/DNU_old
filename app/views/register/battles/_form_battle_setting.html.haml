@@ -11,7 +11,7 @@
     = form_battle_setting.input :target
     = form_battle_setting.input :target_variable
     = form_battle_setting.input :message
-    [技]#{@learned_skills.invert[form_battle_setting.object.skill_id]}
+    [技]#{Result::Skill.find_by_id(form_battle_setting.object.skill_id).try(:skill).try(:name)}
     %br
     優先度#{form_battle_setting.object.priority}：#{@use_conditions.invert[form_battle_setting.object.use_condition.to_i]}のとき#{@frequencies.invert[form_battle_setting.object.frequency.to_i]}
     - i += 1

@@ -53,7 +53,7 @@ class Register::ApplicationController < ApplicationController
     name  = names.singularize
 
     temp = current_user.try(name)
-    register = temp.nil? ? "Register::#{names.classify}".constantize.new : clone_record(temp)
+    register = temp.nil? ? "Register::#{names.classify}".constantize.new : wrap_clone_record(temp)
     register.try("build_#{name}")
 
     self.instance_variable_set("@register_#{name}",register)
@@ -166,6 +166,9 @@ class Register::ApplicationController < ApplicationController
   end
 
   private
+  def wrap_clone_record(record)
+    clone_record(record)
+  end
   def clone_record(record)
     DNU::DeepClone.register(record)
   end
