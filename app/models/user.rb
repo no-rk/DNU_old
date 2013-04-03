@@ -86,7 +86,16 @@ class User < ActiveRecord::Base
   def result(type, day_i = Day.last_day_i)
     day_arel  = Day.arel_table
     
-    self.send("result_#{type.to_s.pluralize}").where(day_arel[:day].eq(day_i)).includes(:day)
+    self.send("result_#{type.to_s.pluralize}").where(day_arel[:day].eq(day_i)).includes(:day).includes(type)
+  end
+  
+  def result_state(day_i = Day.last_day_i)
+    state = {}
+    state = result(:job,     day_i).inject(state){ |h,r| h.tap{ h[r.job.name]     = r.lv_cap.nil? ? r.lv : [r.lv, r.lv_cap].min } }
+    state = result(:art,     day_i).inject(state){ |h,r| h.tap{ h[r.art.name]     = r.lv_cap.nil? ? r.lv : [r.lv, r.lv_cap].min } }
+    state = result(:product, day_i).inject(state){ |h,r| h.tap{ h[r.product.name] = r.lv_cap.nil? ? r.lv : [r.lv, r.lv_cap].min } }
+    state = result(:ability, day_i).inject(state){ |h,r| h.tap{ h[r.ability.name] = r.lv_cap.nil? ? r.lv : [r.lv, r.lv_cap].min } }
+    state
   end
   
   def icons

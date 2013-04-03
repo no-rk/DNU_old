@@ -31,3 +31,9 @@ ENo.#{@id} #{@profile.name}
 - @products.each do |product|
   #{product.nickname} LV#{product.lv}#{"(熟練#{product.lv_cap})" if product.lv_cap.present?}
   %br
+%br
+技
+%br
+- @skills.each do |skill|
+  #{skill.nickname} 消費#{skill.cost}
+  %br

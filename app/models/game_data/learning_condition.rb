@@ -4,7 +4,7 @@ class GameData::LearningCondition < ActiveRecord::Base
   
   scope :find_by_state, lambda{ |state|
     conditions = nil
-    state.each do |name, lv|  
+    state.each do |name, lv|
       condition = arel_table[:name].eq(name).and(arel_table[:lv].lteq(lv))
       if conditions.nil?
         conditions = condition
@@ -29,7 +29,15 @@ class GameData::LearningCondition < ActiveRecord::Base
     having(
       arel_table[:group_count].
       eq(arel_table[:group_count].count)
-    )
+    ).
+    includes(:learnable)
   }
   
+  def self.find_learnable(state, type = nil)
+    if type.present?
+      find_by_state(state).where(:learnable_type => "GameData::#{type.to_s.camelize}").map{ |r| r.learnable }
+    else
+      find_by_state(state).map{ |r| r.learnable }
+    end
+  end
 end

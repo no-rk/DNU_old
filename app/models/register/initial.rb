@@ -102,5 +102,17 @@ class Register::Initial < ActiveRecord::Base
       result_point.value = 30
       result_point.save!
     end
+    # 習得技を結果に反映
+    result_skill_id = Result::Skill.where(:character_type => self.user.class.name).
+                                    where(:character_id => self.user.id).pluck(:id)
+    GameData::LearningCondition.find_learnable(self.user.result_state, :skill).each do |skill|
+      result_skill = Result::Skill.where(:id => result_skill_id.shift).first_or_initialize
+      result_skill.character = self.user
+      result_skill.day = Day.last
+      result_skill.skill = skill
+      result_skill.exp = 0
+      result_skill.forget = false
+      result_skill.save!
+    end
   end
 end
