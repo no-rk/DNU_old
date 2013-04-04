@@ -3,6 +3,7 @@ module DNU
     module Update
       extend Before
       extend Learning
+      extend Move
       extend Map
       extend After
       
@@ -16,6 +17,9 @@ module DNU
           
           # 技やアビリティの習得
           learning
+          
+          # 移動
+          move
           
           # マップ生成
           map

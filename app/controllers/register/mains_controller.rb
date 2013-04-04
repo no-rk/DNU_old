@@ -5,8 +5,10 @@ class Register::MainsController < Register::ApplicationController
       names = self.class.controller_name
       c_record = "Register::#{names.classify}".constantize.new
       # 合言葉は引き継ぐ
-      c_record.build_party_slogan
-      c_record.party_slogan.slogan = record.party_slogan.slogan
+      if record.party_slogan.present?
+        c_record.build_party_slogan
+        c_record.party_slogan.slogan = record.party_slogan.slogan
+      end
     else
       c_record = clone_record(record)
     end

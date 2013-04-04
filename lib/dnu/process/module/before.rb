@@ -34,7 +34,12 @@ module DNU
           [:place, :inventory, :point, :status, :job, :art, :product, :ability, :skill].each do |result_name|
             # 再更新の場合は結果クリア
             unless @new_day
-              user.result(result_name, now_day.day).destroy_all
+              case result_name
+              when :place
+                user.result(:places, now_day.day).destroy_all
+              else
+                user.result(result_name, now_day.day).destroy_all
+              end
             end
             user.result(result_name, now_day.before_i).each do |result|
               result_c = DNU::DeepClone.result(result)

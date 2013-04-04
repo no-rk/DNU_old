@@ -63,6 +63,12 @@ class User < ActiveRecord::Base
     end
   end
   
+  def register(type, day_i = Day.last_day_i)
+    day_arel  = Day.arel_table
+    
+    self.send("#{type.to_s.pluralize}").except(:order).where(day_arel[:day].eq(day_i)).includes(:day).first
+  end
+  
   def result_character(day_i = Day.last_day_i)
     if self.creation_day == Day.last_day_i
       character
@@ -70,7 +76,6 @@ class User < ActiveRecord::Base
       day_i += 1 if self.creation_day == day_i
       
       day_arel  = Day.arel_table
-      character_arel = Register::Character.arel_table
       
       self.characters.except(:order).where(day_arel[:day].eq(day_i)).includes(:day).first
     end
