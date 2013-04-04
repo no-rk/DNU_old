@@ -1,8 +1,26 @@
+=link_to :"最古", result_map_path(0, @name) unless @day_i == 0
 =link_to :"前日", result_map_path(@day_i-1, @name) if @day_i > 0
 =link_to :"後日", result_map_path(@day_i+1, @name) if @day_i < Day.last_day_i
-=link_to :"最新", result_map_path(nil, @name)
+=link_to :"最新", result_map_path(nil, @name) unless @day_i == Day.last_day_i
 .row-fluid
   .span12.well
-    = @name
+    第#{@day_i}回 #{@name}
     %br
-    =image_tag(result_mapimage_path(@day_i, @name))
+    %table
+      - for x in 0..(@x + 1)
+        - if [0,@x+1].include?(x)
+          %tr
+            - for y in 0..(@y + 1)
+              - if [0,@y+1].include?(y)
+                %td{ :style => "margin:0;padding:0;width:32px;height:32px;border: 1px #2b2b2b solid;" }
+              -else
+                %td{ :style => "margin:0;padding:0;width:32px;height:32px;border: 1px #2b2b2b solid;text-align: center;" } #{y}
+        - else
+          %tr
+            - for y in 0..(@y + 1)
+              - if [0,@y+1].include?(y)
+                %td{ :style => "margin:0;padding:0;width:32px;height:32px;border: 1px #2b2b2b solid;text-align: center;" } #{('A'.ord-1+x).chr}
+              - else
+                %td{ :style => "margin:0;padding:0;width:32px;height:32px;border: 1px #2b2b2b solid;text-align: center;background-image:url('#{result_mapimage_path(@day_i, @name)}');background-position:-#{(y-1)*32}px -#{(x-1)*32}px;" }
+                  -if @user_counts[[x, y]].present?
+                    %b{ :style => "color:black;" }= @user_counts[[x, y]]

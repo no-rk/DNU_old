@@ -7,7 +7,8 @@ class ResultController < ApplicationController
     @day_i = (params[:day] || Day.last_day_i).to_i
     
     this_user = User.find(@id)
-    @passed_day = @day_i - this_user.creation_day.to_i
+    @creation_day = this_user.creation_day.to_i
+    @passed_day = @day_i - @creation_day
     @profile  = this_user.result_character(@day_i).profile
     @guardian = this_user.result_guardian
     @place    = this_user.result(:place,   @day_i).first
@@ -23,6 +24,11 @@ class ResultController < ApplicationController
   def map
     @name = params[:name]
     @day_i = (params[:day] || Day.last_day_i).to_i
+    
+    @map = Result::Map.find_by_name_and_day_i(@name, @day_i).first
+    @user_counts = @map.user_counts
+    @x = @map.map.map_tips.maximum(:x).to_i
+    @y = @map.map.map_tips.maximum(:y).to_i
   end
   
   # GET result(/:day)/mapimage/:name
