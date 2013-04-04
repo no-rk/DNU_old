@@ -4,6 +4,7 @@ class CreateResultPlaces < ActiveRecord::Migration
       t.references :user
       t.references :day
       t.references :map_tip
+      t.boolean :arrival
 
       t.timestamps
     end

@@ -3,11 +3,12 @@ module DNU
   module GenerateMap
     def self.apply(map, day_i = Day.last_day_i)
       images_path = "#{Rails.root}/app/assets/images"
+      #map_path    = "#{images_path}/#{day_i}/map"
       # 作成済みならおしまい
-      return if File.exist?("#{images_path}/#{map.name}_#{day_i}.png")
+      #return if File.exist?("#{map_path}/#{map.name}.png")
       # マップチップ
       tip_img = {}
-      GameData::MapTip.pluck("distinct landform").each do |landform|
+      GameData::MapTip.pluck(:landform).uniq.each do |landform|
         landform_img = Magick::ImageList.new("#{images_path}/#{landform}.png")
         tip_columns = landform_img.columns/2
         tip_rows    = landform_img.rows/10
@@ -31,22 +32,46 @@ module DNU
         y = 32*(map_tip.x-1)
         x = 32*(map_tip.y-1)
         if known_tips.include?(map_tip.id)
-          map_img = map_img.composite(tip_img[landform][   left_up(map_tip)], x   , y   , Magick::OverCompositeOp)
-          map_img = map_img.composite(tip_img[landform][  right_up(map_tip)], x+16, y   , Magick::OverCompositeOp)
-          map_img = map_img.composite(tip_img[landform][ left_down(map_tip)], x   , y+16, Magick::OverCompositeOp)
-          map_img = map_img.composite(tip_img[landform][right_down(map_tip)], x+16, y+16, Magick::OverCompositeOp)
+          map_img.composite!(tip_img[landform][   left_up(map_tip)], x   , y   , Magick::OverCompositeOp)
+          map_img.composite!(tip_img[landform][  right_up(map_tip)], x+16, y   , Magick::OverCompositeOp)
+          map_img.composite!(tip_img[landform][ left_down(map_tip)], x   , y+16, Magick::OverCompositeOp)
+          map_img.composite!(tip_img[landform][right_down(map_tip)], x+16, y+16, Magick::OverCompositeOp)
         else
-          map_img = map_img.composite(unknown_img, x, y, Magick::OverCompositeOp)
+          map_img.composite!(unknown_img, x, y, Magick::OverCompositeOp)
         end
       end
-      map_img.write("#{images_path}/#{map.name}_#{day_i}.png")
-      map_img
+      #FileUtils.mkdir_p(map_path) unless FileTest.exist?(map_path)
+      #map_img.write("#{map_path}/#{map.name}.png")
+      map_img.format = "png"
+      map_img.to_blob
     end
     
     private
     def self.set_known_tips(map, day_i)
       day_arel  = Day.arel_table
-      Result::Place.where(day_arel[:day].lteq(day_i)).joins(:day).pluck("distinct map_tip_id")
+      initials = map.places.where(day_arel[:day].lteq(day_i)).includes(:day).includes(:map_tip).uniq.map{ |r| r.map_tip }
+      
+      visible = Hash.new { |hash,key| hash[key] = Hash.new { |hash,key| hash[key] = {} } }
+      vision  = 5
+      initials.each do |initial|
+        check_visible(visible, initial, vision, 0)
+      end
+      
+      visible.values.map{ |h| h.values }.flatten.map{ |h| h[:id] }
+    end
+    
+    def self.check_visible(visible, map_tip, vision, opacity = map_tip.try(:opacity))
+      if map_tip.present? and vision > (visible[map_tip.x][map_tip.y][:vision] || -1)
+        visible[map_tip.x][map_tip.y][:vision] = vision
+        visible[map_tip.x][map_tip.y][:id] ||= map_tip.id
+        next_vision = vision - 1 - opacity
+        if next_vision >=0
+          check_visible(visible, map_tip.up,    next_vision)
+          check_visible(visible, map_tip.down,  next_vision)
+          check_visible(visible, map_tip.left,  next_vision)
+          check_visible(visible, map_tip.right, next_vision)
+        end
+      end
     end
     
     def self.left_up(map_tip)

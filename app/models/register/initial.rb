@@ -120,6 +120,7 @@ class Register::Initial < ActiveRecord::Base
     result_place.user = self.user
     result_place.day = Day.last
     result_place.map_tip = GameData::Map.find_by_name("MAP1").map_tips.where(:x => 4, :y => 24).first
+    result_place.arrival = true
     result_place.save!
   end
 end

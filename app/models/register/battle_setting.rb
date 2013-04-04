@@ -1,6 +1,6 @@
 class Register::BattleSetting < ActiveRecord::Base
   belongs_to :battlable, :polymorphic => true
-  belongs_to :skill,     :class_name => "Result::Skill"
+  belongs_to :skill,     :class_name => "GameData::Skill"
   
   validates :skill_id,      :presence => true
   validates :priority,      :presence => true

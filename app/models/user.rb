@@ -80,12 +80,6 @@ class User < ActiveRecord::Base
     initial.init_guardian.guardian
   end
   
-  def result(type, day_i = Day.last_day_i)
-    day_arel  = Day.arel_table
-    
-    self.send("result_#{type.to_s.pluralize}").where(day_arel[:day].eq(day_i)).includes(:day)
-  end
-  
   def result_state(day_i = Day.last_day_i)
     state = {}
     state = result(:job,     day_i).includes(:job    ).inject(state){ |h,r| h.tap{ h[r.job.name]     = r.lv_cap.nil? ? r.lv : [r.lv, r.lv_cap].min } }
@@ -104,6 +98,31 @@ class User < ActiveRecord::Base
     train = result(:product, day_i).where(train_arel[:visible].eq(true)).includes(:product, :train).inject(train){ |h,r| h.tap{ h[r.nickname] = r.train.id } }
     train = result(:ability, day_i).where(train_arel[:visible].eq(true)).includes(:ability, :train).inject(train){ |h,r| h.tap{ h[r.nickname] = r.train.id } }
     train
+  end
+  
+  def result_map(day_i = Day.last_day_i)
+    Result::Map.find_by_name_and_day_i(result(:place, day_i).first.map.name, day_i)
+  end
+  
+  def result(type, day_i = Day.last_day_i)
+    case type.to_sym
+    when :character
+      result_character(day_i)
+    when :guardian
+      result_guardian
+    when :map
+      result_map(day_i)
+    when :state
+      result_state(day_i)
+    when :train
+      result_train(day_i)
+    when :place
+      day_arel  = Day.arel_table
+      self.send("result_#{type.to_s.pluralize}").where(:arrival => true).where(day_arel[:day].eq(day_i)).includes(:day)
+    else
+      day_arel  = Day.arel_table
+      self.send("result_#{type.to_s.pluralize}").where(day_arel[:day].eq(day_i)).includes(:day)
+    end
   end
   
   def icons

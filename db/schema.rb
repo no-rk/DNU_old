@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130403020705) do
+ActiveRecord::Schema.define(:version => 20130404055606) do
 
   create_table "admins", :force => true do |t|
     t.string   "email",               :default => "", :null => false
@@ -675,6 +675,17 @@ ActiveRecord::Schema.define(:version => 20130403020705) do
   add_index "result_jobs", ["day_id"], :name => "index_result_jobs_on_day_id"
   add_index "result_jobs", ["job_id"], :name => "index_result_jobs_on_job_id"
 
+  create_table "result_maps", :force => true do |t|
+    t.integer  "day_id"
+    t.integer  "map_id"
+    t.binary   "image"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "result_maps", ["day_id"], :name => "index_result_maps_on_day_id"
+  add_index "result_maps", ["map_id"], :name => "index_result_maps_on_map_id"
+
   create_table "result_notices", :force => true do |t|
     t.integer  "party_id"
     t.string   "kind"
@@ -712,6 +723,7 @@ ActiveRecord::Schema.define(:version => 20130403020705) do
     t.integer  "user_id"
     t.integer  "day_id"
     t.integer  "map_tip_id"
+    t.boolean  "arrival"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end

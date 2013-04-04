@@ -24,4 +24,13 @@ class ResultController < ApplicationController
     @name = params[:name]
     @day_i = (params[:day] || Day.last_day_i).to_i
   end
+  
+  # GET result(/:day)/mapimage/:name
+  def mapimage
+    @name = params[:name]
+    @day_i = (params[:day] || Day.last_day_i).to_i
+    
+    @map = Result::Map.find_by_name_and_day_i(@name, @day_i).first
+    send_data(@map.try(:image), :disposition => "inline", :type => "image/png")
+  end
 end
