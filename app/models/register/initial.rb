@@ -122,5 +122,14 @@ class Register::Initial < ActiveRecord::Base
     result_place.map_tip = GameData::Map.find_by_name("MAP1").map_tips.where(:x => 4, :y => 24).first
     result_place.arrival = true
     result_place.save!
+    # マップ生成
+    map = self.user.result(:place).first.map
+    if Result::Map.where(:map_id => map.id).all.blank?
+      result_map = Result::Map.new
+      result_map.day = Day.last
+      result_map.map = map
+      result_map.image = DNU::GenerateMap.apply(map)
+      result_map.save!
+    end
   end
 end

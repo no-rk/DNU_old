@@ -3,6 +3,7 @@ module DNU
     module Update
       extend Before
       extend Learning
+      extend Map
       extend After
       
       def self.start(new_day = nil)
@@ -15,6 +16,9 @@ module DNU
           
           # 技やアビリティの習得
           learning
+          
+          # マップ生成
+          map
           
           # 更新後処理
           after
