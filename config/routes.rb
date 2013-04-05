@@ -25,12 +25,13 @@ DNU::Application.routes.draw do
   get 'register' => 'register#index'  , :as => 'register_index'
   post 'history' => 'register#history', :as => 'register_history'
 
-  get "result"                       => 'result#index',    :as => 'result'
-  get "result/enos"                  => 'result#enos',     :as => 'result_enos'
-  get "result/maps"                  => 'result#maps',     :as => 'result_maps'
-  get "result(/:day)/eno/:id"        => 'result#eno',      :as => 'result_eno'
-  get "result(/:day)/map/:name"      => 'result#map',      :as => 'result_map'
-  get "result(/:day)/mapimage/:name" => 'result#mapimage', :as => 'result_mapimage'
+  get "result"                        => 'result#index',      :as => 'result'
+  get "result/enos(/:new)"            => 'result#enos',       :as => 'result_enos'
+  get "result/maps"                   => 'result#maps',       :as => 'result_maps'
+  get "result(/:day)/eno/:id"         => 'result#eno',        :as => 'result_eno'
+  get "result(/:day)/map/:name"       => 'result#map',        :as => 'result_map'
+  get "result(/:day)/map/:name/:x/:y" => 'result#map_detail', :as => 'result_map_detail'
+  get "result(/:day)/mapimage/:name"  => 'result#map_image' , :as => 'result_map_image'
 
   get "editors/map"
 

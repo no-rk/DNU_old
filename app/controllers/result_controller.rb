@@ -3,9 +3,13 @@ class ResultController < ApplicationController
   def index
   end
   
-  # GET result/enos
+  # GET result/enos(/:new)
   def enos
-    @users = User.already_make.page(params[:page]).per(10)
+    if params[:new].try(:to_sym) == :new
+      @users = User.new_commer.page(params[:page]).per(10)
+    else
+      @users = User.already_make.page(params[:page]).per(10)
+    end
   end
   
   # GET result/maps
@@ -48,8 +52,21 @@ class ResultController < ApplicationController
     render :layout => 'plain'
   end
   
+  # GET result(/:day)/map/:name/:x/:y
+  def map_detail
+    @name = params[:name]
+    @day_i = (params[:day] || Day.last_day_i).to_i
+    @x = params[:x]
+    @y = params[:y]
+    
+    @map = Result::Map.find_by_name_and_day_i(@name, @day_i).first
+    @map_tip = @map.map.map_tips.where(:x => @x, :y => @y).first
+    @users = @map_tip.nil? ? [] : @map_tip.where_places_by_day_i(@day_i).map{ |r| r.user }
+    render :layout => 'plain'
+  end
+  
   # GET result(/:day)/mapimage/:name
-  def mapimage
+  def map_image
     @name = params[:name]
     @day_i = (params[:day] || Day.last_day_i).to_i
     

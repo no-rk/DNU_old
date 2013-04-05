@@ -4,6 +4,10 @@ class GameData::MapTip < ActiveRecord::Base
   
   has_many :places, :class_name => "Result::Place"
   
+  def name
+    "#{map.name} #{('A'.ord-1+x).chr}#{y} #{I18n.t(landform, :scope => 'DNU.Result.Place')}"
+  end
+  
   def where_places_by_day_i(day_i = Day.last_day_i)
     day_arel = Day.arel_table
     places.where(:arrival => true).where(day_arel[:day].eq(day_i)).includes(:day).includes(:user)

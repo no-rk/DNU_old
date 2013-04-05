@@ -2,3 +2,6 @@
 %br
 = link_to("個人結果一覧", result_enos_path)
 %br
+- if User.new_commer.present?
+  = link_to("新規登録一覧", result_enos_path(:new))
+  %br

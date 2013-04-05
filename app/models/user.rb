@@ -36,6 +36,7 @@ class User < ActiveRecord::Base
   has_many :result_abilities, :as => :character, :class_name => "Result::Ability"
   has_many :result_skills,    :as => :character, :class_name => "Result::Skill"
 
+  scope :new_commer,   lambda{ where(arel_table[:creation_day].eq(Day.last_day_i)) }
   scope :already_make, lambda{ where(arel_table[:creation_day].lt(Day.last_day_i)) }
 
   acts_as_tagger
