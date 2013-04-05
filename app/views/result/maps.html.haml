@@ -1,0 +1,4 @@
+- @maps.each do |map|
+  = link_to(map.name, result_map_path(nil, map.name))
+  %br
+= paginate @maps

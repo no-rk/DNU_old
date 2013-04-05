@@ -1,0 +1,4 @@
+- @users.each do |user|
+  #{link_to("ENo.#{user.id}", result_eno_path(nil, user.id))} #{user.name}
+  %br
+= paginate @users

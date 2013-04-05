@@ -1,5 +1,17 @@
 class ResultController < ApplicationController
-  layout "result"
+  # GET result
+  def index
+  end
+  
+  # GET result/enos
+  def enos
+    @users = User.already_make.page(params[:page]).per(10)
+  end
+  
+  # GET result/maps
+  def maps
+    @maps = GameData::Map.page(params[:page]).per(10)
+  end
   
   # GET result(/:day)/eno/:id
   def eno
@@ -19,6 +31,8 @@ class ResultController < ApplicationController
     @arts     = this_user.result(:art,     @day_i).all
     @products = this_user.result(:product, @day_i).all
     @skills   = this_user.result(:skill,   @day_i).all
+    
+    render :layout => 'plain'
   end
   
   # GET result(/:day)/map/:name
@@ -30,6 +44,8 @@ class ResultController < ApplicationController
     @user_counts = @map.user_counts
     @x = @map.map.map_tips.maximum(:x).to_i
     @y = @map.map.map_tips.maximum(:y).to_i
+    
+    render :layout => 'plain'
   end
   
   # GET result(/:day)/mapimage/:name
