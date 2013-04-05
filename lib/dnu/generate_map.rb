@@ -48,8 +48,7 @@ module DNU
     
     private
     def self.set_known_tips(map, day_i)
-      day_arel  = Day.arel_table
-      initials = map.places.where(day_arel[:day].lteq(day_i)).includes(:day).includes(:map_tip).uniq.map{ |r| r.map_tip }
+      initials = map.through_map_tips_by_day_i(day_i)
       
       visible = Hash.new { |hash,key| hash[key] = Hash.new { |hash,key| hash[key] = {} } }
       vision  = 5

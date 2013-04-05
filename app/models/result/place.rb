@@ -5,6 +5,12 @@ class Result::Place < ActiveRecord::Base
   attr_accessible :arrival
   
   has_one :map, :through => :map_tip, :class_name => "GameData::Map"
+  has_many :mains, :through => :user, :class_name => "Register::Main"
+  
+  def find_party_slogan_by_day_i(day_i = Day.last_day_i)
+    day_arel = Day.arel_table
+    mains.where(day_arel[:day].eq(day_i)).includes(:day).includes(:party_slogan).first.try(:party_slogan).try(:slogan)
+  end
   
   def name
     "#{map.name} #{('A'.ord-1+map_tip.x).chr}#{map_tip.y} #{I18n.t(map_tip.landform, :scope => 'DNU.Result.Place')}"

@@ -20,10 +20,23 @@ module DNU
                 user_form.day = now_day
                 user_form.save!
               # 新登録がなくても一部フォームは古登録を採用
-              elsif [:battle, :duel, :competition, :character].any?{ |f| f==form_name }
-                user_form = DNU::DeepClone.register(user_form)
-                user_form.day  = now_day
-                user_form.save!
+              elsif [:main, :battle, :duel, :competition, :character].any?{ |f| f==form_name }
+                case form_name
+                when  :main
+                  # 合言葉だけ引き継ぐ
+                  if user_form.party_slogan.present?
+                    new_form = Register::Main.new
+                    new_form.user = user
+                    new_form.day  = now_day
+                    new_form.build_party_slogan
+                    new_form.party_slogan.slogan = user_form.party_slogan.slogan
+                    new_form.save!
+                  end
+                else
+                  user_form = DNU::DeepClone.register(user_form)
+                  user_form.day  = now_day
+                  user_form.save!
+                end
               end
               # この時点で日数の情報が付いていない登録は削除
               user.send(form_name.to_s.pluralize).where(:day_id => nil).destroy_all
@@ -31,7 +44,7 @@ module DNU
           end
           
           # 前日の結果を初期値としてコピー
-          [:place, :inventory, :point, :status, :job, :art, :product, :ability, :skill].each do |result_name|
+          [:party, :place, :inventory, :point, :status, :job, :art, :product, :ability, :skill].each do |result_name|
             # 再更新の場合は結果クリア
             unless @new_day
               case result_name
@@ -41,10 +54,15 @@ module DNU
                 user.result(result_name, now_day.day).destroy_all
               end
             end
-            user.result(result_name, now_day.before_i).each do |result|
-              result_c = DNU::DeepClone.result(result)
-              result_c.day = now_day
-              result_c.save!
+            case result_name
+            when :party
+              
+            else
+              user.result(result_name, now_day.before_i).each do |result|
+                result_c = DNU::DeepClone.result(result)
+                result_c.day = now_day
+                result_c.save!
+              end
             end
           end
         end

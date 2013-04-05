@@ -122,6 +122,15 @@ class Register::Initial < ActiveRecord::Base
     result_place.map_tip = GameData::Map.find_by_name("MAP1").map_tips.where(:x => 4, :y => 24).first
     result_place.arrival = true
     result_place.save!
+    # PTを結果に反映
+    result_party_id = Result::PartyMember.where(:character_type => self.user.class.name).
+                                          where(:character_id => self.user.id).pluck(:party_id)
+    result_party = Result::Party.where(:id => result_party_id.shift).first_or_initialize
+    result_party.day = Day.last
+    result_party.kind = :battle
+    result_party.party_members.build if result_party.party_members.blank?
+    result_party.party_members.first.character = self.user
+    result_party.save!
     # マップ生成
     map = self.user.result(:place).first.map
     if Result::Map.where(:map_id => map.id).all.blank?

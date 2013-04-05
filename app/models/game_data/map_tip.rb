@@ -4,9 +4,9 @@ class GameData::MapTip < ActiveRecord::Base
   
   has_many :places, :class_name => "Result::Place"
   
-  def users(day_i = Day.last_day_i)
+  def where_places_by_day_i(day_i = Day.last_day_i)
     day_arel = Day.arel_table
-    places.where(:arraival => true).where(day_arel[:day].eq(2)).includes(:day).includes(:user).map{|r| r.user}
+    places.where(:arrival => true).where(day_arel[:day].eq(day_i)).includes(:day).includes(:user)
   end
   
   def up

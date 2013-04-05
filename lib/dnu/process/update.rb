@@ -4,6 +4,7 @@ module DNU
       extend Before
       extend Learning
       extend Move
+      extend Party
       extend Map
       extend After
       
@@ -20,6 +21,9 @@ module DNU
           
           # 移動
           move
+          
+          # PT結成
+          party
           
           # マップ生成
           map

@@ -1,6 +1,7 @@
 require_dependency "dnu/process/module/before"
 require_dependency "dnu/process/module/learning"
 require_dependency "dnu/process/module/move"
+require_dependency "dnu/process/module/party"
 require_dependency "dnu/process/module/map"
 require_dependency "dnu/process/module/after"
 

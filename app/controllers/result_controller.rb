@@ -13,6 +13,7 @@ class ResultController < ApplicationController
     @guardian = this_user.result_guardian
     @place    = this_user.result(:place,   @day_i).first
     @job      = this_user.result(:job,     @day_i).first
+    @party    = this_user.result(:party,   @day_i).first
     @points   = this_user.result(:point,   @day_i).all
     @statuses = this_user.result(:status,  @day_i).all
     @arts     = this_user.result(:art,     @day_i).all

@@ -10,6 +10,12 @@ ENo.#{@id} #{@profile.name}
 現在地 #{link_to(@place.name, result_map_path(@day_i, @place.map_tip.map.name), :target => :_blank)}
 %br
 %br
+第#{@party.id}PT
+%br
+- @party.party_members.each do |member|
+  #{link_to("ENo.#{member.character.id}", result_eno_path(@day_i, member.character.id), :target => :_blank)} #{member.character.result_character(@day_i).profile.name}
+  %br
+%br
 ポイント
 %br
 - @points.each do |point|
