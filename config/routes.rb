@@ -59,6 +59,10 @@ DNU::Application.routes.draw do
   get  "tests/effects"
   post "tests/effects"
 
+  get "kousin"      => 'home#kousin',      :as => 'kousin'
+  get "saikousin"   => 'home#saikousin',   :as => 'saikousin'
+  get "kousinstate" => 'home#kousinstate', :as => 'kousinstate'
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

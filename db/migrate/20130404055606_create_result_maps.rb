@@ -3,7 +3,7 @@ class CreateResultMaps < ActiveRecord::Migration
     create_table :result_maps do |t|
       t.references :day
       t.references :map
-      t.binary :image
+      t.binary :image, :limit => 1.megabyte
 
       t.timestamps
     end

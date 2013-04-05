@@ -678,9 +678,9 @@ ActiveRecord::Schema.define(:version => 20130404055606) do
   create_table "result_maps", :force => true do |t|
     t.integer  "day_id"
     t.integer  "map_id"
-    t.binary   "image"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.binary   "image",      :limit => 16777215
+    t.datetime "created_at",                     :null => false
+    t.datetime "updated_at",                     :null => false
   end
 
   add_index "result_maps", ["day_id"], :name => "index_result_maps_on_day_id"

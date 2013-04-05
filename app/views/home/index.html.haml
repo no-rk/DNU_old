@@ -6,7 +6,7 @@
       %a.btn.btn-primary.btn-large{:href => new_user_registration_path} 新規登録 &raquo;
 - if Day.last.present?
   %p
-    第#{Day.last.day}回
+    第#{Day.last_day_i}回
     - case Day.last.state
     - when 0
       %span.badge.badge-important 更新中
@@ -15,3 +15,15 @@
     - when 2
       %span.badge.badge-success 確定済
   %p #{Day.last.updated_at.to_s(:jp)}更新
+.hero-unit
+  %p 更新処理ボタン
+  %p
+    - case Day.last.state
+    - when 0
+      更新中・・・
+    - when 1
+      %a.btn.btn-danger{:href => saikousin_path} 再更新する。
+      %a.btn.btn-success{:href => kousinstate_path} 確定済にする。
+    - when 2
+      %a.btn.btn-danger{:href => kousin_path} 更新する。
+      %a.btn.btn-warning{:href => kousinstate_path} 未確定にする。
