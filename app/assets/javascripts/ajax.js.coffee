@@ -51,7 +51,7 @@ $ ->
     #親要素のajax:successイベントが実行されないように伝播を止める
     event.stopPropagation()
     #ポップオーバーで表示されるデータ書き換える
-    img = if data.img_path? then '<img src="' + data.img_path + '" class="img-polaroid icon">' else ""
+    img = if data.img_path? then '<img src="' + data.img_path + '" class="icon">' else ""
     $html = $('<div>').html(img + data.caption)
     $(this).attr({
       "data-original-title": data.model + "::" + data.name
@@ -94,7 +94,7 @@ $ ->
     next = $(this).next('a')
     next.show()
     #ポップオーバーで表示されるデータ書き換える
-    img = if data.img_path? then '<img src="' + data.img_path + '" class="img-polaroid icon">' else ""
+    img = if data.img_path? then '<img src="' + data.img_path + '" class="icon">' else ""
     $html = $('<div>').html(img + data.caption)
     next.attr({
       "data-original-title": data.model + "::" + data.name

@@ -6,8 +6,24 @@ class Result::Status < ActiveRecord::Base
 
   has_one :train, :through => :status, :class_name => "GameData::Train"
 
+  def grow_using_point_name!(point_name)
+    point_arel = GameData::Point.arel_table
+    result_point = self.character.result(:point, self.day.day).where(point_arel[:name].eq(point_name)).includes(:point).first
+    if result_point.present?
+      result_point.value -= self.require_point
+      if result_point.save
+        self.count += 1
+        self.save!
+      end
+    end
+  end
+  
   def value
-    50 + count.to_i*5
+    n = count.to_f
+    ((1.0/4)*(n+10)*(n+20)).ceil
+  end
+  def require_point
+    (value/10).to_i
   end
   def nickname
     name || status.name

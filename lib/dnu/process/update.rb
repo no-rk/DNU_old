@@ -2,6 +2,7 @@ module DNU
   module Process
     module Update
       extend Before
+      extend Train
       extend Learning
       extend Move
       extend Party
@@ -15,6 +16,9 @@ module DNU
         if (Day.settled? and @new_day) or (Day.pending? and @new_day.nil?)
           # 更新前処理
           before
+          
+          # 能力や技能や生産やアビリティーの訓練
+          train
           
           # 技やアビリティの習得
           learning

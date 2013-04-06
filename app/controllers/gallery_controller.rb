@@ -10,7 +10,7 @@ class GalleryController < ApplicationController
         @imgs = @imgs.map{ |t| t.taggable }.uniq
       else
         @imgs = "Register::Upload#{model.classify}".constantize.where_public
-        @imgs = @imgs.tagged_with(tag) if tag
+        @imgs = @imgs.tagged_with(tag, :any => true) if tag
         @imgs = @imgs.all
       end
     rescue
