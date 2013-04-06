@@ -1,5 +1,12 @@
 %br
-= form_trade.simple_fields_for :send_points, :defaults => { :as => (:plain if @read_only), :user => current_user, :input_html => { :class => :'span6' } } do |form_send_point|
+= form_trade.simple_fields_for :send_points, :wrapper => :simple, :defaults => { :as => (:plain if @read_only), :user => current_user, :input_html => { :class => :'span2' } } do |form_send_point|
+  - default_point_id = 1
+  = form_send_point.input :point_id, :as => :hidden, input_html: { :value => (form_send_point.object.point_id || default_point_id) }
+  ENo.
   = form_send_point.input :user_id
+  に
   = form_send_point.input :value
-  = form_send_point.input :message
+  G 送付
+  %br
+  = form_send_point.input :message, :wrapper => :bootstrap, :input_html => { :class => :'message span9', :rows => 5 }, :wrapper_html => { :class => :clearfix }
+  %br

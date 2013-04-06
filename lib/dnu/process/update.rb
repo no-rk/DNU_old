@@ -2,6 +2,7 @@ module DNU
   module Process
     module Update
       extend Before
+      extend SendPoint
       extend Train
       extend Learning
       extend Move
@@ -16,6 +17,9 @@ module DNU
         if (Day.settled? and @new_day) or (Day.pending? and @new_day.nil?)
           # 更新前処理
           before
+          
+          # ポイント送付
+          send_point
           
           # 能力や技能や生産やアビリティーの訓練
           train

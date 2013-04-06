@@ -4,7 +4,7 @@ class Register::Trade < ActiveRecord::Base
 
   has_many :send_points, :order => "id ASC", :dependent => :destroy
 
-  accepts_nested_attributes_for :send_points, :allow_destroy => true, :reject_if => :all_blank
+  accepts_nested_attributes_for :send_points, :allow_destroy => true, :reject_if => proc { |attributes| attributes.all? {|k,v| k.to_sym==:point_id ? true : v.blank?} }
 
   attr_accessible  :send_points_attributes
 

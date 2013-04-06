@@ -1,4 +1,5 @@
 require_dependency "dnu/process/module/before"
+require_dependency "dnu/process/module/send_point"
 require_dependency "dnu/process/module/train"
 require_dependency "dnu/process/module/learning"
 require_dependency "dnu/process/module/move"
