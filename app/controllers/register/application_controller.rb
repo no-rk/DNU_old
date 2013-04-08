@@ -60,7 +60,7 @@ class Register::ApplicationController < ApplicationController
     set_instance_variables
 
     respond_to do |format|
-      format.html # new.html.erb
+      format.html { render action: "new" }
       format.json { render json: register }
     end
   end

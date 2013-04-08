@@ -1,0 +1,6 @@
+%h1= @register_ability.class.model_name.human.downcase
+= render 'form', { :register_ability => @register_ability }
+
+= link_to 'Show', @register_ability
+|
+= link_to 'Back', register_abilities_path

@@ -13,6 +13,9 @@ class User < ActiveRecord::Base
   has_one  :competition , :order => "updated_at DESC", :class_name => "Register::Competition"
   has_many :competitions, :order => "updated_at DESC", :class_name => "Register::Competition"
 
+  has_one  :ability     , :order => "updated_at DESC", :class_name => "Register::Ability"
+  has_many :abilities   , :order => "updated_at DESC", :class_name => "Register::Ability"
+
   has_one  :character   , :order => "updated_at DESC", :class_name => "Register::Character"
   has_many :characters  , :order => "updated_at DESC", :class_name => "Register::Character"
   has_one  :image       , :order => "updated_at DESC", :class_name => "Register::Image"
