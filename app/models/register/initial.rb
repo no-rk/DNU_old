@@ -99,7 +99,7 @@ class Register::Initial < ActiveRecord::Base
       result_point.character = self.user
       result_point.day = Day.last
       result_point.point = point
-      result_point.value = 30
+      result_point.value = 500
       result_point.save!
     end
     # 習得技を結果に反映

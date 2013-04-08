@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130408015700) do
+ActiveRecord::Schema.define(:version => 20130408120238) do
 
   create_table "admins", :force => true do |t|
     t.string   "email",               :default => "", :null => false
@@ -278,6 +278,20 @@ ActiveRecord::Schema.define(:version => 20130408015700) do
 
   add_index "register_abilities", ["day_id"], :name => "index_register_abilities_on_day_id"
   add_index "register_abilities", ["user_id"], :name => "index_register_abilities_on_user_id"
+
+  create_table "register_ability_settings", :force => true do |t|
+    t.integer  "ability_id"
+    t.string   "kind"
+    t.integer  "game_data_ability_id"
+    t.boolean  "pull_down"
+    t.integer  "lv"
+    t.boolean  "setting"
+    t.datetime "created_at",           :null => false
+    t.datetime "updated_at",           :null => false
+  end
+
+  add_index "register_ability_settings", ["ability_id"], :name => "index_register_ability_settings_on_ability_id"
+  add_index "register_ability_settings", ["game_data_ability_id"], :name => "index_register_ability_settings_on_game_data_ability_id"
 
   create_table "register_battle_settings", :force => true do |t|
     t.integer  "battlable_id"

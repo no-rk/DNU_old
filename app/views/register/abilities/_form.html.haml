@@ -1,7 +1,7 @@
 = simple_form_for(register_ability) do |form_ability|
   = register_ability.updated_at.try(:to_s, :jp)
-  = render 'register/error', { :register_error   => register_ability }
-  = render 'form_effect',    { :register_ability => register_ability, :form_ability => form_ability }
+  = render 'register/error',       { :register_error   => register_ability }
+  = render 'form_ability_setting', { :register_ability => register_ability, :form_ability => form_ability }
   - unless @read_only
     .actions
       %button.btn.btn-large.btn-warning{"data-remote" => "true"} 確認する

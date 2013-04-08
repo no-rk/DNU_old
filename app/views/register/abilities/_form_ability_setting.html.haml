@@ -1,0 +1,19 @@
+- @abilities.each do |id, ability|
+  - if @ability_id.nil? or @ability_id == id
+    - if @ability_id.nil?
+      %br
+      %br
+      %h3 #{ability[:nickname]}
+    %br
+    #{ability[:caption]}
+    %br
+    - if ability[:pull_down_effects].present?
+      %br
+      = select_tag '', options_for_select(ability[:pull_down_effects]), :include_blank => true
+      %br
+      %br
+    - ability[:lv_effects].each do |lv, effect|
+      %br
+      LV#{lv}：#{effect}
+      = select_tag '', options_for_select({ "有効" => true, "無効" => false })
+%h3 （まだ宣言できない。）

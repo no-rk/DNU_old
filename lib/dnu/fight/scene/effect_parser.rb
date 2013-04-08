@@ -259,6 +259,17 @@ class EffectParser < Parslet::Parser
     str('呪術師')
   }
   
+  rule(:product_name) {
+    str('合成') |
+    str('付加') |
+    str('狩猟') |
+    str('釣匠') |
+    str('園芸') |
+    str('鍛治') |
+    str('解錠') |
+    str('薬師')
+  }
+  
   # disease_name_set
   
   rule(:disease_name_complement) {
@@ -1474,7 +1485,7 @@ class EffectParser < Parslet::Parser
   # learning_conditions
   
   rule(:learning_condition) {
-    (job_name | art_name).as(:name) >> level >> natural_number.as(:lv)
+    (job_name | art_name | product_name).as(:name) >> level >> natural_number.as(:lv)
   }
   
   rule(:learning_condition_wrap) {
@@ -1614,7 +1625,7 @@ class EffectParser < Parslet::Parser
     bra >> str('アビリティ') >> ket >> (newline.absent? >> any).repeat(1).as(:name) >> newline >>
     learning_conditions.maybe >>
     partition >> (partition.absent? >> any).repeat(1).as(:caption) >> partition >>
-    sup_effects.as(:effects) >>
+    sup_effects.as(:effects).maybe >>
     (
       lv_effects |
       pull_down_effects

@@ -16,18 +16,17 @@ class Register::AbilitiesController < Register::ApplicationController
       
       tree = parser.ability_definition.parse(ability.ability.definition)
       tree = transform.apply(tree)
-      @abilities[ability.ability_id][:lv_effects] = []
-      @abilities[ability.ability_id][:pull_down_effects] = []
+      @abilities[ability.ability_id][:lv_effects] = {}
+      @abilities[ability.ability_id][:pull_down_effects] = {}
       tree[:definitions].each do |effect|
         if ability.lv.to_i >= effect[:lv].to_i
           if effect[:pull_down].present?
-            @abilities[ability.ability_id][:pull_down_effects].push(effect)
+            @abilities[ability.ability_id][:pull_down_effects].merge!("LV#{effect[:lv]}：#{effect[:pull_down]}" => effect[:lv])
           else
-            @abilities[ability.ability_id][:lv_effects].push(effect)
+            @abilities[ability.ability_id][:lv_effects].merge!(effect[:lv].to_i => effect[:caption])
           end
         end
       end
-      
     end
   end
 end
