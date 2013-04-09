@@ -23,7 +23,7 @@
     %br
     .controls.controls-row
       %span.label.label-success.span2 優先度
-      = form_battle_setting.input :priority, :collection => (1..8).to_a.inject({}){ |h,v| h.tap{ h[v] = v } }, :selected => (i+1), :input_html => { :class => :'span2' }
+      = form_battle_setting.input :priority, :collection => (1..8).to_a.inject({}){ |h,v| h.tap{ h[v] = v } }, :selected => (form_battle_setting.object.priority || (i+1)), :input_html => { :class => :'span2' }
     .controls.controls-row
       %span.label.span1 技
       = form_battle_setting.input :skill_id, :collection => @learned_skills, :input_html => { :class => :'span6' }, :error_class => :'error'

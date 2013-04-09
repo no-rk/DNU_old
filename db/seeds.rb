@@ -45,6 +45,7 @@ map_names.each do |map_name|
 end
 
 # 能力, 武器, 技, 付加, 罠, アビリティ, キャラクター, 状態異常
+ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_ability_definitions")
 ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_learning_conditions")
 [:status, :weapon, :skill, :sup, :trap, :ability, :character, :disease].each do |table|
   ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_#{table.to_s.tableize}")
@@ -65,6 +66,22 @@ ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_learning_conditi
       data = data.merge(:caption => tree[:caption].to_s) if tree[:caption]
       #p data
       model = "GameData::#{table.to_s.camelize}".constantize.new(data)
+      # アビリティー詳細
+      if table == :ability
+        check_first = true
+        tree[:definitions].each do |effect|
+          if effect[:pull_down].present?
+            if check_first
+              model.ability_definitions.build(:kind => :pull_down, :lv => 1, :caption => "無効")
+              check_first = false
+            end
+            model.ability_definitions.build(:kind => :pull_down, :lv => effect[:lv], :caption => effect[:pull_down].to_s)
+          else
+            model.ability_definitions.build(:kind => :lv,        :lv => effect[:lv], :caption => effect[:caption].to_s)
+          end
+        end
+      end
+      # 習得条件
       if tree[:learning_conditions].present?
         condition_group = 1
         if tree[:learning_conditions][:or].present?

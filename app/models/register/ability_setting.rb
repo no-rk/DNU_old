@@ -1,5 +1,6 @@
 class Register::AbilitySetting < ActiveRecord::Base
   belongs_to :ability
-  belongs_to :game_data_ability, :class_name => "GameData::Ability"
-  attr_accessible :kind, :lv, :pull_down, :setting, :ability_id, :game_data_ability_id
+  belongs_to :ability_definition, :class_name => "GameData::AbilityDefinition"
+  has_one :game_data_ability, :through => :ability_definition, :class_name => "GameData::Ability", :source => :ability
+  attr_accessible :kind, :setting, :ability_definition_id
 end

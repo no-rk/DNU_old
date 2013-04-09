@@ -2,7 +2,7 @@ class Register::Ability < ActiveRecord::Base
   belongs_to :user
   belongs_to :day
   
-  has_many :ability_settings, :dependent => :destroy
+  has_many :ability_settings, :order => "ability_definition_id ASC", :dependent => :destroy
   accepts_nested_attributes_for :ability_settings, :allow_destroy => true
   attr_accessible :ability_settings_attributes
   

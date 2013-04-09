@@ -2,8 +2,8 @@ class Register::MainsController < Register::ApplicationController
   private
   def wrap_clone_record(record)
     if record.respond_to?(:day) and record.day.present?
-      names = self.class.controller_name
-      c_record = "Register::#{names.classify}".constantize.new
+      c_record = Register::Main.new
+      c_record.build_main
       # 合言葉は引き継ぐ
       if record.party_slogan.present?
         c_record.build_party_slogan

@@ -5,6 +5,7 @@ class Result::Ability < ActiveRecord::Base
   attr_accessible :caption, :forget, :lv, :lv_cap, :lv_cap_exp, :lv_exp, :name
 
   has_one :train, :through => :ability, :class_name => "GameData::Train"
+  has_many :ability_definitions, :through => :ability, :class_name => "GameData::AbilityDefinition"
 
   def grow_using_point_name!(point_name)
     point_arel = GameData::Point.arel_table

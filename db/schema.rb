@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130408120238) do
+ActiveRecord::Schema.define(:version => 20130409020604) do
 
   create_table "admins", :force => true do |t|
     t.string   "email",               :default => "", :null => false
@@ -48,6 +48,17 @@ ActiveRecord::Schema.define(:version => 20130408120238) do
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
+
+  create_table "game_data_ability_definitions", :force => true do |t|
+    t.integer  "ability_id"
+    t.string   "kind"
+    t.integer  "lv"
+    t.text     "caption"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "game_data_ability_definitions", ["ability_id"], :name => "index_game_data_ability_definitions_on_ability_id"
 
   create_table "game_data_art_types", :force => true do |t|
     t.string   "name"
@@ -282,16 +293,14 @@ ActiveRecord::Schema.define(:version => 20130408120238) do
   create_table "register_ability_settings", :force => true do |t|
     t.integer  "ability_id"
     t.string   "kind"
-    t.integer  "game_data_ability_id"
-    t.boolean  "pull_down"
-    t.integer  "lv"
+    t.integer  "ability_definition_id"
     t.boolean  "setting"
-    t.datetime "created_at",           :null => false
-    t.datetime "updated_at",           :null => false
+    t.datetime "created_at",            :null => false
+    t.datetime "updated_at",            :null => false
   end
 
+  add_index "register_ability_settings", ["ability_definition_id"], :name => "index_register_ability_settings_on_ability_definition_id"
   add_index "register_ability_settings", ["ability_id"], :name => "index_register_ability_settings_on_ability_id"
-  add_index "register_ability_settings", ["game_data_ability_id"], :name => "index_register_ability_settings_on_game_data_ability_id"
 
   create_table "register_battle_settings", :force => true do |t|
     t.integer  "battlable_id"

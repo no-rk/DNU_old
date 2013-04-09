@@ -7,13 +7,13 @@ class Register::ApplicationController < ApplicationController
   # GET /register/controller_name.json
   def index
     names = self.class.controller_name
+    set_instance_variables
 
-    registers = current_user.try(names).scoped.page(params[:page]).per(Settings.register.history.per)
+    registers = current_user.send(names).page(params[:page]).per(Settings.register.history.per)
 
     self.instance_variable_set("@register_#{names}",registers)
     @read_only = true
     @update_time = true
-    set_instance_variables
 
     if registers.blank?
       respond_to do |format|
@@ -33,12 +33,12 @@ class Register::ApplicationController < ApplicationController
   def show
     names = self.class.controller_name
     name  = names.singularize
+    set_instance_variables
 
-    register = current_user.try(names).find(params[:id])
+    register = current_user.send(names).find(params[:id])
 
     self.instance_variable_set("@register_#{name}",register)
     @read_only = true
-    set_instance_variables
 
     respond_to do |format|
       format.html # show.html.erb
@@ -51,13 +51,13 @@ class Register::ApplicationController < ApplicationController
   def new
     names = self.class.controller_name
     name  = names.singularize
-
-    temp = current_user.try(name)
-    register = temp.nil? ? "Register::#{names.classify}".constantize.new : wrap_clone_record(temp)
-    register.try("build_#{name}")
-
-    self.instance_variable_set("@register_#{name}",register)
     set_instance_variables
+
+    register = current_user.send(name) || "Register::#{names.classify}".constantize.new
+    register.send("build_#{name}")
+    build_record(register)
+
+    self.instance_variable_set("@register_#{name}", register.new_record? ? register : wrap_clone_record(register))
 
     respond_to do |format|
       format.html { render action: "new" }
@@ -69,12 +69,13 @@ class Register::ApplicationController < ApplicationController
   def edit
     names = self.class.controller_name
     name  = names.singularize
+    set_instance_variables
 
-    register = current_user.try(names).find(params[:id])
-    register.try("build_#{name}")
+    register = current_user.send(names).find(params[:id])
+    register.send("build_#{name}")
+    build_record(register)
 
     self.instance_variable_set("@register_#{name}",register)
-    set_instance_variables
   end
 
   # POST /register/controller_name
@@ -82,13 +83,13 @@ class Register::ApplicationController < ApplicationController
   def create
     names = self.class.controller_name
     name  = names.singularize
+    set_instance_variables
 
     register = "Register::#{names.classify}".constantize.new(params[:"register_#{name}"])
     register.user = current_user
 
     self.instance_variable_set("@register_#{name}",register)
     @read_only = true if request.xhr?
-    set_instance_variables
 
     respond_to do |format|
       #Ajaxの場合はバリデートのみ行う
@@ -114,6 +115,7 @@ class Register::ApplicationController < ApplicationController
   def update
     names = self.class.controller_name
     name  = names.singularize
+    set_instance_variables
 
     register = "Register::#{names.classify}".constantize.find(params[:id])
     register.assign_attributes(params[:"register_#{name}"])
@@ -126,7 +128,6 @@ class Register::ApplicationController < ApplicationController
 
     self.instance_variable_set("@register_#{name}",register)
     @read_only = true if request.xhr?
-    set_instance_variables
 
     respond_to do |format|
       #Ajaxの場合はバリデートのみ行う
@@ -152,12 +153,12 @@ class Register::ApplicationController < ApplicationController
   def destroy
     names = self.class.controller_name
     name  = names.singularize
+    set_instance_variables
 
-    register = current_user.try(names).find(params[:id])
+    register = current_user.send(names).find(params[:id])
     register.destroy
 
     self.instance_variable_set("@register_#{name}",register)
-    set_instance_variables
 
     respond_to do |format|
       format.html { redirect_to send("register_#{names}_url") }
@@ -173,7 +174,7 @@ class Register::ApplicationController < ApplicationController
     DNU::DeepClone.register(record)
   end
   def changed?(record)
-    last_record = current_user.try(record.class.model_name.split('::').last.downcase)
+    last_record = current_user.send(record.class.model_name.split('::').last.downcase)
 
     if last_record.nil?
       return false
@@ -189,5 +190,7 @@ class Register::ApplicationController < ApplicationController
   def save_success(register)
   end
   def set_instance_variables
+  end
+  def build_record(record)
   end
 end
