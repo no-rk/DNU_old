@@ -5,6 +5,7 @@ module DNU
       extend SendPoint
       extend Train
       extend Learning
+      extend Blossom
       extend Move
       extend Party
       extend Map
@@ -26,6 +27,9 @@ module DNU
           
           # 技やアビリティの習得
           learning
+          
+          # 技能の開花
+          blossom
           
           # 移動
           move

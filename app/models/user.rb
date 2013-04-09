@@ -134,6 +134,28 @@ class User < ActiveRecord::Base
     end
   end
   
+  def blossom(art, day = Day.last)
+    if !self.result(:art, day.day).exists?(:art_id => art.id, :forget => false) and self.result(:art, day.day).where(:forget => false).count < 5
+      point_arel = GameData::Point.arel_table
+      result_point = self.result(:point, day.day).where(point_arel[:name].eq(:GP)).includes(:point).first
+      result_point.value -= 10
+      if result_point.save
+        result_art = Result::Art.where(
+          :character_id => self.id,
+          :character_type => :User,
+          :day_id=>day.id,
+          :art_id=>art.id
+        ).first_or_initialize
+        result_art.lv = 1
+        result_art.lv_exp ||= 0
+        result_art.lv_cap ||= 5
+        result_art.lv_cap_exp ||= 0
+        result_art.forget = false
+        result_art.save!
+      end
+    end
+  end
+  
   def icons
     begin
       self.character.icons.select([:number,:url,:upload_icon_id]).includes(:upload_icon).inject({}){|h,v| h[v.number]=v.url.blank? ? v.upload_icon.icon_url(:icon) : v.url;h}
