@@ -61,6 +61,7 @@ ja:
         キャラ作成
 
       register/move: 移動
+      register/blossom: 開花
       register/train: 訓練
       register/party_slogan: 合言葉
       register/battle_setting: 戦闘設定
@@ -79,6 +80,7 @@ ja:
         slogan: 合言葉
       register/main:
         moves: 移動
+        blossoms: 開花
         trains: 訓練
       register/main/moves: *move
       register/main/party_slogan: *party_slogan
@@ -166,6 +168,9 @@ ja:
       index: "%{model_name}履歴ありません。"
       create: "%{model_name}登録されました。"
       update: "%{model_name}更新されました。"
+
+    main:
+      blossoms: 同じ技能を複数開花することはできません。
 
     initials:
       status:
