@@ -61,6 +61,7 @@ ja:
         キャラ作成
 
       register/move: 移動
+      register/forget: 忘却
       register/blossom: 開花
       register/train: 訓練
       register/party_slogan: 合言葉
@@ -80,6 +81,7 @@ ja:
         slogan: 合言葉
       register/main:
         moves: 移動
+        forgets: 忘却
         blossoms: 開花
         trains: 訓練
       register/main/moves: *move
@@ -170,6 +172,7 @@ ja:
       update: "%{model_name}更新されました。"
 
     main:
+      forgets: 同じ技能を複数忘却することはできません。
       blossoms: 同じ技能を複数開花することはできません。
 
     initials:

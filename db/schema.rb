@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130409081214) do
+ActiveRecord::Schema.define(:version => 20130409115837) do
 
   create_table "admins", :force => true do |t|
     t.string   "email",               :default => "", :null => false
@@ -369,6 +369,16 @@ ActiveRecord::Schema.define(:version => 20130409081214) do
 
   add_index "register_duels", ["day_id"], :name => "index_register_duels_on_day_id"
   add_index "register_duels", ["user_id"], :name => "index_register_duels_on_user_id"
+
+  create_table "register_forgets", :force => true do |t|
+    t.integer  "main_id"
+    t.integer  "train_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "register_forgets", ["main_id"], :name => "index_register_forgets_on_main_id"
+  add_index "register_forgets", ["train_id"], :name => "index_register_forgets_on_train_id"
 
   create_table "register_icons", :force => true do |t|
     t.integer  "character_id"

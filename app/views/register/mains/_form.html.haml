@@ -2,8 +2,9 @@
   = register_main.updated_at.try(:to_s, :jp)
   = render 'register/error', { :register_error => register_main }
   = render 'form_move',         { :register_main => register_main, :form_main => form_main }
-  = render 'form_blossom',      { :register_main => register_main, :form_main => form_main }
   = render 'form_train',        { :register_main => register_main, :form_main => form_main }
+  = render 'form_forget',       { :register_main => register_main, :form_main => form_main }
+  = render 'form_blossom',      { :register_main => register_main, :form_main => form_main }
   = render 'form_party_slogan', { :register_main => register_main, :form_main => form_main }
   - unless @read_only
     .actions

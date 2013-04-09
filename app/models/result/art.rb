@@ -2,6 +2,7 @@ class Result::Art < ActiveRecord::Base
   belongs_to :character, :polymorphic => true
   belongs_to :day
   belongs_to :art, :class_name => "GameData::Art"
+  has_one :art_type, :through => :art, :class_name => "GameData::ArtType"
   attr_accessible :caption, :forget, :lv, :lv_cap, :lv_cap_exp, :lv_exp, :name
 
   has_one :train, :through => :art, :class_name => "GameData::Train"

@@ -91,10 +91,10 @@ class User < ActiveRecord::Base
   
   def result_state(day_i = Day.last_day_i)
     state = {}
-    state = result(:job,     day_i).includes(:job    ).inject(state){ |h,r| h.tap{ h[r.job.name]     = r.lv_cap.nil? ? r.lv : [r.lv, r.lv_cap].min } }
-    state = result(:art,     day_i).includes(:art    ).inject(state){ |h,r| h.tap{ h[r.art.name]     = r.lv_cap.nil? ? r.lv : [r.lv, r.lv_cap].min } }
-    state = result(:product, day_i).includes(:product).inject(state){ |h,r| h.tap{ h[r.product.name] = r.lv_cap.nil? ? r.lv : [r.lv, r.lv_cap].min } }
-    state = result(:ability, day_i).includes(:ability).inject(state){ |h,r| h.tap{ h[r.ability.name] = r.lv_cap.nil? ? r.lv : [r.lv, r.lv_cap].min } }
+    state = result(:job,     day_i).where(:forget => false).includes(:job    ).inject(state){ |h,r| h.tap{ h[r.job.name]     = r.lv_cap.nil? ? r.lv : [r.lv, r.lv_cap].min } }
+    state = result(:art,     day_i).where(:forget => false).includes(:art    ).inject(state){ |h,r| h.tap{ h[r.art.name]     = r.lv_cap.nil? ? r.lv : [r.lv, r.lv_cap].min } }
+    state = result(:product, day_i).where(:forget => false).includes(:product).inject(state){ |h,r| h.tap{ h[r.product.name] = r.lv_cap.nil? ? r.lv : [r.lv, r.lv_cap].min } }
+    state = result(:ability, day_i).where(:forget => false).includes(:ability).inject(state){ |h,r| h.tap{ h[r.ability.name] = r.lv_cap.nil? ? r.lv : [r.lv, r.lv_cap].min } }
     state
   end
   
@@ -102,10 +102,10 @@ class User < ActiveRecord::Base
     train_arel = GameData::Train.arel_table
     train = {}
     train = result(:status,  day_i).where(train_arel[:visible].eq(true)).includes(:status,  :train).inject(train){ |h,r| h.tap{ h[r.nickname] = r.train.id } }
-    train = result(:job,     day_i).where(train_arel[:visible].eq(true)).includes(:job,     :train).inject(train){ |h,r| h.tap{ h[r.nickname] = r.train.id } }
-    train = result(:art,     day_i).where(train_arel[:visible].eq(true)).includes(:art,     :train).inject(train){ |h,r| h.tap{ h[r.nickname] = r.train.id } }
-    train = result(:product, day_i).where(train_arel[:visible].eq(true)).includes(:product, :train).inject(train){ |h,r| h.tap{ h[r.nickname] = r.train.id } }
-    train = result(:ability, day_i).where(train_arel[:visible].eq(true)).includes(:ability, :train).inject(train){ |h,r| h.tap{ h[r.nickname] = r.train.id } }
+    train = result(:job,     day_i).where(:forget => false).where(train_arel[:visible].eq(true)).includes(:job,     :train).inject(train){ |h,r| h.tap{ h[r.nickname] = r.train.id } }
+    train = result(:art,     day_i).where(:forget => false).where(train_arel[:visible].eq(true)).includes(:art,     :train).inject(train){ |h,r| h.tap{ h[r.nickname] = r.train.id } }
+    train = result(:product, day_i).where(:forget => false).where(train_arel[:visible].eq(true)).includes(:product, :train).inject(train){ |h,r| h.tap{ h[r.nickname] = r.train.id } }
+    train = result(:ability, day_i).where(:forget => false).where(train_arel[:visible].eq(true)).includes(:ability, :train).inject(train){ |h,r| h.tap{ h[r.nickname] = r.train.id } }
     train
   end
   
@@ -152,6 +152,19 @@ class User < ActiveRecord::Base
         result_art.lv_cap_exp ||= 0
         result_art.forget = false
         result_art.save!
+      end
+    end
+  end
+  
+  def forget(art, day = Day.last)
+    result_art = self.result(:art, day.day).where(:art_id => art.id, :forget => false).first
+    if result_art.present?
+      result_art.forget = true
+      if result_art.save
+        point_arel = GameData::Point.arel_table
+        result_point = self.result(:point, day.day).where(point_arel[:name].eq(:GP)).includes(:point).first
+        result_point.value += result_art.lv*2
+        result_point.save!
       end
     end
   end
