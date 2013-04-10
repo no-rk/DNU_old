@@ -8,6 +8,7 @@ class Result::Art < ActiveRecord::Base
   has_one :train, :through => :art, :class_name => "GameData::Train"
 
   def grow_using_point_name!(point_name)
+    success = false
     point_arel = GameData::Point.arel_table
     result_point = self.character.result(:point, self.day.day).where(point_arel[:name].eq(point_name)).includes(:point).first
     if result_point.present?
@@ -15,12 +16,17 @@ class Result::Art < ActiveRecord::Base
       if result_point.save
         self.lv += 1
         self.save!
+        success = true
       end
     end
+    success
   end
   
-  def require_point
-    lv.to_i
+  def value(n = lv)
+    "LV#{n.to_i}"
+  end
+  def require_point(n = lv)
+    n.to_i
   end
   def nickname
     name || art.name

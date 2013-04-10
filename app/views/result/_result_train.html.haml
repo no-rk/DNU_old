@@ -1,0 +1,9 @@
+%h3 訓練
+
+- @trains.each do |train|
+  #{train.trainable.nickname}#{train.trainable.value(train.from)}を訓練
+  - if train.success
+    し#{train.trainable.value(train.to)}に（消費P#{train.trainable.require_point(train.from)}）。
+  -else 
+    ・・・できない。
+  %br

@@ -25,6 +25,8 @@ class ResultController < ApplicationController
     this_user = User.find(@id)
     @creation_day = this_user.creation_day.to_i
     @passed_day = @day_i - @creation_day
+    # 訓練
+    @trains    = this_user.result(:train, @day_i).all
     # 移動
     @direction_list = { :'休' => 0, :'上' => 1, :'右' => 2, :'下' => 3, :'左' => 4 }.invert
     @moves     = this_user.result(:move, @day_i).all

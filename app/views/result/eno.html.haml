@@ -5,6 +5,10 @@
 .row-fluid
   #day.span12.well
     #{@passed_day}日目
+- if @trains.present?
+  .row-fluid
+    #train.span12.well
+      = render 'result_train'
 - if @moves.present?
   .row-fluid
     #move.span12.well

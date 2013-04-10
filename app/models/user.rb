@@ -26,7 +26,8 @@ class User < ActiveRecord::Base
   has_one  :make        , :order => "updated_at DESC", :class_name => "Register::Make"
   has_many :makes       , :order => "updated_at DESC", :class_name => "Register::Make"
 
-  has_many :result_moves,   :class_name => "Result::Move"
+  has_many :result_trains, :class_name => "Result::Train"
+  has_many :result_moves,  :class_name => "Result::Move"
   
   has_many :through_party_members, :as => :character, :class_name => "Result::PartyMember"
   has_many :result_parties, :through => :through_party_members, :class_name => "Result::Party", :source => :party
@@ -100,7 +101,7 @@ class User < ActiveRecord::Base
     state
   end
   
-  def result_train(day_i = Day.last_day_i)
+  def result_trainable(day_i = Day.last_day_i)
     train_arel = GameData::Train.arel_table
     train = {}
     train = result(:status,  day_i).where(train_arel[:visible].eq(true)).includes(:status,  :train).inject(train){ |h,r| h.tap{ h[r.nickname] = r.train.id } }
@@ -125,8 +126,8 @@ class User < ActiveRecord::Base
       result_map(day_i)
     when :state
       result_state(day_i)
-    when :train
-      result_train(day_i)
+    when :trainable
+      result_trainable(day_i)
     when :place
       day_arel  = Day.arel_table
       self.send("result_#{type.to_s.pluralize}").where(:arrival => true).where(day_arel[:day].eq(day_i)).includes(:day)

@@ -17,7 +17,7 @@ class Register::MainsController < Register::ApplicationController
   def set_instance_variables
     @direction_list ||= { :'休' => 0, :'上' => 1, :'右' => 2, :'下' => 3, :'左' => 4 }
     @selected_direction ||= @direction_list[:'休']
-    @train_list ||= current_user.result_train
+    @train_list ||= current_user.result(:trainable)
     at_arel = GameData::ArtType.arel_table
     forget_ids = current_user.result(:art).where(:forget => false).where(at_arel[:name].eq("武器")).includes(:art_type).map{ |r| r.art_id }
     @forget_list ||= GameData::Train.where(:trainable_id => forget_ids, :trainable_type => "GameData::Art").includes(:trainable).inject({}){ |h,r| h.tap{ h[r.trainable.name] = r.id } }

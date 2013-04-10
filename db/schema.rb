@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130410004833) do
+ActiveRecord::Schema.define(:version => 20130410020422) do
 
   create_table "admins", :force => true do |t|
     t.string   "email",               :default => "", :null => false
@@ -868,6 +868,22 @@ ActiveRecord::Schema.define(:version => 20130410004833) do
   add_index "result_statuses", ["character_id"], :name => "index_result_statuses_on_character_id"
   add_index "result_statuses", ["day_id"], :name => "index_result_statuses_on_day_id"
   add_index "result_statuses", ["status_id"], :name => "index_result_statuses_on_status_id"
+
+  create_table "result_trains", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "day_id"
+    t.integer  "trainable_id"
+    t.string   "trainable_type"
+    t.integer  "from"
+    t.integer  "to"
+    t.boolean  "success"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+  end
+
+  add_index "result_trains", ["day_id"], :name => "index_result_trains_on_day_id"
+  add_index "result_trains", ["trainable_id"], :name => "index_result_trains_on_trainable_id"
+  add_index "result_trains", ["user_id"], :name => "index_result_trains_on_user_id"
 
   create_table "taggings", :force => true do |t|
     t.integer  "tag_id"
