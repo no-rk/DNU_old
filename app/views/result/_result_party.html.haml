@@ -5,4 +5,4 @@
     - if member.character.id != @id
       #{link_to("ENo.#{member.character.id}", result_eno_path(@day_i, member.character.id), :target => :_blank)} #{member.character.result_character(@day_i).profile.name} と合言葉が一致！
       %br
-第#{@party.id}PTを#{@party.party_members.count}人で結成した。
+#{@party.nickname}を#{@party.party_members.count}人で結成した。

@@ -4,9 +4,13 @@
 =link_to :"最新", result_map_detail_path(nil, @name, @x, @y) unless @day_i == Day.last_day_i
 .row-fluid
   .span12.well
-    #{@map_tip.try(:name)} #{@users.count}人
+    #{@map_tip.try(:name)} #{@user_ids.count}人
     %br
     %br
-    - @users.each do |user|
-      #{link_to("ENo.#{user.id}", result_eno_path(@day_i, user.id))} #{user.name}
+    - @parties.each do |party|
+      #{party.nickname}
+      %br
+      - party.party_members.each do |member|
+        #{link_to("ENo.#{member.character.id}", result_eno_path(@day_i, member.character.id), :target => :_blank)} #{member.character.result(:character, @day_i).profile.name}
+        %br
       %br

@@ -7,6 +7,7 @@ module DNU
       extend Learn
       extend Forget
       extend Blossom
+      extend Grow
       extend Move
       extend Party
       extend Map
@@ -34,6 +35,9 @@ module DNU
           
           # 技能の開花
           blossom
+          
+          # 成長
+          grow
           
           # 移動
           move

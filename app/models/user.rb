@@ -35,6 +35,7 @@ class User < ActiveRecord::Base
   
   has_many :through_party_members, :as => :character, :class_name => "Result::PartyMember"
   has_many :result_parties, :through => :through_party_members, :class_name => "Result::Party", :source => :party
+  has_many :result_notices, :through => :result_parties, :class_name => "Result::Notice", :source => :notices
   
   has_many :result_places,      :class_name => "Result::Place"
   has_many :result_inventories, :class_name => "Result::Inventory"
@@ -116,6 +117,17 @@ class User < ActiveRecord::Base
     train
   end
   
+  def result_trainable_all(day_i = Day.last_day_i)
+    train_arel = GameData::Train.arel_table
+    train = {}
+    train = result(:status,  day_i).where(train_arel[:visible].eq(true)).includes(:status,  :train).inject(train){ |h,r| h.tap{ h[r.nickname] = r.train.id } }
+    train = result(:job,     day_i).where(train_arel[:visible].eq(true)).includes(:job,     :train).inject(train){ |h,r| h.tap{ h[r.nickname] = r.train.id } }
+    train = result(:art,     day_i).where(train_arel[:visible].eq(true)).includes(:art,     :train).inject(train){ |h,r| h.tap{ h[r.nickname] = r.train.id } }
+    train = result(:product, day_i).where(train_arel[:visible].eq(true)).includes(:product, :train).inject(train){ |h,r| h.tap{ h[r.nickname] = r.train.id } }
+    train = result(:ability, day_i).where(train_arel[:visible].eq(true)).includes(:ability, :train).inject(train){ |h,r| h.tap{ h[r.nickname] = r.train.id } }
+    train
+  end
+  
   def result_map(day_i = Day.last_day_i)
     Result::Map.find_by_name_and_day_i(result(:place, day_i).first.map.name, day_i)
   end
@@ -132,6 +144,8 @@ class User < ActiveRecord::Base
       result_state(day_i)
     when :trainable
       result_trainable(day_i)
+    when :trainable_all
+      result_trainable_all(day_i)
     when :place
       day_arel  = Day.arel_table
       self.send("result_#{type.to_s.pluralize}").where(:arrival => true).where(day_arel[:day].eq(day_i)).includes(:day)

@@ -1,6 +1,7 @@
 class Result::Map < ActiveRecord::Base
   belongs_to :day
   belongs_to :map, :class_name => "GameData::Map"
+  has_many :map_tips, :through => :map, :class_name => "GameData::MapTip"
   attr_accessible :image
   
   scope :find_by_name_and_day_i, lambda{ |name, day_i|

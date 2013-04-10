@@ -78,8 +78,10 @@ class ResultController < ApplicationController
     @y = params[:y]
     
     @map = Result::Map.find_by_name_and_day_i(@name, @day_i).first
-    @map_tip = @map.map.map_tips.where(:x => @x, :y => @y).first
-    @users = @map_tip.nil? ? [] : @map_tip.where_places_by_day_i(@day_i).map{ |r| r.user }
+    @map_tip = @map.map_tips.where(:x => @x, :y => @y).first
+    
+    @user_ids = @map_tip.nil? ? [] : @map_tip.where_places_by_day_i(@day_i).map{ |r| r.user.id }
+    @parties = Result::Party.where_user_ids_and_day_i(@user_ids, @day_i)
     render :layout => 'plain'
   end
   

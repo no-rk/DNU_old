@@ -6,13 +6,13 @@ class Register::ApplicationController < ApplicationController
   # GET /register/controller_name
   # GET /register/controller_name.json
   def index
+    @read_only = true
     names = self.class.controller_name
     set_instance_variables
 
     registers = current_user.send(names).page(params[:page]).per(Settings.register.history.per)
 
     self.instance_variable_set("@register_#{names}",registers)
-    @read_only = true
     @update_time = true
 
     if registers.blank?
@@ -31,6 +31,7 @@ class Register::ApplicationController < ApplicationController
   # GET /register/controller_name/1
   # GET /register/controller_name/1.json
   def show
+    @read_only = true
     names = self.class.controller_name
     name  = names.singularize
     set_instance_variables
@@ -38,7 +39,6 @@ class Register::ApplicationController < ApplicationController
     register = current_user.send(names).find(params[:id])
 
     self.instance_variable_set("@register_#{name}",register)
-    @read_only = true
 
     respond_to do |format|
       format.html # show.html.erb
@@ -81,6 +81,7 @@ class Register::ApplicationController < ApplicationController
   # POST /register/controller_name
   # POST /register/controller_name.json
   def create
+    @read_only = true if request.xhr?
     names = self.class.controller_name
     name  = names.singularize
     set_instance_variables
@@ -89,7 +90,6 @@ class Register::ApplicationController < ApplicationController
     register.user = current_user
 
     self.instance_variable_set("@register_#{name}",register)
-    @read_only = true if request.xhr?
 
     respond_to do |format|
       #Ajaxの場合はバリデートのみ行う
@@ -113,6 +113,7 @@ class Register::ApplicationController < ApplicationController
   # PUT /register/controller_name/1
   # PUT /register/controller_name/1.json
   def update
+    @read_only = true if request.xhr?
     names = self.class.controller_name
     name  = names.singularize
     set_instance_variables
@@ -127,7 +128,6 @@ class Register::ApplicationController < ApplicationController
     end
 
     self.instance_variable_set("@register_#{name}",register)
-    @read_only = true if request.xhr?
 
     respond_to do |format|
       #Ajaxの場合はバリデートのみ行う
