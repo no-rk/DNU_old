@@ -43,26 +43,18 @@ module DNU
             end
           end
           
-          # 前日の結果を初期値としてコピー
-          [:party, :place, :inventory, :point, :status, :job, :art, :product, :ability, :skill].each do |result_name|
-            # 再更新の場合は結果クリア
-            unless @new_day
-              case result_name
-              when :place
-                user.result(:places, now_day.day).destroy_all
-              else
-                user.result(result_name, now_day.day).destroy_all
-              end
+          # 再更新の場合は結果クリア
+          unless @new_day
+            [:ability, :art, :inventory, :job, :move, :party, :places, :point, :product, :skill, :status].each do |result_name|
+              user.result(result_name, now_day.day).destroy_all
             end
-            case result_name
-            when :party
-              
-            else
-              user.result(result_name, now_day.before_i).each do |result|
-                result_c = DNU::DeepClone.result(result)
-                result_c.day = now_day
-                result_c.save!
-              end
+          end
+          # 前日の結果を初期値としてコピー
+          [:ability, :art, :inventory, :job, :place, :point, :product, :skill, :status].each do |result_name|
+            user.result(result_name, now_day.before_i).each do |result|
+              result_c = DNU::DeepClone.result(result)
+              result_c.day = now_day
+              result_c.save!
             end
           end
         end

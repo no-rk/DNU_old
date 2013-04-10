@@ -1,0 +1,5 @@
+%h3 移動
+
+- @moves.each do |move|
+  【#{move.from.name}】から#{@direction_list[move.direction]}に向かって【#{move.to.try(:name) || "？？？"}】へ移動#{move.success ? "した。" : "・・・できない。" }
+  %br
