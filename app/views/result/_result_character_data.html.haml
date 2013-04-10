@@ -9,7 +9,7 @@ ENo.#{@id} #{@profile.name}
 %br
 守護竜 #{@guardian.name}
 %br
-現在地 #{link_to(@place.name, result_map_path(@day_i, @place.map_tip.map.name), :target => :_blank)}
+現在地 #{link_to(@place.name, result_map_path(@day_i, @place.map.name), :target => :_blank)}
 %br
 %br
 第#{@party.id}PT

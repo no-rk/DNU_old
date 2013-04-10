@@ -6,7 +6,8 @@ class Result::Point < ActiveRecord::Base
   
   validate :point_non_negative?
   
-  def send_to_user(to_user, send_value)
+  def send_to_user!(to_user, send_value)
+    success = false
     unless self.point.protect
       if to_user.present?
         self.value -= send_value.to_i
@@ -14,9 +15,11 @@ class Result::Point < ActiveRecord::Base
           result_point = to_user.result(:point, self.day.day).where(:point_id => self.point_id).first
           result_point.value += send_value.to_i
           result_point.save!
+          success = true
         end
       end
     end
+    success
   end
   
   def nickname

@@ -25,30 +25,34 @@ class ResultController < ApplicationController
     this_user = User.find(@id)
     @creation_day = this_user.creation_day.to_i
     @passed_day = @day_i - @creation_day
+    # 送信ポイント
+    @send_points  = this_user.result(:send_point, @day_i).includes(:send_point).includes(:point).includes(:to).all
+    # 受信ポイント
+    @receive_points = Result::SendPoint.receive_points(@id, @day_i).all
     # 訓練
-    @trains    = this_user.result(:train, @day_i).all
+    @trains       = this_user.result(:train, @day_i).all
     # 習得
-    @learns    = this_user.result(:learn, @day_i).all
+    @learns       = this_user.result(:learn, @day_i).all
     # 忘却
-    @forgets   = this_user.result(:forget, @day_i).all
+    @forgets      = this_user.result(:forget, @day_i).all
     # 開花
-    @blossoms  = this_user.result(:blossom, @day_i).all
+    @blossoms     = this_user.result(:blossom, @day_i).all
     # 移動
     @direction_list = { :'休' => 0, :'上' => 1, :'右' => 2, :'下' => 3, :'左' => 4 }.invert
-    @moves     = this_user.result(:move, @day_i).all
+    @moves        = this_user.result(:move, @day_i).all
     # PT結成
-    @party     = this_user.result(:party, @day_i).first
+    @party        = this_user.result(:party, @day_i).includes(:party_members).first
     # キャラデータ
-    @profile   = this_user.result(:character, @day_i).profile
-    @guardian  = this_user.result(:guardian,  @day_i)
-    @place     = this_user.result(:place,     @day_i).first
-    @job       = this_user.result(:job,       @day_i).where(:forget => false).first
-    @points    = this_user.result(:point,     @day_i).all
-    @statuses  = this_user.result(:status,    @day_i).all
-    @arts      = this_user.result(:art,       @day_i).where(:forget => false).all
-    @products  = this_user.result(:product,   @day_i).where(:forget => false).all
-    @abilities = this_user.result(:ability,   @day_i).where(:forget => false).all
-    @skills    = this_user.result(:skill,     @day_i).where(:forget => false).all
+    @profile      = this_user.result(:character, @day_i).profile
+    @guardian     = this_user.result(:guardian,  @day_i)
+    @place        = this_user.result(:place,     @day_i).includes(:map_tip).includes(:map).first
+    @job          = this_user.result(:job,       @day_i).where(:forget => false).includes(:job).first
+    @points       = this_user.result(:point,     @day_i).includes(:point).all
+    @statuses     = this_user.result(:status,    @day_i).includes(:status).all
+    @arts         = this_user.result(:art,       @day_i).where(:forget => false).includes(:art).all
+    @products     = this_user.result(:product,   @day_i).where(:forget => false).includes(:product).all
+    @abilities    = this_user.result(:ability,   @day_i).where(:forget => false).includes(:ability).all
+    @skills       = this_user.result(:skill,     @day_i).where(:forget => false).includes(:skill).all
     
     render :layout => 'plain'
   end

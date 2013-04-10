@@ -12,6 +12,8 @@ class Register::Initial < ActiveRecord::Base
 
   attr_accessible :init_job_attributes, :init_guardian_attributes, :init_statuses_attributes, :init_arts_attributes
 
+  has_one :guardian, :through => :init_guardian, :class_name => "GameData::Guardian"
+
   after_validation :check_total_value
 
   after_save :save_result

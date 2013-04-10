@@ -26,11 +26,12 @@ class User < ActiveRecord::Base
   has_one  :make        , :order => "updated_at DESC", :class_name => "Register::Make"
   has_many :makes       , :order => "updated_at DESC", :class_name => "Register::Make"
 
-  has_many :result_trains,   :class_name => "Result::Train"
-  has_many :result_learns,   :class_name => "Result::Learn"
-  has_many :result_forgets,  :class_name => "Result::Forget"
-  has_many :result_blossoms, :class_name => "Result::Blossom"
-  has_many :result_moves,    :class_name => "Result::Move"
+  has_many :result_send_points, :class_name => "Result::SendPoint"
+  has_many :result_trains,      :class_name => "Result::Train"
+  has_many :result_learns,      :class_name => "Result::Learn"
+  has_many :result_forgets,     :class_name => "Result::Forget"
+  has_many :result_blossoms,    :class_name => "Result::Blossom"
+  has_many :result_moves,       :class_name => "Result::Move"
   
   has_many :through_party_members, :as => :character, :class_name => "Result::PartyMember"
   has_many :result_parties, :through => :through_party_members, :class_name => "Result::Party", :source => :party
@@ -87,12 +88,12 @@ class User < ActiveRecord::Base
       
       day_arel  = Day.arel_table
       
-      self.characters.except(:order).where(day_arel[:day].eq(day_i)).includes(:day).first
+      self.characters.except(:order).where(day_arel[:day].eq(day_i)).includes(:day).includes(:profile).first
     end
   end
   
   def result_guardian
-    initial.init_guardian.guardian
+    initial.guardian
   end
   
   def result_state(day_i = Day.last_day_i)

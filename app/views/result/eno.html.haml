@@ -5,6 +5,14 @@
 .row-fluid
   #day.span12.well
     #{@passed_day}日目
+- if @send_points.present?
+  .row-fluid
+    #send_point.span12.well
+      = render 'result_send_point'
+- if @receive_points.present?
+  .row-fluid
+    #receive_point.span12.well
+      = render 'result_receive_point'
 - if @trains.present?
   .row-fluid
     #train.span12.well
