@@ -4,7 +4,7 @@ module DNU
       extend Before
       extend SendPoint
       extend Train
-      extend Learning
+      extend Learn
       extend Forget
       extend Blossom
       extend Move
@@ -27,7 +27,7 @@ module DNU
           train
           
           # 技やアビリティの習得
-          learning
+          learn
           
           # 技能の忘却
           forget

@@ -9,6 +9,10 @@
   .row-fluid
     #train.span12.well
       = render 'result_train'
+- if @learns.present?
+  .row-fluid
+    #learn.span12.well
+      = render 'result_learn'
 - if @moves.present?
   .row-fluid
     #move.span12.well

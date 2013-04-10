@@ -1,8 +1,8 @@
 module DNU
   module Process
-    module Learning
+    module Learn
       
-      def learning
+      def learn
         # キャラ作成済みの各ユーザー
         User.already_make.find_each do |user|
           result_state = user.result(:state)
@@ -17,6 +17,12 @@ module DNU
               result_skill.exp = 0
               result_skill.forget = false
               result_skill.save!
+              result_learn = Result::Learn.new
+              result_learn.user = user
+              result_learn.day = Day.last
+              result_learn.learnable = skill
+              result_learn.first = Result::Skill.first_learn?(skill.id)
+              result_learn.save!
             end
           end
           # アビリティー習得
@@ -31,6 +37,12 @@ module DNU
               result_ability.lv_exp = 0
               result_ability.forget = false
               result_ability.save!
+              result_learn = Result::Learn.new
+              result_learn.user = user
+              result_learn.day = Day.last
+              result_learn.learnable = ability
+              result_learn.first = Result::Ability.first_learn?(ability.id)
+              result_learn.save!
             end
           end
         end

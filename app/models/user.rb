@@ -27,6 +27,7 @@ class User < ActiveRecord::Base
   has_many :makes       , :order => "updated_at DESC", :class_name => "Register::Make"
 
   has_many :result_trains, :class_name => "Result::Train"
+  has_many :result_learns, :class_name => "Result::Learn"
   has_many :result_moves,  :class_name => "Result::Move"
   
   has_many :through_party_members, :as => :character, :class_name => "Result::PartyMember"

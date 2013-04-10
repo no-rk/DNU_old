@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130410020422) do
+ActiveRecord::Schema.define(:version => 20130410042052) do
 
   create_table "admins", :force => true do |t|
     t.string   "email",               :default => "", :null => false
@@ -727,6 +727,20 @@ ActiveRecord::Schema.define(:version => 20130410020422) do
   add_index "result_jobs", ["character_id"], :name => "index_result_jobs_on_character_id"
   add_index "result_jobs", ["day_id"], :name => "index_result_jobs_on_day_id"
   add_index "result_jobs", ["job_id"], :name => "index_result_jobs_on_job_id"
+
+  create_table "result_learns", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "day_id"
+    t.integer  "learnable_id"
+    t.string   "learnable_type"
+    t.boolean  "first"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+  end
+
+  add_index "result_learns", ["day_id"], :name => "index_result_learns_on_day_id"
+  add_index "result_learns", ["learnable_id"], :name => "index_result_learns_on_learnable_id"
+  add_index "result_learns", ["user_id"], :name => "index_result_learns_on_user_id"
 
   create_table "result_maps", :force => true do |t|
     t.integer  "day_id"

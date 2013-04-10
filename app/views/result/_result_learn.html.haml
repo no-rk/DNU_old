@@ -1,0 +1,5 @@
+%h3 習得
+
+- @learns.each do |learn|
+  【#{learn.learnable.class.model_name.human}】#{learn.learnable.name}を#{"初" if learn.first}習得
+  %br

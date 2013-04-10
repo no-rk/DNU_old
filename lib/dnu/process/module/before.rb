@@ -45,7 +45,7 @@ module DNU
           
           # 再更新の場合は結果クリア
           unless @new_day
-            [:ability, :art, :inventory, :job, :move, :party, :places, :point, :product, :skill, :status, :train].each do |result_name|
+            [:ability, :art, :inventory, :job, :learn, :move, :party, :places, :point, :product, :skill, :status, :train].each do |result_name|
               user.result(result_name, now_day.day).destroy_all
             end
           end
