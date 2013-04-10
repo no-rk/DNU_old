@@ -30,12 +30,13 @@ class ResultController < ApplicationController
     # 移動
     @direction_list = { :'休' => 0, :'上' => 1, :'右' => 2, :'下' => 3, :'左' => 4 }.invert
     @moves     = this_user.result(:move, @day_i).all
+    # PT結成
+    @party     = this_user.result(:party, @day_i).first
     # キャラデータ
     @profile   = this_user.result(:character, @day_i).profile
     @guardian  = this_user.result(:guardian,  @day_i)
     @place     = this_user.result(:place,     @day_i).first
     @job       = this_user.result(:job,       @day_i).where(:forget => false).first
-    @party     = this_user.result(:party,     @day_i).first
     @points    = this_user.result(:point,     @day_i).all
     @statuses  = this_user.result(:status,    @day_i).all
     @arts      = this_user.result(:art,       @day_i).where(:forget => false).all

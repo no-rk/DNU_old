@@ -13,6 +13,10 @@
   .row-fluid
     #move.span12.well
       = render 'result_move'
+- if @party.present?
+  .row-fluid
+    #party.span12.well
+      = render 'result_party'
 .row-fluid
   #character_data.span12.well
     = render 'result_character_data'
