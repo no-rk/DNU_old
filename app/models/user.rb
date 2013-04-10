@@ -26,9 +26,11 @@ class User < ActiveRecord::Base
   has_one  :make        , :order => "updated_at DESC", :class_name => "Register::Make"
   has_many :makes       , :order => "updated_at DESC", :class_name => "Register::Make"
 
-  has_many :result_trains, :class_name => "Result::Train"
-  has_many :result_learns, :class_name => "Result::Learn"
-  has_many :result_moves,  :class_name => "Result::Move"
+  has_many :result_trains,   :class_name => "Result::Train"
+  has_many :result_learns,   :class_name => "Result::Learn"
+  has_many :result_forgets,  :class_name => "Result::Forget"
+  has_many :result_blossoms, :class_name => "Result::Blossom"
+  has_many :result_moves,    :class_name => "Result::Move"
   
   has_many :through_party_members, :as => :character, :class_name => "Result::PartyMember"
   has_many :result_parties, :through => :through_party_members, :class_name => "Result::Party", :source => :party
@@ -138,7 +140,8 @@ class User < ActiveRecord::Base
     end
   end
   
-  def blossom(art, day = Day.last)
+  def blossom!(art, day = Day.last)
+    success = false
     if !self.result(:art, day.day).exists?(:art_id => art.id, :forget => false) and self.result(:art, day.day).where(:forget => false).count < 5
       point_arel = GameData::Point.arel_table
       result_point = self.result(:point, day.day).where(point_arel[:name].eq(:GP)).includes(:point).first
@@ -156,21 +159,26 @@ class User < ActiveRecord::Base
         result_art.lv_cap_exp ||= 0
         result_art.forget = false
         result_art.save!
+        success = true
       end
     end
+    success
   end
   
-  def forget(art, day = Day.last)
+  def forget!(art, day = Day.last)
+    success = false
     result_art = self.result(:art, day.day).where(:art_id => art.id, :forget => false).first
     if result_art.present?
       result_art.forget = true
       if result_art.save
         point_arel = GameData::Point.arel_table
         result_point = self.result(:point, day.day).where(point_arel[:name].eq(:GP)).includes(:point).first
-        result_point.value += result_art.lv*2
+        result_point.value += result_art.forget_point
         result_point.save!
+        success = true
       end
     end
+    success
   end
   
   def icons

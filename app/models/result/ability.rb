@@ -33,6 +33,9 @@ class Result::Ability < ActiveRecord::Base
   def require_point(n = lv)
     n.to_i
   end
+  def forget_point(n = lv)
+    n.to_i*2
+  end
   def nickname
     name || ability.name
   end

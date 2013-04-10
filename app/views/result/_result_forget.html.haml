@@ -1,0 +1,5 @@
+%h3 忘却
+
+- @forgets.each do |forget|
+  【#{forget.forgettable.class.model_name.human}】#{forget.forgettable.name}を忘却#{forget.success ? "した。" : "・・・できない。" }
+  %br

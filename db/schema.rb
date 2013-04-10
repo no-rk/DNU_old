@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130410042052) do
+ActiveRecord::Schema.define(:version => 20130410060455) do
 
   create_table "admins", :force => true do |t|
     t.string   "email",               :default => "", :null => false
@@ -596,6 +596,34 @@ ActiveRecord::Schema.define(:version => 20130410042052) do
   add_index "result_arts", ["art_id"], :name => "index_result_arts_on_art_id"
   add_index "result_arts", ["character_id"], :name => "index_result_arts_on_character_id"
   add_index "result_arts", ["day_id"], :name => "index_result_arts_on_day_id"
+
+  create_table "result_blossoms", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "day_id"
+    t.integer  "blossomable_id"
+    t.string   "blossomable_type"
+    t.boolean  "success"
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
+  end
+
+  add_index "result_blossoms", ["blossomable_id"], :name => "index_result_blossoms_on_blossomable_id"
+  add_index "result_blossoms", ["day_id"], :name => "index_result_blossoms_on_day_id"
+  add_index "result_blossoms", ["user_id"], :name => "index_result_blossoms_on_user_id"
+
+  create_table "result_forgets", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "day_id"
+    t.integer  "forgettable_id"
+    t.string   "forgettable_type"
+    t.boolean  "success"
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
+  end
+
+  add_index "result_forgets", ["day_id"], :name => "index_result_forgets_on_day_id"
+  add_index "result_forgets", ["forgettable_id"], :name => "index_result_forgets_on_forgettable_id"
+  add_index "result_forgets", ["user_id"], :name => "index_result_forgets_on_user_id"
 
   create_table "result_inventories", :force => true do |t|
     t.integer  "user_id"

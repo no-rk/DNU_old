@@ -13,6 +13,14 @@
   .row-fluid
     #learn.span12.well
       = render 'result_learn'
+- if @forgets.present?
+  .row-fluid
+    #forget.span12.well
+      = render 'result_forget'
+- if @blossoms.present?
+  .row-fluid
+    #blossom.span12.well
+      = render 'result_blossom'
 - if @moves.present?
   .row-fluid
     #move.span12.well

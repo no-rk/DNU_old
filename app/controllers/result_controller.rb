@@ -29,6 +29,10 @@ class ResultController < ApplicationController
     @trains    = this_user.result(:train, @day_i).all
     # 習得
     @learns    = this_user.result(:learn, @day_i).all
+    # 忘却
+    @forgets   = this_user.result(:forget, @day_i).all
+    # 開花
+    @blossoms  = this_user.result(:blossom, @day_i).all
     # 移動
     @direction_list = { :'休' => 0, :'上' => 1, :'右' => 2, :'下' => 3, :'左' => 4 }.invert
     @moves     = this_user.result(:move, @day_i).all

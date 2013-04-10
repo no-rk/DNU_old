@@ -1,0 +1,5 @@
+%h3 開花
+
+- @blossoms.each do |blossom|
+  【#{blossom.blossomable.class.model_name.human}】#{blossom.blossomable.name}を開花#{blossom.success ? "した。" : "・・・できない。" }
+  %br
