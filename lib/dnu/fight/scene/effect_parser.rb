@@ -1540,11 +1540,17 @@ class EffectParser < Parslet::Parser
   # weapon_definition
   
   rule(:weapon_definition) {
-    bra >> str('武器') >> ket >>
+    bra >> str('武器').as(:kind) >> ket >>
     (separator.absent? >> any).repeat(1).as(:name) >> separator >>
     str('射程') >> natural_number.as(:range) >> newline >>
     sup_effects.as(:effects) >>
     (default_attack_definition.as(:default_attack)).maybe
+  }
+  
+  # equip_definition
+  
+  rule(:equip_definition) {
+    weapon_definition
   }
   
   # status_definition
@@ -1918,6 +1924,54 @@ class EffectParser < Parslet::Parser
     bra >> str('イベント') >> ket >> (newline.absent? >> any).repeat(1).as(:name) >> newline >>
     string.as(:caption).maybe >>
     event_steps
+  }
+  
+  # item_definition
+  
+  rule(:item_type) {
+    (
+      equip_name |
+      str('消耗') |
+      str('戦物')
+    ).as(:item_type)
+  }
+  
+  rule(:item_definition) {
+    (newline.absent? >> any).repeat(1).as(:item_name) >> newline >>
+    spaces? >> (bra >> element_name.as(:item_element) >> ket).maybe >>
+    bra >> item_type >>
+    separator >> non_negative_integer.as(:item_strength) >>
+    separator >> (
+      minus |
+      (
+        (
+          (level | plus | separator).absent? >> any
+        ).repeat(1).as(:name) >> (
+          level >> natural_number.as(:lv)
+        ).maybe
+      ).as(:A)
+    ) >>
+    (
+      plus >>
+      (
+        (level | separator).absent? >> any
+      ).repeat(1).as(:name) >> (
+        level >> natural_number.as(:lv)
+      ).maybe
+    ).as(:G).maybe >>
+    separator >> (
+      minus |
+      (
+        (
+          (level | ket).absent? >> any
+        ).repeat(1).as(:name) >> (
+          level >> natural_number.as(:lv)
+        ).maybe
+      ).as(:B)
+    ) >>
+    ket >>
+    (newline >> string.as(:item_caption)).maybe >>
+    newline.maybe
   }
   
   # root

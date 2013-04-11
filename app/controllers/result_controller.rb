@@ -39,9 +39,9 @@ class ResultController < ApplicationController
     @blossoms     = this_user.result(:blossom, @day_i).all
     # 移動
     @direction_list = { :'休' => 0, :'上' => 1, :'右' => 2, :'下' => 3, :'左' => 4 }.invert
-    @moves        = this_user.result(:move, @day_i).all
+    @moves        = this_user.result(:move, @day_i).includes(:from, :to).all
     # PT結成
-    @party        = this_user.result(:party, @day_i).includes(:party_members).first
+    @party        = this_user.result(:party, @day_i).first
     # キャラデータ
     @profile      = this_user.result(:character, @day_i).profile
     @guardian     = this_user.result(:guardian,  @day_i)
