@@ -4,8 +4,8 @@ class CreateResultItems < ActiveRecord::Migration
       t.references :user
       t.references :day
       t.references :way, :polymorphic => true
-      t.references :plan, :polymorphic => true
-      t.references :type, :polymorphic => true
+      t.references :plan
+      t.references :type
       t.boolean :protect
       t.references :source
 

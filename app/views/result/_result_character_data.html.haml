@@ -53,3 +53,11 @@ ENo.#{@id} #{@profile.name}
 - @skills.each do |skill|
   #{skill.nickname} 消費#{skill.cost}
   %br
+%br
+アイテム一覧
+%br
+- @inventories.each do |item|
+  [#{item.number}]#{item.name}
+  %br
+  　#{item.element_name}（ #{item.type_name} / #{item.strength} / #{item.sup(:A)}#{item.sup(:G)} / #{item.sup(:B)} ）
+  %br

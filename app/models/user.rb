@@ -196,6 +196,38 @@ class User < ActiveRecord::Base
     success
   end
   
+  def blank_item_number(day_i = Day.last_day_i)
+    max_inventory = 15
+    ((1..max_inventory).to_a - self.result(:inventory, day_i).map{ |r| r.number }).min
+  end
+  
+  def new_inventory(day_i = Day.last_day_i)
+    result_inventory = Result::Inventory.new
+    result_inventory.user = self
+    result_inventory.day = Day.find_by_day(day_i)
+    result_inventory.number = blank_item_number(day_i)
+    result_inventory
+  end
+  
+  def add_item!(item, way = nil, day_i = Day.last_day_i)
+    success = false
+    item_type = item.keys.first
+    item_name = item.values.first
+    
+    result_inventory = self.new_inventory(day_i)
+    if result_inventory.number.present?
+      result_item = Result::Item.new_item_by_type_and_name(item_type, item_name, self, way, day_i)
+      if result_item.present?
+        result_item.way = way
+        
+        result_inventory.item = result_item
+        result_inventory.save!
+        success = true
+      end
+    end
+    success
+  end
+  
   def icons
     begin
       self.character.icons.select([:number,:url,:upload_icon_id]).includes(:upload_icon).inject({}){|h,v| h[v.number]=v.url.blank? ? v.upload_icon.icon_url(:icon) : v.url;h}

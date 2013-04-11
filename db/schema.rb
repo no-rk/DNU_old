@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130411011403) do
+ActiveRecord::Schema.define(:version => 20130411055433) do
 
   create_table "admins", :force => true do |t|
     t.string   "email",               :default => "", :null => false
@@ -141,6 +141,14 @@ ActiveRecord::Schema.define(:version => 20130411011403) do
   create_table "game_data_item_types", :force => true do |t|
     t.string   "name"
     t.text     "caption"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "game_data_items", :force => true do |t|
+    t.string   "kind"
+    t.string   "name"
+    t.text     "definition"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
@@ -722,6 +730,7 @@ ActiveRecord::Schema.define(:version => 20130411011403) do
     t.string   "way_type"
     t.string   "kind"
     t.integer  "sup_id"
+    t.integer  "lv"
     t.integer  "source_id"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
@@ -740,9 +749,7 @@ ActiveRecord::Schema.define(:version => 20130411011403) do
     t.integer  "way_id"
     t.string   "way_type"
     t.integer  "plan_id"
-    t.string   "plan_type"
     t.integer  "type_id"
-    t.string   "type_type"
     t.boolean  "protect"
     t.integer  "source_id"
     t.datetime "created_at", :null => false

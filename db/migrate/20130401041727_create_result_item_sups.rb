@@ -7,6 +7,7 @@ class CreateResultItemSups < ActiveRecord::Migration
       t.references :way, :polymorphic => true
       t.string :kind
       t.references :sup
+      t.integer :lv
       t.references :source
 
       t.timestamps

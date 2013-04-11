@@ -47,6 +47,10 @@ class EffectParser < Parslet::Parser
     match('[-]').repeat(1) >> newline
   }
   
+  rule(:partition_end) {
+    match('[-]').repeat(1) >> newline.maybe
+  }
+  
   rule(:from_to) {
     match('[-~‐－―ー～]') | str('から')
   }
@@ -141,7 +145,7 @@ class EffectParser < Parslet::Parser
       str('"').absent? >> any
     ).repeat.as(:inner_text) >> 
     str('"') |
-    partition >> (partition.absent? >> any).repeat(1).as(:inner_text) >> partition
+    partition >> (partition_end.absent? >> any).repeat(1).as(:inner_text) >> partition_end
   }
   
   # name rule
@@ -1929,18 +1933,16 @@ class EffectParser < Parslet::Parser
   # item_definition
   
   rule(:item_type) {
-    (
-      equip_name |
-      str('消耗') |
-      str('戦物')
-    ).as(:item_type)
+    equip_name |
+    str('消耗') |
+    str('戦物')
   }
   
   rule(:item_definition) {
-    (newline.absent? >> any).repeat(1).as(:item_name) >> newline >>
-    spaces? >> (bra >> element_name.as(:item_element) >> ket).maybe >>
-    bra >> item_type >>
-    separator >> non_negative_integer.as(:item_strength) >>
+    (newline.absent? >> any).repeat(1).as(:name) >> newline >>
+    spaces? >> (bra >> element_name.as(:element) >> ket).maybe >>
+    bra >> item_type.as(:kind) >>
+    separator >> non_negative_integer.as(:strength) >>
     separator >> (
       minus |
       (
@@ -1970,7 +1972,8 @@ class EffectParser < Parslet::Parser
       ).as(:B)
     ) >>
     ket >>
-    (newline >> string.as(:item_caption)).maybe >>
+    (bra >> str('送品不可') >> ket).maybe.as(:protect) >>
+    (newline >> string.as(:caption)).maybe >>
     newline.maybe
   }
   

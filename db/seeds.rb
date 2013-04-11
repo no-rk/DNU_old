@@ -71,10 +71,10 @@ map_names.each do |map_name|
   map_name_model.save!
 end
 
-# 能力, 武器, 技, 付加, 罠, アビリティ, キャラクター, 状態異常
+# 能力, 武器, 技, 付加, 罠, アビリティ, キャラクター, 状態異常, アイテム
 ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_ability_definitions")
 ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_learning_conditions")
-[:status, :weapon, :skill, :sup, :trap, :ability, :character, :disease].each do |table|
+[:status, :weapon, :skill, :sup, :trap, :ability, :character, :disease, :item].each do |table|
   ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_#{table.to_s.tableize}")
   list = YAML.load(ERB.new(File.read("#{Rails.root}/db/game_data/#{table}.yml")).result)
   list.each do |data|
@@ -85,11 +85,16 @@ ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_learning_conditi
       p "文法エラー"
       p data
     else
+      model = "GameData::#{table.to_s.camelize}".constantize.new
       data = { "name" => tree[:name].to_s, "definition" => data }
-      data = data.merge(:kind =>    tree[:kind].keys.first.to_s) if tree[:kind].try(:respond_to?, :keys)
-      data = data.merge(:color =>   tree[:color].to_s)   if tree[:color]
-      data = data.merge(:caption => tree[:caption].to_s) if tree[:caption]
-      #p data
+      if tree[:kind].try(:respond_to?, :keys) and model.respond_to?(:kind)
+        data.merge!(:kind =>  tree[:kind].keys.first.to_s)
+      elsif tree[:kind] and model.respond_to?(:kind)
+        data.merge!(:kind =>  tree[:kind].to_s)
+      end
+      data.merge!(:color =>   tree[:color].to_s)   if tree[:color]   and model.respond_to?(:color)
+      data.merge!(:caption => tree[:caption].to_s) if tree[:caption] and model.respond_to?(:caption)
+      # p data
       model = "GameData::#{table.to_s.camelize}".constantize.new(data)
       # アビリティー詳細
       if table == :ability

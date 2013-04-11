@@ -53,6 +53,7 @@ class ResultController < ApplicationController
     @products     = this_user.result(:product,   @day_i).where(:forget => false).includes(:product).all
     @abilities    = this_user.result(:ability,   @day_i).where(:forget => false).includes(:ability).all
     @skills       = this_user.result(:skill,     @day_i).where(:forget => false).includes(:skill).all
+    @inventories  = this_user.result(:inventory, @day_i).includes(:type).all
     
     render :layout => 'plain'
   end
