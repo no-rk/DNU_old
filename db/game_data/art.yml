@@ -1,6 +1,10 @@
 - name: 武器
   caption: |-
-    説明なし。
+    対応する装備品を上手く扱える技能。
+    熟練によりLV制限が課せられる。
+  blossom: true
+  forget: true
+  lv_cap: true
   attributes:
     - name: 剣
       caption: |-
@@ -42,80 +46,15 @@
       caption: |-
         射程が<b>1</b>で、戦闘時に<b>AT/MAT</b>が増加します。
 
-- name: 頭
-  caption: |-
-    説明なし。
-  attributes:
-    - name: 兜
-      caption: |-
-        受ける物理ダメージが減少します。
-        また、<b>DF</b>が増加します。
-    - name: 帽子
-      caption: |-
-        受ける物理ダメージが減少します。
-        また、<b>MSP</b>が増加します。
-    - name: 耳
-      caption: |-
-        受ける物理ダメージが減少します。
-        また、<b>SPD</b>が増加します。
-
-- name: 腕
-  caption: |-
-    説明なし。
-  attributes:
-    - name: 盾
-      caption: |-
-        受ける魔法ダメージが減少します。
-        また、<b>MEVA</b>が増加します。
-    - name: 小手
-      caption: |-
-        受ける魔法ダメージが減少します。
-        また、<b>AT</b>が増加します。
-    - name: 腕輪
-      caption: |-
-        受ける魔法ダメージが減少します。
-        また、<b>MAT</b>が増加します。
-
-- name: 身体
-  caption: |-
-    説明なし。
-  attributes:
-    - name: 鎧
-      caption: |-
-        受ける物理ダメージが減少します。
-        また、<b>DF</b>が増加します。
-    - name: ローブ
-      caption: |-
-        受ける物理ダメージが減少します。
-        また、<b>MDF</b>が増加します。
-    - name: 服
-      caption: |-
-        受ける物理ダメージが減少します。
-        また、<b>EVA</b>が増加します。
-
-- name: 装飾
-  caption: |-
-    説明なし。
-  attributes:
-    - name: レンズ
-      caption: |-
-        受ける魔法ダメージが減少します。
-        また、<b>HIT/MHIT</b>が増加します。
-    - name: ピアス
-      caption: |-
-        受ける魔法ダメージが減少します。
-        また、<b>CRI</b>が増加します。
-    - name: オーブ
-      caption: |-
-        受ける魔法ダメージが減少します。
-        また、<b>MHP</b>が増加します。
-
 - name: 竜魂
   caption: |-
     「<b>竜魂</b>」は技能に分類されますが、装備品としての存在はありません。
     竜魂は来島時にあなたが選択した竜に対応する属性、及び特性を持つ技能となり、最初から習得されています。
     竜魂の特性は来島時に選択されたものから変更は出来ませんが、
     属性はゲーム内で入手できるアイテムを使用することで何度でも変更出来ます。
+  blossom: false
+  forget: false
+  lv_cap: false
   attributes:
     - name: 火魂
       caption: |-

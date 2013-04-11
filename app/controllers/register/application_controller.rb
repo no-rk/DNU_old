@@ -87,6 +87,8 @@ class Register::ApplicationController < ApplicationController
     set_instance_variables
 
     register = "Register::#{names.classify}".constantize.new(params[:"register_#{name}"])
+    # register.send("build_#{name}")
+    # build_record(register)
     register.user = current_user
 
     self.instance_variable_set("@register_#{name}",register)
@@ -120,6 +122,8 @@ class Register::ApplicationController < ApplicationController
 
     register = "Register::#{names.classify}".constantize.find(params[:id])
     register.assign_attributes(params[:"register_#{name}"])
+    # register.send("build_#{name}")
+    # build_record(register)
     if register.respond_to?(:day) and register.day.present?
       register = clone_record(register)
       register.day = nil

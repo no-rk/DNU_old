@@ -21,6 +21,7 @@ class Register::Initial < ActiveRecord::Base
   def build_initial
     self.build_init_job if self.init_job.nil?
     self.build_init_guardian if self.init_guardian.nil?
+    (1-self.init_arts.size).times{self.init_arts.build}
   end
 
   private

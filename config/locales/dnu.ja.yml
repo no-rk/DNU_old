@@ -131,13 +131,13 @@ ja:
         job_id: 初期職業
       register/init_guardian: &init_guardian
         guardian_id: 守護竜
+      register/init_art: &init_art
+        art_id: 初期技能
       register/initial:
         status: 初期能力
-        art: 初期技能
       register/initial/init_job: *init_job
       register/initial/init_guardian: *init_guardian
-      register/initial/init_arts:
-        art_id: 全ての技能
+      register/initial/init_arts: *init_art
 
   activemodel:
     attributes:

@@ -1,14 +1,10 @@
-- jobs      = GameData::Job.all.inject({}){|j,t| j[t.id]=t.name; j } if jobs.nil?
-- guardians = GameData::Guardian.all.inject({}){|j,t| j[t.id]=t.name; j } if guardians.nil?
-- statuses  = GameData::Status.all.map{|t| {:id => t.id, :name => t.name} } if statuses.nil?
-- arts      = GameData::ArtType.all.map{|t| {:id => t.id, :name => t.name, :attributes => GameData::ArtType.find(t.id).arts.all.inject({}){|h,u| h[u.id]=u.name;h } } if t.name != "竜魂" }.compact if arts.nil?
 = simple_form_for(register_initial) do |form_initial|
   = register_initial.updated_at
   = render :partial => 'register/error', :locals=>{:register_error=>register_initial}
-  = render :partial => 'form_init_job',      :locals=>{:register_initial=>register_initial,:form_initial=>form_initial,:jobs=>jobs}
-  = render :partial => 'form_init_guardian', :locals=>{:register_initial=>register_initial,:form_initial=>form_initial,:guardians=>guardians}
-  = render :partial => 'form_init_statuses', :locals=>{:register_initial=>register_initial,:form_initial=>form_initial,:statuses=>statuses}
-  = render :partial => 'form_init_arts',     :locals=>{:register_initial=>register_initial,:form_initial=>form_initial,:arts=>arts}
+  = render :partial => 'form_init_job',      :locals=>{:register_initial=>register_initial,:form_initial=>form_initial}
+  = render :partial => 'form_init_guardian', :locals=>{:register_initial=>register_initial,:form_initial=>form_initial}
+  = render :partial => 'form_init_statuses', :locals=>{:register_initial=>register_initial,:form_initial=>form_initial}
+  = render :partial => 'form_init_arts',     :locals=>{:register_initial=>register_initial,:form_initial=>form_initial}
   - unless @read_only
     .actions
       %button.btn.btn-large.btn-warning{"data-remote" => "true"} 確認する

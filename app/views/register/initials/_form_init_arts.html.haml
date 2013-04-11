@@ -1,8 +1,3 @@
-//- arts.count.times{register_initial.init_arts.build} if register_initial.init_arts.empty?
-- register_initial.init_arts.build if register_initial.init_arts.empty?
-- i = 0
-%br
-= form_initial.label :art
 = form_initial.simple_fields_for :init_arts, :defaults => { :as => (:plain if @read_only), :user => current_user, :input_html => { :class => :'span3' } } do |form_init_arts|
-  = form_init_arts.input :art_id, :wrapper_html => { :class => 'form-inline' }, :label => arts[i][:name], :label_html => { :'data-help-path'=>help_path(:art_types), :'data-params'=>"id=#{arts[i][:id]}" }, :collection => arts[i][:attributes].invert, :input_html => { :'data-url' => help_path(:arts), :'data-remote' => true, :'data-params' => ("id=#{register_initial.init_arts[i][:art_id]}" if register_initial.init_arts[i][:art_id]), :'data-type' => :json, :'data-help-path' => help_path(:arts) }
-  - i += 1
+  %br
+  = form_init_arts.input :art_id, :wrapper_html => { :class => 'form-inline' }, :collection => @arts, :input_html => { :'data-url' => help_path(:arts), :'data-remote' => true, :'data-params' => ("id=#{form_init_arts.object.art_id}" if form_init_arts.object.art_id), :'data-type' => :json, :'data-help-path' => help_path(:arts) }

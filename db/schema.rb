@@ -63,6 +63,9 @@ ActiveRecord::Schema.define(:version => 20130411011403) do
   create_table "game_data_art_types", :force => true do |t|
     t.string   "name"
     t.text     "caption"
+    t.boolean  "blossom"
+    t.boolean  "forget"
+    t.boolean  "lv_cap"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end

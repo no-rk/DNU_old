@@ -2,14 +2,16 @@ class Register::MakesController < Register::ApplicationController
   # GET /register/makes/new
   # GET /register/makes/new.json
   def new
-    @register_make    = Register::Make.new
-
+    set_instance_variables
+    
+    @register_make = Register::Make.new
+    
     @register_character = Register::Character.new
     @register_character.build_character
-
+    
     @register_initial = Register::Initial.new
     @register_initial.build_initial
-
+    
     respond_to do |format|
       format.html # new.html.erb
       format.json { render json: @register_make }
@@ -19,19 +21,20 @@ class Register::MakesController < Register::ApplicationController
   # POST /register/makes
   # POST /register/makes.json
   def create
+    @read_only = true if request.xhr?
+    set_instance_variables
+    
     @register_make = Register::Make.new(params[:register_make])
     @register_make.user = current_user
-
+    
     #characterテーブルに保存する
     @register_character = Register::Character.new(params[:register_character])
-    @register_character.user    = current_user
-
+    @register_character.user = current_user
+    
     #initialテーブルに保存する
     @register_initial = Register::Initial.new(params[:register_initial])
-    @register_initial.user    = current_user
-
-    @read_only = true if request.xhr?
-
+    @register_initial.user = current_user
+    
     respond_to do |format|
       #Ajaxの場合はバリデートのみ行う
       if @read_only
@@ -73,5 +76,11 @@ class Register::MakesController < Register::ApplicationController
       redirect_to register_index_path
       return false
     end
+  end
+  def set_instance_variables
+    @jobs      ||= GameData::Job.all.inject({}){|h,r| h.tap{h[r.name]=r.id} }
+    @guardians ||= GameData::Guardian.all.inject({}){|h,r| h.tap{h[r.name]=r.id} }
+    @statuses  ||= GameData::Status.all.map{|t| {:id => t.id, :name => t.name} }
+    @arts      ||= GameData::Art.where(GameData::ArtType.arel_table[:name].eq("武器")).includes(:art_type).all.inject({}){|h,r| h.tap{h[r.name]=r.id} }
   end
 end
