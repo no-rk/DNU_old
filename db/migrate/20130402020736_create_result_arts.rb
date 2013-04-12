@@ -1,8 +1,7 @@
 class CreateResultArts < ActiveRecord::Migration
   def change
     create_table :result_arts do |t|
-      t.references :character, :polymorphic => true
-      t.references :day
+      t.references :passed_day
       t.references :art
       t.string :name
       t.text :caption
@@ -14,8 +13,7 @@ class CreateResultArts < ActiveRecord::Migration
 
       t.timestamps
     end
-    add_index :result_arts, :character_id
-    add_index :result_arts, :day_id
+    add_index :result_arts, :passed_day_id
     add_index :result_arts, :art_id
   end
 end

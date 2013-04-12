@@ -1,8 +1,12 @@
 class Result::Point < ActiveRecord::Base
-  belongs_to :character, :polymorphic => true
-  belongs_to :day
+  belongs_to :passed_day
   belongs_to :point, :class_name => "GameData::Point"
   attr_accessible :value
+  
+  has_one :user, :through => :passed_day
+  has_one :day,  :through => :passed_day
+  
+  has_many :result_arts, :through => :passed_day, :class_name => "Result::Art"
   
   validate :point_non_negative?
   

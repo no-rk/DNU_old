@@ -7,9 +7,7 @@ module DNU
         User.already_make.find_each do |user|
           if user.register(:main).present?
             user.register(:main).trains.includes(:train).each do |train|
-              result_train = Result::Train.new
-              result_train.user = user
-              result_train.day = Day.last
+              result_train = user.new_result(:train)
               case train.train.trainable_type.underscore.split("/").last.to_sym
               when :status
                 result_status = user.result(:status).where(:status_id => train.train.trainable_id).first

@@ -1,7 +1,7 @@
 %h3 受信ポイント
 
 - @receive_points.each do |receive_point|
-  #{link_to("ENo.#{receive_point.user_id}", result_eno_path(@day_i, receive_point.user_id), :target => :_blank)} #{receive_point.user.result_character(@day_i).profile.name}
+  #{link_to("ENo.#{receive_point.user.id}", result_eno_path(@day_i, receive_point.user.id), :target => :_blank)} #{receive_point.user.result_character(@day_i).profile.name}
   から#{receive_point.send_point.value}#{receive_point.point.name}受け取った。
   %br
   - if receive_point.send_point.message.present?

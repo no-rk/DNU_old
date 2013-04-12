@@ -10,17 +10,13 @@ module DNU
             place.arrival = false
             place.save!
             user.register(:main).moves.where(:direction => [1,2,3,4]).each do |move|
-              result_move = Result::Move.new
-              result_move.user = user
-              result_move.day = Day.last
-              result_move.direction = move.direction
-              result_move.from = place.map_tip
-              result_move.success = true
+              result_move = user.new_result(:move ,{
+                :direction => move.direction,
+                :from      => place.map_tip,
+                :success   => true
+              })
               
-              result_place = Result::Place.new
-              result_place.user = user
-              result_place.day = Day.last
-              result_place.arrival = false
+              result_place = user.new_result(:place, { :arrival => false })
               case move.direction
               when 1
                 result_place.map_tip = place.map_tip.up

@@ -1,6 +1,9 @@
 class Day < ActiveRecord::Base
   attr_accessible :day, :state
   
+  validates :day,   :presence => true, :numericality => { :only_integer => true, :greater_than_ot_equal_to => 0 }
+  validates :state, :presence => true, :inclusion => { :in => 0..2 }
+  
   def self.last_day_i
     last_day = self.last
     last_day.try(:day) || 0

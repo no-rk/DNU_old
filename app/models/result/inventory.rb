@@ -1,8 +1,10 @@
 class Result::Inventory < ActiveRecord::Base
-  belongs_to :user
-  belongs_to :day
+  belongs_to :passed_day
   belongs_to :item
   attr_accessible :number
+  
+  has_one :user, :through => :passed_day
+  has_one :day,  :through => :passed_day
   
   has_many :item_names,     :through => :item
   has_many :item_strengths, :through => :item

@@ -28,28 +28,27 @@ class User < ActiveRecord::Base
 
   has_many :result_passed_days, :class_name => "Result::PassedDay"
   
-  has_many :result_battle_values, :through => :result_passed_days, :class_name => "Result::BattleValue"
-
-  has_many :result_send_points, :class_name => "Result::SendPoint"
-  has_many :result_trains,      :class_name => "Result::Train"
-  has_many :result_learns,      :class_name => "Result::Learn"
-  has_many :result_forgets,     :class_name => "Result::Forget"
-  has_many :result_blossoms,    :class_name => "Result::Blossom"
-  has_many :result_moves,       :class_name => "Result::Move"
+  has_many :result_send_points,   :through => :result_passed_days, :class_name => "Result::SendPoint"
+  has_many :result_trains,        :through => :result_passed_days, :class_name => "Result::Train"
+  has_many :result_learns,        :through => :result_passed_days, :class_name => "Result::Learn"
+  has_many :result_forgets,       :through => :result_passed_days, :class_name => "Result::Forget"
+  has_many :result_blossoms,      :through => :result_passed_days, :class_name => "Result::Blossom"
+  has_many :result_moves,         :through => :result_passed_days, :class_name => "Result::Move"
   
+  has_many :result_points,        :through => :result_passed_days, :class_name => "Result::Point"
+  has_many :result_jobs,          :through => :result_passed_days, :class_name => "Result::Job"
+  has_many :result_statuses,      :through => :result_passed_days, :class_name => "Result::Status"
+  has_many :result_arts,          :through => :result_passed_days, :class_name => "Result::Art"
+  has_many :result_products,      :through => :result_passed_days, :class_name => "Result::Product"
+  has_many :result_abilities,     :through => :result_passed_days, :class_name => "Result::Ability"
+  has_many :result_battle_values, :through => :result_passed_days, :class_name => "Result::BattleValue"
+  has_many :result_skills,        :through => :result_passed_days, :class_name => "Result::Skill"
+  has_many :result_inventories,   :through => :result_passed_days, :class_name => "Result::Inventory"
+  has_many :result_places,        :through => :result_passed_days, :class_name => "Result::Place"
+
   has_many :through_party_members, :as => :character, :class_name => "Result::PartyMember"
   has_many :result_parties, :through => :through_party_members, :class_name => "Result::Party", :source => :party
   has_many :result_notices, :through => :result_parties, :class_name => "Result::Notice", :source => :notices
-  
-  has_many :result_places,      :class_name => "Result::Place"
-  has_many :result_inventories, :class_name => "Result::Inventory"
-  has_many :result_points,    :as => :character, :class_name => "Result::Point"
-  has_many :result_statuses,  :as => :character, :class_name => "Result::Status"
-  has_many :result_jobs,      :as => :character, :class_name => "Result::Job"
-  has_many :result_arts,      :as => :character, :class_name => "Result::Art"
-  has_many :result_products,  :as => :character, :class_name => "Result::Product"
-  has_many :result_abilities, :as => :character, :class_name => "Result::Ability"
-  has_many :result_skills,    :as => :character, :class_name => "Result::Skill"
 
   scope :new_commer,   lambda{ where(arel_table[:creation_day].eq(Day.last_day_i)) }
   scope :already_make, lambda{ where(arel_table[:creation_day].lt(Day.last_day_i)) }
@@ -159,19 +158,44 @@ class User < ActiveRecord::Base
     end
   end
   
-  def blossom!(art, day = Day.last)
+  def new_result(type, data = {}, day_i = Day.last_day_i)
+    case type.to_sym
+    when :passed_day
+      record = self.result_passed_days.build
+      data[:day] ||= Day.find_by_day(day_i)
+    else
+      record = self.result(:passed_day, day_i).last.send("result_#{type.to_s.pluralize}").build
+    end
+    data.each do |k, v|
+      record.send("#{k}=", v) if record.respond_to?("#{k}=")
+    end
+    record
+  end
+  
+  def create_result!(type, data = {}, day_i = Day.last_day_i)
+    case type.to_sym
+    when :passed_day
+      record = self.result_passed_days.build
+      data[:day] ||= Day.find_by_day(day_i)
+    else
+      record = self.result(:passed_day, day_i).last.send("result_#{type.to_s.pluralize}").build
+    end
+    data.each do |k, v|
+      record.send("#{k}=", v) if record.respond_to?("#{k}=")
+    end
+    record.save!
+    record
+  end
+  
+  def blossom!(art, day_i = Day.last_day_i)
     success = false
-    if !self.result(:art, day.day).exists?(:art_id => art.id, :forget => false) and self.result(:art, day.day).where(:forget => false).count < 5
+    if !self.result(:art, day_i).exists?(:art_id => art.id, :forget => false) and self.result(:art, day_i).where(:forget => false).count < 5
       point_arel = GameData::Point.arel_table
-      result_point = self.result(:point, day.day).where(point_arel[:name].eq(:GP)).includes(:point).first
+      result_point = self.result(:point, day_i).where(point_arel[:name].eq(:GP)).includes(:point).first
       result_point.value -= 10
       if result_point.save
-        result_art = Result::Art.where(
-          :character_id => self.id,
-          :character_type => :User,
-          :day_id=>day.id,
-          :art_id=>art.id
-        ).first_or_initialize
+        result_art = result_point.result_arts.where(:art_id=>art.id).first_or_initialize
+        result_art.passed_day ||= result_point.passed_day
         result_art.lv = 1
         result_art.lv_exp ||= 0
         result_art.lv_cap ||= 5
@@ -184,14 +208,14 @@ class User < ActiveRecord::Base
     success
   end
   
-  def forget!(art, day = Day.last)
+  def forget!(art, day_i = Day.last_day_i)
     success = false
-    result_art = self.result(:art, day.day).where(:art_id => art.id, :forget => false).first
+    result_art = self.result(:art, day_i).where(:art_id => art.id, :forget => false).first
     if result_art.present?
       result_art.forget = true
       if result_art.save
         point_arel = GameData::Point.arel_table
-        result_point = self.result(:point, day.day).where(point_arel[:name].eq(:GP)).includes(:point).first
+        result_point = result_art.result_points.where(point_arel[:name].eq(:GP)).includes(:point).first
         result_point.value += result_art.forget_point
         result_point.save!
         success = true
@@ -205,20 +229,12 @@ class User < ActiveRecord::Base
     ((1..max_inventory).to_a - self.result(:inventory, day_i).map{ |r| r.number }).min
   end
   
-  def new_inventory(day_i = Day.last_day_i)
-    result_inventory = Result::Inventory.new
-    result_inventory.user = self
-    result_inventory.day = Day.find_by_day(day_i)
-    result_inventory.number = blank_item_number(day_i)
-    result_inventory
-  end
-  
   def add_item!(item, way = nil, day_i = Day.last_day_i)
     success = false
     item_type = item.keys.first
     item_name = item.values.first
     
-    result_inventory = self.new_inventory(day_i)
+    result_inventory = new_result(:inventory, { :number => blank_item_number(day_i) }, day_i)
     if result_inventory.number.present?
       result_item = Result::Item.new_item_by_type_and_name(item_type, item_name, self, way, day_i)
       if result_item.present?

@@ -1,8 +1,7 @@
 class CreateResultAbilities < ActiveRecord::Migration
   def change
     create_table :result_abilities do |t|
-      t.references :character, :polymorphic => true
-      t.references :day
+      t.references :passed_day
       t.references :ability
       t.string :name
       t.text :caption
@@ -14,8 +13,7 @@ class CreateResultAbilities < ActiveRecord::Migration
 
       t.timestamps
     end
-    add_index :result_abilities, :character_id
-    add_index :result_abilities, :day_id
+    add_index :result_abilities, :passed_day_id
     add_index :result_abilities, :ability_id
   end
 end

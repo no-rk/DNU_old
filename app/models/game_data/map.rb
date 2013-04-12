@@ -14,7 +14,7 @@ class GameData::Map < ActiveRecord::Base
     places.where(:arrival => true).
            where(day_arel[:day].eq(day_i)).includes(:day).
            inject(Hash.new { |hash,key| hash[key] = Hash.new { |hash,key| hash[key] = [] } }){ |h,r|
-             h.tap{ h[r.map_tip_id][r.find_party_slogan_by_day_i(day_i)].push(r.user_id) }
+             h.tap{ h[r.map_tip_id][r.find_party_slogan_by_day_i(day_i)].push(r.user.id) }
            }
   end
   

@@ -14,6 +14,7 @@ class Result::Map < ActiveRecord::Base
   
   def user_counts
     map_arel = GameData::MapTip.arel_table
-    Result::Place.where(:arrival => true).where(:day_id => day.id).where(map_arel[:map_id].eq(map.id)).includes(:map_tip).group(:x,:y).count
+    day_arel = Day.arel_table
+    Result::Place.where(:arrival => true).where(day_arel[:day].eq(day.day)).includes(:day).where(map_arel[:map_id].eq(map.id)).includes(:map_tip).group(:x,:y).count
   end
 end

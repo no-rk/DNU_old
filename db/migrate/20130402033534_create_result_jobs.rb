@@ -1,8 +1,7 @@
 class CreateResultJobs < ActiveRecord::Migration
   def change
     create_table :result_jobs do |t|
-      t.references :character, :polymorphic => true
-      t.references :day
+      t.references :passed_day
       t.references :job
       t.string :name
       t.text :caption
@@ -14,8 +13,7 @@ class CreateResultJobs < ActiveRecord::Migration
 
       t.timestamps
     end
-    add_index :result_jobs, :character_id
-    add_index :result_jobs, :day_id
+    add_index :result_jobs, :passed_day_id
     add_index :result_jobs, :job_id
   end
 end

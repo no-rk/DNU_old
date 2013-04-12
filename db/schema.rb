@@ -586,9 +586,7 @@ ActiveRecord::Schema.define(:version => 20130412050452) do
   add_index "register_upload_icons", ["image_id"], :name => "index_register_upload_icons_on_image_id"
 
   create_table "result_abilities", :force => true do |t|
-    t.integer  "character_id"
-    t.string   "character_type"
-    t.integer  "day_id"
+    t.integer  "passed_day_id"
     t.integer  "ability_id"
     t.string   "name"
     t.text     "caption"
@@ -597,18 +595,15 @@ ActiveRecord::Schema.define(:version => 20130412050452) do
     t.integer  "lv_cap"
     t.integer  "lv_cap_exp"
     t.boolean  "forget"
-    t.datetime "created_at",     :null => false
-    t.datetime "updated_at",     :null => false
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
   end
 
   add_index "result_abilities", ["ability_id"], :name => "index_result_abilities_on_ability_id"
-  add_index "result_abilities", ["character_id"], :name => "index_result_abilities_on_character_id"
-  add_index "result_abilities", ["day_id"], :name => "index_result_abilities_on_day_id"
+  add_index "result_abilities", ["passed_day_id"], :name => "index_result_abilities_on_passed_day_id"
 
   create_table "result_arts", :force => true do |t|
-    t.integer  "character_id"
-    t.string   "character_type"
-    t.integer  "day_id"
+    t.integer  "passed_day_id"
     t.integer  "art_id"
     t.string   "name"
     t.text     "caption"
@@ -617,13 +612,12 @@ ActiveRecord::Schema.define(:version => 20130412050452) do
     t.integer  "lv_cap"
     t.integer  "lv_cap_exp"
     t.boolean  "forget"
-    t.datetime "created_at",     :null => false
-    t.datetime "updated_at",     :null => false
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
   end
 
   add_index "result_arts", ["art_id"], :name => "index_result_arts_on_art_id"
-  add_index "result_arts", ["character_id"], :name => "index_result_arts_on_character_id"
-  add_index "result_arts", ["day_id"], :name => "index_result_arts_on_day_id"
+  add_index "result_arts", ["passed_day_id"], :name => "index_result_arts_on_passed_day_id"
 
   create_table "result_battle_values", :force => true do |t|
     t.integer  "passed_day_id"
@@ -637,8 +631,7 @@ ActiveRecord::Schema.define(:version => 20130412050452) do
   add_index "result_battle_values", ["passed_day_id"], :name => "index_result_battle_values_on_passed_day_id"
 
   create_table "result_blossoms", :force => true do |t|
-    t.integer  "user_id"
-    t.integer  "day_id"
+    t.integer  "passed_day_id"
     t.integer  "blossomable_id"
     t.string   "blossomable_type"
     t.boolean  "success"
@@ -647,12 +640,10 @@ ActiveRecord::Schema.define(:version => 20130412050452) do
   end
 
   add_index "result_blossoms", ["blossomable_id"], :name => "index_result_blossoms_on_blossomable_id"
-  add_index "result_blossoms", ["day_id"], :name => "index_result_blossoms_on_day_id"
-  add_index "result_blossoms", ["user_id"], :name => "index_result_blossoms_on_user_id"
+  add_index "result_blossoms", ["passed_day_id"], :name => "index_result_blossoms_on_passed_day_id"
 
   create_table "result_forgets", :force => true do |t|
-    t.integer  "user_id"
-    t.integer  "day_id"
+    t.integer  "passed_day_id"
     t.integer  "forgettable_id"
     t.string   "forgettable_type"
     t.boolean  "success"
@@ -660,22 +651,19 @@ ActiveRecord::Schema.define(:version => 20130412050452) do
     t.datetime "updated_at",       :null => false
   end
 
-  add_index "result_forgets", ["day_id"], :name => "index_result_forgets_on_day_id"
   add_index "result_forgets", ["forgettable_id"], :name => "index_result_forgets_on_forgettable_id"
-  add_index "result_forgets", ["user_id"], :name => "index_result_forgets_on_user_id"
+  add_index "result_forgets", ["passed_day_id"], :name => "index_result_forgets_on_passed_day_id"
 
   create_table "result_inventories", :force => true do |t|
-    t.integer  "user_id"
-    t.integer  "day_id"
+    t.integer  "passed_day_id"
     t.integer  "number"
     t.integer  "item_id"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
   end
 
-  add_index "result_inventories", ["day_id"], :name => "index_result_inventories_on_day_id"
   add_index "result_inventories", ["item_id"], :name => "index_result_inventories_on_item_id"
-  add_index "result_inventories", ["user_id"], :name => "index_result_inventories_on_user_id"
+  add_index "result_inventories", ["passed_day_id"], :name => "index_result_inventories_on_passed_day_id"
 
   create_table "result_item_elements", :force => true do |t|
     t.integer  "item_id"
@@ -775,9 +763,7 @@ ActiveRecord::Schema.define(:version => 20130412050452) do
   add_index "result_items", ["way_id"], :name => "index_result_items_on_way_id"
 
   create_table "result_jobs", :force => true do |t|
-    t.integer  "character_id"
-    t.string   "character_type"
-    t.integer  "day_id"
+    t.integer  "passed_day_id"
     t.integer  "job_id"
     t.string   "name"
     t.text     "caption"
@@ -786,17 +772,15 @@ ActiveRecord::Schema.define(:version => 20130412050452) do
     t.integer  "lv_cap"
     t.integer  "lv_cap_exp"
     t.boolean  "forget"
-    t.datetime "created_at",     :null => false
-    t.datetime "updated_at",     :null => false
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
   end
 
-  add_index "result_jobs", ["character_id"], :name => "index_result_jobs_on_character_id"
-  add_index "result_jobs", ["day_id"], :name => "index_result_jobs_on_day_id"
   add_index "result_jobs", ["job_id"], :name => "index_result_jobs_on_job_id"
+  add_index "result_jobs", ["passed_day_id"], :name => "index_result_jobs_on_passed_day_id"
 
   create_table "result_learns", :force => true do |t|
-    t.integer  "user_id"
-    t.integer  "day_id"
+    t.integer  "passed_day_id"
     t.integer  "learnable_id"
     t.string   "learnable_type"
     t.boolean  "first"
@@ -804,9 +788,8 @@ ActiveRecord::Schema.define(:version => 20130412050452) do
     t.datetime "updated_at",     :null => false
   end
 
-  add_index "result_learns", ["day_id"], :name => "index_result_learns_on_day_id"
   add_index "result_learns", ["learnable_id"], :name => "index_result_learns_on_learnable_id"
-  add_index "result_learns", ["user_id"], :name => "index_result_learns_on_user_id"
+  add_index "result_learns", ["passed_day_id"], :name => "index_result_learns_on_passed_day_id"
 
   create_table "result_maps", :force => true do |t|
     t.integer  "day_id"
@@ -820,20 +803,18 @@ ActiveRecord::Schema.define(:version => 20130412050452) do
   add_index "result_maps", ["map_id"], :name => "index_result_maps_on_map_id"
 
   create_table "result_moves", :force => true do |t|
-    t.integer  "user_id"
-    t.integer  "day_id"
+    t.integer  "passed_day_id"
     t.integer  "direction"
     t.integer  "from_id"
     t.integer  "to_id"
     t.boolean  "success"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
   end
 
-  add_index "result_moves", ["day_id"], :name => "index_result_moves_on_day_id"
   add_index "result_moves", ["from_id"], :name => "index_result_moves_on_from_id"
+  add_index "result_moves", ["passed_day_id"], :name => "index_result_moves_on_passed_day_id"
   add_index "result_moves", ["to_id"], :name => "index_result_moves_on_to_id"
-  add_index "result_moves", ["user_id"], :name => "index_result_moves_on_user_id"
 
   create_table "result_notices", :force => true do |t|
     t.integer  "party_id"
@@ -880,36 +861,29 @@ ActiveRecord::Schema.define(:version => 20130412050452) do
   add_index "result_passed_days", ["user_id"], :name => "index_result_passed_days_on_user_id"
 
   create_table "result_places", :force => true do |t|
-    t.integer  "user_id"
-    t.integer  "day_id"
+    t.integer  "passed_day_id"
     t.integer  "map_tip_id"
     t.boolean  "arrival"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
   end
 
-  add_index "result_places", ["day_id"], :name => "index_result_places_on_day_id"
   add_index "result_places", ["map_tip_id"], :name => "index_result_places_on_map_tip_id"
-  add_index "result_places", ["user_id"], :name => "index_result_places_on_user_id"
+  add_index "result_places", ["passed_day_id"], :name => "index_result_places_on_passed_day_id"
 
   create_table "result_points", :force => true do |t|
-    t.integer  "character_id"
-    t.string   "character_type"
-    t.integer  "day_id"
+    t.integer  "passed_day_id"
     t.integer  "point_id"
     t.integer  "value"
-    t.datetime "created_at",     :null => false
-    t.datetime "updated_at",     :null => false
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
   end
 
-  add_index "result_points", ["character_id"], :name => "index_result_points_on_character_id"
-  add_index "result_points", ["day_id"], :name => "index_result_points_on_day_id"
+  add_index "result_points", ["passed_day_id"], :name => "index_result_points_on_passed_day_id"
   add_index "result_points", ["point_id"], :name => "index_result_points_on_point_id"
 
   create_table "result_products", :force => true do |t|
-    t.integer  "character_id"
-    t.string   "character_type"
-    t.integer  "day_id"
+    t.integer  "passed_day_id"
     t.integer  "product_id"
     t.string   "name"
     t.text     "caption"
@@ -918,64 +892,54 @@ ActiveRecord::Schema.define(:version => 20130412050452) do
     t.integer  "lv_cap"
     t.integer  "lv_cap_exp"
     t.boolean  "forget"
-    t.datetime "created_at",     :null => false
-    t.datetime "updated_at",     :null => false
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
   end
 
-  add_index "result_products", ["character_id"], :name => "index_result_products_on_character_id"
-  add_index "result_products", ["day_id"], :name => "index_result_products_on_day_id"
+  add_index "result_products", ["passed_day_id"], :name => "index_result_products_on_passed_day_id"
   add_index "result_products", ["product_id"], :name => "index_result_products_on_product_id"
 
   create_table "result_send_points", :force => true do |t|
-    t.integer  "user_id"
-    t.integer  "day_id"
+    t.integer  "passed_day_id"
     t.integer  "send_point_id"
     t.boolean  "success"
     t.datetime "created_at",    :null => false
     t.datetime "updated_at",    :null => false
   end
 
-  add_index "result_send_points", ["day_id"], :name => "index_result_send_points_on_day_id"
+  add_index "result_send_points", ["passed_day_id"], :name => "index_result_send_points_on_passed_day_id"
   add_index "result_send_points", ["send_point_id"], :name => "index_result_send_points_on_send_point_id"
-  add_index "result_send_points", ["user_id"], :name => "index_result_send_points_on_user_id"
 
   create_table "result_skills", :force => true do |t|
-    t.integer  "character_id"
-    t.string   "character_type"
-    t.integer  "day_id"
+    t.integer  "passed_day_id"
     t.integer  "skill_id"
     t.string   "name"
     t.text     "caption"
     t.integer  "exp"
     t.boolean  "forget"
-    t.datetime "created_at",     :null => false
-    t.datetime "updated_at",     :null => false
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
   end
 
-  add_index "result_skills", ["character_id"], :name => "index_result_skills_on_character_id"
-  add_index "result_skills", ["day_id"], :name => "index_result_skills_on_day_id"
+  add_index "result_skills", ["passed_day_id"], :name => "index_result_skills_on_passed_day_id"
   add_index "result_skills", ["skill_id"], :name => "index_result_skills_on_skill_id"
 
   create_table "result_statuses", :force => true do |t|
-    t.integer  "character_id"
-    t.string   "character_type"
-    t.integer  "day_id"
+    t.integer  "passed_day_id"
     t.integer  "status_id"
     t.string   "name"
     t.text     "caption"
     t.integer  "count"
     t.integer  "bonus"
-    t.datetime "created_at",     :null => false
-    t.datetime "updated_at",     :null => false
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
   end
 
-  add_index "result_statuses", ["character_id"], :name => "index_result_statuses_on_character_id"
-  add_index "result_statuses", ["day_id"], :name => "index_result_statuses_on_day_id"
+  add_index "result_statuses", ["passed_day_id"], :name => "index_result_statuses_on_passed_day_id"
   add_index "result_statuses", ["status_id"], :name => "index_result_statuses_on_status_id"
 
   create_table "result_trains", :force => true do |t|
-    t.integer  "user_id"
-    t.integer  "day_id"
+    t.integer  "passed_day_id"
     t.integer  "trainable_id"
     t.string   "trainable_type"
     t.integer  "from"
@@ -985,9 +949,8 @@ ActiveRecord::Schema.define(:version => 20130412050452) do
     t.datetime "updated_at",     :null => false
   end
 
-  add_index "result_trains", ["day_id"], :name => "index_result_trains_on_day_id"
+  add_index "result_trains", ["passed_day_id"], :name => "index_result_trains_on_passed_day_id"
   add_index "result_trains", ["trainable_id"], :name => "index_result_trains_on_trainable_id"
-  add_index "result_trains", ["user_id"], :name => "index_result_trains_on_user_id"
 
   create_table "taggings", :force => true do |t|
     t.integer  "tag_id"

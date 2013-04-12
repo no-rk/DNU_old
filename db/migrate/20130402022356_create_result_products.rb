@@ -1,8 +1,7 @@
 class CreateResultProducts < ActiveRecord::Migration
   def change
     create_table :result_products do |t|
-      t.references :character, :polymorphic => true
-      t.references :day
+      t.references :passed_day
       t.references :product
       t.string :name
       t.text :caption
@@ -14,8 +13,7 @@ class CreateResultProducts < ActiveRecord::Migration
 
       t.timestamps
     end
-    add_index :result_products, :character_id
-    add_index :result_products, :day_id
+    add_index :result_products, :passed_day_id
     add_index :result_products, :product_id
   end
 end

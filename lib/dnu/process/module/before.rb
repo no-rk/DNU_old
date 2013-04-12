@@ -45,15 +45,17 @@ module DNU
           
           # 再更新の場合は結果クリア
           unless @new_day
-            [:ability, :art, :blossom, :forget, :inventory, :job, :learn, :move, :party, :places, :point, :product, :send_point, :skill, :status, :train].each do |result_name|
+            user.result(:passed_day, now_day.day).destroy_all
+            [:party].each do |result_name|
               user.result(result_name, now_day.day).destroy_all
             end
           end
+          user.create_result!(:passed_day, { :day => now_day, :passed_day => (now_day.day.to_i - user.creation_day.to_i) })
           # 前日の結果を初期値としてコピー
           [:ability, :art, :inventory, :job, :place, :point, :product, :skill, :status].each do |result_name|
             user.result(result_name, now_day.before_i).each do |result|
               result_c = DNU::DeepClone.result(result)
-              result_c.day = now_day
+              result_c.passed_day = user.result(:passed_day, now_day.day).last
               result_c.save!
             end
           end
