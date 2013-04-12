@@ -26,6 +26,10 @@ class User < ActiveRecord::Base
   has_one  :make        , :order => "updated_at DESC", :class_name => "Register::Make"
   has_many :makes       , :order => "updated_at DESC", :class_name => "Register::Make"
 
+  has_many :result_passed_days, :class_name => "Result::PassedDay"
+  
+  has_many :result_battle_values, :through => :result_passed_days, :class_name => "Result::BattleValue"
+
   has_many :result_send_points, :class_name => "Result::SendPoint"
   has_many :result_trains,      :class_name => "Result::Train"
   has_many :result_learns,      :class_name => "Result::Learn"

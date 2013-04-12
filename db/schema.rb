@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130411055433) do
+ActiveRecord::Schema.define(:version => 20130412050452) do
 
   create_table "admins", :force => true do |t|
     t.string   "email",               :default => "", :null => false
@@ -625,6 +625,17 @@ ActiveRecord::Schema.define(:version => 20130411055433) do
   add_index "result_arts", ["character_id"], :name => "index_result_arts_on_character_id"
   add_index "result_arts", ["day_id"], :name => "index_result_arts_on_day_id"
 
+  create_table "result_battle_values", :force => true do |t|
+    t.integer  "passed_day_id"
+    t.integer  "battle_value_id"
+    t.integer  "value"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
+  end
+
+  add_index "result_battle_values", ["battle_value_id"], :name => "index_result_battle_values_on_battle_value_id"
+  add_index "result_battle_values", ["passed_day_id"], :name => "index_result_battle_values_on_passed_day_id"
+
   create_table "result_blossoms", :force => true do |t|
     t.integer  "user_id"
     t.integer  "day_id"
@@ -856,6 +867,17 @@ ActiveRecord::Schema.define(:version => 20130411055433) do
 
   add_index "result_party_members", ["character_id"], :name => "index_result_party_members_on_character_id"
   add_index "result_party_members", ["party_id"], :name => "index_result_party_members_on_party_id"
+
+  create_table "result_passed_days", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "day_id"
+    t.integer  "passed_day"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "result_passed_days", ["day_id"], :name => "index_result_passed_days_on_day_id"
+  add_index "result_passed_days", ["user_id"], :name => "index_result_passed_days_on_user_id"
 
   create_table "result_places", :force => true do |t|
     t.integer  "user_id"

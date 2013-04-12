@@ -61,6 +61,12 @@ class Register::Initial < ActiveRecord::Base
       result_art.forget = false
       result_art.save!
     end
+    # 初期技能に対応した装備を結果に反映
+    if self.user.result(:inventory).exists?
+      self.user.result(:inventory).first.item.destroy
+      self.user.result(:inventory).destroy_all
+    end
+    self.user.add_item!({ self.init_arts.first.art.name => "初期装備" }, GameData::Product.find_by_name("鍛治"))
     # 守護竜に対応した竜魂を結果に反映
     dragon_souls = GameData::ArtType.where(:name => "竜魂").first.arts
     result_art = Result::Art.where(:id => result_art_id.shift).first_or_initialize
