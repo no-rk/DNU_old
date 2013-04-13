@@ -57,7 +57,7 @@ ENo.#{@id} #{@profile.name}
 アイテム一覧
 %br
 - @inventories.each do |item|
-  [#{item.number}]#{item.name} ※アイテムID:#{item.item.id}
+  [#{item.number}]#{item.name} ※アイテム#{link_to("ID:#{item.item.id}", result_item_path(@day_i, item.item.id), :target => :_blank)}
   %br
   　#{item.element_name}（ #{item.type_name} / #{item.strength} / #{item.sup(:A)}#{item.sup(:G)} / #{item.sup(:B)} ）
   %br

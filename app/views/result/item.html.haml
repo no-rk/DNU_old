@@ -1,0 +1,13 @@
+.row-fluid
+  .span12.well
+    第#{@item.day.day}回に
+    ENo.#{@item.user.id} #{@item.user.result(:character, @day_i).profile.name} が
+    #{@item.way.name} で得た #{@item.type.name}
+    %br
+    %br
+    - @item_passed_days.each do |passed_day|
+      - day_i = passed_day.day.day
+      - user  = passed_day.user
+      第#{day_i}回 所有者 ENo.#{user.id} #{user.result(:character, day_i).profile.name}
+      %br
+    = paginate @item_passed_days

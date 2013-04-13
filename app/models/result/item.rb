@@ -13,12 +13,20 @@ class Result::Item < ActiveRecord::Base
 
   attr_accessible :protect
   
+  has_many :result_inventories, :class_name => "Result::Inventory"
+  has_many :passed_days, :through => :result_inventories, :class_name => "Result::PassedDay"
+  
   validates :user,    :presence => true
   validates :day,     :presence => true
   validates :type,    :presence => true
   validates :protect, :inclusion => { :in => [true, false] }
   
   validate :has_name?, :has_strength?
+  
+  def passed_days_lteq_day_i(day_i = Day.last_day_i)
+    day_arel = Day.arel_table
+    self.passed_days.where(day_arel[:day].lteq(day_i)).order(day_arel[:day]).includes(:day)
+  end
   
   def self.new_item_by_data(item_data, user, way = nil, day_i = Day.last_day_i)
     day = Day.find_by_day(day_i)

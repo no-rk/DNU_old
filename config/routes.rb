@@ -32,6 +32,7 @@ DNU::Application.routes.draw do
   get "result/enos(/:new)"            => 'result#enos',       :as => 'result_enos'
   get "result/maps"                   => 'result#maps',       :as => 'result_maps'
   get "result(/:day)/eno/:id"         => 'result#eno',        :as => 'result_eno'
+  get "result(/:day)/item/:id"        => 'result#item',       :as => 'result_item'
   get "result(/:day)/map/:name"       => 'result#map',        :as => 'result_map'
   get "result(/:day)/map/:name/:x/:y" => 'result#map_detail', :as => 'result_map_detail'
   get "result(/:day)/mapimage/:name"  => 'result#map_image' , :as => 'result_map_image'

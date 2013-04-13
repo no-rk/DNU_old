@@ -62,6 +62,17 @@ class ResultController < ApplicationController
     render :layout => 'plain'
   end
   
+  # GET result(/:day)/item/:id
+  def item
+    @id  = params[:id].to_i
+    @day_i = (params[:day] || Day.last_day_i).to_i
+    
+    @item = Result::Item.find(@id)
+    @item_passed_days = @item.passed_days_lteq_day_i(@day_i).page(params[:page]).per(10)
+    
+    render :layout => 'plain'
+  end
+  
   # GET result(/:day)/map/:name
   def map
     @name = params[:name]
