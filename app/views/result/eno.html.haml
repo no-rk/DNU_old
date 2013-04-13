@@ -21,6 +21,10 @@
   .row-fluid
     #receive_item.span12.well
       = render 'result_receive_item'
+- if @forges.present?
+  .row-fluid
+    #forge.span12.well
+      = render 'result_forge'
 - if @trains.present?
   .row-fluid
     #train.span12.well

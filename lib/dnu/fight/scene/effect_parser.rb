@@ -1967,7 +1967,7 @@ class EffectParser < Parslet::Parser
     ).as(:G).maybe >>
     bra >>
     (
-      equip_type.as(:qeuip_type) >>
+      equip_type.as(:equip_type) >>
       (
         level.maybe >>
         natural_number.as(:lv)

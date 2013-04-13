@@ -33,37 +33,43 @@ class Result::Item < ActiveRecord::Base
     result_item = self.new
     result_item.type = GameData::ItemType.find_by_name(item_data[:kind].to_s)
     item_data.each do |k, v|
-      case k.to_sym
-      when :name
-        result_item.item_names.build do |item_name|
-          item_name.user    = user
-          item_name.day     = day
-          item_name.way     = way
-          item_name.name    = item_data[:name].to_s
-          item_name.caption = item_data[:caption].to_s if item_data[:caption].present?
-        end
-      when :element
-        result_item.item_elements.build do |item_element|
-          item_element.user    = user
-          item_element.day     = day
-          item_element.way     = way
-          item_element.element = GameData::Element.find_by_name(item_data[:element].values.first.to_s)
-        end
-      when :strength
-        result_item.item_strengths.build do |item_strength|
-          item_strength.user     = user
-          item_strength.day      = day
-          item_strength.way      = way
-          item_strength.strength = item_data[:strength].to_i
-        end
-      when :A, :B, :G
-        result_item.item_sups.build do |item_sup|
-          item_sup.user = user
-          item_sup.day  = day
-          item_sup.way  = way
-          item_sup.kind = k.to_s
-          item_sup.sup  = GameData::Sup.find_by_name(v[:name].to_s)
-          item_sup.lv   = v[:lv].to_i if v[:lv].present?
+      if v.present?
+        case k.to_sym
+        when :name
+          result_item.item_names.build do |item_name|
+            item_name.user    = user
+            item_name.day     = day
+            item_name.way     = way
+            item_name.name    = item_data[:name].to_s
+            item_name.caption = item_data[:caption].to_s if item_data[:caption].present?
+            item_name.source  = item_data[:source] if item_data[:source].present?
+          end
+        when :element
+          result_item.item_elements.build do |item_element|
+            item_element.user    = user
+            item_element.day     = day
+            item_element.way     = way
+            item_element.element = GameData::Element.find_by_name(item_data[:element].values.first.to_s)
+            item_element.source  = item_data[:source] if item_data[:source].present?
+          end
+        when :strength
+          result_item.item_strengths.build do |item_strength|
+            item_strength.user     = user
+            item_strength.day      = day
+            item_strength.way      = way
+            item_strength.strength = item_data[:strength].to_i
+            item_strength.source   = item_data[:source] if item_data[:source].present?
+          end
+        when :A, :B, :G
+          result_item.item_sups.build do |item_sup|
+            item_sup.user    = user
+            item_sup.day     = day
+            item_sup.way     = way
+            item_sup.kind    = k.to_s
+            item_sup.sup     = GameData::Sup.find_by_name(v[:name].to_s)
+            item_sup.lv      = v[:lv].to_i if v[:lv].present?
+            item_sup.source  = item_data[:source] if item_data[:source].present?
+          end
         end
       end
     end
@@ -87,6 +93,18 @@ class Result::Item < ActiveRecord::Base
       result_item.plan    = item_plan
       result_item.protect = item_data[:protect].present?
     end
+    result_item
+  end
+  
+  def self.new_item_from_material(material, register_forge, way = nil, day_i = register_forge.day.day)
+    item_data = register_forge.item_data_from_material(material, day_i)
+    
+    result_item = self.new_item_by_data(item_data, register_forge.smith, way, day_i)
+    result_item.user    = register_forge.smith
+    result_item.day     = Day.find_by_day(day_i)
+    result_item.way     = way
+    result_item.source  = material
+    result_item.protect = material.protect
     result_item
   end
   

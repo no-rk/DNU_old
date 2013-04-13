@@ -30,6 +30,7 @@ class User < ActiveRecord::Base
   
   has_many :result_send_points,   :through => :result_passed_days, :class_name => "Result::SendPoint"
   has_many :result_send_items,    :through => :result_passed_days, :class_name => "Result::SendItem"
+  has_many :result_forges,        :through => :result_passed_days, :class_name => "Result::Forge"
   has_many :result_trains,        :through => :result_passed_days, :class_name => "Result::Train"
   has_many :result_learns,        :through => :result_passed_days, :class_name => "Result::Learn"
   has_many :result_forgets,       :through => :result_passed_days, :class_name => "Result::Forget"

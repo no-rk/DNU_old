@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130413043316) do
+ActiveRecord::Schema.define(:version => 20130413124515) do
 
   create_table "admins", :force => true do |t|
     t.string   "email",               :default => "", :null => false
@@ -398,6 +398,23 @@ ActiveRecord::Schema.define(:version => 20130413043316) do
   add_index "register_duels", ["day_id"], :name => "index_register_duels_on_day_id"
   add_index "register_duels", ["user_id"], :name => "index_register_duels_on_user_id"
 
+  create_table "register_forges", :force => true do |t|
+    t.integer  "product_id"
+    t.integer  "user_id"
+    t.integer  "number"
+    t.integer  "item_type_id"
+    t.boolean  "experiment"
+    t.string   "name"
+    t.text     "caption"
+    t.text     "message"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
+  end
+
+  add_index "register_forges", ["item_type_id"], :name => "index_register_forges_on_item_type_id"
+  add_index "register_forges", ["product_id"], :name => "index_register_forges_on_product_id"
+  add_index "register_forges", ["user_id"], :name => "index_register_forges_on_user_id"
+
   create_table "register_forgets", :force => true do |t|
     t.integer  "main_id"
     t.integer  "train_id"
@@ -653,6 +670,21 @@ ActiveRecord::Schema.define(:version => 20130413043316) do
 
   add_index "result_blossoms", ["blossomable_id"], :name => "index_result_blossoms_on_blossomable_id"
   add_index "result_blossoms", ["passed_day_id"], :name => "index_result_blossoms_on_passed_day_id"
+
+  create_table "result_forges", :force => true do |t|
+    t.integer  "passed_day_id"
+    t.integer  "forge_id"
+    t.integer  "from_id"
+    t.integer  "to_id"
+    t.boolean  "success"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
+  end
+
+  add_index "result_forges", ["forge_id"], :name => "index_result_forges_on_forge_id"
+  add_index "result_forges", ["from_id"], :name => "index_result_forges_on_from_id"
+  add_index "result_forges", ["passed_day_id"], :name => "index_result_forges_on_passed_day_id"
+  add_index "result_forges", ["to_id"], :name => "index_result_forges_on_to_id"
 
   create_table "result_forgets", :force => true do |t|
     t.integer  "passed_day_id"

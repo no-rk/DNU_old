@@ -64,6 +64,8 @@ class Register::Initial < ActiveRecord::Base
     },
       GameData::Product.find_by_name("鍛治")
     )
+    # テスト用の材料を結果に反映
+    5.times{ self.user.add_item!("材料"=>"テスト材料") }
     # 守護竜に対応した竜魂を結果に反映
     dragon_souls = GameData::ArtType.where(:name => "竜魂").first.arts
     self.user.create_result!(:art, {

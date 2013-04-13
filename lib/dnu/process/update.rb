@@ -4,6 +4,7 @@ module DNU
       extend Before
       extend SendPoint
       extend SendItem
+      extend Forge
       extend Train
       extend Learn
       extend Forget
@@ -27,6 +28,9 @@ module DNU
           
           # アイテム送付
           send_item
+          
+          # 鍛治
+          forge
           
           # 能力や技能や生産やアビリティーの訓練
           train

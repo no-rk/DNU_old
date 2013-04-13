@@ -3,6 +3,9 @@
     第#{@item.day.day}回に
     ENo.#{@item.user.id} #{@item.user.result(:character, @day_i).profile.name} が
     #{@item.way.try(:name) || "???"} で得た #{@item.type.name}
+    - if @item.source.present?
+      %br
+      原材料：アイテム#{link_to("ID:#{@item.source.id}", result_item_path(@day_i, @item.source.id), :target => :_blank)}
     %br
     %br
     - @item_passed_days.each do |passed_day|
