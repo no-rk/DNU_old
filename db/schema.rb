@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130412050452) do
+ActiveRecord::Schema.define(:version => 20130413043316) do
 
   create_table "admins", :force => true do |t|
     t.string   "email",               :default => "", :null => false
@@ -540,6 +540,18 @@ ActiveRecord::Schema.define(:version => 20130412050452) do
 
   add_index "register_profiles", ["character_id"], :name => "index_register_profiles_on_character_id"
 
+  create_table "register_send_items", :force => true do |t|
+    t.integer  "trade_id"
+    t.integer  "user_id"
+    t.integer  "number"
+    t.text     "message"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "register_send_items", ["trade_id"], :name => "index_register_send_items_on_trade_id"
+  add_index "register_send_items", ["user_id"], :name => "index_register_send_items_on_user_id"
+
   create_table "register_send_points", :force => true do |t|
     t.integer  "trade_id"
     t.integer  "point_id"
@@ -898,6 +910,20 @@ ActiveRecord::Schema.define(:version => 20130412050452) do
 
   add_index "result_products", ["passed_day_id"], :name => "index_result_products_on_passed_day_id"
   add_index "result_products", ["product_id"], :name => "index_result_products_on_product_id"
+
+  create_table "result_send_items", :force => true do |t|
+    t.integer  "passed_day_id"
+    t.integer  "send_item_id"
+    t.integer  "number"
+    t.integer  "item_id"
+    t.boolean  "success"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
+  end
+
+  add_index "result_send_items", ["item_id"], :name => "index_result_send_items_on_item_id"
+  add_index "result_send_items", ["passed_day_id"], :name => "index_result_send_items_on_passed_day_id"
+  add_index "result_send_items", ["send_item_id"], :name => "index_result_send_items_on_send_item_id"
 
   create_table "result_send_points", :force => true do |t|
     t.integer  "passed_day_id"

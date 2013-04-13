@@ -13,45 +13,56 @@ class Result::Item < ActiveRecord::Base
 
   attr_accessible :protect
   
-  def self.new_item_by_data(item_data, user = nil, way = nil, day_i = Day.last_day_i)
+  validates :user,    :presence => true
+  validates :day,     :presence => true
+  validates :type,    :presence => true
+  validates :protect, :inclusion => { :in => [true, false] }
+  
+  validate :has_name?, :has_strength?
+  
+  def self.new_item_by_data(item_data, user, way = nil, day_i = Day.last_day_i)
     day = Day.find_by_day(day_i)
     result_item = self.new
     result_item.type = GameData::ItemType.find_by_name(item_data[:kind].to_s)
     item_data.each do |k, v|
       case k.to_sym
       when :name
-        result_item.item_names.build
-        result_item.item_names.last.user = user
-        result_item.item_names.last.day = day
-        result_item.item_names.last.way = way
-        result_item.item_names.last.name = item_data[:name].to_s
-        result_item.item_names.last.caption = item_data[:caption].to_s if item_data[:caption].present?
+        result_item.item_names.build do |item_name|
+          item_name.user    = user
+          item_name.day     = day
+          item_name.way     = way
+          item_name.name    = item_data[:name].to_s
+          item_name.caption = item_data[:caption].to_s if item_data[:caption].present?
+        end
       when :element
-        result_item.item_elements.build
-        result_item.item_elements.last.user = user
-        result_item.item_elements.last.day = day
-        result_item.item_elements.last.way = way
-        result_item.item_elements.last.element = GameData::Element.find_by_name(item_data[:element].values.first.to_s)
+        result_item.item_elements.build do |item_element|
+          item_element.user    = user
+          item_element.day     = day
+          item_element.way     = way
+          item_element.element = GameData::Element.find_by_name(item_data[:element].values.first.to_s)
+        end
       when :strength
-        result_item.item_strengths.build
-        result_item.item_strengths.last.user = user
-        result_item.item_strengths.last.day = day
-        result_item.item_strengths.last.way = way
-        result_item.item_strengths.last.strength = item_data[:strength].to_i
+        result_item.item_strengths.build do |item_strength|
+          item_strength.user     = user
+          item_strength.day      = day
+          item_strength.way      = way
+          item_strength.strength = item_data[:strength].to_i
+        end
       when :A, :B, :G
-        result_item.item_sups.build
-        result_item.item_sups.last.user = user
-        result_item.item_sups.last.day = day
-        result_item.item_sups.last.way = way
-        result_item.item_sups.last.kind = k.to_s
-        result_item.item_sups.last.sup = GameData::Sup.find_by_name(v[:name].to_s)
-        result_item.item_sups.last.lv = v[:lv].to_i if v[:lv].present?
+        result_item.item_sups.build do |item_sup|
+          item_sup.user = user
+          item_sup.day  = day
+          item_sup.way  = way
+          item_sup.kind = k.to_s
+          item_sup.sup  = GameData::Sup.find_by_name(v[:name].to_s)
+          item_sup.lv   = v[:lv].to_i if v[:lv].present?
+        end
       end
     end
     result_item
   end
   
-  def self.new_item_by_type_and_name(item_type, item_name, user = nil, way = nil, day_i = Day.last_day_i)
+  def self.new_item_by_type_and_name(item_type, item_name, user, way = nil, day_i = Day.last_day_i)
     item_plan = GameData::Item.where(:kind => item_type, :name => item_name).first
     
     if item_plan.present?
@@ -62,12 +73,48 @@ class Result::Item < ActiveRecord::Base
       item_data = transform.apply(item_data)
       
       result_item = self.new_item_by_data(item_data, user, way, day_i)
-      result_item.user = user
-      result_item.day = Day.find_by_day(day_i)
-      result_item.way = way
-      result_item.plan = item_plan
+      result_item.user    = user
+      result_item.day     = Day.find_by_day(day_i)
+      result_item.way     = way
+      result_item.plan    = item_plan
       result_item.protect = item_data[:protect].present?
     end
     result_item
+  end
+  
+  def item_name(day_i = Day.last_day_i)
+    day_arel = Day.arel_table
+    
+    item_names.where(day_arel[:day].lteq(day_i)).order(day_arel[:day].desc).includes(:day).limit(1).includes(:user).first
+  end
+  
+  def item_element(day_i = Day.last_day_i)
+    day_arel = Day.arel_table
+    
+    item_elements.where(day_arel[:day].lteq(day_i)).order(day_arel[:day].desc).includes(:day).limit(1).includes(:user).includes(:element).first
+  end
+  
+  def item_strength(day_i = Day.last_day_i)
+    day_arel = Day.arel_table
+    
+    item_strengths.where(day_arel[:day].lteq(day_i)).order(day_arel[:day].desc).includes(:day).limit(1).includes(:user).first
+  end
+  
+  def item_sup(kind, day_i = Day.last_day_i)
+    day_arel = Day.arel_table
+    
+    item_sups.where(:kind => kind).where(day_arel[:day].lteq(day_i)).order(day_arel[:day].desc).includes(:day).limit(1).includes(:user).includes(:sup).first
+  end
+
+  private
+  def has_name?
+    if self.item_names.blank?
+      errors.add(:item_names, :invalid)
+    end
+  end
+  def has_strength?
+    if self.item_strengths.blank?
+      errors.add(:item_strengths, :invalid)
+    end
   end
 end

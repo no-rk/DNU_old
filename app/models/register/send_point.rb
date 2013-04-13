@@ -4,7 +4,8 @@ class Register::SendPoint < ActiveRecord::Base
   belongs_to :user
   attr_accessible :point_id, :user_id, :message, :value
   
-  validates :point_id, :presence => true, :numericality => { :only_integer => true, :greater_than => 0 }
-  validates :user_id,  :presence => true, :numericality => { :only_integer => true, :greater_than => 0 }
-  validates :value,    :presence => true, :numericality => { :only_integer => true, :greater_than => 0 }
+  validates :point_id, :numericality => { :only_integer => true, :greater_than => 0 }
+  validates :user_id,  :numericality => { :only_integer => true, :greater_than => 0 }
+  validates :value,    :numericality => { :only_integer => true, :greater_than => 0 }
+  validates :message, :length => { :maximum => 800, :tokenizer => DNU::Sanitize.counter }
 end

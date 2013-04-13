@@ -1,0 +1,10 @@
+%br
+= form_trade.simple_fields_for :send_items, :wrapper => :simple, :defaults => { :as => (:plain if @read_only), :user => current_user, :input_html => { :class => :'span2' } } do |form_send_item|
+  ENo.
+  = form_send_item.input :user_id
+  に
+  = form_send_item.input :number
+  送付
+  %br
+  = form_send_item.input :message, :wrapper => :bootstrap, :input_html => { :class => :'message span9', :rows => 5 }, :wrapper_html => { :class => :clearfix }
+  %br

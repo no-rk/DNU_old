@@ -13,6 +13,27 @@ class Result::Inventory < ActiveRecord::Base
   
   has_one :type, :through => :item, :class_name => "GameData::ItemType"
   
+  validates :passed_day, :presence => true
+  validates :item,       :presence => true
+  validates :number,     :numericality => { :only_integer => true, :greater_than => 0 }
+  
+  def send_to_user!(to_user)
+    success = false
+    unless self.item.protect
+      if to_user.present?
+        result_inventory = to_user.new_inventory(self.day.day)
+        if result_inventory.number.present?
+          result_inventory.item = self.item
+          if result_inventory.save
+            self.destroy
+            success = true
+          end
+        end
+      end
+    end
+    success
+  end
+  
   def name
     item_name.try(:name)
   end
@@ -51,30 +72,18 @@ class Result::Inventory < ActiveRecord::Base
   end
   
   def item_name
-    day_arel = Day.arel_table
-    day_i = self.day.try(:day)
-    
-    item_names.where(day_arel[:day].lteq(day_i)).order(day_arel[:day].desc).includes(:day).limit(1).includes(:user).first
+    item.item_name(self.day.day)
   end
   
   def item_element
-    day_arel = Day.arel_table
-    day_i = self.day.try(:day)
-    
-    item_elements.where(day_arel[:day].lteq(day_i)).order(day_arel[:day].desc).includes(:day).limit(1).includes(:user).includes(:element).first
+    item.item_element(self.day.day)
   end
   
   def item_strength
-    day_arel = Day.arel_table
-    day_i = self.day.try(:day)
-    
-    item_strengths.where(day_arel[:day].lteq(day_i)).order(day_arel[:day].desc).includes(:day).limit(1).includes(:user).first
+    item.item_strength(self.day.day)
   end
   
   def item_sup(kind)
-    day_arel = Day.arel_table
-    day_i = self.day.try(:day)
-    
-    item_sups.where(:kind => kind).where(day_arel[:day].lteq(day_i)).order(day_arel[:day].desc).includes(:day).limit(1).includes(:user).includes(:sup).first
+    item.item_sup(kind, self.day.day)
   end
 end

@@ -29,6 +29,7 @@ class User < ActiveRecord::Base
   has_many :result_passed_days, :class_name => "Result::PassedDay"
   
   has_many :result_send_points,   :through => :result_passed_days, :class_name => "Result::SendPoint"
+  has_many :result_send_items,    :through => :result_passed_days, :class_name => "Result::SendItem"
   has_many :result_trains,        :through => :result_passed_days, :class_name => "Result::Train"
   has_many :result_learns,        :through => :result_passed_days, :class_name => "Result::Learn"
   has_many :result_forgets,       :through => :result_passed_days, :class_name => "Result::Forget"
@@ -224,9 +225,16 @@ class User < ActiveRecord::Base
     success
   end
   
+  def max_inventory(day_i = Day.last_day_i)
+    15
+  end
+  
   def blank_item_number(day_i = Day.last_day_i)
-    max_inventory = 15
-    ((1..max_inventory).to_a - self.result(:inventory, day_i).map{ |r| r.number }).min
+    ((1..max_inventory(day_i)).to_a - self.result(:inventory, day_i).map{ |r| r.number }).min
+  end
+  
+  def new_inventory(day_i = Day.last_day_i)
+    new_result(:inventory, { :number => blank_item_number(day_i) }, day_i)
   end
   
   def add_item!(item, way = nil, day_i = Day.last_day_i)
@@ -234,12 +242,10 @@ class User < ActiveRecord::Base
     item_type = item.keys.first
     item_name = item.values.first
     
-    result_inventory = new_result(:inventory, { :number => blank_item_number(day_i) }, day_i)
+    result_inventory = new_inventory(day_i)
     if result_inventory.number.present?
       result_item = Result::Item.new_item_by_type_and_name(item_type, item_name, self, way, day_i)
-      if result_item.present?
-        result_item.way = way
-        
+      if result_item.try(:save)
         result_inventory.item = result_item
         result_inventory.save!
         success = true

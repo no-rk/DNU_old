@@ -1,0 +1,10 @@
+%h3 送信アイテム
+
+- @send_items.each do |send_item|
+  - if send_item.success
+    #{link_to("ENo.#{send_item.to.id}", result_eno_path(@day_i, send_item.to.id), :target => :_blank)} #{send_item.to.result(:character, @day_i).profile.name}
+    に [#{send_item.send_item.number}] #{send_item.item.item_name(@day_i).name} ※アイテムID:#{send_item.item.id} を送った。
+  - else
+    ENo.#{send_item.send_item.user_id}
+    に [#{send_item.send_item.number}] #{send_item.item.try(:item_name, @day_i).try(:name) || "-"} 送れない。
+  %br

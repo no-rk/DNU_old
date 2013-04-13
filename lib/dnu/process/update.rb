@@ -3,6 +3,7 @@ module DNU
     module Update
       extend Before
       extend SendPoint
+      extend SendItem
       extend Train
       extend Learn
       extend Forget
@@ -23,6 +24,9 @@ module DNU
           
           # ポイント送付
           send_point
+          
+          # アイテム送付
+          send_item
           
           # 能力や技能や生産やアビリティーの訓練
           train

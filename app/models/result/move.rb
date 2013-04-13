@@ -8,7 +8,7 @@ class Result::Move < ActiveRecord::Base
   has_one :day,  :through => :passed_day
   
   validates :passed_day, :presence => true
-  validates :direction,  :presence => true
+  validates :direction,  :inclusion => { :in => 0..4 }
   validates :from,       :presence => true
   validates :to,         :presence => true
 end

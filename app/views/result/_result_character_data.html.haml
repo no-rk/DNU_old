@@ -57,7 +57,7 @@ ENo.#{@id} #{@profile.name}
 アイテム一覧
 %br
 - @inventories.each do |item|
-  [#{item.number}]#{item.name}
+  [#{item.number}]#{item.name} ※アイテムID:#{item.item.id}
   %br
   　#{item.element_name}（ #{item.type_name} / #{item.strength} / #{item.sup(:A)}#{item.sup(:G)} / #{item.sup(:B)} ）
   %br

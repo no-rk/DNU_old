@@ -5,6 +5,6 @@
     #{link_to("ENo.#{send_point.to.id}", result_eno_path(@day_i, send_point.to.id), :target => :_blank)} #{send_point.to.result_character(@day_i).profile.name}
     に#{send_point.send_point.value}#{send_point.point.name}送った。
   - else
-    ENo.#{send_point.send_point.user.id}
+    ENo.#{send_point.send_point.user_id}
     に#{send_point.send_point.value}#{send_point.point.name}送れない。
   %br

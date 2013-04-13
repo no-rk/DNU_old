@@ -28,7 +28,11 @@ class ResultController < ApplicationController
     # 送信ポイント
     @send_points  = this_user.result(:send_point, @day_i).includes(:send_point).includes(:point).includes(:to).all
     # 受信ポイント
-    @receive_points = Result::SendPoint.receive_points(@id, @day_i).all
+    @receive_points = Result::SendPoint.receives(@id, @day_i).all
+    # 送信アイテム
+    @send_items   = this_user.result(:send_item, @day_i).includes(:to).all
+    # 受信アイテム
+    @receive_items = Result::SendItem.receives(@id, @day_i).all
     # 訓練
     @trains       = this_user.result(:train, @day_i).all
     # 習得
