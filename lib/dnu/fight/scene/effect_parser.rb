@@ -1934,8 +1934,47 @@ class EffectParser < Parslet::Parser
   
   rule(:item_type) {
     equip_name |
+    str('材料') |
     str('消耗') |
     str('戦物')
+  }
+  
+  rule(:equip_type) {
+    str('武器') |
+    str('頭') |
+    str('身体') |
+    str('腕') |
+    str('装飾')
+  }
+  
+  rule(:item_sup) {
+    (separator | newline).maybe >>
+    (bra >> element_name.as(:element) >> ket).maybe >>
+    (
+      (
+        (level | plus | bra).absent? >> any
+      ).repeat(1).as(:name) >> (
+        level >> natural_number.as(:lv)
+      ).maybe
+    ).as(:sup) >>
+    (
+      plus >>
+      (
+        (level | bra).absent? >> any
+      ).repeat(1).as(:name) >> (
+        level >> natural_number.as(:lv)
+      ).maybe
+    ).as(:G).maybe >>
+    bra >>
+    (
+      equip_type.as(:qeuip_type) >>
+      (
+        level.maybe >>
+        natural_number.as(:lv)
+      ).maybe
+    ) >>
+    ket >>
+    (separator | newline).maybe
   }
   
   rule(:item_definition) {
@@ -1974,6 +2013,8 @@ class EffectParser < Parslet::Parser
     ket >>
     (bra >> str('送品不可') >> ket).maybe.as(:protect) >>
     (newline >> string.as(:caption)).maybe >>
+    newline.maybe >>
+    (item_sup.repeat(0).as(:item_sups)).maybe >>
     newline.maybe
   }
   
