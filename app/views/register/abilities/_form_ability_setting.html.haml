@@ -1,31 +1,15 @@
-- if @ability_id.present?
-  %br
-  #{@abilities[@ability_id][:caption]}
-  %br
-  %br
-- ability_id = 0
-= form_ability.simple_fields_for :ability_settings, :wrapper => :simple, :defaults => { :as => (:plain if @read_only), :user => current_user, :input_html => { :class => :'span2' } } do |form_ability_setting|
-  - if ability_id != form_ability_setting.object.game_data_ability.id
-    - ability_id = form_ability_setting.object.game_data_ability.id
-    - if @ability_id.nil?
-      %br
-      %h3 #{@abilities[ability_id][:nickname]}
-      #{@abilities[ability_id][:caption]}
-      %br
-      %br
-  = form_ability_setting.input :kind, :as => :hidden
-  - case form_ability_setting.object.ability_definition.kind.to_sym
-  - when :pull_down
-    - if @ability_id.present? and @ability_id != ability_id
-      = form_ability_setting.input :ability_definition_id, :as => :hidden
-    - else
-      = form_ability_setting.input :ability_definition_id, :collection => @abilities[ability_id][:pull_down_effects], :include_blank => false, :input_html => { :class => :'span6' }
-      %br
-  - when :lv
+- ability_id = form_ability_conf.object.game_data_ability_id
+= form_ability_conf.simple_fields_for :ability_settings, :wrapper => :simple, :defaults => { :as => (:plain if @read_only), :user => current_user, :input_html => { :class => :'span2' } } do |form_ability_setting|
+  - if @ability_id.present? and @ability_id != ability_id
     = form_ability_setting.input :ability_definition_id, :as => :hidden
-    - if @ability_id.present? and @ability_id != ability_id
+    = form_ability_setting.input :setting, :as => :hidden
+  - else
+    - case form_ability_setting.object.ability_definition.kind.to_sym
+    - when :pull_down
+      = form_ability_setting.input :ability_definition_id, :collection => @abilities[ability_id][:pull_down_effects], :include_blank => false, :input_html => { :class => :'span6' }
       = form_ability_setting.input :setting, :as => :hidden
-    - else
+    - when :lv
+      = form_ability_setting.input :ability_definition_id, :as => :hidden
       #{@abilities[ability_id][:lv_effects].invert[form_ability_setting.object.ability_definition_id]}
       = form_ability_setting.input :setting, :collection => { "有効" => true, "無効" => false }, :include_blank => false
       %br

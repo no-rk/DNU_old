@@ -1,7 +1,8 @@
 class Result::Ability < ActiveRecord::Base
   belongs_to :passed_day
   belongs_to :ability, :class_name => "GameData::Ability"
-  attr_accessible :caption, :forget, :lv, :lv_cap, :lv_cap_exp, :lv_exp, :name
+  belongs_to :ability_conf, :class_name => "Register::AbilityConf"
+  attr_accessible :forget, :lv, :lv_cap, :lv_cap_exp, :lv_exp
   
   has_one :user, :through => :passed_day
   has_one :day,  :through => :passed_day
@@ -10,6 +11,8 @@ class Result::Ability < ActiveRecord::Base
   
   has_one :train,                :through => :ability, :class_name => "GameData::Train"
   has_many :ability_definitions, :through => :ability, :class_name => "GameData::AbilityDefinition"
+  
+  has_one :ability_name, :through => :ability_conf, :class_name => "Register::AbilityName"
   
   validates :passed_day, :presence => true
   validates :ability,    :presence => true
@@ -44,6 +47,6 @@ class Result::Ability < ActiveRecord::Base
     n.to_i*2
   end
   def nickname
-    name || ability.name
+    ability_name.try(:name).blank? ? ability.name : ability_name.name
   end
 end

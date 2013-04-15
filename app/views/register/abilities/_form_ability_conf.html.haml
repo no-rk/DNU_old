@@ -1,0 +1,12 @@
+= form_ability.simple_fields_for :ability_confs, :wrapper => :simple, :defaults => { :as => (:plain if @read_only), :user => current_user, :input_html => { :class => :'span2' } } do |form_ability_conf|
+  - ability_id = form_ability_conf.object.game_data_ability_id
+  - if @ability_id.nil?
+    %h3 #{@abilities[ability_id][:nickname]}
+  - if @ability_id.nil? or @ability_id == ability_id
+    #{@abilities[ability_id][:caption]}
+    %br
+    %br
+  = form_ability_conf.input :kind, :as => :hidden
+  = form_ability_conf.input :game_data_ability_id, :as => :hidden
+  = render 'form_ability_name',    { :register_ability => register_ability, :form_ability_conf => form_ability_conf }
+  = render 'form_ability_setting', { :register_ability => register_ability, :form_ability_conf => form_ability_conf }

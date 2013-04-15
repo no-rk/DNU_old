@@ -1,10 +1,13 @@
 class Result::Skill < ActiveRecord::Base
   belongs_to :passed_day
   belongs_to :skill, :class_name => "GameData::Skill"
-  attr_accessible :caption, :exp, :forget, :name
+  belongs_to :skill_conf, :class_name => "Register::SkillConf"
+  attr_accessible :exp, :forget
   
   has_one :user, :through => :passed_day
   has_one :day,  :through => :passed_day
+  
+  has_one :skill_name, :through => :skill_conf, :class_name => "Register::SkillName"
   
   validates :passed_day, :presence => true
   validates :skill,      :presence => true
@@ -15,7 +18,7 @@ class Result::Skill < ActiveRecord::Base
   end
   
   def nickname
-    name || skill.name
+    skill_name.try(:name).blank? ? skill.name : skill_name.name
   end
   
   def cost

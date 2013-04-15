@@ -7,10 +7,10 @@ module DNU
         if record_c.respond_to?("build_#{attr}")
           record.send("build_#{attr}") if record.send(attr).nil?
           r = record.send(attr)
-          record_c.send("#{attr}=", r.class.new.send(:initialize_dup, r))
+          record_c.send("#{attr}=", self.register(r))
         else
           record.send(attr).each do |r|
-            record_c.send(attr) << r.class.new.send(:initialize_dup, r)
+            record_c.send(attr) << self.register(r)
           end
         end
       end

@@ -53,6 +53,8 @@ ja:
       register/competition: &competition
         闘技大会
 
+      register/skill: &skill
+        技
       register/ability: &ability
         アビリティー
 
@@ -204,6 +206,9 @@ ja:
         -
           - *competition
           - competitions
+        -
+          - *skill
+          - skills
         -
           - *ability
           - abilities

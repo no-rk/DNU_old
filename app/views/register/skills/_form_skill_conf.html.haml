@@ -1,0 +1,6 @@
+= form_skill.simple_fields_for :skill_confs, :wrapper => :simple, :defaults => { :as => (:plain if @read_only), :user => current_user, :input_html => { :class => :'span2' } } do |form_skill_conf|
+  - skill_id = form_skill_conf.object.game_data_skill_id
+  %h3 #{@skills[skill_id][:nickname]}
+  = form_skill_conf.input :kind, :as => :hidden
+  = form_skill_conf.input :game_data_skill_id, :as => :hidden
+  = render 'form_skill_name', { :register_skill => register_skill, :form_skill_conf => form_skill_conf }

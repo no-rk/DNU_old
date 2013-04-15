@@ -21,11 +21,15 @@
         %a{:href => new_register_duel_path}= Register::Duel.model_name.human.downcase
       %li{:class => active_current(new_register_competition_path)}
         %a{:href => new_register_competition_path}= Register::Competition.model_name.human.downcase
+      %li.nav-header 設定
+      %li{:class => active_current(new_register_skill_path)}
+        %a{:href => new_register_skill_path}= Register::Skill.model_name.human.downcase
       - if abilities.count > 0
-        %li.nav-header アビリティー
+        %li{:class => active_current(new_register_ability_path)}
+          %a{:href => new_register_ability_path}= Register::Ability.model_name.human.downcase
         - abilities.each do |ability|
           %li{:class => active_current(register_ability_id_path(ability.ability_id))}
-            %a{:href => register_ability_id_path(ability.ability_id)}= ability.nickname
+            %a{:href => register_ability_id_path(ability.ability_id)} └ #{ability.nickname}
       %li.nav-header 設定
       %li{:class => active_current(new_register_character_path)}
         %a{:href => new_register_character_path}= Register::Character.model_name.human.downcase

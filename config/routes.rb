@@ -20,6 +20,7 @@ DNU::Application.routes.draw do
   namespace :register do resources :images    , :only => [ :show, :new, :create, :update ] end
   namespace :register do resources :initials  , :only => [ :show, :new, :create, :update ] end
 
+  namespace :register do resources :skills end
   namespace :register do resources :abilities end
   namespace :register do get 'abilities/:ability_id/new' => 'abilities#ability_id'  , :as => 'ability_id' end
 

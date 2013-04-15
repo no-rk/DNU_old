@@ -3,8 +3,7 @@ class CreateResultAbilities < ActiveRecord::Migration
     create_table :result_abilities do |t|
       t.references :passed_day
       t.references :ability
-      t.string :name
-      t.text :caption
+      t.references :ability_conf
       t.integer :lv
       t.integer :lv_exp
       t.integer :lv_cap
@@ -15,5 +14,6 @@ class CreateResultAbilities < ActiveRecord::Migration
     end
     add_index :result_abilities, :passed_day_id
     add_index :result_abilities, :ability_id
+    add_index :result_abilities, :ability_conf_id
   end
 end

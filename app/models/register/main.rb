@@ -8,11 +8,11 @@ class Register::Main < ActiveRecord::Base
   has_many :trains,   :order => "id ASC", :dependent => :destroy
   has_one  :party_slogan, :dependent => :destroy
   
-  accepts_nested_attributes_for :moves,        :allow_destroy => true
-  accepts_nested_attributes_for :forgets,      :allow_destroy => true, :reject_if => :all_blank
-  accepts_nested_attributes_for :blossoms,     :allow_destroy => true, :reject_if => :all_blank
-  accepts_nested_attributes_for :trains,       :allow_destroy => true, :reject_if => :all_blank
-  accepts_nested_attributes_for :party_slogan, :allow_destroy => true, :reject_if => :all_blank
+  accepts_nested_attributes_for :moves
+  accepts_nested_attributes_for :forgets,      :reject_if => :all_blank
+  accepts_nested_attributes_for :blossoms,     :reject_if => :all_blank
+  accepts_nested_attributes_for :trains,       :reject_if => :all_blank
+  accepts_nested_attributes_for :party_slogan, :reject_if => :all_blank
   
   attr_accessible :moves_attributes, :forgets_attributes, :blossoms_attributes, :trains_attributes, :party_slogan_attributes
   

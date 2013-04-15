@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130413124515) do
+ActiveRecord::Schema.define(:version => 20130415084000) do
 
   create_table "admins", :force => true do |t|
     t.string   "email",               :default => "", :null => false
@@ -318,17 +318,37 @@ ActiveRecord::Schema.define(:version => 20130413124515) do
   add_index "register_abilities", ["day_id"], :name => "index_register_abilities_on_day_id"
   add_index "register_abilities", ["user_id"], :name => "index_register_abilities_on_user_id"
 
-  create_table "register_ability_settings", :force => true do |t|
+  create_table "register_ability_confs", :force => true do |t|
     t.integer  "ability_id"
+    t.integer  "game_data_ability_id"
     t.string   "kind"
+    t.datetime "created_at",           :null => false
+    t.datetime "updated_at",           :null => false
+  end
+
+  add_index "register_ability_confs", ["ability_id"], :name => "index_register_ability_confs_on_ability_id"
+  add_index "register_ability_confs", ["game_data_ability_id"], :name => "index_register_ability_confs_on_game_data_ability_id"
+
+  create_table "register_ability_names", :force => true do |t|
+    t.integer  "ability_conf_id"
+    t.string   "name"
+    t.text     "caption"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
+  end
+
+  add_index "register_ability_names", ["ability_conf_id"], :name => "index_register_ability_names_on_ability_conf_id"
+
+  create_table "register_ability_settings", :force => true do |t|
+    t.integer  "ability_conf_id"
     t.integer  "ability_definition_id"
     t.boolean  "setting"
     t.datetime "created_at",            :null => false
     t.datetime "updated_at",            :null => false
   end
 
+  add_index "register_ability_settings", ["ability_conf_id"], :name => "index_register_ability_settings_on_ability_conf_id"
   add_index "register_ability_settings", ["ability_definition_id"], :name => "index_register_ability_settings_on_ability_definition_id"
-  add_index "register_ability_settings", ["ability_id"], :name => "index_register_ability_settings_on_ability_id"
 
   create_table "register_battle_settings", :force => true do |t|
     t.integer  "battlable_id"
@@ -583,6 +603,37 @@ ActiveRecord::Schema.define(:version => 20130413124515) do
   add_index "register_send_points", ["trade_id"], :name => "index_register_send_points_on_trade_id"
   add_index "register_send_points", ["user_id"], :name => "index_register_send_points_on_user_id"
 
+  create_table "register_skill_confs", :force => true do |t|
+    t.integer  "skill_id"
+    t.integer  "game_data_skill_id"
+    t.string   "kind"
+    t.datetime "created_at",         :null => false
+    t.datetime "updated_at",         :null => false
+  end
+
+  add_index "register_skill_confs", ["game_data_skill_id"], :name => "index_register_skill_confs_on_game_data_skill_id"
+  add_index "register_skill_confs", ["skill_id"], :name => "index_register_skill_confs_on_skill_id"
+
+  create_table "register_skill_names", :force => true do |t|
+    t.integer  "skill_conf_id"
+    t.string   "name"
+    t.text     "caption"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
+  end
+
+  add_index "register_skill_names", ["skill_conf_id"], :name => "index_register_skill_names_on_skill_conf_id"
+
+  create_table "register_skills", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "day_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "register_skills", ["day_id"], :name => "index_register_skills_on_day_id"
+  add_index "register_skills", ["user_id"], :name => "index_register_skills_on_user_id"
+
   create_table "register_trades", :force => true do |t|
     t.integer  "user_id"
     t.integer  "day_id"
@@ -617,17 +668,17 @@ ActiveRecord::Schema.define(:version => 20130413124515) do
   create_table "result_abilities", :force => true do |t|
     t.integer  "passed_day_id"
     t.integer  "ability_id"
-    t.string   "name"
-    t.text     "caption"
+    t.integer  "ability_conf_id"
     t.integer  "lv"
     t.integer  "lv_exp"
     t.integer  "lv_cap"
     t.integer  "lv_cap_exp"
     t.boolean  "forget"
-    t.datetime "created_at",    :null => false
-    t.datetime "updated_at",    :null => false
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
   end
 
+  add_index "result_abilities", ["ability_conf_id"], :name => "index_result_abilities_on_ability_conf_id"
   add_index "result_abilities", ["ability_id"], :name => "index_result_abilities_on_ability_id"
   add_index "result_abilities", ["passed_day_id"], :name => "index_result_abilities_on_passed_day_id"
 
@@ -971,8 +1022,7 @@ ActiveRecord::Schema.define(:version => 20130413124515) do
   create_table "result_skills", :force => true do |t|
     t.integer  "passed_day_id"
     t.integer  "skill_id"
-    t.string   "name"
-    t.text     "caption"
+    t.integer  "skill_conf_id"
     t.integer  "exp"
     t.boolean  "forget"
     t.datetime "created_at",    :null => false
@@ -980,6 +1030,7 @@ ActiveRecord::Schema.define(:version => 20130413124515) do
   end
 
   add_index "result_skills", ["passed_day_id"], :name => "index_result_skills_on_passed_day_id"
+  add_index "result_skills", ["skill_conf_id"], :name => "index_result_skills_on_skill_conf_id"
   add_index "result_skills", ["skill_id"], :name => "index_result_skills_on_skill_id"
 
   create_table "result_statuses", :force => true do |t|
