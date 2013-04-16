@@ -76,6 +76,57 @@ class Result::Item < ActiveRecord::Base
     result_item
   end
   
+  def update_item_by_data(item_data, user, way = nil, day_i = Day.last_day_i)
+    success = false
+    day = Day.find_by_day(day_i)
+    item_data.each do |k, v|
+      if v.present?
+        case k.to_sym
+        when :name
+          self.item_names.build do |item_name|
+            item_name.user    = user
+            item_name.day     = day
+            item_name.way     = way
+            item_name.name    = item_data[:name].to_s
+            item_name.caption = item_data[:caption].to_s if item_data[:caption].present?
+            item_name.source  = item_data[:source] if item_data[:source].present?
+            success = item_name
+          end
+        when :element
+          self.item_elements.build do |item_element|
+            item_element.user    = user
+            item_element.day     = day
+            item_element.way     = way
+            item_element.element = GameData::Element.find_by_name(item_data[:element].values.first.to_s)
+            item_element.source  = item_data[:source] if item_data[:source].present?
+            success = item_element
+          end
+        when :strength
+          self.item_strengths.build do |item_strength|
+            item_strength.user     = user
+            item_strength.day      = day
+            item_strength.way      = way
+            item_strength.strength = item_data[:strength].to_i
+            item_strength.source   = item_data[:source] if item_data[:source].present?
+            success = item_strength
+          end
+        when :A, :B, :G
+          self.item_sups.build do |item_sup|
+            item_sup.user    = user
+            item_sup.day     = day
+            item_sup.way     = way
+            item_sup.kind    = k.to_s
+            item_sup.sup     = GameData::Sup.find_by_name(v[:name].to_s)
+            item_sup.lv      = v[:lv].to_i if v[:lv].present?
+            item_sup.source  = item_data[:source] if item_data[:source].present?
+            success = item_sup
+          end
+        end
+      end
+    end
+    success
+  end
+  
   def self.new_item_by_type_and_name(item_type, item_name, user, way = nil, day_i = Day.last_day_i)
     item_plan = GameData::Item.where(:kind => item_type, :name => item_name).first
     
@@ -110,26 +161,34 @@ class Result::Item < ActiveRecord::Base
   
   def item_name(day_i = Day.last_day_i)
     day_arel = Day.arel_table
+    item_name_arel = Result::ItemName.arel_table
     
-    item_names.where(day_arel[:day].lteq(day_i)).order(day_arel[:day].desc).includes(:day).limit(1).includes(:user).first
+    item_names.where(day_arel[:day].lteq(day_i)).order(day_arel[:day].desc, item_name_arel[:id].desc).includes(:day).limit(1).includes(:user).first
   end
   
   def item_element(day_i = Day.last_day_i)
     day_arel = Day.arel_table
+    item_element_arel = Result::ItemElement.arel_table
     
-    item_elements.where(day_arel[:day].lteq(day_i)).order(day_arel[:day].desc).includes(:day).limit(1).includes(:user).includes(:element).first
+    item_elements.where(day_arel[:day].lteq(day_i)).order(day_arel[:day].desc, item_element_arel[:id].desc).includes(:day).limit(1).includes(:user).includes(:element).first
   end
   
   def item_strength(day_i = Day.last_day_i)
     day_arel = Day.arel_table
+    item_strength_arel = Result::ItemStrength.arel_table
     
-    item_strengths.where(day_arel[:day].lteq(day_i)).order(day_arel[:day].desc).includes(:day).limit(1).includes(:user).first
+    item_strengths.where(day_arel[:day].lteq(day_i)).order(day_arel[:day].desc, item_strength_arel[:id].desc).includes(:day).limit(1).includes(:user).first
   end
   
   def item_sup(kind, day_i = Day.last_day_i)
     day_arel = Day.arel_table
+    item_sup_arel = Result::ItemSup.arel_table
     
-    item_sups.where(:kind => kind).where(day_arel[:day].lteq(day_i)).order(day_arel[:day].desc).includes(:day).limit(1).includes(:user).includes(:sup).first
+    item_sups.where(:kind => kind).where(day_arel[:day].lteq(day_i)).order(day_arel[:day].desc, item_sup_arel[:id].desc).includes(:day).limit(1).includes(:user).includes(:sup).first
+  end
+  
+  def equip_type
+    self.type.item_equip.try(:kind)
   end
 
   private

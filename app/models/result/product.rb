@@ -28,6 +28,9 @@ class Result::Product < ActiveRecord::Base
     success
   end
   
+  def effective_lv
+    (self.lv_cap.nil? ? self.lv : [self.lv, self.lv_cap].min).to_i
+  end
   def value(n = lv)
     "LV#{n.to_i}"
   end

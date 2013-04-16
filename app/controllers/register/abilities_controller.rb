@@ -47,6 +47,7 @@ class Register::AbilitiesController < Register::ApplicationController
           end
         end
         ability_conf.ability_settings.sort_by!{ |r| r.ability_definition_id.to_i }
+        ability_conf.save if record.ability_confs.exists?(first_or_build)
       end
     end
     record.ability_confs.sort_by!{ |r| r.game_data_ability_id.to_i }

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130415084000) do
+ActiveRecord::Schema.define(:version => 20130415131015) do
 
   create_table "admins", :force => true do |t|
     t.string   "email",               :default => "", :null => false
@@ -634,6 +634,20 @@ ActiveRecord::Schema.define(:version => 20130415084000) do
   add_index "register_skills", ["day_id"], :name => "index_register_skills_on_day_id"
   add_index "register_skills", ["user_id"], :name => "index_register_skills_on_user_id"
 
+  create_table "register_supplements", :force => true do |t|
+    t.integer  "product_id"
+    t.integer  "user_id"
+    t.integer  "material_number"
+    t.integer  "item_number"
+    t.boolean  "experiment"
+    t.text     "message"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
+  end
+
+  add_index "register_supplements", ["product_id"], :name => "index_register_supplements_on_product_id"
+  add_index "register_supplements", ["user_id"], :name => "index_register_supplements_on_user_id"
+
   create_table "register_trades", :force => true do |t|
     t.integer  "user_id"
     t.integer  "day_id"
@@ -1046,6 +1060,23 @@ ActiveRecord::Schema.define(:version => 20130415084000) do
 
   add_index "result_statuses", ["passed_day_id"], :name => "index_result_statuses_on_passed_day_id"
   add_index "result_statuses", ["status_id"], :name => "index_result_statuses_on_status_id"
+
+  create_table "result_supplements", :force => true do |t|
+    t.integer  "passed_day_id"
+    t.integer  "supplement_id"
+    t.integer  "from_id"
+    t.integer  "to_id"
+    t.integer  "item_sup_id"
+    t.boolean  "success"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
+  end
+
+  add_index "result_supplements", ["from_id"], :name => "index_result_supplements_on_from_id"
+  add_index "result_supplements", ["item_sup_id"], :name => "index_result_supplements_on_item_sup_id"
+  add_index "result_supplements", ["passed_day_id"], :name => "index_result_supplements_on_passed_day_id"
+  add_index "result_supplements", ["supplement_id"], :name => "index_result_supplements_on_supplement_id"
+  add_index "result_supplements", ["to_id"], :name => "index_result_supplements_on_to_id"
 
   create_table "result_trains", :force => true do |t|
     t.integer  "passed_day_id"

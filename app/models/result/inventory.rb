@@ -34,6 +34,10 @@ class Result::Inventory < ActiveRecord::Base
     success
   end
   
+  def material?
+    self.type_name.to_s == "材料"
+  end
+  
   def name
     item_name.try(:name)
   end

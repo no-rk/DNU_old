@@ -5,6 +5,7 @@ module DNU
       extend SendPoint
       extend SendItem
       extend Forge
+      extend Supplement
       extend Train
       extend Learn
       extend Forget
@@ -31,6 +32,9 @@ module DNU
           
           # 鍛治
           forge
+          
+          # 付加
+          supplement
           
           # 能力や技能や生産やアビリティーの訓練
           train

@@ -1,0 +1,11 @@
+%h3 付加
+
+- @supplements.each do |supplement|
+  - if supplement.success
+    #{link_to("ENo.#{supplement.target.id}", result_eno_path(@day_i, supplement.target.id), :target => :_blank)} #{supplement.target.result(:character, @day_i).profile.name} の所持する
+    [#{supplement.supplement.material_number}] #{supplement.from.item_name(@day_i).name} ※アイテム#{link_to("ID:#{supplement.from.id}", result_item_path(@day_i, supplement.from.id), :target => :_blank)} を
+    [#{supplement.supplement.item_number}] #{supplement.to.item_name(@day_i).name} ※アイテム#{link_to("ID:#{supplement.to.id}", result_item_path(@day_i, supplement.to.id), :target => :_blank)} に
+    【#{supplement.item_sup.sup.name}#{"LV#{supplement.item_sup.lv}" if supplement.item_sup.lv.present?}】を付加#{"実験" if supplement.supplement.experiment}。
+  - else
+    失敗した。
+  %br

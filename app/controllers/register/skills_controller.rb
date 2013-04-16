@@ -19,6 +19,7 @@ class Register::SkillsController < Register::ApplicationController
           skill_conf = record.skill_confs.build(first_or_build)
         end
         skill_conf.build_skill_name if skill_conf.skill_name.nil?
+        skill_conf.save if record.skill_confs.exists?(first_or_build)
       end
     end
     record.skill_confs.sort_by!{ |r| r.game_data_skill_id.to_i }

@@ -1,0 +1,14 @@
+%br
+%h3 付加
+= form_product.simple_fields_for :supplements, :wrapper => :simple, :defaults => { :as => (:plain if @read_only), :user => current_user, :input_html => { :class => :'span2' } } do |form_supplement|
+  ENo.
+  = form_supplement.input :user_id
+  の
+  = form_supplement.input :material_number
+  を使って
+  = form_supplement.input :item_number
+  に
+  = form_supplement.input :experiment, :collection => { "付加" => false,  "付加実験" => true }, :include_blank => false
+  %br
+  = form_supplement.input :message, :wrapper => :bootstrap, :input_html => { :class => :'message span9', :rows => 2 }, :wrapper_html => { :class => :clearfix }
+  %br

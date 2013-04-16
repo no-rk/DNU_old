@@ -12,4 +12,8 @@ class Result::ItemSup < ActiveRecord::Base
   validates :kind, :inclusion => { :in => ["A", "B", "G"] }
   validates :sup,  :presence => true
   validates :lv,   :allow_nil => true, :numericality => { :only_integer => true, :greater_than => 0 }
+  
+  def to_hash
+    { :name => self.sup.name, :lv => self.lv }
+  end
 end

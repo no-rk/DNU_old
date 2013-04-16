@@ -5,4 +5,6 @@
     #{link_to("ENo.#{forge.target.id}", result_eno_path(@day_i, forge.target.id), :target => :_blank)} #{forge.target.result(:character, @day_i).profile.name} の所持する
     [#{forge.forge.number}] #{forge.from.item_name(@day_i).name} ※アイテム#{link_to("ID:#{forge.from.id}", result_item_path(@day_i, forge.from.id), :target => :_blank)} から
     #{forge.to.item_name(@day_i).name} ※アイテム#{link_to("ID:#{forge.to.id}", result_item_path(@day_i, forge.to.id), :target => :_blank)} を作製#{"実験" if forge.forge.experiment}。
-    %br
+  - else
+    失敗した。
+  %br

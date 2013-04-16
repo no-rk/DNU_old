@@ -18,7 +18,7 @@ class Register::Forge < ActiveRecord::Base
   def forge!(way = GameData::Product.find_by_name("鍛治"), day_i = self.day.day)
     success = false
     inventory = self.user.result(:inventory, day_i).where(:number => self.number).first if self.user.present?
-    if inventory.try(:type).try(:name).to_s == "材料"
+    if inventory.try(:material?)
       result_item = Result::Item.new_item_from_material(inventory.item, self, way, day_i)
       if result_item.try(:save)
         unless self.experiment
@@ -44,7 +44,7 @@ class Register::Forge < ActiveRecord::Base
     
     product_arel  = GameData::Product.arel_table
     product_forge = self.smith.result(:product).where(product_arel[:name].eq("鍛治")).includes(:product).first
-    forge_lv = (product_forge.try(:lv_cap).nil? ? product_forge.try(:lv) : [product_forge.lv, product_forge.lv_cap].min).to_i
+    forge_lv = product_forge.try(:effective_lv).to_i
     
     # 鍛治LVが付加発現LVより低い場合はクリア
     material_data = {} if forge_lv < material_data[:lv].to_i

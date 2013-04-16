@@ -35,6 +35,8 @@ class ResultController < ApplicationController
     @receive_items = Result::SendItem.receives(@id, @day_i).all
     # 鍛治
     @forges       = this_user.result(:forge, @day_i).all
+    # 付加
+    @supplements  = this_user.result(:supplement, @day_i).all
     # 訓練
     @trains       = this_user.result(:train, @day_i).all
     # 習得

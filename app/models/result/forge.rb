@@ -2,7 +2,7 @@ class Result::Forge < ActiveRecord::Base
   belongs_to :passed_day
   belongs_to :forge, :class_name => "Register::Forge"
   belongs_to :from,  :class_name => "Result::Item"
-  belongs_to :to,    :class_name => "Result::Item"
+  belongs_to :to,    :class_name => "Result::Item", :dependent => :destroy
   attr_accessible :success
   
   has_one :user,   :through => :passed_day

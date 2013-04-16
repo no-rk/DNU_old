@@ -6,6 +6,7 @@ class Result::PassedDay < ActiveRecord::Base
   has_many :result_send_points,   :dependent => :destroy, :class_name => "Result::SendPoint"
   has_many :result_send_items,    :dependent => :destroy, :class_name => "Result::SendItem"
   has_many :result_forges,        :dependent => :destroy, :class_name => "Result::Forge"
+  has_many :result_supplements,   :dependent => :destroy, :class_name => "Result::Supplement"
   has_many :result_trains,        :dependent => :destroy, :class_name => "Result::Train"
   has_many :result_learns,        :dependent => :destroy, :class_name => "Result::Learn"
   has_many :result_forgets,       :dependent => :destroy, :class_name => "Result::Forget"
