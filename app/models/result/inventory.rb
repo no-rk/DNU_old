@@ -13,6 +13,8 @@ class Result::Inventory < ActiveRecord::Base
   
   has_one :type, :through => :item, :class_name => "GameData::ItemType"
   
+  has_one :result_equip, :class_name => "Result::Equip"
+  
   validates :passed_day, :presence => true
   validates :item,       :presence => true
   validates :number,     :numericality => { :only_integer => true, :greater_than => 0 }
@@ -32,6 +34,12 @@ class Result::Inventory < ActiveRecord::Base
       end
     end
     success
+  end
+  
+  def equip?
+    if self.result_equip.try(:success)
+      item.equip_type
+    end
   end
   
   def material?

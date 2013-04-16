@@ -6,6 +6,7 @@ module DNU
       extend SendItem
       extend Forge
       extend Supplement
+      extend Equip
       extend Train
       extend Learn
       extend Forget
@@ -35,6 +36,9 @@ module DNU
           
           # 付加
           supplement
+          
+          # 装備
+          equip
           
           # 能力や技能や生産やアビリティーの訓練
           train

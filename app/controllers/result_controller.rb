@@ -37,6 +37,8 @@ class ResultController < ApplicationController
     @forges       = this_user.result(:forge, @day_i).all
     # 付加
     @supplements  = this_user.result(:supplement, @day_i).all
+    # 装備
+    @equips       = this_user.result(:equip, @day_i).all
     # 訓練
     @trains       = this_user.result(:train, @day_i).all
     # 習得
@@ -61,7 +63,7 @@ class ResultController < ApplicationController
     @products     = this_user.result(:product,   @day_i).where(:forget => false).includes(:product).all
     @abilities    = this_user.result(:ability,   @day_i).where(:forget => false).includes(:ability).all
     @skills       = this_user.result(:skill,     @day_i).where(:forget => false).includes(:skill).all
-    @inventories  = this_user.result(:inventory, @day_i).includes(:type).order(:number).all
+    @inventories  = this_user.result(:inventory, @day_i).includes(:type).includes(:result_equip).order(:number).all
     
     render :layout => 'plain'
   end

@@ -1554,7 +1554,12 @@ class EffectParser < Parslet::Parser
   # equip_definition
   
   rule(:equip_definition) {
-    weapon_definition
+    bra >> equip_type.as(:kind) >> ket >>
+    ((separator | newline).absent? >> any).repeat(1).as(:name) >>
+    (separator >> str('射程') >> natural_number.as(:range)).maybe >>
+    newline >>
+    sup_effects.as(:effects) >>
+    (default_attack_definition.as(:default_attack)).maybe
   }
   
   # status_definition

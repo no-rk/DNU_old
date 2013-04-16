@@ -165,8 +165,6 @@ $ ->
     #データタイプがjsonだったら
     else
       $('*[data-errors]').removeClass("badge badge-important").empty().css({ position: "fixed", bottom: 0, right: 0 })
-      #登録内容に変更があったら
-      $('*[data-errors]').addClass("badge badge-important").append("変更された。") if data.change
       #登録内容にエラーがあれば
       $('*[data-errors]').addClass("badge badge-important").append("エラーが" + data.errors.length + "つ。") if data.errors.length
       for error in data.errors

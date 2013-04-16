@@ -29,6 +29,10 @@
   .row-fluid
     #supplement.span12.well
       = render 'result_supplement'
+- if @equips.present?
+  .row-fluid
+    #equip.span12.well
+      = render 'result_equip'
 - if @trains.present?
   .row-fluid
     #train.span12.well

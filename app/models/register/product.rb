@@ -11,7 +11,7 @@ class Register::Product < ActiveRecord::Base
   attr_accessible  :forges_attributes, :supplements_attributes
 
   def build_product
-    (3-self.forges.size).times{self.forges.build}
-    (3-self.supplements.size).times{self.supplements.build}
+    (5-self.forges.size).times{self.forges.build}
+    (5-self.supplements.size).times{self.supplements.build}
   end
 end

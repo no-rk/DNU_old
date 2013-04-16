@@ -1,0 +1,9 @@
+%h3 装備
+
+- @equips.each do |equip|
+  - if equip.success
+    [#{equip.equip.number}]#{equip.item.item_name(@day_i).name} ※アイテム#{link_to("ID:#{equip.item.id}", result_item_path(@day_i, equip.item.id), :target => :_blank)} を
+    #{equip.item.equip_type} に装備。
+  - else
+    失敗した。
+  %br

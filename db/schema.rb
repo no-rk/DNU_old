@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130415131015) do
+ActiveRecord::Schema.define(:version => 20130416080955) do
 
   create_table "admins", :force => true do |t|
     t.string   "email",               :default => "", :null => false
@@ -418,6 +418,17 @@ ActiveRecord::Schema.define(:version => 20130415131015) do
   add_index "register_duels", ["day_id"], :name => "index_register_duels_on_day_id"
   add_index "register_duels", ["user_id"], :name => "index_register_duels_on_user_id"
 
+  create_table "register_equips", :force => true do |t|
+    t.integer  "battlable_id"
+    t.string   "battlable_type"
+    t.string   "kind"
+    t.integer  "number"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+  end
+
+  add_index "register_equips", ["battlable_id"], :name => "index_register_equips_on_battlable_id"
+
   create_table "register_forges", :force => true do |t|
     t.integer  "product_id"
     t.integer  "user_id"
@@ -735,6 +746,19 @@ ActiveRecord::Schema.define(:version => 20130415131015) do
 
   add_index "result_blossoms", ["blossomable_id"], :name => "index_result_blossoms_on_blossomable_id"
   add_index "result_blossoms", ["passed_day_id"], :name => "index_result_blossoms_on_passed_day_id"
+
+  create_table "result_equips", :force => true do |t|
+    t.integer  "passed_day_id"
+    t.integer  "equip_id"
+    t.integer  "inventory_id"
+    t.boolean  "success"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
+  end
+
+  add_index "result_equips", ["equip_id"], :name => "index_result_equips_on_equip_id"
+  add_index "result_equips", ["inventory_id"], :name => "index_result_equips_on_inventory_id"
+  add_index "result_equips", ["passed_day_id"], :name => "index_result_equips_on_passed_day_id"
 
   create_table "result_forges", :force => true do |t|
     t.integer  "passed_day_id"

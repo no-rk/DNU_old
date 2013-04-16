@@ -129,8 +129,10 @@ ja:
       register/product/forges: *forge
       register/product/supplements: *supplement
       
+      register/equip: &equip
+        number: アイテムNo.
       register/battle_setting: &battle_setting
-        skill_id: 技
+        skill: 技
         priority: 優先度
         use_condition: 使用条件
         use_condition_variable: (A)
@@ -138,6 +140,9 @@ ja:
         target: 対象指定
         target_variable: (B)
         message: 技発動時セリフ
+      register/battle:
+        equips: 装備
+      register/battle/equips: *equip
       register/battle/battle_settings: *battle_setting
       
       register/skill_name: &skill_name
@@ -176,10 +181,13 @@ ja:
 
       register/init_job: &init_job
         job_id: 初期職業
+        job: 初期職業
       register/init_guardian: &init_guardian
         guardian_id: 守護竜
+        guardian: 守護竜
       register/init_art: &init_art
         art_id: 初期技能
+        art: 初期技能
       register/initial:
         status: 初期能力
       register/initial/init_job: *init_job

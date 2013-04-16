@@ -98,7 +98,7 @@ class Register::ApplicationController < ApplicationController
       if @read_only
         register.valid?
         format.html { render :partial => 'form', :locals => { :"register_#{name}" => register } }
-        format.json { render json: { "change" => changed?(register), "errors" => register.errors.full_messages } }
+        format.json { render json: { "errors" => register.errors.full_messages } }
       else
         if register.save
           save_success(register)
@@ -138,7 +138,7 @@ class Register::ApplicationController < ApplicationController
       if @read_only
         register.valid?
         format.html { render :partial => 'form', :locals => { :"register_#{name}" => register } }
-        format.json { render json: { "change" => changed?(register), "errors" => register.errors.full_messages } }
+        format.json { render json: { "errors" => register.errors.full_messages } }
       else
         if register.save
           save_success(register)
@@ -176,17 +176,6 @@ class Register::ApplicationController < ApplicationController
   end
   def clone_record(record)
     DNU::DeepClone.register(record)
-  end
-  def changed?(record)
-    last_record = current_user.send(record.class.model_name.split('::').last.downcase)
-
-    if last_record.nil?
-      return false
-    end
-
-    nested_attr = record.nested_attributes_options.map{|key,value| key}
-    return true if clone_record(record).to_json(:include=>nested_attr) != clone_record(last_record).to_json(:include=>nested_attr)
-    false
   end
   def edit_action
     "edit"

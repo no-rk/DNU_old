@@ -43,7 +43,6 @@ class Register::MakesController < Register::ApplicationController
         @register_initial.valid?
         format.html { render :partial => 'form', :locals=>{:register_make=>@register_make,:register_character=>@register_character,:register_initial=>@register_initial} }
         format.json { render json: {
-          "change" => changed?(@register_make) || changed?(@register_character) || changed?(@register_initial),
           "errors" => @register_make.errors.full_messages + @register_character.errors.full_messages + @register_initial.errors.full_messages
         } }
       else
