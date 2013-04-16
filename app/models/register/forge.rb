@@ -7,13 +7,13 @@ class Register::Forge < ActiveRecord::Base
   has_one :smith, :through => :product, :class_name => "User", :source => :user
   has_one :day,   :through => :product
   
-  validates :user_id,      :numericality => { :only_integer => true, :greater_than => 0 }
-  validates :number,       :numericality => { :only_integer => true, :greater_than => 0 }
-  validates :item_type_id, :numericality => { :only_integer => true, :greater_than => 0 }
-  validates :experiment,   :inclusion => { :in => [true, false] }
-  validates :name,         :presence => true, :length => { :maximum => 20 }
-  validates :caption,      :length => { :maximum => 800, :tokenizer => DNU::Sanitize.counter }
-  validates :message,      :length => { :maximum => 800, :tokenizer => DNU::Sanitize.counter }
+  validates :user_id,    :numericality => { :only_integer => true, :greater_than => 0 }
+  validates :number,     :numericality => { :only_integer => true, :greater_than => 0 }
+  validates :item_type,  :presence => true
+  validates :experiment, :inclusion => { :in => [true, false] }
+  validates :name,       :presence => true, :length => { :maximum => 20 }
+  validates :caption,    :length => { :maximum => 800, :tokenizer => DNU::Sanitize.counter }
+  validates :message,    :length => { :maximum => 800, :tokenizer => DNU::Sanitize.counter }
   
   def forge!(way = GameData::Product.find_by_name("鍛治"), day_i = self.day.day)
     success = false

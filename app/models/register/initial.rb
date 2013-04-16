@@ -61,9 +61,7 @@ class Register::Initial < ActiveRecord::Base
     # 初期技能に対応した装備を結果に反映
     self.user.add_item!({
       self.init_arts.first.art.name => "初期装備"
-    },
-      GameData::Product.find_by_name("鍛治")
-    )
+    })
     # テスト用の材料を結果に反映
     5.times{ self.user.add_item!("材料"=>"テスト材料") }
     # 守護竜に対応した竜魂を結果に反映

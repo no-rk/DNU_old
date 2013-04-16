@@ -1,5 +1,5 @@
 %br
-%h3 送品
+= form_trade.label :send_items
 = form_trade.simple_fields_for :send_items, :wrapper => :simple, :defaults => { :as => (:plain if @read_only), :user => current_user, :input_html => { :class => :'span2' } } do |form_send_item|
   ENo.
   = form_send_item.input :user_id

@@ -1,3 +1,4 @@
+- day_arel = Day.arel_table
 .row-fluid
   .span12.well
     第#{@item.day.day}回に
@@ -12,5 +13,15 @@
       - day_i = passed_day.day.day
       - user  = passed_day.user
       第#{day_i}回 所有者 ENo.#{user.id} #{user.result(:character, day_i).profile.name}
+      %br
+      - @item.item_sups.where(day_arel[:day].eq(day_i)).includes(:day).find_each do |item_sup|
+        ENo.#{item_sup.user.id} #{item_sup.user.result(:character, day_i).profile.name} が
+        - if item_sup.source.present?
+          アイテム#{link_to("ID:#{item_sup.source.id}", result_item_path(day_i, item_sup.source.id), :target => :_blank)}
+          を使って
+        #{item_sup.way.name || "???"} で
+        付加#{item_sup.kind} を
+        #{item_sup.sup.name}#{"LV#{item_sup.lv}" if item_sup.lv.present?} にした。
+        %br
       %br
     = paginate @item_passed_days

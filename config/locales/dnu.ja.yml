@@ -72,6 +72,10 @@ ja:
       register/blossom: 開花
       register/train: 訓練
       register/party_slogan: 合言葉
+      register/send_point: 送金
+      register/send_item: 送品
+      register/forge: 鍛治
+      register/supplement: 付加
       register/battle_setting: 戦闘設定
       register/profile: プロフィール
       register/upload_icon: アップロードアイコン
@@ -94,6 +98,37 @@ ja:
       register/main/moves: *move
       register/main/party_slogan: *party_slogan
       
+      register/send_point: &send_point
+        user_id: ENo.
+        value: 額
+        message: メッセージ
+      register/send_item: &send_item
+        user_id: ENo.
+        number: アイテムNo.
+        message: メッセージ
+      register/trade:
+        send_points: 送金
+        send_items: 送品
+      register/trade/send_points: *send_point
+      register/trade/send_items: *send_item
+      
+      register/forge: &forge
+        user_id: ENo.
+        number: アイテムNo.
+        item_type: アイテム種
+        name: 装備名
+        message: メッセージ
+      register/supplement: &supplement
+        user_id: ENo.
+        material_number: 材料No.
+        item_number: アイテムNo.
+        message: メッセージ
+      register/product:
+        forge: 鍛治
+        supplement: 付加
+      register/product/forges: *forge
+      register/product/supplements: *supplement
+      
       register/battle_setting: &battle_setting
         skill_id: 技
         priority: 優先度
@@ -104,6 +139,16 @@ ja:
         target_variable: (B)
         message: 技発動時セリフ
       register/battle/battle_settings: *battle_setting
+      
+      register/skill_name: &skill_name
+        name: 技名
+        caption: 技の説明
+      register/skill/skill_confs/skill_name: *skill_name
+      
+      register/ability_name: &ability_name
+        name: アビリティー名
+        caption: アビリティーの説明
+      register/ability/ability_confs/ability_name: *ability_name
       
       register/profile: &profile
         age: 年齢
