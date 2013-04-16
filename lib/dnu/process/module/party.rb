@@ -11,7 +11,7 @@ module DNU
                 user_ids.each do |user_id|
                   party = Result::Party.new
                   party.day = Day.last
-                  party.kind = :battle
+                  party.kind = "battle"
                   party.party_members.build
                   party.party_members.first.character = User.find(user_id)
                   party.save!
@@ -31,7 +31,7 @@ module DNU
                   pt.sort!
                   party = Result::Party.new
                   party.day = Day.last
-                  party.kind = :battle
+                  party.kind = "battle"
                   pt.each do |user_id|
                     party.party_members.build
                     party.party_members.last.character = User.find(user_id)

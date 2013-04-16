@@ -14,6 +14,7 @@ module DNU
       extend Grow
       extend Move
       extend Party
+      extend Notice
       extend Map
       extend After
       
@@ -60,6 +61,9 @@ module DNU
           
           # PT結成
           party
+          
+          # 戦闘予告
+          notice
           
           # マップ生成
           map

@@ -4,6 +4,9 @@ class Result::Party < ActiveRecord::Base
   has_many :notices, :dependent => :destroy
   attr_accessible :caption, :kind, :name
   
+  validates :day,  :presence => true
+  validates :kind, :inclusion => { :in => ["battle"] }
+  
   scope :where_user_ids_and_day_i, lambda{ |user_ids, day_i|
     pm_arel = Result::PartyMember.arel_table
     day_arel = Day.arel_table
@@ -14,7 +17,28 @@ class Result::Party < ActiveRecord::Base
     uniq
   }
   
+  scope :already_make, lambda{ |day_i|
+    user_ids = User.already_make.pluck(:id)
+    where_user_ids_and_day_i(user_ids, day_i)
+  }
+  
   def nickname
     name || "第#{id}PT"
+  end
+  
+  def self.new_from_tree(tree, battle_kind = :battle, day = Day.last)
+    result_party = self.new(:name => tree[:pt_name].to_s, :caption => tree[:pt_caption].to_s)
+    result_party.kind = battle_kind.to_s
+    result_party.day = day
+    
+    tree[:members].each do |member|
+      kind = member[:kind].keys.first.to_s
+      name = member[:name].to_s
+      
+      result_party.party_members.build do |result_party_member|
+        result_party_member.character = GameData::Character.where(:kind => kind, :name => name).first
+      end
+    end
+    result_party
   end
 end

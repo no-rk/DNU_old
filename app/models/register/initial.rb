@@ -113,7 +113,7 @@ class Register::Initial < ActiveRecord::Base
                                           where(:character_id => self.user.id).pluck(:party_id)
     result_party = Result::Party.where(:id => result_party_id.shift).first_or_initialize
     result_party.day = Day.last
-    result_party.kind = :battle
+    result_party.kind = "battle"
     result_party.party_members.build if result_party.party_members.blank?
     result_party.party_members.first.character = self.user
     result_party.save!

@@ -1791,6 +1791,7 @@ class EffectParser < Parslet::Parser
   
   rule(:pt_setting) {
     bra >> str('PT') >> ket >> (newline.absent? >> any).repeat(1).as(:pt_name) >> newline >>
+    string.as(:pt_caption).maybe >> newline.maybe >>
     character_settings.as(:members)
   }
   

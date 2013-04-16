@@ -3,5 +3,11 @@ class Result::Notice < ActiveRecord::Base
   belongs_to :enemy, :class_name => "Result::Party"
   attr_accessible :kind
   
-  has_one :day, :through => :party
+  has_one  :day,           :through => :party
+  has_many :party_members, :through => :party
+  has_many :enemy_members, :through => :enemy, :class_name => "Result::PartyMember", :source => :party_members
+  
+  validates :party, :presence => true
+  validates :kind,  :inclusion => { :in => ["battle"] }
+  validates :enemy, :presence => true
 end

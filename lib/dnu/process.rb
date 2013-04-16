@@ -11,6 +11,7 @@ require_dependency "dnu/process/module/blossom"
 require_dependency "dnu/process/module/grow"
 require_dependency "dnu/process/module/move"
 require_dependency "dnu/process/module/party"
+require_dependency "dnu/process/module/notice"
 require_dependency "dnu/process/module/map"
 require_dependency "dnu/process/module/after"
 

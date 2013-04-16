@@ -179,16 +179,7 @@ class User < ActiveRecord::Base
   end
   
   def create_result!(type, data = {}, day_i = Day.last_day_i)
-    case type.to_sym
-    when :passed_day
-      record = self.result_passed_days.build
-      data[:day] ||= Day.find_by_day(day_i)
-    else
-      record = self.result(:passed_day, day_i).last.send("result_#{type.to_s.pluralize}").build
-    end
-    data.each do |k, v|
-      record.send("#{k}=", v) if record.respond_to?("#{k}=")
-    end
+    record = new_result(type, data, day_i)
     record.save!
     record
   end

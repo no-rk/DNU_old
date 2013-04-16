@@ -23,8 +23,9 @@ class ResultController < ApplicationController
     @day_i = (params[:day] || Day.last_day_i).to_i
     
     this_user = User.find(@id)
-    @creation_day = this_user.creation_day.to_i
-    @passed_day = @day_i - @creation_day
+    @creation_day  = this_user.creation_day.to_i
+    @passed_day    = @day_i - @creation_day
+    @max_inventory = this_user.max_inventory(@day_i)
     # 送信ポイント
     @send_points  = this_user.result(:send_point, @day_i).includes(:send_point).includes(:point).includes(:to).all
     # 受信ポイント
@@ -51,7 +52,9 @@ class ResultController < ApplicationController
     @direction_list = { :'休' => 0, :'上' => 1, :'右' => 2, :'下' => 3, :'左' => 4 }.invert
     @moves        = this_user.result(:move, @day_i).includes(:from, :to).all
     # PT結成
-    @party        = this_user.result(:party, @day_i).first
+    @party        = this_user.result(:party, @day_i).includes(:party_members).first
+    # 戦闘予告
+    @notice       = this_user.result(:notice, @day_i).includes(:party).includes(:party_members).includes(:enemy).includes(:enemy_members).first
     # キャラデータ
     @profile      = this_user.result(:character, @day_i).profile
     @guardian     = this_user.result(:guardian,  @day_i)

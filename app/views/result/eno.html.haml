@@ -57,6 +57,10 @@
   .row-fluid
     #party.span12.well
       = render 'result_party'
+- if @notice.present?
+  .row-fluid
+    #notice.span12.well
+      = render 'result_notice'
 .row-fluid
   #character_data.span12.well
     = render 'result_character_data'
