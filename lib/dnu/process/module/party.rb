@@ -33,8 +33,9 @@ module DNU
                   party.day = Day.last
                   party.kind = "battle"
                   pt.each do |user_id|
-                    party.party_members.build
-                    party.party_members.last.character = User.find(user_id)
+                    party.party_members.build do |party_member|
+                      party_member.character = User.find(user_id)
+                    end
                   end
                   party.save!
                 end

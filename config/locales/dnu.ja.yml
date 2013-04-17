@@ -86,6 +86,8 @@ ja:
       register/init_guardian: 初期守護竜
 
     attributes:
+      register/diary: &diary
+        diary: 日記
       register/move: &move
         direction: 方向
       register/party_slogan: &party_slogan
@@ -95,6 +97,7 @@ ja:
         forgets: 忘却
         blossoms: 開花
         trains: 訓練
+      register/main/diary: *diary
       register/main/moves: *move
       register/main/party_slogan: *party_slogan
       
