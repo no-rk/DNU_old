@@ -3,6 +3,21 @@
 parser    = EffectParser.new
 transform = EffectTransform.new
 
+def clean_tree(tree)
+  case tree
+  when Hash
+    tree.inject({}){ |h,(k,v)|
+      h.tap{ h[k] = clean_tree(v) }
+    }
+  when Array
+    tree.map{ |v| clean_tree(v) }
+  when Parslet::Slice
+    tree.to_s
+  else
+    tree
+  end
+end
+
 # 日付
 if Day.last.nil?
   Day.create!(:day => 0, :state => 2)
@@ -143,6 +158,42 @@ ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_learning_conditi
       end
       model.save!
     end
+  end
+end
+
+# イベント
+ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_events")
+ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_event_steps")
+ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_event_contents")
+events = YAML.load(ERB.new(File.read("#{Rails.root}/db/game_data/event.yml")).result)
+events.each do |event|
+  begin
+    tree = parser.event_definition.parse(event)
+    tree = transform.apply(tree)
+    tree = clean_tree(tree)
+  rescue
+    p "文法エラー"
+    p event
+  else
+    # Event
+    model = GameData::Event.new
+    model.kind    = (tree[:kind] || "通常").to_s
+    model.name    = tree[:name].to_s
+    model.caption = tree[:caption].to_s
+    # EventStep
+    tree[:steps].each do |step|
+      model.event_steps.build do |event_step|
+        event_step.timing    = step[:timing].keys.first.to_s
+        event_step.condition = step[:condition].to_hash
+        step[:contents].each do |content|
+          event_step.event_contents.build do |event_content|
+            event_content.kind    = content.keys.first
+            event_content.content = content.values.first
+          end
+        end
+      end
+    end
+    model.save!
   end
 end
 

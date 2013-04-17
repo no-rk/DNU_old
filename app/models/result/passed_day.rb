@@ -14,6 +14,9 @@ class Result::PassedDay < ActiveRecord::Base
   has_many :result_blossoms,      :dependent => :destroy, :class_name => "Result::Blossom"
   has_many :result_moves,         :dependent => :destroy, :class_name => "Result::Move"
   
+  has_many :result_events,        :dependent => :destroy, :class_name => "Result::Event"
+  has_many :result_after_moves,   :dependent => :destroy, :class_name => "Result::AfterMove"
+  
   has_many :result_battle_values, :dependent => :destroy, :class_name => "Result::BattleValue"
   has_many :result_points,        :dependent => :destroy, :class_name => "Result::Point"
   has_many :result_jobs,          :dependent => :destroy, :class_name => "Result::Job"

@@ -67,3 +67,15 @@ ENo.#{@id} #{@profile.name}
     [#{number}] -
     %br
     %br
+%br
+イベント一覧
+%br
+- @events.each do |event|
+  #{event.event.name}【#{event.state}】
+  %br
+  -if event.event.caption.present?
+    説明
+    %br
+    「#{event.event.caption}」
+  %br
+  %br

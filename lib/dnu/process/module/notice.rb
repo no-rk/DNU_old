@@ -4,7 +4,7 @@ module DNU
       
       def notice
         # キャラ作成済みの各パーティー
-        Result::Party.already_make(Day.last_day_i).find_each do |party|
+        Result::Party.already_make.find_each do |party|
           
           tree = {
             :pt_name    => "敵たち",

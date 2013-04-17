@@ -134,7 +134,7 @@ class EffectParser < Parslet::Parser
   
   rule(:place) {
     (
-      variable >> alphabet.as(:X) >> natural_number.as(:Y)
+      place_name.as(:name) >> spaces? >> alphabet.as(:x) >> natural_number.as(:y)
     ).as(:place)
   }
   
@@ -211,6 +211,10 @@ class EffectParser < Parslet::Parser
     str('ラ').as(:Random) |
     str('弱').as(:Weak) |
     str('全').as(:All)
+  }
+  
+  rule(:place_name) {
+    alternation_from_array(GameData::Map.pluck(:name))
   }
   
   rule(:equip_name) {
@@ -1759,9 +1763,9 @@ class EffectParser < Parslet::Parser
   
   rule(:event_timing) {
     (
-      str('通過').as(:pass) |
-      str('移動').as(:move)
-    ).as(:timing) >> before_after.as(:before_after)
+      str('移動毎').as(:each_move) |
+      str('移動後').as(:after_move)
+    ).as(:timing)
   }
   
   # event_condition
@@ -1824,8 +1828,8 @@ class EffectParser < Parslet::Parser
   
   # event_contents
   
-  rule(:text) {
-    string.as(:text)
+  rule(:print_text) {
+    string.as(:print_text)
   }
   
   rule(:set_flag) {
@@ -1835,14 +1839,14 @@ class EffectParser < Parslet::Parser
         on.as(:on) |
         off.as(:off)
       )
-    ).as(:set_flag)
+    ).as(:boolean).as(:set_flag)
   }
   
   rule(:set_integer) {
     (
       variable >> str('を').maybe >>
       non_negative_integer.as(:integer) >> str('に').maybe
-    ).as(:set_integer)
+    ).as(:integer).as(:set_integer)
   }
   
   rule(:end_step) {
@@ -1854,7 +1858,7 @@ class EffectParser < Parslet::Parser
   }
   
   rule(:event_content) {
-    text |
+    print_text |
     set_flag |
     set_integer |
     end_step |
@@ -1885,8 +1889,14 @@ class EffectParser < Parslet::Parser
   
   # event_definition
   
+  rule(:event_kind) {
+    str('共通') |
+    str('内部') |
+    str('通常').maybe
+  }
+  
   rule(:event_definition) {
-    bra >> str('イベント') >> ket >> (newline.absent? >> any).repeat(1).as(:name) >> newline >>
+    bra >> event_kind.as(:kind) >> str('イベント') >> ket >> (newline.absent? >> any).repeat(1).as(:name) >> newline >>
     string.as(:caption).maybe >>
     event_steps
   }

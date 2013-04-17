@@ -17,9 +17,14 @@ class Result::Party < ActiveRecord::Base
     uniq
   }
   
-  scope :already_make, lambda{ |day_i|
+  scope :already_make, lambda{ 
+    day_i = Day.last_day_i
     user_ids = User.already_make.pluck(:id)
-    where_user_ids_and_day_i(user_ids, day_i)
+    if where_user_ids_and_day_i(user_ids, day_i).exists?
+      where_user_ids_and_day_i(user_ids, day_i)
+    else
+      where_user_ids_and_day_i(user_ids, day_i - 1)
+    end
   }
   
   def nickname

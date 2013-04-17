@@ -41,6 +41,10 @@ class User < ActiveRecord::Base
   has_many :result_blossoms,      :through => :result_passed_days, :class_name => "Result::Blossom"
   has_many :result_moves,         :through => :result_passed_days, :class_name => "Result::Move"
   
+  has_many :result_events,        :through => :result_passed_days, :class_name => "Result::Event"
+  has_many :result_event_states,  :through => :result_events,      :class_name => "Result::EventState", :source => :event_states
+  has_many :result_after_moves,   :through => :result_passed_days, :class_name => "Result::AfterMove"
+  
   has_many :result_points,        :through => :result_passed_days, :class_name => "Result::Point"
   has_many :result_jobs,          :through => :result_passed_days, :class_name => "Result::Job"
   has_many :result_statuses,      :through => :result_passed_days, :class_name => "Result::Status"
@@ -53,8 +57,10 @@ class User < ActiveRecord::Base
   has_many :result_places,        :through => :result_passed_days, :class_name => "Result::Place"
 
   has_many :through_party_members, :as => :character, :class_name => "Result::PartyMember"
-  has_many :result_parties, :through => :through_party_members, :class_name => "Result::Party", :source => :party
-  has_many :result_notices, :through => :result_parties, :class_name => "Result::Notice", :source => :notices
+  
+  has_many :result_parties,       :through => :through_party_members, :class_name => "Result::Party",       :source => :party
+  has_many :result_party_members, :through => :result_parties,        :class_name => "Result::PartyMember", :source => :party_members
+  has_many :result_notices,       :through => :result_parties,        :class_name => "Result::Notice",      :source => :notices
 
   scope :new_commer,   lambda{ where(arel_table[:creation_day].eq(Day.last_day_i)) }
   scope :already_make, lambda{ where(arel_table[:creation_day].lt(Day.last_day_i)) }
@@ -141,6 +147,15 @@ class User < ActiveRecord::Base
     Result::Map.find_by_name_and_day_i(result(:place, day_i).first.map.name, day_i)
   end
   
+  def result_event_states_by_timing(timing, day_i = Day.last_day_i)
+    event_arel      = Result::Event.arel_table
+    event_step_arel = GameData::EventStep.arel_table
+    
+    self.result(:event_state, day_i).where(:state => "途中").
+                                     where(event_arel[:state].eq("途中")).includes(:event).
+                                     where(event_step_arel[:timing].eq(timing)).includes(:event_step)
+  end
+  
   def result(type, day_i = Day.last_day_i)
     case type.to_sym
     when :character
@@ -158,6 +173,13 @@ class User < ActiveRecord::Base
     when :place
       day_arel  = Day.arel_table
       self.send("result_#{type.to_s.pluralize}").where(:arrival => true).where(day_arel[:day].eq(day_i)).includes(:day)
+    when :party
+      day_arel  = Day.arel_table
+      if self.send("result_#{type.to_s.pluralize}").where(day_arel[:day].eq(day_i)).includes(:day).exists?
+        self.send("result_#{type.to_s.pluralize}").where(day_arel[:day].eq(day_i)).includes(:day)
+      else
+        self.send("result_#{type.to_s.pluralize}").where(day_arel[:day].eq(day_i - 1)).includes(:day)
+      end
     else
       day_arel  = Day.arel_table
       self.send("result_#{type.to_s.pluralize}").where(day_arel[:day].eq(day_i)).includes(:day)
@@ -244,6 +266,43 @@ class User < ActiveRecord::Base
       if result_item.try(:save)
         result_inventory.item = result_item
         result_inventory.save!
+        success = true
+      end
+    end
+    success
+  end
+  
+  def add_event!(event, day_i = Day.last_day_i)
+    success = false
+    event_kind = event.keys.first
+    event_name = event.values.first
+    
+    event_arel = GameData::Event.arel_table
+    if result(:event, day_i).where(event_arel[:kind].eq(event_kind),event_arel[:name].eq(event_name)).includes(:event).exists?
+      result_event = result(:event, day_i).where(event_arel[:kind].eq(event_kind),event_arel[:name].eq(event_name)).includes(:event).first
+      result_event.event.event_steps.each do |event_step|
+        unless result_event.event_states.where(:event_step_id => event_step.id).exists?
+          result_event.event_states.build do |event_state|
+            event_state.event_step = event_step
+            event_state.state      = "途中"
+            event_state.save!
+            success = true
+          end
+        end
+      end
+    else
+      result_event = new_result(:event, {
+        :event => GameData::Event.find_by_kind_and_name(event_kind, event_name),
+        :state => "途中"
+      }, day_i)
+      if result_event.event.present?
+        result_event.event.event_steps.each do |event_step|
+          result_event.event_states.build do |event_state|
+            event_state.event_step = event_step
+            event_state.state      = "途中"
+          end
+        end
+        result_event.save!
         success = true
       end
     end

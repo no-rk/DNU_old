@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130417041027) do
+ActiveRecord::Schema.define(:version => 20130417140254) do
 
   create_table "admins", :force => true do |t|
     t.string   "email",               :default => "", :null => false
@@ -122,6 +122,34 @@ ActiveRecord::Schema.define(:version => 20130417041027) do
   end
 
   create_table "game_data_equip_types", :force => true do |t|
+    t.string   "name"
+    t.text     "caption"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "game_data_event_contents", :force => true do |t|
+    t.integer  "event_step_id"
+    t.string   "kind"
+    t.text     "content"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
+  end
+
+  add_index "game_data_event_contents", ["event_step_id"], :name => "index_game_data_event_contents_on_event_step_id"
+
+  create_table "game_data_event_steps", :force => true do |t|
+    t.integer  "event_id"
+    t.string   "timing"
+    t.text     "condition"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "game_data_event_steps", ["event_id"], :name => "index_game_data_event_steps_on_event_id"
+
+  create_table "game_data_events", :force => true do |t|
+    t.string   "kind"
     t.string   "name"
     t.text     "caption"
     t.datetime "created_at", :null => false
@@ -723,6 +751,16 @@ ActiveRecord::Schema.define(:version => 20130417041027) do
   add_index "result_abilities", ["ability_id"], :name => "index_result_abilities_on_ability_id"
   add_index "result_abilities", ["passed_day_id"], :name => "index_result_abilities_on_passed_day_id"
 
+  create_table "result_after_moves", :force => true do |t|
+    t.integer  "passed_day_id"
+    t.integer  "event_content_id"
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
+  end
+
+  add_index "result_after_moves", ["event_content_id"], :name => "index_result_after_moves_on_event_content_id"
+  add_index "result_after_moves", ["passed_day_id"], :name => "index_result_after_moves_on_passed_day_id"
+
   create_table "result_arts", :force => true do |t|
     t.integer  "passed_day_id"
     t.integer  "art_id"
@@ -775,6 +813,39 @@ ActiveRecord::Schema.define(:version => 20130417041027) do
   add_index "result_equips", ["equip_id"], :name => "index_result_equips_on_equip_id"
   add_index "result_equips", ["inventory_id"], :name => "index_result_equips_on_inventory_id"
   add_index "result_equips", ["passed_day_id"], :name => "index_result_equips_on_passed_day_id"
+
+  create_table "result_event_states", :force => true do |t|
+    t.integer  "event_id"
+    t.integer  "event_step_id"
+    t.string   "state"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
+  end
+
+  add_index "result_event_states", ["event_id"], :name => "index_result_event_states_on_event_id"
+  add_index "result_event_states", ["event_step_id"], :name => "index_result_event_states_on_event_step_id"
+
+  create_table "result_event_variables", :force => true do |t|
+    t.integer  "event_id"
+    t.string   "kind"
+    t.string   "name"
+    t.text     "value"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "result_event_variables", ["event_id"], :name => "index_result_event_variables_on_event_id"
+
+  create_table "result_events", :force => true do |t|
+    t.integer  "passed_day_id"
+    t.integer  "event_id"
+    t.string   "state"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
+  end
+
+  add_index "result_events", ["event_id"], :name => "index_result_events_on_event_id"
+  add_index "result_events", ["passed_day_id"], :name => "index_result_events_on_passed_day_id"
 
   create_table "result_forges", :force => true do |t|
     t.integer  "passed_day_id"

@@ -9,6 +9,11 @@ module DNU
         
         now_day = Day.where(:day => now_day).first_or_create!
         
+        # 再更新の場合はPT結果クリア
+        unless @new_day
+          day_arel = Day.arel_table
+          Result::Party.where(day_arel[:day].eq(now_day.day)).includes(:day).destroy_all
+        end
         # キャラ作成済みの各ユーザー
         User.already_make.find_each do |user|
           # 最新宣言に日数の情報を付与する
@@ -46,15 +51,12 @@ module DNU
           # 再更新の場合は結果クリア
           unless @new_day
             user.result(:passed_day, now_day.day).destroy_all
-            [:party].each do |result_name|
-              user.result(result_name, now_day.day).destroy_all
-            end
           end
           user.create_result!(:passed_day, { :day => now_day, :passed_day => (now_day.day.to_i - user.creation_day.to_i) })
           # 前日の結果を初期値としてコピー
-          [:ability, :art, :inventory, :job, :place, :point, :product, :skill, :status].each do |result_name|
+          [:ability, :art, :inventory, :job, :place, :point, :product, :skill, :status, :event].each do |result_name|
             user.result(result_name, now_day.before_i).each do |result|
-              result_c = DNU::DeepClone.result(result)
+              result_c = DNU::DeepClone.register(result)
               result_c.passed_day = user.result(:passed_day, now_day.day).last
               result_c.save!
             end

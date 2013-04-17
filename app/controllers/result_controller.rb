@@ -55,6 +55,8 @@ class ResultController < ApplicationController
     @moves        = this_user.result(:move, @day_i).includes(:from, :to).all
     # PT結成
     @party        = this_user.result(:party, @day_i).first
+    # 移動後
+    @after_moves  = this_user.result(:after_move, @day_i)
     # 戦闘予告
     @notice       = this_user.result(:notice, @day_i).includes(:party).includes(:enemy).first
     # キャラデータ
@@ -69,6 +71,7 @@ class ResultController < ApplicationController
     @abilities    = this_user.result(:ability,   @day_i).where(:forget => false).includes(:ability).all
     @skills       = this_user.result(:skill,     @day_i).where(:forget => false).includes(:skill).all
     @inventories  = this_user.result(:inventory, @day_i).includes(:type).includes(:result_equip).order(:number).all
+    @events       = this_user.result(:event, @day_i).all
     
     render :layout => 'plain'
   end

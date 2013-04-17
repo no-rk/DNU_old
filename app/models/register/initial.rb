@@ -64,6 +64,9 @@ class Register::Initial < ActiveRecord::Base
     })
     # テスト用の材料を結果に反映
     5.times{ self.user.add_item!("材料"=>"テスト材料") }
+    # テスト用のイベントを結果に反映
+    self.user.add_event!("内部"=>"街")
+    self.user.add_event!("通常"=>"ぱしり")
     # 守護竜に対応した竜魂を結果に反映
     dragon_souls = GameData::ArtType.where(:name => "竜魂").first.arts
     self.user.create_result!(:art, {

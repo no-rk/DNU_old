@@ -61,6 +61,10 @@
   .row-fluid
     #party.span12.well
       = render 'result_party'
+- if @after_moves.present?
+  .row-fluid
+    #after_move.span12.well
+      = render 'result_after_move'
 - if @notice.present?
   .row-fluid
     #notice.span12.well
