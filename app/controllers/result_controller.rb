@@ -56,7 +56,7 @@ class ResultController < ApplicationController
     # PT結成
     @party        = this_user.result(:party, @day_i).first
     # 戦闘予告
-    @notice       = this_user.result(:notice, @day_i).includes(:party).includes(:enemy).includes(:enemy_members).first
+    @notice       = this_user.result(:notice, @day_i).includes(:party).includes(:enemy).first
     # キャラデータ
     @profile      = this_user.result(:character, @day_i).profile
     @guardian     = this_user.result(:guardian,  @day_i)

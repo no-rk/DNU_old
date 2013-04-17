@@ -8,8 +8,8 @@ if Day.last.nil?
   Day.create!(:day => 0, :state => 2)
 end
 
-# ジョブ, 守護, 言葉, 戦闘値, 生産, 属性, 戦闘設定, ポイント
-[:job, :guardian, :word, :battle_value, :product, :element, :battle_setting, :point].each do |table|
+# ジョブ, 守護, 言葉, 戦闘値, 生産, 属性, 戦闘設定, ポイント, 装備種
+[:job, :guardian, :word, :battle_value, :product, :element, :battle_setting, :point, :equip_type].each do |table|
   ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_#{table.to_s.tableize}")
   list = YAML.load(ERB.new(File.read("#{Rails.root}/db/game_data/#{table}.yml")).result)
   list.each do |data|
@@ -17,30 +17,6 @@ end
     model = "GameData::#{table.to_s.camelize}".constantize.new(data)
     model.save!
   end
-end
-
-# アイテム
-ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_item_types")
-ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_item_equips")
-item_types = YAML.load(ERB.new(File.read("#{Rails.root}/db/game_data/item_type.yml")).result)
-item_types.each do |item_type|
-  # p item_type.except("equip")
-  item_type_model = GameData::ItemType.new(item_type.except("equip"))
-  if item_type["equip"].present?
-    # p item_type["equip"]
-    begin
-      tree = parser.equip_definition.parse(item_type["equip"])
-      tree = transform.apply(tree)
-    rescue
-      p "文法エラー"
-      p data
-    else
-      item_type_model.build_item_equip
-      item_type_model.item_equip.kind = tree[:kind].to_s
-      item_type_model.item_equip.definition = item_type["equip"]
-    end
-  end
-  item_type_model.save!
 end
 
 # 技能
@@ -69,6 +45,30 @@ map_names.each do |map_name|
     map_name_model.map_tips.build(map_tip)
   end
   map_name_model.save!
+end
+
+# アイテム種, 装備種
+ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_item_types")
+ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_item_equips")
+item_types = YAML.load(ERB.new(File.read("#{Rails.root}/db/game_data/item_type.yml")).result)
+item_types.each do |item_type|
+  # p item_type.except("equip")
+  item_type_model = GameData::ItemType.new(item_type.except("equip"))
+  if item_type["equip"].present?
+    # p item_type["equip"]
+    begin
+      tree = parser.equip_definition.parse(item_type["equip"])
+      tree = transform.apply(tree)
+    rescue
+      p "文法エラー"
+      p data
+    else
+      item_type_model.build_item_equip
+      item_type_model.item_equip.kind = tree[:kind].to_s
+      item_type_model.item_equip.definition = item_type["equip"]
+    end
+  end
+  item_type_model.save!
 end
 
 # 能力, 武器, 技, 付加, 罠, アビリティ, キャラクター, 状態異常, アイテム

@@ -214,64 +214,19 @@ class EffectParser < Parslet::Parser
   }
   
   rule(:equip_name) {
-    str('剣') |
-    str('槍') |
-    str('斧') |
-    str('弓') |
-    str('銃') |
-    str('刀') |
-    str('素手') |
-    str('本') |
-    str('魔石') |
-    str('杖') |
-    str('兜') |
-    str('帽子') |
-    str('耳') |
-    str('盾') |
-    str('小手') |
-    str('腕輪') |
-    str('鎧') |
-    str('ローブ') |
-    str('服') |
-    str('レンズ') |
-    str('ピアス') |
-    str('オーブ')
+    alternation_from_array(GameData::ItemType.joins(:item_equip).pluck(:name))
   }
   
   rule(:art_name) {
-    equip_name |
-    str('火魂') |
-    str('水魂') |
-    str('地魂') |
-    str('風魂') |
-    str('光魂') |
-    str('闇魂')
+    alternation_from_array(GameData::Art.pluck(:name))
   }
   
   rule(:job_name) {
-    str('竜騎士') |
-    str('魔剣士') |
-    str('芸術家') |
-    str('ウォリアー') |
-    str('サムライ') |
-    str('レンジャー') |
-    str('ガンナー') |
-    str('モンク') |
-    str('祈祷師') |
-    str('魔術師') |
-    str('人形師') |
-    str('呪術師')
+    alternation_from_array(GameData::Job.pluck(:name))
   }
   
   rule(:product_name) {
-    str('合成') |
-    str('付加') |
-    str('狩猟') |
-    str('釣匠') |
-    str('園芸') |
-    str('鍛治') |
-    str('解錠') |
-    str('薬師')
+    alternation_from_array(GameData::Product.pluck(:name))
   }
   
   # disease_name_set
@@ -1939,35 +1894,28 @@ class EffectParser < Parslet::Parser
   # item_definition
   
   rule(:item_type) {
-    equip_name |
-    str('材料') |
-    str('消耗') |
-    str('戦物')
+    alternation_from_array(GameData::ItemType.pluck(:name))
   }
   
   rule(:equip_type) {
-    str('武器') |
-    str('頭') |
-    str('身体') |
-    str('腕') |
-    str('装飾')
+    alternation_from_array(GameData::EquipType.pluck(:name))
+  }
+  
+  rule(:sup_name) {
+    alternation_from_array(GameData::Sup.pluck(:name))
   }
   
   rule(:item_sup) {
     (separator | newline).maybe >>
     (bra >> element_name.as(:element) >> ket).maybe >>
     (
-      (
-        (level | plus | bra).absent? >> any
-      ).repeat(1).as(:name) >> (
+      sup_name.as(:name) >> (
         level >> natural_number.as(:lv)
       ).maybe
     ).as(:sup) >>
     (
       plus >>
-      (
-        (level | bra).absent? >> any
-      ).repeat(1).as(:name) >> (
+      sup_name.as(:name) >> (
         level >> natural_number.as(:lv)
       ).maybe
     ).as(:G).maybe >>
@@ -1991,27 +1939,21 @@ class EffectParser < Parslet::Parser
     separator >> (
       minus |
       (
-        (
-          (level | plus | separator).absent? >> any
-        ).repeat(1).as(:name) >> (
+        sup_name.as(:name) >> (
           level >> natural_number.as(:lv)
         ).maybe
       ).as(:A)
     ) >>
     (
       plus >>
-      (
-        (level | separator).absent? >> any
-      ).repeat(1).as(:name) >> (
+      sup_name.as(:name) >> (
         level >> natural_number.as(:lv)
       ).maybe
     ).as(:G).maybe >>
     separator >> (
       minus |
       (
-        (
-          (level | ket).absent? >> any
-        ).repeat(1).as(:name) >> (
+        sup_name.as(:name) >> (
           level >> natural_number.as(:lv)
         ).maybe
       ).as(:B)
@@ -2028,4 +1970,32 @@ class EffectParser < Parslet::Parser
   
   root(:root_processes)
   
+  private
+  def alternation_from_array(words)
+    result = nil
+    
+    words.each do |word|
+      if result.nil?
+        result = str(word)
+      else
+        result = result | str(word)
+      end
+    end
+    
+    result
+  end
+  
+  def alternation_from_hash(words)
+    result = nil
+    
+    words.each do |k, word|
+      if result.nil?
+        result = str(word).as(:"#{k}#{rand}")
+      else
+        result = result | str(word).as(:"#{k}#{rand}")
+      end
+    end
+    
+    result
+  end
 end

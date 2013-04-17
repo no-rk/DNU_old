@@ -61,7 +61,7 @@ ENo.#{@id} #{@profile.name}
   - if inventory.present?
     [#{inventory.number}] #{inventory.name} ※アイテム#{link_to("ID:#{inventory.item.id}", result_item_path(@day_i, inventory.item.id), :target => :_blank)}
     %br
-    　#{inventory.element_name}（ #{inventory.type_name} / #{inventory.strength} / #{inventory.sup(:A)}#{inventory.sup(:G)} / #{inventory.sup(:B)} / #{inventory.equip? || "-"} ）
+    　#{inventory.element_name}（ #{inventory.type_name} / #{inventory.strength} / #{inventory.sup(:A)}#{inventory.sup(:G)} / #{inventory.sup(:B)} / #{inventory.equip? || "-"} ）#{"【送品不可】" if inventory.item.protect}
     %br
   - else
     [#{number}] -
