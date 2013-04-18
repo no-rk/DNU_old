@@ -31,6 +31,20 @@ module DNU
         result_event_variable.save!
       end
       
+      def add_event(tree)
+        kind = (tree[:kind] || "通常").to_s
+        name = tree[:name].to_s
+        
+        user.add_event!({ kind => name }, day.day)
+      end
+      
+      def add_item(tree)
+        kind = tree[:kind].to_s
+        name = tree[:name].to_s
+        
+        user.add_item!({ kind => name }, game_data_event, day.day)
+      end
+      
       def end_step(dummy)
         self.state = "終了"
         self.save!

@@ -6,6 +6,7 @@ class RegisterController < ApplicationController
 
   # GET /register
   def index
+    @title = "ENo.#{current_user.id} 宣言トップ"
   end
 
   # POST /history

@@ -1871,10 +1871,31 @@ class EffectParser < Parslet::Parser
     str('この').maybe >> str('イベント終了').as(:end_event)
   }
   
+  rule(:add_event) {
+    (
+      bra >> event_kind.as(:kind) >> str('イベント') >> ket >>
+      (spaces.absent? >> any).repeat(1).as(:name) >> spaces >>
+      str('を').maybe >> str('追加')
+    ).as(:add_event)
+  }
+  
+  rule(:item_kind_and_name) {
+    alternation_from_hash(GameData::Item.all.map{|r| { r.kind => r.name } })
+  }
+  
+  rule(:add_item) {
+    (
+      item_kind_and_name >> spaces? >>
+      str('を').maybe >> str('追加')
+    ).as(:add_item)
+  }
+  
   rule(:event_content) {
     print_text |
     set_flag |
     set_integer |
+    add_event |
+    add_item |
     end_step |
     end_event
   }
@@ -2012,11 +2033,13 @@ class EffectParser < Parslet::Parser
   def alternation_from_hash(words)
     result = nil
     
-    words.each do |k, word|
+    words.each do |h|
+      kind = h.keys.first
+      name = h.values.first
       if result.nil?
-        result = str(word).as(:"#{k}#{rand}")
+        result = bra >> str(kind).as(:kind) >> ket >> str(name).as(:name)
       else
-        result = result | str(word).as(:"#{k}#{rand}")
+        result = result | bra >> str(kind).as(:kind) >> ket >> str(name).as(:name)
       end
     end
     

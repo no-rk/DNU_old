@@ -1,10 +1,12 @@
 class ResultController < ApplicationController
   # GET result
   def index
+    @title = "結果"
   end
   
   # GET result/enos(/:new)
   def enos
+    @title = "個人結果一覧"
     if params[:new].try(:to_sym) == :new
       @users = User.new_commer.page(params[:page]).per(10)
     else
@@ -14,6 +16,7 @@ class ResultController < ApplicationController
   
   # GET result/maps
   def maps
+    @title = "マップ一覧"
     @maps = GameData::Map.page(params[:page]).per(10)
   end
   
@@ -21,6 +24,7 @@ class ResultController < ApplicationController
   def eno
     @id  = params[:id].to_i
     @day_i = (params[:day] || Day.last_day_i).to_i
+    @title = "ENo.#{@id}の第#{@day_i}回の結果"
     
     this_user = User.find(@id)
     @creation_day  = this_user.creation_day.to_i
@@ -80,6 +84,7 @@ class ResultController < ApplicationController
   def item
     @id  = params[:id].to_i
     @day_i = (params[:day] || Day.last_day_i).to_i
+    @title = "アイテムID：#{@id}の第#{@day_i}回の結果"
     
     @item = Result::Item.find(@id)
     @item_passed_days = @item.passed_days_lteq_day_i(@day_i).page(params[:page]).per(10)
@@ -91,6 +96,7 @@ class ResultController < ApplicationController
   def map
     @name = params[:name]
     @day_i = (params[:day] || Day.last_day_i).to_i
+    @title = "#{@name}の第#{@day_i}回の結果"
     
     @map = Result::Map.find_by_name_and_day_i(@name, @day_i).first
     @user_counts = @map.user_counts
@@ -104,8 +110,9 @@ class ResultController < ApplicationController
   def map_detail
     @name = params[:name]
     @day_i = (params[:day] || Day.last_day_i).to_i
-    @x = params[:x]
-    @y = params[:y]
+    @x = params[:x].to_i
+    @y = params[:y].to_i
+    @title = "#{@name} #{('A'.ord-1+@x).chr}#{@y}の第#{@day_i}回の結果"
     
     @map = Result::Map.find_by_name_and_day_i(@name, @day_i).first
     @map_tip = @map.map_tips.where(:x => @x, :y => @y).first

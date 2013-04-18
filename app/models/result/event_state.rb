@@ -12,6 +12,8 @@ class Result::EventState < ActiveRecord::Base
   has_one :user,       :through => :event
   has_one :day,        :through => :event
   
+  has_one :game_data_event, :through => :event, :class_name => "GameData::Event", :source => :event
+  
   has_many :event_contents, :through => :event_step, :class_name => "GameData::EventContent"
   
   has_many :result_send_points,   :through => :passed_day, :class_name => "Result::SendPoint"

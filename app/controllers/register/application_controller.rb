@@ -1,6 +1,7 @@
 class Register::ApplicationController < ApplicationController
   before_filter :authenticate_user!
   before_filter :make_check
+  before_filter :set_title
   layout "register"
 
   # GET /register/controller_name
@@ -171,6 +172,9 @@ class Register::ApplicationController < ApplicationController
   end
 
   private
+  def set_title
+    @title = "ENo.#{current_user.id} " + "Register::#{controller_name.classify}".constantize.model_name.human
+  end
   def wrap_clone_record(record)
     clone_record(record)
   end

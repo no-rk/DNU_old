@@ -3,7 +3,11 @@
   .span12.well
     第#{@item.day.day}回に
     ENo.#{@item.user.id} #{@item.user.result(:character, @day_i).profile.name} が
-    #{@item.way.try(:name) || "???"} で得た #{@item.type.name}
+    - if @item.way.present?
+      [#{@item.way.class.model_name.human}]#{@item.way.name}
+    - else
+      ???
+    で得た #{@item.type.name}
     - if @item.source.present?
       %br
       原材料：アイテム#{link_to("ID:#{@item.source.id}", result_item_path(@day_i, @item.source.id), :target => :_blank)}
@@ -19,8 +23,11 @@
         - if item_sup.source.present?
           アイテム#{link_to("ID:#{item_sup.source.id}", result_item_path(day_i, item_sup.source.id), :target => :_blank)}
           を使って
-        #{item_sup.way.name || "???"} で
-        付加#{item_sup.kind} を
+        - if item_sup.way.present?
+          [#{item_sup.way.class.model_name.human}]#{item_sup.way.name}
+        - else
+          ???
+        で付加#{item_sup.kind} を
         #{item_sup.sup.name}#{"LV#{item_sup.lv}" if item_sup.lv.present?} にした。
         %br
       %br

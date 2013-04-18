@@ -278,8 +278,8 @@ class User < ActiveRecord::Base
     event_name = event.values.first
     
     event_arel = GameData::Event.arel_table
-    if result(:event, day_i).where(event_arel[:kind].eq(event_kind),event_arel[:name].eq(event_name)).includes(:event).exists?
-      result_event = result(:event, day_i).where(event_arel[:kind].eq(event_kind),event_arel[:name].eq(event_name)).includes(:event).first
+    if result(:event, day_i).where(event_arel[:kind].eq(event_kind)).where(event_arel[:name].eq(event_name)).includes(:event).exists?
+      result_event = result(:event, day_i).where(event_arel[:kind].eq(event_kind)).where(event_arel[:name].eq(event_name)).includes(:event).first
       result_event.event.event_steps.each do |event_step|
         unless result_event.event_states.where(:event_step_id => event_step.id).exists?
           result_event.event_states.build do |event_state|

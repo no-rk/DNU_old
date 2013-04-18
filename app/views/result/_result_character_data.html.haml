@@ -71,11 +71,15 @@ ENo.#{@id} #{@profile.name}
 イベント一覧
 %br
 - @events.each do |event|
-  #{event.event.name}【#{event.state}】
+  イベント名「#{event.event.name}」状態【#{event.state}】
   %br
   -if event.event.caption.present?
-    説明
+    説明「#{event.event.caption}」
     %br
-    「#{event.event.caption}」
-  %br
+  - if event.event_variables.present?
+    %pre
+      【デバッグ】
+      - event.event_variables.each do |event_variable|
+        #{event_variable.name} ⇒ #{event_variable.value}
+        %br
   %br

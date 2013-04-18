@@ -4,6 +4,7 @@ ja:
       admin: 糞管理者
       day: 日数
 
+      game_data/event: イベント
       game_data/map: マップ
       game_data/map_tip: マップデータ
       game_data/weapon: 武器
