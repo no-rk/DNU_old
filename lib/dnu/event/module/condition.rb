@@ -1,6 +1,8 @@
 module DNU
   module Event
     module Condition
+      include Calculate
+      
       def present_place(tree)
         map_name  = tree[:place][:name].to_s
         map_tip_x = tree[:place][:x].to_i
@@ -21,6 +23,22 @@ module DNU
           flag = !flag
         end
         flag
+      end
+      
+      def condition_gt(tree)
+        check_condition(tree[:left]) > check_condition(tree[:right])
+      end
+      
+      def condition_lt(tree)
+        check_condition(tree[:left]) < check_condition(tree[:right])
+      end
+      
+      def condition_ge(tree)
+        check_condition(tree[:left]) >= check_condition(tree[:right])
+      end
+      
+      def condition_le(tree)
+        check_condition(tree[:left]) <= check_condition(tree[:right])
       end
       
       def condition_and(tree)

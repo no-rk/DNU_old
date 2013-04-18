@@ -76,24 +76,48 @@ class EffectParser < Parslet::Parser
   }
   
   rule(:arrow) {
-    spaces? >> (
+    spaces? >>
+    (
       match('[→⇒]') |
       match('[=＝]') >> match('[>＞]')
-    ) >> spaces?
+    ) >>
+    spaces?
+  }
+  
+  rule(:op_gt) {
+    spaces? >>
+    match('[>＞]') >>
+    spaces?
+  }
+  
+  rule(:op_lt) {
+    spaces? >>
+    match('[<＜]') >>
+    spaces?
   }
   
   rule(:op_ge) {
-    match('[≧]') |
-    match('[>＞]') >> match('[=＝]')
+    spaces? >>
+    (
+      match('[≧]') |
+      match('[>＞]') >> match('[=＝]')
+    ) >>
+    spaces?
   }
   
   rule(:op_le) {
-    match('[≦]') |
-    match('[<＜]') >> match('[=＝]')
+    spaces? >>
+    (
+      match('[≦]') |
+      match('[<＜]') >> match('[=＝]')
+    ) >>
+    spaces?
   }
   
   rule(:op_eq) {
-    match('[=＝]')
+    spaces? >>
+    match('[=＝]') >>
+    spaces?
   }
   
   rule(:op_and) {
@@ -434,6 +458,7 @@ class EffectParser < Parslet::Parser
     equip_strength.as(:equip_strength) |
     distance.as(:distance) |
     position_to_fixnum.as(:fixnum) |
+    variable.as(:variable) |
     bra >> (
       random_number |
       add_coeff |
@@ -1156,7 +1181,9 @@ class EffectParser < Parslet::Parser
         wrap_random_percent |
         next_not_change |
         in_pre_phase |
-        in_phase
+        in_phase |
+        present_place |
+        get_flag
       ) >> str('になった').absent?
     )
   }
@@ -1189,6 +1216,20 @@ class EffectParser < Parslet::Parser
     comparable.as(:rights)
   }
   
+  rule(:condition_gt) {
+    (
+      comparable_left >> str('が').maybe >> comparable_right >> str('より大きい') |
+      comparable_left >> op_gt >> comparable_right
+    ).as(:condition_gt)
+  }
+  
+  rule(:condition_lt) {
+    (
+      comparable_left >> str('が').maybe >> comparable_right >> str('より小さい') |
+      comparable_left >> op_lt >> comparable_right
+    ).as(:condition_lt)
+  }
+  
   rule(:condition_ge) {
     (
       comparable_left >> str('が').maybe >> comparable_right >> str('以上') |
@@ -1216,6 +1257,8 @@ class EffectParser < Parslet::Parser
     hp_mp_percent |
     condition_ge |
     condition_le |
+    condition_gt |
+    condition_lt |
     condition_eq
   }
   
@@ -1779,7 +1822,7 @@ class EffectParser < Parslet::Parser
   }
   
   rule(:present_place) {
-    place.as(:present_place)
+    (str('現在地') >> str('が').maybe >> spaces?).maybe >> place.as(:present_place)
   }
   
   rule(:get_flag) {
@@ -1792,38 +1835,8 @@ class EffectParser < Parslet::Parser
     ).as(:get_flag)
   }
   
-  rule(:event_condition_wrap) {
-    bra >> event_condition >> ket |
-    present_place |
-    get_flag
-  }
-  
-  rule(:event_condition_or) {
-    (
-      (
-        event_condition_and |
-        event_condition_wrap
-      ).as(:right) >>
-      op_or >>
-      (
-        event_condition_and |
-        event_condition_wrap
-      ).as(:left)
-    ).as(:condition_or)
-  }
-  
-  rule(:event_condition_and) {
-    (
-      event_condition_wrap >> (op_and >> event_condition_wrap).repeat(1)
-    ).as(:condition_and)
-  }
-  
   rule(:event_condition) {
-    (
-      event_condition_or |
-      event_condition_and |
-      event_condition_wrap
-    ).as(:condition)
+    (conditions | condition).as(:condition)
   }
   
   # event_contents
@@ -1845,16 +1858,17 @@ class EffectParser < Parslet::Parser
   rule(:set_integer) {
     (
       variable >> str('を').maybe >>
+      (plus.as(:plus) | minus.as(:minus)).maybe >>
       non_negative_integer.as(:integer) >> str('に').maybe
     ).as(:integer).as(:set_integer)
   }
   
   rule(:end_step) {
-    str('終了').as(:end_step)
+    (str('この') >> (str('イベント') | str('ステップ')).present?).maybe >> (str('イベント') >> str('ステップ').present?).maybe >> str('ステップ').maybe >> str('終了').as(:end_step)
   }
   
   rule(:end_event) {
-    str('イベント終了').as(:end_event)
+    str('この').maybe >> str('イベント終了').as(:end_event)
   }
   
   rule(:event_content) {

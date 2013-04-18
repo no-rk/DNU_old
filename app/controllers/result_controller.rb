@@ -71,7 +71,7 @@ class ResultController < ApplicationController
     @abilities    = this_user.result(:ability,   @day_i).where(:forget => false).includes(:ability).all
     @skills       = this_user.result(:skill,     @day_i).where(:forget => false).includes(:skill).all
     @inventories  = this_user.result(:inventory, @day_i).includes(:type).includes(:result_equip).order(:number).all
-    @events       = this_user.result(:event, @day_i).all
+    @events       = this_user.result(:event, @day_i).where(GameData::Event.arel_table[:kind].in(["共通", "通常"])).includes(:event).all
     
     render :layout => 'plain'
   end
