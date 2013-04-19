@@ -10,8 +10,8 @@ module DNU
             :pt_name    => "敵たち",
             :pt_caption => "テスト用",
             :members    => [
-              { :kind => { :Monster => "モンスター" }, :name => "キュアプルプル" },
-              { :kind => { :Monster => "モンスター" }, :name => "ピコピコテール" }
+              { :kind => "モンスター", :name => "キュアプルプル" },
+              { :kind => "モンスター", :name => "ピコピコテール" }
             ]
           }
           

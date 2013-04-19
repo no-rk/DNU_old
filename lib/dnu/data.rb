@@ -1,0 +1,77 @@
+module DNU
+  class Data
+    def self.parse(model)
+      kind = model.class.name.split("::").last.downcase
+      text = model.definition
+      
+      parser    = EffectParser.new
+      transform = EffectTransform.new
+      
+      begin
+        tree = parser.send("#{kind}_definition").parse(text)
+        tree = transform.apply(tree)
+      rescue
+        tree = nil
+      end
+      tree
+    end
+    
+    def self.sync(model)
+      kind       = model.class.name.split("::").last.downcase
+      id         = model.id
+      definition = model.definition
+      if id.present?
+        db = YAML::Store.new("#{Rails.root}/db/game_data/#{kind}.yml")
+        db.transaction do
+          if db[:data][id-1] != definition
+            db[:data][id-1] = definition
+          end
+        end
+      end
+    end
+    
+    def self.trainable(model, visible)
+      train = GameData::Train.where({
+        :trainable_type => model.class.name,
+        :trainable_id   => model.id
+      }).first_or_initialize
+      
+      train.visible = visible
+      train.save!
+    end
+    
+    def self.set_learning_conditions(model, learning_conditions)
+      # 習得条件
+      if learning_conditions.present?
+        model.learning_conditions.destroy_all if model.learning_conditions.present?
+        condition_group = 1
+        if learning_conditions[:or].present?
+          learning_conditions[:or].each do |condition_or|
+            if condition_or[:and].present?
+              group_count = condition_or[:and].count
+              condition_or[:and].each do |condition|
+                condition[:name] = condition[:name].to_s
+                model.learning_conditions.build(condition.merge({ :condition_group => condition_group, :group_count => group_count }))
+              end
+            else
+              group_count = 1
+              condition_or[:name] = condition_or[:name].to_s
+              model.learning_conditions.build(condition_or.merge({ :condition_group => condition_group, :group_count => group_count }))
+            end
+            condition_group = condition_group + 1
+          end
+        elsif learning_conditions[:and].present?
+          group_count = learning_conditions[:and].count
+          learning_conditions[:and].each do |condition|
+            condition[:name] = condition[:name].to_s
+            model.learning_conditions.build(condition.merge({ :condition_group => condition_group, :group_count => group_count }))
+          end
+        else
+          group_count = 1
+          learning_conditions[:name] = learning_conditions[:name].to_s
+          model.learning_conditions.build(learning_conditions.merge({ :condition_group => condition_group, :group_count => group_count }))
+        end
+      end
+    end
+  end
+end

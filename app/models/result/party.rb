@@ -37,7 +37,7 @@ class Result::Party < ActiveRecord::Base
     result_party.day = day
     
     tree[:members].each do |member|
-      kind = member[:kind].keys.first.to_s
+      kind = member[:kind].to_s
       name = member[:name].to_s
       
       result_party.party_members.build do |result_party_member|

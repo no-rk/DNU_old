@@ -18,6 +18,9 @@ def clean_tree(tree)
   end
 end
 
+ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_trains")
+ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_learning_conditions")
+
 # 日付
 if Day.last.nil?
   Day.create!(:day => 0, :state => 2)
@@ -88,78 +91,15 @@ item_types.each do |item_type|
   item_type_model.save!
 end
 
-# 能力, 武器, 技, 付加, 罠, アビリティ, キャラクター, 状態異常, アイテム
+# 能力, 状態異常, 付加, 罠, 技, アビリティ, キャラクター, アイテム
 ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_ability_definitions")
-ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_learning_conditions")
-[:status, :weapon, :skill, :sup, :trap, :ability, :character, :disease, :item].each do |table|
+[:status, :disease, :sup, :trap, :skill, :ability, :character, :item].each do |table|
   ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_#{table.to_s.tableize}")
   list = YAML.load(ERB.new(File.read("#{Rails.root}/db/game_data/#{table}.yml")).result)
-  list.each do |data|
-    begin
-      tree = parser.send("#{table}_definition").parse(data)
-      tree = transform.apply(tree)
-    rescue
-      p "文法エラー"
-      p data
-    else
-      model = "GameData::#{table.to_s.camelize}".constantize.new
-      data = { "name" => tree[:name].to_s, "definition" => data }
-      if tree[:kind].try(:respond_to?, :keys) and model.respond_to?(:kind)
-        data.merge!(:kind =>  tree[:kind].keys.first.to_s)
-      elsif tree[:kind] and model.respond_to?(:kind)
-        data.merge!(:kind =>  tree[:kind].to_s)
-      end
-      data.merge!(:color =>   tree[:color].to_s)   if tree[:color]   and model.respond_to?(:color)
-      data.merge!(:caption => tree[:caption].to_s) if tree[:caption] and model.respond_to?(:caption)
-      # p data
-      model = "GameData::#{table.to_s.camelize}".constantize.new(data)
-      # アビリティー詳細
-      if table == :ability
-        check_first = true
-        tree[:definitions].each do |effect|
-          if effect[:pull_down].present?
-            if check_first
-              model.ability_definitions.build(:kind => :pull_down, :lv => 1, :caption => "無効")
-              check_first = false
-            end
-            model.ability_definitions.build(:kind => :pull_down, :lv => effect[:lv], :caption => effect[:pull_down].to_s)
-          else
-            model.ability_definitions.build(:kind => :lv,        :lv => effect[:lv], :caption => effect[:caption].to_s)
-          end
-        end
-      end
-      # 習得条件
-      if tree[:learning_conditions].present?
-        condition_group = 1
-        if tree[:learning_conditions][:or].present?
-          tree[:learning_conditions][:or].each do |condition_or|
-            if condition_or[:and].present?
-              group_count = condition_or[:and].count
-              condition_or[:and].each do |condition|
-                condition[:name] = condition[:name].to_s
-                model.learning_conditions.build(condition.merge({ :condition_group => condition_group, :group_count => group_count }))
-              end
-            else
-              group_count = 1
-              condition_or[:name] = condition_or[:name].to_s
-              model.learning_conditions.build(condition_or.merge({ :condition_group => condition_group, :group_count => group_count }))
-            end
-            condition_group = condition_group + 1
-          end
-        elsif tree[:learning_conditions][:and].present?
-          group_count = tree[:learning_conditions][:and].count
-          tree[:learning_conditions][:and].each do |condition|
-            condition[:name] = condition[:name].to_s
-            model.learning_conditions.build(condition.merge({ :condition_group => condition_group, :group_count => group_count }))
-          end
-        else
-          group_count = 1
-          tree[:learning_conditions][:name] = tree[:learning_conditions][:name].to_s
-          model.learning_conditions.build(tree[:learning_conditions].merge({ :condition_group => condition_group, :group_count => group_count }))
-        end
-      end
-      model.save!
-    end
+  list[:data].each do |data|
+    model = "GameData::#{table.to_s.camelize}".constantize.new
+    model.definition = data
+    model.save!
   end
 end
 
@@ -200,8 +140,7 @@ events.each do |event|
 end
 
 # 訓練可能なものをまとめる
-ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_trains")
-[:Job, :Status, :Art, :Product, :Ability].each do |class_name|
+[:Job, :Art, :Product].each do |class_name|
   "GameData::#{class_name}".constantize.find_each do |trainable|
     train = GameData::Train.new
     train.trainable = trainable

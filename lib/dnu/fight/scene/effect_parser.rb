@@ -1759,12 +1759,12 @@ class EffectParser < Parslet::Parser
   # character_definitions
   
   rule(:character_type) {
-    str('PC').as(:PC) |
-    str('NPC').as(:NPC) |
-    str('モンスター').as(:Monster) |
-    str('竜').as(:Dragon) |
-    str('人形').as(:Puppet) |
-    str('召喚').as(:Summon)
+    str('PC') |
+    str('NPC') |
+    str('モンスター') |
+    str('竜') |
+    str('人形') |
+    str('召喚')
   }
   
   rule(:character_definition) {
