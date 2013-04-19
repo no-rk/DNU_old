@@ -8,10 +8,8 @@
 %br
 テキスト形式で読込ボタンを押すとサンプルのデータを読み込む。
 %br
-- map_size = 26
-- vision_size = 5
 %input#map_name{ :type => :text, :value => :'マップの名前' }
-%input#map_size{ :type => :number, :value => map_size }
+%input#map_size{ :type => :number, :value => @map_size }
 %button#map_reset.btn.btn-warning リセット
 %br
 %textarea#map_caption.span9{ :rows => 3 }
@@ -25,53 +23,18 @@
     %td 地形種類
     %td 衝突判定
     %td 視界妨害
-  %tr#water
-    %td.water 水辺
-    %td
-      %input{ :type => :checkbox, :checked => :checked }
-    %td
-      %input{ :type => :number, :value => 0 }
-  %tr#plain.selected
-    %td.plain 平原
-    %td
-      %input{ :type => :checkbox }
-    %td
-      %input{ :type => :number, :value => 0 }
-  %tr#desert
-    %td.desert 砂地
-    %td
-      %input{ :type => :checkbox }
-    %td
-      %input{ :type => :number, :value => 0 }
-  %tr#town
-    %td.town 街
-    %td
-      %input{ :type => :checkbox }
-    %td
-      %input{ :type => :number, :value => 0 }
-  %tr#forest
-    %td.forest 森林
-    %td
-      %input{ :type => :checkbox }
-    %td
-      %input{ :type => :number, :value => 1 }
-  %tr#mountain
-    %td.mountain 山岳
-    %td
-      %input{ :type => :checkbox }
-    %td
-      %input{ :type => :number, :value => 2 }
-  %tr#wall
-    %td.wall 壁
-    %td
-      %input{ :type => :checkbox, :checked => :checked }
-    %td
-      %input{ :type => :number, :value => 10 }
+  - @landforms.each do |landform|
+    %tr{ :id => landform.image }
+      %td{ :class => landform.image } #{landform.name}
+      %td
+        %input{ :type => :checkbox, :checked => (:checked if landform.collision) }
+      %td
+        %input{ :type => :number, :value => landform.opacity }
 %select#map_draw
   %option{ :value => :pen, :selected => :selected } ペン
   %option{ :value => :rectangle } 塗りつぶし
 %br
-%input#vision_size{ :type => :number, :value => vision_size }
+%input#vision_size{ :type => :number, :value => @vision_size }
 %button#map_vision.btn.btn-warning 視界表示オフ
 %br
 %button#map_output.btn.btn-warning テキスト形式で出力

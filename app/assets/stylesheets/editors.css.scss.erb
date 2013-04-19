@@ -187,24 +187,8 @@ table#map{
     }
   }
 }
-td.plain{
-  @include map_tip("plain", #006666);
+<% GameData::Landform.all.each do |landform| %>
+td.<%= landform.image %>{
+  @include map_tip("<%= landform.image %>", #<%= landform.color %>);
 }
-td.desert{
-  @include map_tip("desert", #FFFFEE);
-}
-td.town{
-  @include map_tip("town", #FFFFFF);
-}
-td.forest{
-  @include map_tip("forest", #99CC99);
-}
-td.mountain{
-  @include map_tip("mountain", #FFCC99);
-}
-td.water{
-  @include map_tip("water", #9999FF);
-}
-td.wall{
-  @include map_tip("wall", #666666);
-}
+<% end %>

@@ -23,8 +23,8 @@ if Day.last.nil?
   Day.create!(:day => 0, :state => 2)
 end
 
-# ジョブ, 守護, 言葉, 戦闘値, 生産, 属性, 戦闘設定, ポイント, 装備種
-[:job, :guardian, :word, :battle_value, :product, :element, :battle_setting, :point, :equip_type].each do |table|
+# ジョブ, 守護, 言葉, 戦闘値, 生産, 属性, 戦闘設定, ポイント, 装備種, 地形
+[:job, :guardian, :word, :battle_value, :product, :element, :battle_setting, :point, :equip_type, :landform].each do |table|
   ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_#{table.to_s.tableize}")
   list = YAML.load(ERB.new(File.read("#{Rails.root}/db/game_data/#{table}.yml")).result)
   list.each do |data|
@@ -57,7 +57,9 @@ map_names.each do |map_name|
   map_name_model = GameData::Map.new(map_name.except("attributes"))
   map_name["attributes"].each do |map_tip|
     #p map
-    map_name_model.map_tips.build(map_tip)
+    map_name_model.map_tips.build(map_tip.except("landform")) do |game_data_map_tip|
+      game_data_map_tip.landform = GameData::Landform.find_by_image(map_tip["landform"])
+    end
   end
   map_name_model.save!
 end

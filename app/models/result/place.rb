@@ -19,6 +19,6 @@ class Result::Place < ActiveRecord::Base
   end
   
   def name
-    "#{map.name} #{('A'.ord-1+map_tip.x).chr}#{map_tip.y} #{I18n.t(map_tip.landform, :scope => 'DNU.Result.Place')}"
+    map_tip.name
   end
 end

@@ -1,0 +1,55 @@
+- name: 平原
+  caption: |-
+    説明。
+  image: plain
+  color: "006666"
+  collision: false
+  opacity: 0
+
+- name: 砂地
+  caption: |-
+    説明。
+  image: desert
+  color: "FFFFEE"
+  collision: false
+  opacity: 0
+
+- name: 森林
+  caption: |-
+    説明。
+  image: forest
+  color: "99CC99"
+  collision: false
+  opacity: 1
+
+- name: 山岳
+  caption: |-
+    説明。
+  image: mountain
+  color: "FFCC99"
+  collision: false
+  opacity: 2
+
+- name: 街
+  caption: |-
+    説明。
+  image: town
+  color: "FFFFFF"
+  collision: false
+  opacity: 0
+
+- name: 壁
+  caption: |-
+    説明。
+  image: wall
+  color: "666666"
+  collision: true
+  opacity: 10
+
+- name: 水辺
+  caption: |-
+    説明。
+  image: water
+  color: "9999FF"
+  collision: true
+  opacity: 0

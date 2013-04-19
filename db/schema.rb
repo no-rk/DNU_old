@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130417140254) do
+ActiveRecord::Schema.define(:version => 20130419021936) do
 
   create_table "admins", :force => true do |t|
     t.string   "email",               :default => "", :null => false
@@ -195,6 +195,17 @@ ActiveRecord::Schema.define(:version => 20130417140254) do
     t.datetime "updated_at", :null => false
   end
 
+  create_table "game_data_landforms", :force => true do |t|
+    t.string   "name"
+    t.text     "caption"
+    t.string   "image"
+    t.string   "color"
+    t.boolean  "collision"
+    t.integer  "opacity"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
   create_table "game_data_learning_conditions", :force => true do |t|
     t.integer  "learnable_id"
     t.string   "learnable_type"
@@ -212,13 +223,14 @@ ActiveRecord::Schema.define(:version => 20130417140254) do
     t.integer  "map_id"
     t.integer  "x"
     t.integer  "y"
-    t.string   "landform"
+    t.integer  "landform_id"
     t.boolean  "collision"
     t.integer  "opacity"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
   end
 
+  add_index "game_data_map_tips", ["landform_id"], :name => "index_game_data_map_tips_on_landform_id"
   add_index "game_data_map_tips", ["map_id"], :name => "index_game_data_map_tips_on_map_id"
 
   create_table "game_data_maps", :force => true do |t|

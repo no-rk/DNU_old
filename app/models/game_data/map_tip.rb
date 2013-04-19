@@ -1,11 +1,18 @@
 class GameData::MapTip < ActiveRecord::Base
   belongs_to :map
-  attr_accessible :collision, :landform, :opacity, :x, :y
+  belongs_to :landform
+  attr_accessible :collision, :opacity, :x, :y
   
   has_many :places, :class_name => "Result::Place"
   
+  validates :x,         :numericality => { :only_integer => true, :greater_than => 0 }
+  validates :y,         :numericality => { :only_integer => true, :greater_than => 0 }
+  validates :landform,  :presence => true
+  validates :collision, :inclusion => { :in => [true, false] }
+  validates :opacity,   :numericality => { :only_integer => true, :greater_than_or_equal_to => 0 }
+
   def name
-    "#{map.name} #{('A'.ord-1+x).chr}#{y} #{I18n.t(landform, :scope => 'DNU.Result.Place')}"
+    "#{map.name} #{('A'.ord-1+x).chr}#{y} #{landform.name}"
   end
   
   def where_places_by_day_i(day_i = Day.last_day_i)

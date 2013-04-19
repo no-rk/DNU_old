@@ -4,6 +4,8 @@ class GameData::Map < ActiveRecord::Base
   
   has_many :places, :through => :map_tips, :class_name => "Result::Place"
   
+  validates :name, :presence => true
+  
   def where_places_by_day_i(day_i = Day.last_day_i)
     day_arel = Day.arel_table
     places.where(:arrival => true).where(day_arel[:day].eq(day_i)).includes(:day).includes(:user)

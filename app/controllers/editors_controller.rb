@@ -2,6 +2,10 @@ class EditorsController < ApplicationController
   layout "no_side"
   
   def map
+    @map_size    = 26
+    @vision_size = 5
+    @landforms   = GameData::Landform.all
+    
     @rokume = <<'ROKUME'
 - name: MAP1
   caption: |-

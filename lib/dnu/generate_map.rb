@@ -8,7 +8,7 @@ module DNU
       #return if File.exist?("#{map_path}/#{map.name}.png")
       # マップチップ
       tip_img = {}
-      GameData::MapTip.pluck(:landform).uniq.each do |landform|
+      GameData::Landform.pluck(:image).each do |landform|
         landform_img = Magick::ImageList.new("#{images_path}/#{landform}.png")
         tip_columns = landform_img.columns/2
         tip_rows    = landform_img.rows/10
@@ -28,7 +28,7 @@ module DNU
       # マップチップ貼り付け
       known_tips = set_known_tips(map, day_i)
       map.map_tips.find_each do |map_tip|
-        landform = map_tip.landform
+        landform = map_tip.landform.image
         y = 32*(map_tip.x-1)
         x = 32*(map_tip.y-1)
         if known_tips.include?(map_tip.id)
