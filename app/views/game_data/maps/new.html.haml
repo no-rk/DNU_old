@@ -1,0 +1,14 @@
+- if controller.action_name.to_sym == :new
+  %input{ :id => :map_new, :type => :hidden , :value => 1 }
+- @map_list.each do |name, id|
+  = link_to("#{name} を編集する", edit_game_data_map_path(id))
+  %br
+%br
+= form_tag(new_game_data_map_path, :method => :get, :class => "no_diff") do
+  縦横
+  = select_tag :map_size, options_for_select(@map_select, @map.map_size)
+  マスに
+  %button.btn.btn-warning サイズ変更
+  %br
+  （入力中のデータはリセットされる）
+= render 'form'

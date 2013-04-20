@@ -38,6 +38,14 @@
   collision: false
   opacity: 0
 
+- name: 床
+  caption: |-
+    説明。
+  image: floor
+  color: "999999"
+  collision: false
+  opacity: 3
+
 - name: 壁
   caption: |-
     説明。

@@ -87,6 +87,18 @@ ja:
       register/init_guardian: 初期守護竜
 
     attributes:
+      game_data/map:
+        name: マップ名
+        caption: マップ説明
+        base: マップ背景
+      game_data/map_tip: &map_tip
+        x: X座標
+        y: Y座標
+        landform: 地形
+        collision: 衝突判定
+        opacity: 不透明度
+      game_data/map/map_tips: *map_tip
+      
       register/diary: &diary
         diary: 日記
       register/move: &move

@@ -1,0 +1,21 @@
+%table#map
+%table#map_tool
+  %caption
+    ツールボックス
+  %tr
+    %td 地形種類
+    %td 衝突判定
+    %td 視界妨害
+  - @landforms.each do |landform|
+    %tr{ :id => landform.image }
+      %td{ :class => landform.image } #{landform.name}
+      %td
+        %input{ :type => :checkbox, :checked => (:checked if landform.collision) }
+      %td
+        %input{ :type => :number, :value => landform.opacity }
+%select#map_draw
+  %option{ :value => :pen, :selected => :selected } ペン
+  %option{ :value => :rectangle } 塗りつぶし
+%br
+%input#vision_size{ :type => :number, :value => @vision_size }
+%button#map_vision.btn.btn-warning 視界表示オフ

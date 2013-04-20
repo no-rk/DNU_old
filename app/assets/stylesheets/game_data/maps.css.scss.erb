@@ -92,8 +92,12 @@ table#map{
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-  td{
-    background-image: image-url("base.png");
+  &.field td{
+    background-image: image-url("field.png");
+    z-index: 0;
+  }
+  &.dangeon td{
+    background-image: image-url("dangeon.png");
     z-index: 0;
   }
   th{

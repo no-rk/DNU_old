@@ -1,0 +1,16 @@
+= render 'game_data/error', { :game_data_error => @map }
+= simple_form_for(@map) do |form_map|
+  = form_map.input :map_size, :as => :hidden, :input_html => { :id => :map_size }
+  = form_map.input :name
+  = form_map.input :caption, :input_html => { :class => :'span9', :rows => 2 }
+  = form_map.input :base, :collection => { 'フィールド' => "field", "ダンジョン" => "dangeon" }, :include_blank => false, :input_html => { :id => :map_base }
+  = form_map.simple_fields_for :map_tips, :wrapper => :simple do |form_map_tip|
+    - x = form_map_tip.object.x
+    - y = form_map_tip.object.y
+    = form_map_tip.input :x, :as => :hidden
+    = form_map_tip.input :y, :as => :hidden
+    = form_map_tip.input :landform_image, :as => :hidden, :input_html => { :id =>  "landform_#{x}_#{y}" }
+    = form_map_tip.input :collision,      :as => :hidden, :input_html => { :id => "collision_#{x}_#{y}" }
+    = form_map_tip.input :opacity,        :as => :hidden, :input_html => { :id =>   "opacity_#{x}_#{y}" }
+  = form_map.submit :class => "btn btn-large btn-success"
+= render 'editor'

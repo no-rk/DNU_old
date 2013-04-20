@@ -5,6 +5,8 @@ DNU::Application.routes.draw do
 
   mount RailsAdmin::Engine => '/admin', :as => 'rails_admin'
 
+  namespace :game_data do resources :maps, :only => [:new, :edit, :create, :update ] end
+
   namespace :communication do resources :messages, :only => [ :index, :new, :create, :update ] end
   namespace :communication do resources :conversations end
 
@@ -37,8 +39,6 @@ DNU::Application.routes.draw do
   get "result(/:day)/map/:name"       => 'result#map',        :as => 'result_map'
   get "result(/:day)/map/:name/:x/:y" => 'result#map_detail', :as => 'result_map_detail'
   get "result(/:day)/mapimage/:name"  => 'result#map_image' , :as => 'result_map_image'
-
-  get "editors/map"
 
   get  "gallery/:model(/:tag/tag)"   => 'gallery#index' , :as => 'gallerys'
   get  "gallery/:model/:id"          => 'gallery#show'  , :as => 'gallery'

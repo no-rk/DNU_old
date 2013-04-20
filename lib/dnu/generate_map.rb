@@ -20,7 +20,7 @@ module DNU
         end
       end
       # ベースチップ
-      base_img = Magick::ImageList.new("#{images_path}/base.png")
+      base_img = Magick::ImageList.new("#{images_path}/#{map.base}.png")
       # 未開拓チップ
       unknown_img = Magick::ImageList.new("#{images_path}/unknown.png")
       # ベースマップ生成

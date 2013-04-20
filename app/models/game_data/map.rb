@@ -1,10 +1,18 @@
 class GameData::Map < ActiveRecord::Base
   has_many :map_tips
-  attr_accessible :base, :caption, :name
+  attr_accessible :base, :caption, :name, :map_tips_attributes, :map_size
+  attr_writer :map_size
+  
+  accepts_nested_attributes_for :map_tips
   
   has_many :places, :through => :map_tips, :class_name => "Result::Place"
   
-  validates :name, :presence => true
+  validates :name, :presence => true, :uniqueness => true
+  validates :base, :inclusion => { :in => ["field", "dangeon"] }
+  
+  def map_size
+    @map_size || map_tips.maximum(:x)
+  end
   
   def where_places_by_day_i(day_i = Day.last_day_i)
     day_arel = Day.arel_table

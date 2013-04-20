@@ -3,7 +3,7 @@ $ ->
   is_draw   = false
   is_vision = false
   start_cell = undefined
-  $.fn.changeTip = (is_recursion) ->
+  $.fn.changeTip = (is_recursion = false) ->
     $map0 = $(this)
     if $map0.is('div')
       map4_class = $map0.data('map4_class')
@@ -47,9 +47,15 @@ $ ->
     if $map0.is('div')
       map4_class = $map0.data('map4_class')
       $(this).removeClass().addClass(map4_class).addClass('map4_tip_0')
-  $.fn.drawMap = (is_simple, map_tip = $('#map_tool tr.selected').attr('id'), map_collision = $('#map_tool tr.selected').find(':checkbox').is(':checked'), map_opacity = $('#map_tool tr.selected').find('input[type=number]').val()) ->
+  $.fn.drawMap = (is_simple = false, is_edit = false, landform = $('#map_tool tr.selected').attr('id'), map_collision = $('#map_tool tr.selected').find(':checkbox').is(':checked'), map_opacity = $('#map_tool tr.selected').find('input[type=number]').val()) ->
     $(this).removeClass()
-    $(this).addClass(map_tip)
+    $(this).addClass(landform)
+    unless is_edit
+      x = $(this).data('map_x')
+      y = $(this).data('map_y')
+      $('#landform_'  + x +  '_' + y).val(landform)
+      $('#collision_' + x +  '_' + y).val(if map_collision then 1 else 0)
+      $('#opacity_'   + x +  '_' + y).val(map_opacity)
     $(this).find('div.map_collision').removeClass('true')
     if map_collision
       $(this).find('div.map_collision').addClass('true')
@@ -64,6 +70,11 @@ $ ->
       $(this).find('div.map_lr').simpleTip()
       $(this).find('div.map_ll').simpleTip()
       $(this).find('div.map_ul').simpleTip()
+    else if is_edit
+      $(this).find('div.map_ur').changeTip()
+      $(this).find('div.map_lr').changeTip()
+      $(this).find('div.map_ll').changeTip()
+      $(this).find('div.map_ul').changeTip()
     else
       $(this).find('div.map_ur').changeTip(true)
       $(this).find('div.map_lr').changeTip(true)
@@ -89,6 +100,7 @@ $ ->
   $.fn.setMap = ->
     $map = $(this)
     $map.empty()
+    $map.addClass($('#map_base').val())
     # テーブル生成
     map_size = $('#map_size').val()-0
     for i in [1..map_size]
@@ -97,7 +109,6 @@ $ ->
       $tr.append($('<th>').html('<div><p>' + String.fromCharCode(64+i) + '</p></div>'))
       for j in [1..map_size]
         $td = $('<td>')
-        $td.addClass('plain')
         $tr.append($td)
       # 右のラベル
       $tr.append($('<th>').html('<div><p>' + String.fromCharCode(64+i) + '</p></div>'))
@@ -124,6 +135,7 @@ $ ->
       $(tr).children('td').each (j, td) ->
         map_y = j+1
         tip_y = j
+        $(td).addClass($('#landform_'  + map_x +  '_' + map_y).val())
         $(td).attr('id', 'map_' + map_x + '_' + map_y)
         $(td).data('map_x', map_x)
         $(td).data('map_y', map_y)
@@ -186,8 +198,21 @@ $ ->
       $map.find('td div.map_base').removeClass('enlighten')
       $map.find('td').removeData('map_vision')
   $('#map').setMap()
-  $('#map_reset').click ->
-    $('#map').setMap()
+  # マップロード
+  unless $('#map_new').val()
+    para = (x, y) ->
+      setTimeout ->
+        landform  = $('#landform_'  + x +  '_' + y).val()
+        collision = $('#collision_' + x +  '_' + y).val()-0 == 1
+        opacity   = $('#opacity_'   + x +  '_' + y).val()
+        $('td#map_' + x + '_' + y).drawMap(false, true, landform, collision, opacity)
+    map_size = $('#map_size').val()-0
+    for x in [1..map_size]
+      for y in [1..map_size]
+        para(x, y)
+  $('#map_base').change ->
+    $('#map').removeClass()
+    $('#map').addClass($(this).val())
   $('#map_tool tr').click ->
     $('#map_tool tr').removeClass('selected')
     $(this).addClass('selected')
@@ -198,25 +223,3 @@ $ ->
     else
       $(this).text('視界表示オン')
       is_vision = true
-  $('#map_output').click ->
-    output = ''
-    output += "- name: " + $('#map_name').val() + "\n"
-    output += "  caption: |-\n"
-    output += "    " + $('#map_caption').val().replace(/\n$/,'').replace(/\n/g,"\n    ") + "\n"
-    output += "  attributes:\n"
-    $('#map tr').each (i, tr) ->
-      $(tr).children('td').each (j, td) ->
-        output += "    - x: " + $(td).data('map_x') + "\n"
-        output += "      y: " + $(td).data('map_y') + "\n"
-        output += "      landform: " + $(td).attr('class') + "\n"
-        output += "      collision: " + ($(td).data('map_collision') ? false)+ "\n"
-        output += "      opacity: " + ($(td).data('map_opacity') ? 0) + "\n"
-    $('#map_text').val(output)
-  $('#map_text').click ->
-    $(this).select()
-  $('#map_input').click ->
-    map = jsyaml.load($('#map_text').val())[0]
-    $('#map_name').val(map.name)
-    $('#map_caption').val(map.caption)
-    for tip in map.attributes
-      $('td#map_' + tip.x + '_' +  tip.y).drawMap(false, tip.landform, tip.collision, tip.opacity)

@@ -1,6 +1,7 @@
 - name: MAP1
   caption: |-
     六命のマップを再現してみた。
+  base: field
   attributes:
     - x: 1
       y: 1

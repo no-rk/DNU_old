@@ -1,0 +1,7 @@
+- if game_data_error.errors.any?
+  .alert.alert-error
+    %button.close{"data-dismiss" => "alert", :type => "button"} （・×・）
+    %strong= game_data_error.errors.count.to_s + " つのエラーにより " + game_data_error.class.model_name.human + " は保存されませんでした。"
+    %ul
+      - game_data_error.errors.full_messages.each do |msg|
+        %li= msg.html_safe
