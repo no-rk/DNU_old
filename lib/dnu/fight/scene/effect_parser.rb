@@ -1863,6 +1863,10 @@ class EffectParser < Parslet::Parser
     ).as(:integer).as(:set_integer)
   }
   
+  rule(:change_place) {
+    place.as(:change_place) >> spaces? >> str('に移動')
+  }
+  
   rule(:end_step) {
     (str('この') >> (str('イベント') | str('ステップ')).present?).maybe >> (str('イベント') >> str('ステップ').present?).maybe >> str('ステップ').maybe >> str('終了').as(:end_step)
   }
@@ -1896,6 +1900,7 @@ class EffectParser < Parslet::Parser
     set_integer |
     add_event |
     add_item |
+    change_place |
     end_step |
     end_event
   }

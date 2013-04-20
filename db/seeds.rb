@@ -52,19 +52,15 @@ art_types.each do |art_type|
 end
 
 # マップ
-ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_maps")
 ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_map_tips")
-map_names = YAML.load(ERB.new(File.read("#{Rails.root}/db/game_data/map.yml")).result)
-map_names.each do |map_name|
-  #p map_name.except("attributes")
-  map_name_model = GameData::Map.new(map_name.except("attributes"))
-  map_name["attributes"].each do |map_tip|
-    #p map
-    map_name_model.map_tips.build(map_tip.except("landform")) do |game_data_map_tip|
-      game_data_map_tip.landform = GameData::Landform.find_by_image(map_tip["landform"])
-    end
+[:map].each do |table|
+  ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_#{table.to_s.tableize}")
+  list = YAML.load(ERB.new(File.read("#{Rails.root}/db/game_data/#{table}.yml")).result)
+  list[:data].each do |data|
+    model = "GameData::#{table.to_s.camelize}".constantize.new
+    model.definition = data
+    model.save!
   end
-  map_name_model.save!
 end
 
 # アイテム種, 装備種

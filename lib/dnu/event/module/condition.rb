@@ -2,6 +2,10 @@ module DNU
   module Event
     module Condition
       include Calculate
+        
+      def random_percent(tree)
+        rand(100) < check_condition(tree)
+      end
       
       def present_place(tree)
         map_name  = tree[:place][:name].to_s

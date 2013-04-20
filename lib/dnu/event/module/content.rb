@@ -1,6 +1,17 @@
 module DNU
   module Event
     module Content
+      def change_place(tree)
+        result_place = user.result(:place).first
+        result_place.arrival = false
+        if result_place.save
+          user.create_result!(:place, {
+            :map_tip => GameData::MapTip.find_by_place(tree[:place]).first,
+            :arrival => true
+          })
+        end
+      end
+      
       def set_flag(tree)
         kind  = tree.keys.first.to_s
         name  = tree.values.first[:name].to_s

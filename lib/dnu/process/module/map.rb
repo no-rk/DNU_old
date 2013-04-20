@@ -3,7 +3,7 @@ module DNU
     module Map
       
       def map
-        GameData::Map.find_each do |map|
+        GameData::Map.has_anyone.find_each do |map|
           result_map = Result::Map.where(:day_id => Day.last.id, :map_id => map.id).first_or_initialize
           result_map.day = Day.last
           result_map.map = map

@@ -1,14 +1,22 @@
 class GameData::Map < ActiveRecord::Base
   has_many :map_tips
   attr_accessible :base, :caption, :name, :map_tips_attributes, :map_size
-  attr_writer :map_size
+  attr_writer :map_size, :definition
   
   accepts_nested_attributes_for :map_tips
+  
+  has_many :result_maps, :class_name => "Result::Map"
   
   has_many :places, :through => :map_tips, :class_name => "Result::Place"
   
   validates :name, :presence => true, :uniqueness => true
   validates :base, :inclusion => { :in => ["field", "dangeon"] }
+  
+  before_validation :set_game_data
+  after_save :sync_game_data
+  
+  scope :already_make, lambda{ joins(:result_maps).uniq }
+  scope :has_anyone,   lambda{ joins(:places).uniq }
   
   def map_size
     @map_size || map_tips.maximum(:x)
@@ -31,5 +39,38 @@ class GameData::Map < ActiveRecord::Base
   def through_map_tips_by_day_i(day_i = Day.last_day_i)
     day_arel = Day.arel_table
     places.where(day_arel[:day].lteq(day_i)).includes(:day).includes(:map_tip).group(:map_tip_id).map{ |r| r.map_tip }
+  end
+  
+  def definition
+    if @definition.nil?
+      @definition = {
+        :name       => name,
+        :caption    => caption,
+        :base       => base,
+        :attributes => map_tips.select([:x, :y, :landform_id, :collision, :opacity]).includes(:landform).map{|r|{:x=>r.x, :y=>r.y, :landform=>r.landform.image, :collision=>r.collision, :opacity=>r.opacity }}
+      }
+    end
+    @definition
+  end
+  
+  private
+  def set_game_data
+    if self.new_record?
+      if definition[:attributes].present?
+        self.name    = definition[:name].to_s
+        self.caption = definition[:caption].to_s
+        self.base    = definition[:base].to_s
+        definition[:attributes].each do |map_tip|
+          self.map_tips.build(map_tip.except(:landform)) do |game_data_map_tip|
+            game_data_map_tip.landform = GameData::Landform.find_by_image(map_tip[:landform])
+          end
+        end
+      else
+        errors.add(:definition, definition)
+      end
+    end
+  end
+  def sync_game_data
+    DNU::Data.sync(self)
   end
 end

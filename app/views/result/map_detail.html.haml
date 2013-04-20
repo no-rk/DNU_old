@@ -1,5 +1,5 @@
-=link_to :"最古", result_map_detail_path(0, @name, @x, @y) unless @day_i == 0
-=link_to :"前日", result_map_detail_path(@day_i-1, @name, @x, @y) if @day_i > 0
+=link_to :"最古", result_map_detail_path(@creation_day, @name, @x, @y) unless @day_i == @creation_day
+=link_to :"前日", result_map_detail_path(@day_i-1, @name, @x, @y) if @passed_day > 0
 =link_to :"後日", result_map_detail_path(@day_i+1, @name, @x, @y) if @day_i < Day.last_day_i
 =link_to :"最新", result_map_detail_path(nil, @name, @x, @y) unless @day_i == Day.last_day_i
 .row-fluid

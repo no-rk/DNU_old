@@ -14,6 +14,11 @@ class GameData::MapTip < ActiveRecord::Base
   
   before_validation :set_landform
   
+  scope :find_by_place, lambda{ |place|
+    map_arel = GameData::Map.arel_table
+    where(map_arel[:name].eq(place[:name].to_s)).includes(:map).where(:x => place[:x], :y => place[:y])
+  }
+  
   def name
     "#{map.name} #{('A'.ord-1+x).chr}#{y} #{landform.name}"
   end

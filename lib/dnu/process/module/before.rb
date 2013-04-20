@@ -9,10 +9,11 @@ module DNU
         
         now_day = Day.where(:day => now_day).first_or_create!
         
-        # 再更新の場合はPT結果クリア
+        # 再更新の場合はPT結果, マップクリア
         unless @new_day
           day_arel = Day.arel_table
           Result::Party.where(day_arel[:day].eq(now_day.day)).includes(:day).destroy_all
+          Result::Map.where(day_arel[:day].eq(now_day.day)).includes(:day).destroy_all
         end
         # キャラ作成済みの各ユーザー
         User.already_make.find_each do |user|

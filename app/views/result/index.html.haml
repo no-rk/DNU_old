@@ -1,5 +1,6 @@
-= link_to("マップ", result_maps_path)
-%br
+- if GameData::Map.already_make.exists?
+  = link_to("マップ", result_maps_path)
+  %br
 - if User.already_make.exists?
   = link_to("個人結果一覧", result_enos_path)
   %br

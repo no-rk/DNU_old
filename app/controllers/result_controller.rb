@@ -17,7 +17,7 @@ class ResultController < ApplicationController
   # GET result/maps
   def maps
     @title = "マップ一覧"
-    @maps = GameData::Map.page(params[:page]).per(10)
+    @maps = GameData::Map.already_make.page(params[:page]).per(10)
   end
   
   # GET result(/:day)/eno/:id
@@ -99,9 +99,11 @@ class ResultController < ApplicationController
     @title = "#{@name}の第#{@day_i}回の結果"
     
     @map = Result::Map.find_by_name_and_day_i(@name, @day_i).first
+    @creation_day = @map.creation_day
+    @passed_day   = @day_i - @creation_day
     @user_counts = @map.user_counts
-    @x = @map.map.map_tips.maximum(:x).to_i
-    @y = @map.map.map_tips.maximum(:y).to_i
+    @x = @map.map_tips.maximum(:x).to_i
+    @y = @map.map_tips.maximum(:y).to_i
     
     render :layout => 'plain'
   end
@@ -115,6 +117,8 @@ class ResultController < ApplicationController
     @title = "#{@name} #{('A'.ord-1+@x).chr}#{@y}の第#{@day_i}回の結果"
     
     @map = Result::Map.find_by_name_and_day_i(@name, @day_i).first
+    @creation_day = @map.creation_day
+    @passed_day   = @day_i - @creation_day
     @map_tip = @map.map_tips.where(:x => @x, :y => @y).first
     
     @user_ids = @map_tip.nil? ? [] : @map_tip.where_places_by_day_i(@day_i).map{ |r| r.user.id }

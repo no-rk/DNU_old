@@ -17,4 +17,8 @@ class Result::Map < ActiveRecord::Base
     day_arel = Day.arel_table
     Result::Place.where(:arrival => true).where(day_arel[:day].eq(day.day)).includes(:day).where(map_arel[:map_id].eq(map.id)).includes(:map_tip).group(:x,:y).count
   end
+  
+  def creation_day
+    map.result_maps.joins(:day).minimum(:day).to_i
+  end
 end
