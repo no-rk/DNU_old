@@ -16,7 +16,7 @@ class GameData::Disease < ActiveRecord::Base
       self.color   = tree[:color].to_s
       self.caption = tree[:caption].to_s
     else
-      errors.add(:definition, definition)
+      errors.add(:definition, :invalid)
     end
   end
   

@@ -99,6 +99,10 @@ ja:
         opacity: 不透明度
       game_data/map/map_tips: *map_tip
       
+      game_data/sup:
+        name: 付加名
+        definition: 付加定義
+      
       register/diary: &diary
         diary: 日記
       register/move: &move

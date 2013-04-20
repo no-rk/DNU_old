@@ -15,7 +15,7 @@ class GameData::Skill < ActiveRecord::Base
       self.name = tree[:name].to_s
       DNU::Data.set_learning_conditions(self, tree[:learning_conditions])
     else
-      errors.add(:definition, definition)
+      errors.add(:definition, :invalid)
     end
   end
   

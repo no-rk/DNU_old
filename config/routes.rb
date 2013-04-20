@@ -5,7 +5,8 @@ DNU::Application.routes.draw do
 
   mount RailsAdmin::Engine => '/admin', :as => 'rails_admin'
 
-  namespace :game_data do resources :maps, :only => [:new, :edit, :create, :update ] end
+  namespace :game_data do resources :maps, :except => [:show, :destroy] end
+  namespace :game_data do resources :sups, :except => [:show, :destroy] end
 
   namespace :communication do resources :messages, :only => [ :index, :new, :create, :update ] end
   namespace :communication do resources :conversations end

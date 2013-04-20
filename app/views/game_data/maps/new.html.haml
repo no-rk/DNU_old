@@ -3,6 +3,8 @@
 - @map_list.each do |name, id|
   = link_to("#{name} を編集する", edit_game_data_map_path(id))
   %br
+= link_to("定義済みマップ一覧", game_data_maps_path)
+%br
 %br
 = form_tag(new_game_data_map_path, :method => :get, :class => "no_diff") do
   縦横

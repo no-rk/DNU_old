@@ -34,7 +34,7 @@ class GameData::Sup < ActiveRecord::Base
     if tree.present?
       self.name = tree[:name].to_s
     else
-      errors.add(:definition, definition)
+      errors.add(:definition, :invalid)
     end
   end
   

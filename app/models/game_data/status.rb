@@ -15,7 +15,7 @@ class GameData::Status < ActiveRecord::Base
       self.name    = tree[:name].to_s
       self.caption = tree[:name].to_s
     else
-      errors.add(:definition, definition)
+      errors.add(:definition, :invalid)
     end
   end
   

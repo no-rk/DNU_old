@@ -32,7 +32,7 @@ class GameData::Ability < ActiveRecord::Base
       end
       DNU::Data.set_learning_conditions(self, tree[:learning_conditions])
     else
-      errors.add(:definition, definition)
+      errors.add(:definition, :invalid)
     end
   end
   

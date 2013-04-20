@@ -15,7 +15,7 @@ class GameData::Item < ActiveRecord::Base
       self.kind = tree[:kind].to_s
       self.name = tree[:name].to_s
     else
-      errors.add(:definition, definition)
+      errors.add(:definition, :invalid)
     end
   end
   

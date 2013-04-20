@@ -1,0 +1,6 @@
+= link_to("新規付加作成", new_game_data_sup_path)
+%br
+- @sups.each do |sup|
+  = link_to("[付加]#{sup.name} 編集", edit_game_data_sup_path(sup.id))
+  %br
+= paginate @sups

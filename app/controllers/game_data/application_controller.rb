@@ -1,6 +1,13 @@
 class GameData::ApplicationController < ApplicationController
   layout "no_side"
 
+  # GET /game_data/controller_name
+  def index
+    records = "GameData::#{controller_name.classify}".constantize.page(params[:page]).per(20)
+    instance_variable_set("@#{controller_name}", records)
+  end
+
+
   # GET /game_data/controller_name/new
   def new
     set_instance_variables
@@ -24,7 +31,7 @@ class GameData::ApplicationController < ApplicationController
     instance_variable_set("@#{controller_name.singularize}", record)
     
     if record.save
-      redirect_to edit_game_data_map_path(record.id), :notice => "保存された。"
+      redirect_to send("edit_game_data_#{controller_name.singularize}_path", record.id), :notice => "保存された。"
     else
       render action: "new"
     end
@@ -39,7 +46,7 @@ class GameData::ApplicationController < ApplicationController
     instance_variable_set("@#{controller_name.singularize}", record)
     
     if record.save
-      redirect_to edit_game_data_map_path(params[:id]), :notice => "更新された。"
+      redirect_to send("edit_game_data_#{controller_name.singularize}_path", params[:id]), :notice => "更新された。"
     else
       render action: "edit"
     end

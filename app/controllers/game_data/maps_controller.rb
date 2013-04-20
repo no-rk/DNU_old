@@ -1,4 +1,5 @@
 class GameData::MapsController < GameData::ApplicationController
+  private
   def set_instance_variables
     @map_list    = GameData::Map.all.inject({}){ |h,r| h.tap{h[r.name]=r.id} }
     @map_select  = (1..26).inject({}){ |h,n| h.tap{ h[n] = n } }

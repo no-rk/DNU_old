@@ -66,7 +66,7 @@ class GameData::Map < ActiveRecord::Base
           end
         end
       else
-        errors.add(:definition, definition)
+        errors.add(:definition, :invalid)
       end
     end
   end
