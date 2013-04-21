@@ -5,6 +5,7 @@ DNU::Application.routes.draw do
 
   mount RailsAdmin::Engine => '/admin', :as => 'rails_admin'
 
+  get 'game_data' => 'game_data#index' , :as => 'game_data_index'
   namespace :game_data do resources :maps,   :except => [:show, :destroy] end
   namespace :game_data do resources :sups,   :except => [:show, :destroy] end
   namespace :game_data do resources :events, :except => [:show, :destroy] end

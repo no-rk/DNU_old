@@ -1,0 +1,28 @@
+!!!
+%html
+  %head
+    %meta{:charset => "utf-8"}/
+    %title= @title || "DNU"
+    %meta{:content => "width=device-width, initial-scale=1.0", :name => "viewport"}/
+    = stylesheet_link_tag "application"
+    = csrf_meta_tags
+  %body{:class => "game_data #{controller.controller_name}_body #{controller.controller_name}_#{controller.action_name}_body"}
+    = render 'layouts/navbar_top'
+    .container-fluid
+      .row-fluid
+        - if notice
+          .alert.alert-info
+            %button.close{"data-dismiss" => "alert", :type => "button"} （・×・）
+            %strong お知らせ
+            = notice
+        - if alert
+          .alert
+            %button.close{"data-dismiss" => "alert", :type => "button"} （・×・）
+            %strong 注意
+            = alert
+      .row-fluid
+        .span3.well
+          = render 'layouts/nav_game_data'
+        .span9.well
+          = yield
+    = javascript_include_tag "application"

@@ -1,5 +1,6 @@
 class GameData::ApplicationController < ApplicationController
-  layout "no_side"
+  before_filter :set_title
+  layout "game_data"
 
   # GET /game_data/controller_name
   def index
@@ -53,6 +54,9 @@ class GameData::ApplicationController < ApplicationController
   end
   
   private
+  def set_title
+    @title = "GameData::#{controller_name.classify}".constantize.model_name.human
+  end
   def set_instance_variables
   end
   def build_record(record)

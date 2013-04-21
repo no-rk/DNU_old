@@ -4737,3 +4737,87 @@
     :landform: plain
     :collision: false
     :opacity: 0
+- :name: "牢屋"
+  :caption: "いみはないです"
+  :base: dangeon
+  :attributes:
+  - :x: 1
+    :y: 1
+    :landform: wall
+    :collision: true
+    :opacity: 10
+  - :x: 1
+    :y: 2
+    :landform: wall
+    :collision: true
+    :opacity: 10
+  - :x: 1
+    :y: 3
+    :landform: wall
+    :collision: true
+    :opacity: 10
+  - :x: 1
+    :y: 4
+    :landform: wall
+    :collision: true
+    :opacity: 10
+  - :x: 2
+    :y: 1
+    :landform: wall
+    :collision: true
+    :opacity: 10
+  - :x: 2
+    :y: 2
+    :landform: floor
+    :collision: false
+    :opacity: 3
+  - :x: 2
+    :y: 3
+    :landform: floor
+    :collision: false
+    :opacity: 3
+  - :x: 2
+    :y: 4
+    :landform: wall
+    :collision: true
+    :opacity: 10
+  - :x: 3
+    :y: 1
+    :landform: wall
+    :collision: true
+    :opacity: 10
+  - :x: 3
+    :y: 2
+    :landform: floor
+    :collision: false
+    :opacity: 3
+  - :x: 3
+    :y: 3
+    :landform: floor
+    :collision: false
+    :opacity: 3
+  - :x: 3
+    :y: 4
+    :landform: wall
+    :collision: true
+    :opacity: 10
+  - :x: 4
+    :y: 1
+    :landform: wall
+    :collision: true
+    :opacity: 10
+  - :x: 4
+    :y: 2
+    :landform: wall
+    :collision: true
+    :opacity: 10
+  - :x: 4
+    :y: 3
+    :landform: wall
+    :collision: true
+    :opacity: 10
+  - :x: 4
+    :y: 4
+    :landform: wall
+    :collision: true
+    :opacity: 10
