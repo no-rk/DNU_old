@@ -152,6 +152,7 @@ ActiveRecord::Schema.define(:version => 20130419021936) do
     t.string   "kind"
     t.string   "name"
     t.text     "caption"
+    t.text     "definition"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end

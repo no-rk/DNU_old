@@ -1,5 +1,19 @@
 module DNU
   class Data
+    def self.clean_tree(tree)
+      case tree
+      when Hash
+        tree.inject({}){ |h,(k,v)|
+          h.tap{ h[k] = self.clean_tree(v) }
+        }
+      when Array
+        tree.map{ |v| self.clean_tree(v) }
+      when Parslet::Slice
+        tree.to_s
+      else
+        tree
+      end
+    end
     def self.parse(model)
       kind = model.class.name.split("::").last.downcase
       text = model.definition
@@ -12,6 +26,8 @@ module DNU
         tree = transform.apply(tree)
       rescue
         tree = nil
+      else
+        tree = self.clean_tree(tree)
       end
       tree
     end

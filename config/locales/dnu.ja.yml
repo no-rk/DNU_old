@@ -103,6 +103,11 @@ ja:
         name: 付加名
         definition: 付加定義
       
+      game_data/event:
+        kind: イベント種類
+        name: イベント名
+        definition: イベント定義
+      
       register/diary: &diary
         diary: 日記
       register/move: &move

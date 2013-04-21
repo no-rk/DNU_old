@@ -43,19 +43,20 @@ class GameData::Map < ActiveRecord::Base
   
   def definition
     if @definition.nil?
-      @definition = {
+      {
         :name       => name,
         :caption    => caption,
         :base       => base,
         :attributes => map_tips.select([:x, :y, :landform_id, :collision, :opacity]).includes(:landform).map{|r|{:x=>r.x, :y=>r.y, :landform=>r.landform.image, :collision=>r.collision, :opacity=>r.opacity }}
       }
+    else
+      @definition
     end
-    @definition
   end
   
   private
   def set_game_data
-    if self.new_record?
+    if @definition.present?
       if definition[:attributes].present?
         self.name    = definition[:name].to_s
         self.caption = definition[:caption].to_s

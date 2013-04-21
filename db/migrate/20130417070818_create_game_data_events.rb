@@ -4,6 +4,7 @@ class CreateGameDataEvents < ActiveRecord::Migration
       t.string :kind
       t.string :name
       t.text :caption
+      t.text :definition
 
       t.timestamps
     end

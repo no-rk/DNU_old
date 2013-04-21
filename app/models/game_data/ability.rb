@@ -17,7 +17,7 @@ class GameData::Ability < ActiveRecord::Base
       self.name    = tree[:name].to_s
       self.caption = tree[:caption].to_s
       # アビリティー詳細
-      self.ability_definitions.destroy_all if self.ability_definitions.present?
+      #self.ability_definitions.destroy_all if self.ability_definitions.present?
       check_first = true
       tree[:definitions].each do |effect|
         if effect[:pull_down].present?

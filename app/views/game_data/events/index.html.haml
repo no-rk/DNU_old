@@ -1,0 +1,6 @@
+= link_to("新規#{@events.first.class.model_name.human}作成", new_game_data_event_path)
+%br
+- @events.each do |event|
+  = link_to("[#{event.kind}#{@events.first.class.model_name.human}]#{event.name} 編集", edit_game_data_event_path(event.id))
+  %br
+= paginate @events
