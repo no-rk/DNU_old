@@ -12,6 +12,7 @@ ja:
       game_data/learning_condition: 習得条件
       game_data/ability: アビリティー
       game_data/character: キャラクター
+      game_data/item: アイテム
       game_data/sup: 付加
       game_data/trap: 罠
       game_data/skill: 技
@@ -102,6 +103,28 @@ ja:
       game_data/sup:
         name: 付加名
         definition: 付加定義
+      
+      game_data/trap:
+        name: 罠名
+        definition: 罠定義
+      
+      game_data/skill:
+        name: 技名
+        definition: 技定義
+      
+      game_data/ability:
+        name: アビリティー名
+        definition: アビリティー定義
+      
+      game_data/item:
+        kind: アイテム種類
+        name: アイテム名
+        definition: アイテム定義
+      
+      game_data/character:
+        kind: キャラクター種類
+        name: キャラクター名
+        definition: キャラクター定義
       
       game_data/event:
         kind: イベント種類
@@ -303,8 +326,8 @@ ja:
 
   views:
     pagination:
-      first: "&laquo; 最新"
-      last: "最古&raquo;"
+      first: "&laquo; 最初"
+      last: "最期&raquo;"
       previous: "&lsaquo; 前"
       next: "次 &rsaquo;"
       truncate: "..."

@@ -4,7 +4,7 @@ class GameData::ApplicationController < ApplicationController
 
   # GET /game_data/controller_name
   def index
-    records = "GameData::#{controller_name.classify}".constantize.page(params[:page]).per(20)
+    records = "GameData::#{controller_name.classify}".constantize.page(params[:page]).per(50)
     instance_variable_set("@#{controller_name}", records)
   end
 

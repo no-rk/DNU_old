@@ -1,0 +1,6 @@
+= link_to("新規#{@skill.class.model_name.human}作成", new_game_data_skill_path)
+%br
+= link_to("定義済み#{@skill.class.model_name.human}一覧", game_data_skills_path)
+%br
+%br
+= render 'form'

@@ -1,0 +1,4 @@
+= render 'game_data/error', { :game_data_error => @skill }
+= simple_form_for(@skill) do |form_skill|
+  = form_skill.input :definition, :input_html => { :class => :span9 }
+  = form_skill.submit :class => "btn btn-large btn-success"

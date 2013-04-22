@@ -1,0 +1,4 @@
+= render 'game_data/error', { :game_data_error => @trap }
+= simple_form_for(@trap) do |form_trap|
+  = form_trap.input :definition, :input_html => { :class => :span9 }
+  = form_trap.submit :class => "btn btn-large btn-success"

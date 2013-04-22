@@ -1,0 +1,6 @@
+= link_to("新規#{@trap.class.model_name.human}作成", new_game_data_trap_path)
+%br
+= link_to("定義済み#{@trap.class.model_name.human}一覧", game_data_traps_path)
+%br
+%br
+= render 'form'

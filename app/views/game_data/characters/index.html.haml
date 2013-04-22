@@ -1,0 +1,6 @@
+= link_to("新規#{@characters.first.class.model_name.human}作成", new_game_data_character_path)
+%br
+- @characters.each do |character|
+  = link_to("[#{character.kind}]#{character.name} 編集", edit_game_data_character_path(character.id))
+  %br
+= paginate @characters

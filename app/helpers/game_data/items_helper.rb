@@ -1,0 +1,2 @@
+module GameData::ItemsHelper
+end

@@ -60,7 +60,7 @@ module DNU
     def self.set_learning_conditions(model, learning_conditions)
       # 習得条件
       if learning_conditions.present?
-        model.learning_conditions.destroy_all if model.learning_conditions.present?
+        model.learning_conditions.destroy_all unless model.new_record?
         condition_group = 1
         if learning_conditions[:or].present?
           learning_conditions[:or].each do |condition_or|

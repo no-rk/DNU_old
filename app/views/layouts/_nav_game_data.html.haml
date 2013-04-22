@@ -3,6 +3,6 @@
     %li{:class => active_current(game_data_index_path)}
       %a{:href => game_data_index_path} ゲームデータトップ
     %li.nav-header 編集可能
-    - [:maps, :sups, :events].each do |table|
+    - [:maps, :sups, :traps, :skills, :abilities, :items, :characters, :events].each do |table|
       %li{:class => active_current(send("game_data_#{table}_path"))}
         %a{:href => send("game_data_#{table}_path")}= "GameData::#{table.to_s.classify}".constantize.model_name.human

@@ -1,0 +1,6 @@
+= link_to("新規#{@skills.first.class.model_name.human}作成", new_game_data_skill_path)
+%br
+- @skills.each do |skill|
+  = link_to("[#{@skills.first.class.model_name.human}]#{skill.name} 編集", edit_game_data_skill_path(skill.id))
+  %br
+= paginate @skills
