@@ -46,8 +46,8 @@ class GameData::ApplicationController < ApplicationController
     record.assign_attributes(params[:"game_data_#{controller_name.singularize}"])
     instance_variable_set("@#{controller_name.singularize}", record)
     
-    if record.valid?
-      redirect_to send("edit_game_data_#{controller_name.singularize}_path", params[:id]), :notice => "現在更新機能停止中。"
+    if record.save
+      redirect_to send("edit_game_data_#{controller_name.singularize}_path", params[:id]), :notice => "更新された。"
     else
       render action: "edit"
     end

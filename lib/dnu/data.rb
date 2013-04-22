@@ -4,16 +4,17 @@ module DNU
       case tree
       when Hash
         tree.inject({}){ |h,(k,v)|
-          h.tap{ h[k] = self.clean_tree(v) }
+          h.tap{ h[k.to_sym] = self.clean_tree(v) }
         }
       when Array
         tree.map{ |v| self.clean_tree(v) }
-      when Parslet::Slice
-        tree.to_s
+      when Parslet::Slice, String
+        tree.to_s.encode(:universal_newline => true)
       else
         tree
       end
     end
+    
     def self.parse(model)
       kind = model.class.name.split("::").last.downcase
       text = model.definition
@@ -35,7 +36,7 @@ module DNU
     def self.sync(model)
       kind       = model.class.name.split("::").last.downcase
       id         = model.id
-      definition = model.definition
+      definition = self.clean_tree(model.definition)
       if id.present?
         db = YAML::Store.new("#{Rails.root}/db/game_data/#{kind}.yml")
         db.transaction do

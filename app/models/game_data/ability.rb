@@ -4,11 +4,21 @@ class GameData::Ability < ActiveRecord::Base
   has_one :train, :as => :trainable, :dependent => :destroy
   attr_accessible :caption, :definition, :name
   
+  has_many :abilities, :class_name => "Result::Ability"
+  
   validates :name,       :presence => true, :uniqueness => true
   validates :definition, :presence => true
   
   before_validation :set_game_data
   after_save        :sync_game_data
+  
+  def used?
+    self.abilities.exists?
+  end
+  
+  def unused?
+    !used?
+  end
   
   private
   def set_game_data
@@ -17,20 +27,24 @@ class GameData::Ability < ActiveRecord::Base
       self.name    = tree[:name].to_s
       self.caption = tree[:caption].to_s
       # アビリティー詳細
-      #self.ability_definitions.destroy_all if self.ability_definitions.present?
-      check_first = true
-      tree[:definitions].each do |effect|
-        if effect[:pull_down].present?
-          if check_first
-            self.ability_definitions.build(:kind => :pull_down, :lv => 1, :caption => "無効")
-            check_first = false
+      if self.unused?
+        self.ability_definitions.destroy_all unless self.new_record?
+        check_first = true
+        tree[:definitions].each do |effect|
+          if effect[:pull_down].present?
+            if check_first
+              self.ability_definitions.build(:kind => :pull_down, :lv => 1, :caption => "無効")
+              check_first = false
+            end
+            self.ability_definitions.build(:kind => :pull_down, :lv => effect[:lv], :caption => effect[:pull_down].to_s)
+          else
+            self.ability_definitions.build(:kind => :lv,        :lv => effect[:lv], :caption => effect[:caption].to_s)
           end
-          self.ability_definitions.build(:kind => :pull_down, :lv => effect[:lv], :caption => effect[:pull_down].to_s)
-        else
-          self.ability_definitions.build(:kind => :lv,        :lv => effect[:lv], :caption => effect[:caption].to_s)
         end
+        DNU::Data.set_learning_conditions(self, tree[:learning_conditions])
+      else
+        errors[:base] << "使用中のイベントのため編集できません。"
       end
-      DNU::Data.set_learning_conditions(self, tree[:learning_conditions])
     else
       errors.add(:definition, :invalid)
     end
