@@ -43,7 +43,7 @@ class GameData::Ability < ActiveRecord::Base
         end
         DNU::Data.set_learning_conditions(self, tree[:learning_conditions])
       else
-        errors[:base] << "使用中のイベントのため編集できません。"
+        errors[:base] << "使用中の#{self.class.model_name.human}のため編集できません。"
       end
     else
       errors.add(:definition, :invalid)

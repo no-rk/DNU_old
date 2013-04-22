@@ -1,0 +1,4 @@
+= render 'game_data/error', { :game_data_error => @enemy_list }
+= simple_form_for(@enemy_list) do |form_enemy_list|
+  = form_enemy_list.input :definition, :input_html => { :class => :span9 }
+  = form_enemy_list.submit :class => "btn btn-large btn-success"

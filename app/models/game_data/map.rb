@@ -3,6 +3,7 @@ class GameData::Map < ActiveRecord::Base
   attr_accessible :base, :caption, :name, :map_tips_attributes, :map_size
   attr_writer :map_size, :definition
   
+  has_many :enemy_territories
   accepts_nested_attributes_for :map_tips
   
   has_many :result_maps, :class_name => "Result::Map"

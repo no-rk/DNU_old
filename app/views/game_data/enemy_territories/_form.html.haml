@@ -1,0 +1,4 @@
+= render 'game_data/error', { :game_data_error => @enemy_territory }
+= simple_form_for(@enemy_territory) do |form_enemy_territory|
+  = form_enemy_territory.input :definition, :input_html => { :class => :span9 }
+  = form_enemy_territory.submit :class => "btn btn-large btn-success"

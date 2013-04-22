@@ -27,6 +27,16 @@ class Result::Party < ActiveRecord::Base
     end
   }
   
+  def place
+    if party_members.where(:character_type => :User).exists?
+      party_members.where(:character_type => :User).first.character.result(:place, day.day).first
+    end
+  end
+  
+  def enemy_territory
+    place.try(:enemy_territory)
+  end
+  
   def nickname
     name || "第#{id}PT"
   end
@@ -37,11 +47,8 @@ class Result::Party < ActiveRecord::Base
     result_party.day = day
     
     tree[:members].each do |member|
-      kind = member[:kind].to_s
-      name = member[:name].to_s
-      
       result_party.party_members.build do |result_party_member|
-        result_party_member.character = GameData::Character.where(:kind => kind, :name => name).first
+        result_party_member.character = member
       end
     end
     result_party

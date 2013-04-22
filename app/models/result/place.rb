@@ -13,6 +13,10 @@ class Result::Place < ActiveRecord::Base
   validates :map_tip,    :presence => true
   validates :arrival,    :inclusion => { :in => [true, false] }
   
+  def enemy_territory
+    map_tip.enemy_territory
+  end
+  
   def find_party_slogan_by_day_i(day_i = Day.last_day_i)
     day_arel = Day.arel_table
     mains.where(day_arel[:day].eq(day_i)).includes(:day).includes(:party_slogan).first.try(:party_slogan).try(:slogan)

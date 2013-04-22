@@ -156,9 +156,13 @@ class EffectParser < Parslet::Parser
     at >> (spaces.absent? >> any).repeat(1).as(:name) >> spaces
   }
   
+  rule(:point) {
+    alphabet.as(:x) >> natural_number.as(:y)
+  }
+  
   rule(:place) {
     (
-      place_name.as(:name) >> spaces? >> alphabet.as(:x) >> natural_number.as(:y)
+      map_name.as(:name) >> spaces? >> point
     ).as(:place)
   }
   
@@ -237,7 +241,11 @@ class EffectParser < Parslet::Parser
     str('全').as(:All)
   }
   
-  rule(:place_name) {
+  rule(:landform_name) {
+    alternation_from_array(GameData::Landform.pluck(:name))
+  }
+  
+  rule(:map_name) {
     alternation_from_array(GameData::Map.pluck(:name))
   }
   
@@ -255,6 +263,30 @@ class EffectParser < Parslet::Parser
   
   rule(:product_name) {
     alternation_from_array(GameData::Product.pluck(:name))
+  }
+  
+  rule(:item_type) {
+    alternation_from_array(GameData::ItemType.pluck(:name))
+  }
+  
+  rule(:equip_type) {
+    alternation_from_array(GameData::EquipType.pluck(:name))
+  }
+  
+  rule(:sup_name) {
+    alternation_from_array(GameData::Sup.pluck(:name))
+  }
+  
+  rule(:item_kind_and_name) {
+    alternation_from_hash(GameData::Item.all.map{|r| { r.kind => r.name } })
+  }
+  
+  rule(:character_kind_and_name) {
+    alternation_from_hash(GameData::Character.all.map{|r| { r.kind => r.name } })
+  }
+  
+  rule(:enemy_list_name) {
+    alternation_from_array(GameData::EnemyList.pluck(:name))
   }
   
   # disease_name_set
@@ -1779,14 +1811,19 @@ class EffectParser < Parslet::Parser
   
   # character_settings
   
+  rule(:correction) {
+    (plus.as(:plus) | minus.as(:minus)) >> natural_number.as(:value)
+  }
+  
   rule(:character_setting) {
-    bra >> character_type.as(:kind) >> ket >> (
-      newline.absent? >> any
-    ).repeat(1).as(:name) >> newline.maybe
+    character_kind_and_name >>
+    (
+      spaces? >> correction.as(:correction)
+    ).maybe
   }
   
   rule(:character_settings) {
-    character_setting.repeat(1)
+    (character_setting >> newline.maybe).repeat(1)
   }
   
   # pt_settings
@@ -1883,10 +1920,6 @@ class EffectParser < Parslet::Parser
     ).as(:add_event)
   }
   
-  rule(:item_kind_and_name) {
-    alternation_from_hash(GameData::Item.all.map{|r| { r.kind => r.name } })
-  }
-  
   rule(:add_item) {
     (
       item_kind_and_name >> spaces? >>
@@ -1942,18 +1975,6 @@ class EffectParser < Parslet::Parser
   }
   
   # item_definition
-  
-  rule(:item_type) {
-    alternation_from_array(GameData::ItemType.pluck(:name))
-  }
-  
-  rule(:equip_type) {
-    alternation_from_array(GameData::EquipType.pluck(:name))
-  }
-  
-  rule(:sup_name) {
-    alternation_from_array(GameData::Sup.pluck(:name))
-  }
   
   rule(:item_sup) {
     (separator | newline).maybe >>
@@ -2013,6 +2034,47 @@ class EffectParser < Parslet::Parser
     (newline >> string.as(:caption)).maybe >>
     newline.maybe >>
     (item_sup.repeat(0).as(:item_sups)).maybe >>
+    newline.maybe
+  }
+  
+  # enemy_list_definition
+  
+  rule(:enemy_list_definition) {
+    bra >> str('敵リスト') >> ket >>
+    (newline.absent? >> any).repeat(1).as(:name) >> newline.present? >>
+    (
+      newline >>
+      character_setting >>
+      (
+        spaces? >> str('出現倍率') >> decimal.as(:frequency)
+      ).maybe
+    ).repeat(1).as(:list) >>
+    newline.maybe
+  }
+  
+  # enemy_list_setting
+  
+  rule(:enemy_list_setting) {
+    bra >> str('敵リスト') >> ket >>
+    enemy_list_name.as(:name) >>
+    (
+      spaces? >> correction.as(:correction)
+    ).maybe
+  }
+  
+  # enemy_territory_definition
+  
+  rule(:enemy_territory_definition) {
+    (
+      landform_name.as(:landform) |
+      map_name.as(:map_name) >> spaces? >>
+      (
+        landform_name.as(:landform) |
+        point.as(:point)
+      ).maybe
+    ) >>
+    arrow >>
+    enemy_list_setting >>
     newline.maybe
   }
   

@@ -72,11 +72,12 @@ item_types.each do |item_type|
   item_type_model.save!
 end
 
-# 能力, 状態異常, 付加, 罠, 技, アビリティ, キャラクター, アイテム, イベント
+# 能力, 状態異常, 付加, 罠, 技, アビリティ, キャラクター, 敵リスト, 敵出現地 アイテム, イベント
 ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_ability_definitions")
+ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_enemy_list_elements")
 ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_event_steps")
 ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_event_contents")
-[:status, :disease, :sup, :trap, :skill, :ability, :character, :item, :event].each do |table|
+[:status, :disease, :sup, :trap, :skill, :ability, :character, :enemy_list, :enemy_territory, :item, :event].each do |table|
   ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_#{table.to_s.tableize}")
   list = YAML.load(ERB.new(File.read("#{Rails.root}/db/game_data/#{table}.yml")).result)
   list[:data].each do |data|

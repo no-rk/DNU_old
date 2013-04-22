@@ -12,6 +12,8 @@ ja:
       game_data/learning_condition: 習得条件
       game_data/ability: アビリティー
       game_data/character: キャラクター
+      game_data/enemy_list: 敵リスト
+      game_data/enemy_territory: 敵出現地
       game_data/item: アイテム
       game_data/sup: 付加
       game_data/trap: 罠
@@ -134,6 +136,18 @@ ja:
         kind: キャラクター種類
         name: キャラクター名
         definition: キャラクター定義
+      
+      game_data/enemy_list:
+        name: 敵リスト名
+        definition: 敵リスト定義
+      
+      game_data/enemy_territory:
+        map_id: マップ
+        landform_id: 地形
+        map_tip_id: 座標
+        enemy_list: 敵リスト
+        correction: 敵リスト補正
+        definition: 敵出現地定義
       
       game_data/event:
         kind: イベント種類

@@ -45,7 +45,7 @@ class GameData::Event < ActiveRecord::Base
           end
         end
       else
-        errors[:base] << "使用中のイベントのため編集できません。"
+        errors[:base] << "使用中の#{self.class.model_name.human}のため編集できません。"
       end
     else
       errors.add(:definition, :invalid)

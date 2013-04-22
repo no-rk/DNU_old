@@ -6,6 +6,10 @@ class GameData::MapTip < ActiveRecord::Base
   
   has_many :places, :class_name => "Result::Place"
   
+  has_many :map_tip_enemy_territories,  :class_name => "GameData::EnemyTerritory"
+  has_many :landform_enemy_territories, :through => :landform, :source => :enemy_territories
+  has_many :map_enemy_territories,      :through => :map,      :source => :enemy_territories
+  
   validates :x,         :numericality => { :only_integer => true, :greater_than => 0 }
   validates :y,         :numericality => { :only_integer => true, :greater_than => 0 }
   validates :landform,  :presence => true
@@ -18,6 +22,18 @@ class GameData::MapTip < ActiveRecord::Base
     map_arel = GameData::Map.arel_table
     where(map_arel[:name].eq(place[:name].to_s)).includes(:map).where(:x => place[:x], :y => place[:y])
   }
+  
+  def enemy_territory
+    if map_tip_enemy_territories.where(:map_id => nil, :landform_id => nil).exists?
+      map_tip_enemy_territories.where(:map_id => nil, :landform_id => nil).first
+    elsif map_enemy_territories.where(:landform_id => landform_id).exists?
+      map_enemy_territories.where(:landform_id => landform_id).first
+    elsif map_enemy_territories.where(:landform_id => nil).exists?
+      map_enemy_territories.where(:landform_id => nil).first
+    elsif landform_enemy_territories.where(:map_id => nil).exists?
+      landform_enemy_territories.where(:map_id => nil).first
+    end
+  end
   
   def name
     "#{map.name} #{('A'.ord-1+x).chr}#{y} #{landform.name}"

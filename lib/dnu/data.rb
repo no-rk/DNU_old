@@ -16,7 +16,7 @@ module DNU
     end
     
     def self.parse(model)
-      kind = model.class.name.split("::").last.downcase
+      kind = model.class.name.split("::").last.underscore
       text = model.definition
       
       parser    = EffectParser.new
@@ -34,7 +34,7 @@ module DNU
     end
     
     def self.sync(model)
-      kind       = model.class.name.split("::").last.downcase
+      kind       = model.class.name.split("::").last.underscore
       id         = model.id
       definition = self.clean_tree(model.definition)
       if id.present?

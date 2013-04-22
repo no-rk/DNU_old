@@ -8,7 +8,7 @@ class AjaxController < ApplicationController
       else
         @ajax = "Register::#{params[:model].classify}".constantize.all
       end
-      model = @ajax.class.model_name.human.downcase
+      model = @ajax.class.model_name.human
       img_path   = @ajax.icon_url(:icon).to_s
       @ajax = @ajax.attributes
       @ajax.store(:model,model)

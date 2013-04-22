@@ -1,0 +1,8 @@
+= link_to("新規#{@enemy_lists.first.class.model_name.human}作成", new_game_data_enemy_list_path)
+%br
+- @enemy_lists.each do |enemy_list|
+  [#{@enemy_lists.first.class.model_name.human}]
+  = enemy_list.name
+  = link_to("編集", edit_game_data_enemy_list_path(enemy_list.id))
+  %br
+= paginate @enemy_lists

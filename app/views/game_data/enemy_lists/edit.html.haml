@@ -1,0 +1,6 @@
+= link_to("新規#{@enemy_list.class.model_name.human}作成", new_game_data_enemy_list_path)
+%br
+= link_to("定義済み#{@enemy_list.class.model_name.human}一覧", game_data_enemy_lists_path)
+%br
+%br
+= render 'form'

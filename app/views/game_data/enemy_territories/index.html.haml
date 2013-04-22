@@ -1,0 +1,8 @@
+= link_to("新規#{@enemy_territories.first.class.model_name.human}作成", new_game_data_enemy_territory_path)
+%br
+- @enemy_territories.each do |enemy_territory|
+  [#{@enemy_territories.first.class.model_name.human}]
+  = enemy_territory.definition
+  = link_to("編集", edit_game_data_enemy_territory_path(enemy_territory.id))
+  %br
+= paginate @enemy_territories

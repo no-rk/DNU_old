@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130419021936) do
+ActiveRecord::Schema.define(:version => 20130422085125) do
 
   create_table "admins", :force => true do |t|
     t.string   "email",               :default => "", :null => false
@@ -120,6 +120,41 @@ ActiveRecord::Schema.define(:version => 20130419021936) do
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
+
+  create_table "game_data_enemy_list_elements", :force => true do |t|
+    t.integer  "enemy_list_id"
+    t.integer  "character_id"
+    t.integer  "correction"
+    t.float    "frequency"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
+  end
+
+  add_index "game_data_enemy_list_elements", ["character_id"], :name => "index_game_data_enemy_list_elements_on_character_id"
+  add_index "game_data_enemy_list_elements", ["enemy_list_id"], :name => "index_game_data_enemy_list_elements_on_enemy_list_id"
+
+  create_table "game_data_enemy_lists", :force => true do |t|
+    t.string   "name"
+    t.text     "definition"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "game_data_enemy_territories", :force => true do |t|
+    t.integer  "landform_id"
+    t.integer  "map_id"
+    t.integer  "map_tip_id"
+    t.integer  "enemy_list_id"
+    t.integer  "correction"
+    t.text     "definition"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
+  end
+
+  add_index "game_data_enemy_territories", ["enemy_list_id"], :name => "index_game_data_enemy_territories_on_enemy_list_id"
+  add_index "game_data_enemy_territories", ["landform_id"], :name => "index_game_data_enemy_territories_on_landform_id"
+  add_index "game_data_enemy_territories", ["map_id"], :name => "index_game_data_enemy_territories_on_map_id"
+  add_index "game_data_enemy_territories", ["map_tip_id"], :name => "index_game_data_enemy_territories_on_map_tip_id"
 
   create_table "game_data_equip_types", :force => true do |t|
     t.string   "name"
