@@ -13,7 +13,7 @@ class GameData::Status < ActiveRecord::Base
     tree = DNU::Data.parse(self)
     if tree.present?
       self.name    = tree[:name].to_s
-      self.caption = tree[:name].to_s
+      self.caption = tree[:caption].to_s
     else
       errors.add(:definition, :invalid)
     end

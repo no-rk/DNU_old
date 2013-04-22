@@ -1,0 +1,8 @@
+= link_to("新規#{@diseases.first.class.model_name.human}作成", new_game_data_disease_path)
+%br
+- @diseases.each do |disease|
+  [#{@diseases.first.class.model_name.human}]
+  %font{ color: "##{disease.color}" } #{disease.name}
+  = link_to("編集", edit_game_data_disease_path(disease.id))
+  %br
+= paginate @diseases

@@ -1,0 +1,6 @@
+= link_to("新規#{@status.class.model_name.human}作成", new_game_data_status_path)
+%br
+= link_to("定義済み#{@status.class.model_name.human}一覧", game_data_statuses_path)
+%br
+%br
+= render 'form'

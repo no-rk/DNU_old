@@ -1,0 +1,8 @@
+= link_to("新規#{@statuses.first.class.model_name.human}作成", new_game_data_status_path)
+%br
+- @statuses.each do |status|
+  [#{@statuses.first.class.model_name.human}]
+  #{status.name}
+  = link_to("編集", edit_game_data_status_path(status.id))
+  %br
+= paginate @statuses

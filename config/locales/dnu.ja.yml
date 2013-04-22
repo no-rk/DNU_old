@@ -88,6 +88,15 @@ ja:
       register/init_guardian: 初期守護竜
 
     attributes:
+      game_data/status:
+        name: 能力名
+        definition: 能力定義
+      
+      game_data/disease:
+        name: 状態異常名
+        color: 状態異常色
+        definition: 状態異常定義
+      
       game_data/map:
         name: マップ名
         caption: マップ説明

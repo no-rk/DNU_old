@@ -1,0 +1,4 @@
+= render 'game_data/error', { game_data_error: @status }
+= simple_form_for(@status) do |form_status|
+  = form_status.input :definition, input_html: { class: :span9 }
+  = form_status.submit class: "btn btn-large btn-success"
