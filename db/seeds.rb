@@ -11,8 +11,8 @@ if Day.last.nil?
   Day.create!(:day => 0, :state => 2)
 end
 
-# ジョブ, 守護, 言葉, 戦闘値, 生産, 属性, 戦闘設定, ポイント, 装備種, 地形
-[:job, :guardian, :word, :battle_value, :product, :element, :battle_setting, :point, :equip_type, :landform].each do |table|
+# ジョブ, 守護, 言葉, 戦闘値, 生産, 属性, 戦闘設定, ポイント, 装備種, 地形, キャラクター種類
+[:job, :guardian, :word, :battle_value, :product, :element, :battle_setting, :point, :equip_type, :landform, :character_type].each do |table|
   ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_#{table.to_s.tableize}")
   list = YAML.load(ERB.new(File.read("#{Rails.root}/db/game_data/#{table}.yml")).result)
   list.each do |data|
@@ -77,7 +77,7 @@ ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_ability_definiti
 ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_enemy_list_elements")
 ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_event_steps")
 ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_event_contents")
-[:status, :disease, :sup, :trap, :skill, :ability, :character, :enemy_list, :enemy_territory, :item, :event].each do |table|
+[:status, :disease, :sup, :trap, :skill, :ability, :item, :character, :enemy_list, :enemy_territory, :event].each do |table|
   ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_#{table.to_s.tableize}")
   list = YAML.load(ERB.new(File.read("#{Rails.root}/db/game_data/#{table}.yml")).result)
   list[:data].each do |data|

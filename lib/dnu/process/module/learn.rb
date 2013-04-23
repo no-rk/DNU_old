@@ -21,7 +21,7 @@ module DNU
               })
             end
           end
-          # アビリティー習得
+          # アビリティ習得
           GameData::LearningCondition.find_learnable(result_state, :ability).each do |ability|
             # いままで未修得だったら習得
             if user.result(:ability).where(:ability_id => ability.id).count == 0

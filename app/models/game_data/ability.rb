@@ -26,7 +26,7 @@ class GameData::Ability < ActiveRecord::Base
     if tree.present?
       self.name    = tree[:name].to_s
       self.caption = tree[:caption].to_s
-      # アビリティー詳細
+      # アビリティ詳細
       if self.unused?
         self.ability_definitions.destroy_all unless self.new_record?
         check_first = true

@@ -58,37 +58,13 @@
     キャラクター種ごとに固有の名前。
     ただしPCのキャラクター名だけは固有とは限らない。
 
-- name: PC
-  caption: |-
-    プレイヤーキャラクター
-
-- name: NPC
-  caption: |-
-    ノンプレイヤーキャラクター
-
-- name: モンスター
-  caption: |-
-    モンスター
-
-- name: 召喚
-  caption: |-
-    戦闘中に特殊効果によって呼ばれる
-
-- name: 人形
-  caption: |-
-    一人が数体もてる
-
-- name: 竜
-  caption: |-
-    一人に一匹だけ
-
 - name: 特殊効果
   caption: |-
     特殊効果種に分類される
 
 - name: 特殊効果種
   caption: |-
-    技、付加、アビリティー
+    技、付加、アビリティ
 
 - name: 特殊効果内容
   caption: |-
@@ -815,7 +791,7 @@
 
 - name: アビリティLV
   caption: |-
-    アビリティーの特殊効果LV。
+    アビリティの特殊効果LV。
 
 - name: 付加LV
   caption: |-

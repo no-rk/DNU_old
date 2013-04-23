@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130422085125) do
+ActiveRecord::Schema.define(:version => 20130423104136) do
 
   create_table "admins", :force => true do |t|
     t.string   "email",               :default => "", :null => false
@@ -96,6 +96,13 @@ ActiveRecord::Schema.define(:version => 20130422085125) do
     t.boolean  "has_equip_value"
     t.datetime "created_at",      :null => false
     t.datetime "updated_at",      :null => false
+  end
+
+  create_table "game_data_character_types", :force => true do |t|
+    t.string   "name"
+    t.text     "caption"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "game_data_characters", :force => true do |t|

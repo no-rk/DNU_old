@@ -156,13 +156,13 @@ class EffectParser < Parslet::Parser
     at >> (spaces.absent? >> any).repeat(1).as(:name) >> spaces
   }
   
-  rule(:point) {
+  rule(:coordinates) {
     alphabet.as(:x) >> natural_number.as(:y)
   }
   
   rule(:place) {
     (
-      map_name.as(:name) >> spaces? >> point
+      map_name.as(:name) >> spaces? >> coordinates
     ).as(:place)
   }
   
@@ -213,39 +213,32 @@ class EffectParser < Parslet::Parser
     ).as(:battle_value)
   }
   
-  rule(:disease_type) {
-    str('猛毒').as(:Poison) |
-    str('麻痺').as(:Palsy) |
-    str('睡眠').as(:Sleep) |
-    str('泥浸').as(:Mud) |
-    str('水濡').as(:Wet) |
-    str('炎纏').as(:Burn) |
-    str('鎌鼬').as(:Vacuum) |
-    str('光身').as(:Shine) |
-    str('暗幕').as(:Black) |
-    str('混濁').as(:Confuse) |
-    (
-      str('全') >>
-      str('状態').maybe >>
-      str('異常')
-    ).as(:All)
+  rule(:status_name) {
+    alternation_from_array(GameData::Status.pluck(:name))
   }
   
   rule(:disease_name) {
-    disease_type.as(:disease_name)
+    dynamic{ |s,c|
+      disease_list = GameData::Disease.pluck(:name)
+      disease_list += disease_list_temp if disease_list_temp.present?
+      alternation_from_array(disease_list)
+    }
+  }
+  
+  rule(:disease_value) {
+    disease_name.as(:disease)
   }
   
   rule(:element_name) {
-    str('無').as(:None) |
-    str('火').as(:Fire) |
-    str('水').as(:Water) |
-    str('地').as(:Earth) |
-    str('風').as(:Wind) |
-    str('光').as(:Light) |
-    str('闇').as(:Dark) |
-    str('ラ').as(:Random) |
-    str('弱').as(:Weak) |
-    str('全').as(:All)
+    alternation_from_array(GameData::Element.pluck(:name))
+  }
+  
+  rule(:skill_name) {
+    alternation_from_array(GameData::Skill.pluck(:name))
+  }
+  
+  rule(:character_type) {
+    alternation_from_array(GameData::CharacterType.pluck(:name))
   }
   
   rule(:landform_name) {
@@ -282,6 +275,14 @@ class EffectParser < Parslet::Parser
   
   rule(:sup_name) {
     alternation_from_array(GameData::Sup.pluck(:name))
+  }
+  
+  rule(:ability_name) {
+    alternation_from_array(GameData::Ability.pluck(:name))
+  }
+  
+  rule(:point_name) {
+    alternation_from_array(GameData::Point.pluck(:name))
   }
   
   rule(:item_kind_and_name) {
@@ -327,7 +328,7 @@ class EffectParser < Parslet::Parser
   
   rule(:disease_name_set_warp) {
     bra >> disease_name_set >> ket |
-    disease_name
+    disease_value
   }
   
   rule(:disease_name_set) {
@@ -450,7 +451,7 @@ class EffectParser < Parslet::Parser
       ).as(:target_condition) >>
       (
         battle_value >> str('割合').as(:ratio).maybe |
-        disease_name
+        disease_value
       ) >> str('追尾')
     ).as(:target_find_state)
   }
@@ -686,7 +687,7 @@ class EffectParser < Parslet::Parser
       battle_value >> str('低下') >> bra >> effect_coeff.as(:change_value) >> ket
     ).as(:down) |
     (
-      disease_name >> str('軽減') >> bra >> effect_coeff.as(:change_value) >> ket
+      disease_value >> str('軽減') >> bra >> effect_coeff.as(:change_value) >> ket
     ).as(:reduce) |
     (
       battle_value >> str('奪取') >> bra >> effect_coeff.as(:change_value) >> ket
@@ -709,7 +710,7 @@ class EffectParser < Parslet::Parser
   
   rule(:disease) {
     (
-      disease_name >> str('追加').maybe >> bra >> effect_coeff.as(:change_value) >> (separator >> effect_hit).maybe >> ket
+      disease_value >> str('追加').maybe >> bra >> effect_coeff.as(:change_value) >> (separator >> effect_hit).maybe >> ket
     ).as(:disease)
   }
   
@@ -801,12 +802,7 @@ class EffectParser < Parslet::Parser
   }
   
   rule(:serif) {
-    str('"') >> 
-    (
-      str('\\') >> any |
-      str('"').absent? >> any
-    ).repeat.as(:serif) >> 
-    str('"')
+    newline.maybe >> string.as(:serif)
   }
   
   rule(:revive) {
@@ -949,7 +945,7 @@ class EffectParser < Parslet::Parser
   
   rule(:add_disease_protect) {
     (
-      disease_name >> str('防御') >> bra >>
+      disease_value >> str('防御') >> bra >>
       effect_coeff.as(:repeat_value) >>
       (separator >> str('重複不可').as(:unique)).maybe >>
       ket
@@ -1045,13 +1041,13 @@ class EffectParser < Parslet::Parser
     (
       str('直前') >> (
         str('ダメージ').as(:attack) |
-        (disease_name.maybe >> str('追加量')).as(:disease) |
+        (disease_value.maybe >> str('追加量')).as(:disease) |
         (battle_value.maybe  >> str('回復量')).as(:heal) |
         (battle_value.maybe  >> str('上昇量')).as(:up) |
         (battle_value.maybe  >> str('低下量')).as(:down) |
         (battle_value.maybe  >> str('増加量')).as(:increase) |
         (battle_value.maybe  >> str('減少量')).as(:decrease) |
-        (disease_name.maybe >> str('軽減量')).as(:reduce) |
+        (disease_value.maybe >> str('軽減量')).as(:reduce) |
         (battle_value.maybe  >> str('奪取量')).as(:steal) |
         (battle_value.maybe  >> str('強奪量')).as(:rob) |
         (battle_value.maybe  >> str('変換量')).as(:convert) |
@@ -1061,13 +1057,13 @@ class EffectParser < Parslet::Parser
     (
       str('直後') >> (
         str('ダメージ').as(:attack) |
-        (disease_name.maybe >> str('追加量')).as(:disease) |
+        (disease_value.maybe >> str('追加量')).as(:disease) |
         (battle_value.maybe  >> str('回復量')).as(:heal) |
         (battle_value.maybe  >> str('上昇量')).as(:up) |
         (battle_value.maybe  >> str('低下量')).as(:down) |
         (battle_value.maybe  >> str('増加量')).as(:increase) |
         (battle_value.maybe  >> str('減少量')).as(:decrease) |
-        (disease_name.maybe >> str('軽減量')).as(:reduce) |
+        (disease_value.maybe >> str('軽減量')).as(:reduce) |
         (battle_value.maybe  >> str('奪取量')).as(:steal) |
         (battle_value.maybe  >> str('強奪量')).as(:rob) |
         (battle_value.maybe  >> str('変換量')).as(:convert) |
@@ -1077,13 +1073,13 @@ class EffectParser < Parslet::Parser
     (
       (
         str('ダメージ').as(:attack) |
-        (disease_name.maybe >> str('追加')).as(:disease) |
+        (disease_value.maybe >> str('追加')).as(:disease) |
         (battle_value.maybe  >> str('回復')).as(:heal) |
         (battle_value.maybe  >> str('上昇')).as(:up) |
         (battle_value.maybe  >> str('低下')).as(:down) |
         (battle_value.maybe  >> str('増加')).as(:increase) |
         (battle_value.maybe  >> str('減少')).as(:decrease) |
-        (disease_name.maybe >> str('軽減')).as(:reduce) |
+        (disease_value.maybe >> str('軽減')).as(:reduce) |
         (battle_value.maybe  >> str('奪取')).as(:steal) |
         (battle_value.maybe  >> str('強奪')).as(:rob) |
         (battle_value.maybe  >> str('変換')).as(:convert) |
@@ -1125,8 +1121,8 @@ class EffectParser < Parslet::Parser
   
   rule(:state_disease) {
     (
-      state_target       >> disease_name >> str('深度') |
-      state_target_group >> disease_name >> str('深度') >> group_value
+      state_target       >> disease_value >> str('深度') |
+      state_target_group >> disease_value >> str('深度') >> group_value
     ).as(:state_disease)
   }
   
@@ -1272,7 +1268,7 @@ class EffectParser < Parslet::Parser
           str('割合').as(:ratio)
         ).maybe
       ).as(:state_character).as(:do) |
-      disease_name.as(:state_disease).as(:do) >> str('深度')
+      disease_value.as(:state_disease).as(:do) >> str('深度')
     )
   }
   
@@ -1472,7 +1468,7 @@ class EffectParser < Parslet::Parser
   }
   
   rule(:disease_timing_options) {
-    disease_type.maybe
+    disease_value.maybe
   }
   
   rule(:heal_timing_options) {
@@ -1653,7 +1649,11 @@ class EffectParser < Parslet::Parser
   # disease_definition
   
   rule(:disease_definition) {
-    bra >> str('状態異常') >> ket >> (separator.absent? >> any).repeat(1).as(:name) >> separator >> color.as(:color) >> newline >>
+    bra >> str('状態異常') >> ket >> (separator.absent? >> any).repeat(1).capture(:name).as(:name) >> separator >> color.as(:color) >> newline >>
+    dynamic{ |s,c|
+      disease_list_temp.push(c.captures[:name])
+      any.present?
+    } >>
     partition >> (partition.absent? >> any).repeat(1).as(:caption) >> partition >>
     sup_effects.as(:effects)
   }
@@ -1689,13 +1689,6 @@ class EffectParser < Parslet::Parser
     root_processes.as(:do).repeat(1).as(:effects)
   }
   
-  # serif_definition
-  
-  rule(:serif_definition) {
-    bra >> str('セリフ') >> ket >> (newline.absent? >> any).repeat(1).as(:name) >> newline >>
-    sup_effects.as(:effects)
-  }
-  
   # ability_definition
   
   rule(:lv_effects) {
@@ -1727,17 +1720,14 @@ class EffectParser < Parslet::Parser
       ability_definition.as(:ability) |
       sup_definition.as(:sup) |
       disease_definition.as(:disease) |
-      skill_definition.as(:skill) |
-      serif_definition.as(:serif)
+      skill_definition.as(:skill)
     ).repeat(1)
   }
   
   # sup_setting
   
   rule(:sup_setting) {
-    bra >> str('付加') >> ket >> (
-      (level | newline).absent? >> any
-    ).repeat(1).as(:name) >> (
+    bra >> str('付加') >> ket >> sup_name.as(:name) >> (
       level >> natural_number.as(:lv)
     ).maybe >> newline.maybe
   }
@@ -1745,9 +1735,7 @@ class EffectParser < Parslet::Parser
   # disease_setting
   
   rule(:disease_setting) {
-    bra >> str('異常') >> ket >> (
-      newline.absent? >> any
-    ).repeat(1).as(:name) >> newline.maybe
+    bra >> str('異常') >> ket >> disease_name.as(:name) >> newline.maybe
   }
   
   # weapon_setting
@@ -1762,13 +1750,22 @@ class EffectParser < Parslet::Parser
     ).maybe >> newline.maybe
   }
   
+  # drop_setting
+  
+  rule(:drop_setting) {
+    item_kind_and_name >> spaces? >> natural_number >> percent >> newline.maybe
+  }
+  
+  # point_setting
+  
+  rule(:point_setting) {
+    bra >> str('ポイント') >> ket >> point_name >> spaces? >> correction >> newline.maybe
+  }
+  
   # status_setting
   
   rule(:status_setting) {
-    bra >> str('能力') >> ket >> (
-      (natural_number | newline).absent? >> any
-    ).repeat(1).as(:name) >>
-    natural_number.as(:status_strength) >> newline.maybe
+    bra >> str('能力') >> ket >> status_name.as(:name) >> spaces? >> decimal.as(:status_rate) >> newline.maybe
   }
   
   # skill_setting
@@ -1783,9 +1780,7 @@ class EffectParser < Parslet::Parser
   }
   
   rule(:skill_setting) {
-    bra >> str('技') >> ket >> (
-      (level | newline).absent? >> any
-    ).repeat(1).as(:name) >> (
+    bra >> str('技') >> ket >> skill_name.as(:name) >> (
       level >> natural_number.as(:lv)
     ).maybe >> newline >>
     priority >> separator >> pre_phase.as(:timing).maybe >> (conditions | condition).as(:condition) >> (
@@ -1798,16 +1793,14 @@ class EffectParser < Parslet::Parser
   # serif_setting
   
   rule(:serif_setting) {
-    bra >> str('セリフ') >> ket >> (
-      newline.absent? >> any
-    ).repeat(1).as(:name) >> newline.maybe
+    bra >> str('セリフ') >> ket >> newline >>
+    sup_effects.as(:effects)
   }
   
   # ability_setting
   
   rule(:ability_setting) {
-    bra >> str('アビリティ') >> ket >>
-    (level.absent? >> any).repeat(1).as(:name) >>
+    bra >> str('アビリティ') >> ket >> ability_name.as(:name) >>
     level >> natural_number.as(:lv) >> newline.maybe
   }
   
@@ -1820,29 +1813,25 @@ class EffectParser < Parslet::Parser
       status_setting.as(:status) |
       weapon_setting.as(:weapon) |
       sup_setting.as(:sup) |
-      disease_setting.as(:disease) |
       skill_setting.as(:skill) |
-      serif_setting.as(:serif)
+      serif_setting.as(:serif) |
+      drop_setting.as(:drop) |
+      point_setting.as(:point)
     ).repeat(1)
   }
   
   # character_definitions
   
-  rule(:character_type) {
-    str('PC') |
-    str('NPC') |
-    str('モンスター') |
-    str('竜') |
-    str('人形') |
-    str('召喚')
+  rule(:rank) {
+    separator >> str('ランク').maybe >> spaces? >> natural_number.as(:rank)
   }
   
   rule(:character_definition) {
-    bra >> character_type.capture(:kind).as(:kind) >> ket >> (newline.absent? >> any).repeat(1).capture(:name).as(:name) >>
+    bra >> character_type.capture(:kind).as(:kind) >> ket >> ((newline | separator).absent? >> any).repeat(1).capture(:name).as(:name) >>
     dynamic{ |s,c|
       character_list_temp.push(c.captures[:kind] => c.captures[:name])
       any.present?
-    } >> newline >>
+    } >> rank >> newline >>
     definitions.as(:definitions).maybe >>
     settings.as(:settings)
   }
@@ -2135,7 +2124,7 @@ class EffectParser < Parslet::Parser
       map_name.as(:map_name) >> spaces? >>
       (
         landform_name.as(:landform) |
-        point.as(:point)
+        coordinates.as(:coordinates)
       ).maybe
     ) >>
     arrow >>
@@ -2148,10 +2137,16 @@ class EffectParser < Parslet::Parser
   root(:root_processes)
   
   private
+  def disease_list_temp
+    @disease_list_temp ||= []
+    @disease_list_temp
+  end
+  
   def character_list_temp
     @character_list_temp ||= []
     @character_list_temp
   end
+  
   def alternation_from_array(words)
     result = nil
     

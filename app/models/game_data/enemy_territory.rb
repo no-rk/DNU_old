@@ -19,11 +19,11 @@ class GameData::EnemyTerritory < ActiveRecord::Base
   def set_game_data
     tree = DNU::Data.parse(self)
     if tree.present?
-      if tree[:point].present?
+      if tree[:coordinates].present?
         self.map_tip = GameData::MapTip.find_by_place({
           :name => tree[:map_name].to_s,
-          :x    => tree[:point][:x].to_i,
-          :y    => tree[:point][:y].to_i
+          :x    => tree[:coordinates][:x].to_i,
+          :y    => tree[:coordinates][:y].to_i
         }).first
       else
         self.landform = GameData::Landform.find_by_name(tree[:landform].to_s) if tree[:landform].present?

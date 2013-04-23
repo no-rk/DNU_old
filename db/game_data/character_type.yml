@@ -1,0 +1,23 @@
+- name: PC
+  caption: |-
+    プレイヤーキャラクター
+
+- name: NPC
+  caption: |-
+    ノンプレイヤーキャラクター
+
+- name: モンスター
+  caption: |-
+    モンスター
+
+- name: 召喚
+  caption: |-
+    戦闘中に特殊効果によって呼ばれる
+
+- name: 人形
+  caption: |-
+    一人が数体もてる
+
+- name: 竜
+  caption: |-
+    一人に一匹だけ

@@ -10,7 +10,7 @@ ja:
       game_data/weapon: 武器
       game_data/train: 訓練
       game_data/learning_condition: 習得条件
-      game_data/ability: アビリティー
+      game_data/ability: アビリティ
       game_data/character: キャラクター
       game_data/enemy_list: 敵リスト
       game_data/enemy_territory: 敵出現地
@@ -33,7 +33,7 @@ ja:
       result/status: 能力
       result/art: 技能
       result/product: 生産
-      result/ability: アビリティー
+      result/ability: アビリティ
       result/skill: 技
       result/inventory: 所持品
       result/item: アイテム
@@ -60,7 +60,7 @@ ja:
       register/skill: &skill
         技
       register/ability: &ability
-        アビリティー
+        アビリティ
 
       register/character: &character
         キャラクター
@@ -124,8 +124,8 @@ ja:
         definition: 技定義
       
       game_data/ability:
-        name: アビリティー名
-        definition: アビリティー定義
+        name: アビリティ名
+        definition: アビリティ定義
       
       game_data/item:
         kind: アイテム種類
@@ -222,8 +222,8 @@ ja:
       register/skill/skill_confs/skill_name: *skill_name
       
       register/ability_name: &ability_name
-        name: アビリティー名
-        caption: アビリティーの説明
+        name: アビリティ名
+        caption: アビリティの説明
       register/ability/ability_confs/ability_name: *ability_name
       
       register/profile: &profile
