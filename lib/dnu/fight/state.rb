@@ -1,15 +1,8 @@
 require_dependency "dnu/fight/state/module/target"
 require_dependency "dnu/fight/state/module/find_effects"
 
+require_dependency "dnu/fight/state/characters"
 require_dependency "dnu/fight/state/character"
-
-require_dependency "dnu/fight/state/character/base_character"
-require_dependency "dnu/fight/state/character/pc"
-require_dependency "dnu/fight/state/character/npc"
-require_dependency "dnu/fight/state/character/monster"
-require_dependency "dnu/fight/state/character/dragon"
-require_dependency "dnu/fight/state/character/puppet"
-require_dependency "dnu/fight/state/character/summon"
 
 require_dependency "dnu/fight/state/effects/base_effects"
 require_dependency "dnu/fight/state/effects/default_attack"

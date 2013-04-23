@@ -42,6 +42,14 @@ module DNU
         result_event_variable.save!
       end
       
+      def add_notice(tree)
+        tree[:members].each do |member|
+          member[:number] = member[:number].nil? ? 1 : send(member[:number].keys.first, member[:number].values.first).call.to_i
+          member[:number] = 0 if member[:number] < 0
+        end
+        user.result(:party, day.day).first.add_notice!(tree)
+      end
+      
       def add_event(tree)
         kind = (tree[:kind] || "通常").to_s
         name = tree[:name].to_s

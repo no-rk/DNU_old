@@ -8,7 +8,7 @@ module DNU
         
         def condition_damage(attack_type)
           lambda do
-            dmg = try('dmg_' + attack_type.to_s).call
+            dmg = send('dmg_' + attack_type.to_s).call
             dmg
           end
         end
@@ -59,7 +59,7 @@ module DNU
             end
           else
             lambda do
-              r = (tree[:group_target] || try(tree[:state_target] || '対象')).send(tree[:status_name]).send(status_or_equip)
+              r = (tree[:group_target] || send(tree[:state_target] || '対象')).send(tree[:status_name]).send(status_or_equip)
               r = r.send(ratio)*percent
               r
             end
@@ -81,7 +81,7 @@ module DNU
             end
           else
             lambda do
-              r = (tree[:group_target] || try(tree[:state_target] || '対象')).send(tree[:status_name]).send(status_or_equip)
+              r = (tree[:group_target] || send(tree[:state_target] || '対象')).send(tree[:status_name]).send(status_or_equip)
               r = r.history[-2].try(:*, percent).try("/", ((tree[:ratio] and r.max!=0) ? r.max : 1).to_f)
               r
             end
@@ -99,7 +99,7 @@ module DNU
             end
           else
             lambda do
-              r = (tree[:group_target] || try(tree[:state_target] || '対象')).try(child_name(tree[:disease_name]))
+              r = (tree[:group_target] || send(tree[:state_target] || '対象')).try(child_name(tree[:disease_name]))
               r
             end
           end
@@ -116,7 +116,7 @@ module DNU
             end
           else
             lambda do
-              r = (tree[:group_target] || try(tree[:state_target] || '対象')).try(child_name(tree[:disease_name]))
+              r = (tree[:group_target] || send(tree[:state_target] || '対象')).try(child_name(tree[:disease_name]))
               r = r.history[-2]
               r
             end
@@ -192,23 +192,28 @@ module DNU
         end
         
         def random_number(tree)
-          from = try(tree[:from].keys.first, tree[:from].values.first)
-          to   = try(  tree[:to].keys.first,   tree[:to].values.first)
+          from = send(tree[:from].keys.first, tree[:from].values.first)
+          to   = send(  tree[:to].keys.first,   tree[:to].values.first)
           lambda{ [from.call, to.call].min + rand((to.call-from.call).abs + 1) }
         end
         
         def add_coeff(tree)
-          add_array = tree.map{ |h| try(h.keys.first, h.values.first) }
+          add_array = tree.map{ |h| send(h.keys.first, h.values.first) }
           lambda{ add_array.inject(0){|r,v| r=r+v.call } }
         end
         
+        def diff_coeff(tree)
+          diff_array = tree.map{ |h| send(h.keys.first, h.values.first) }
+          lambda{ diff_array.inject(diff_array.shift.call){|r,v| r=r-v.call } }
+        end
+        
         def multi_coeff(tree)
-          multi_array = tree.map{ |h| try(h.keys.first, h.values.first) }
+          multi_array = tree.map{ |h| send(h.keys.first, h.values.first) }
           lambda{ multi_array.inject(1){|r,v| r=r*v.call } }
         end
         
         def calcu_value(tree)
-          lambda{ try(tree.keys.first, tree.values.first).call.to_f }
+          lambda{ send(tree.keys.first, tree.values.first).call.to_f }
         end
         
       end

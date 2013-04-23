@@ -62,7 +62,7 @@ item_types.each do |item_type|
       tree = transform.apply(tree)
     rescue
       p "文法エラー"
-      p data
+      p item_type["equip"]
     else
       item_type_model.build_item_equip
       item_type_model.item_equip.kind = tree[:kind].to_s

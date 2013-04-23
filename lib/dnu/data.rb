@@ -33,6 +33,21 @@ module DNU
       tree
     end
     
+    def self.parse_definition(kind, text)
+      parser    = EffectParser.new
+      transform = EffectTransform.new
+      
+      begin
+        tree = parser.send("#{kind}_definition").parse(text)
+        tree = transform.apply(tree)
+      rescue
+        tree = nil
+      else
+        tree = self.clean_tree(tree)
+      end
+      tree
+    end
+    
     def self.sync(model)
       kind       = model.class.name.split("::").last.underscore
       id         = model.id

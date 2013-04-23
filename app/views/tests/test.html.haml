@@ -21,6 +21,8 @@
   = submit_tag "送信"
 - if @text.present?
   - if @result.nil?
-    .rule "入力エラー　#{@error}"
+    .rule
+      エラー
+      %pre= @error
   - else
     = @result.html_safe

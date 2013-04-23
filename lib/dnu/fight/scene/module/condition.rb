@@ -82,6 +82,26 @@ module DNU
           try(tree[:do].keys.first, tree[:do].values.first)
         end
         
+        def condition_gt(tree)
+          if tree[:left]
+            lefts = [try(tree[:left].keys.first, tree[:left].values.first)]
+          else
+            lefts = state_target_group(tree[:lefts][:group]).map{ |c| try(tree[:lefts][:do].keys.first, tree[:lefts][:do].values.first.merge(:group_target => c)) }
+          end
+          if tree[:right]
+            rights = [try(tree[:right].keys.first, tree[:right].values.first)]
+          else
+            rights = state_target_group(tree[:rights][:group]).map{ |c| try(tree[:rights][:do].keys.first, tree[:rights][:do].values.first.merge(:group_target => c)) }
+          end
+          lambda do
+            begin
+              lefts.product(rights).any?{ |l,r| l.call > r.call }
+            rescue
+              nil
+            end
+          end
+        end
+        
         def condition_ge(tree)
           if tree[:left]
             lefts = [try(tree[:left].keys.first, tree[:left].values.first)]
@@ -132,6 +152,26 @@ module DNU
           lambda do
             begin
               lefts.product(rights).any?{ |l,r| l.call <= r.call }
+            rescue
+              nil
+            end
+          end
+        end
+        
+        def condition_lt(tree)
+          if tree[:left]
+            lefts = [try(tree[:left].keys.first, tree[:left].values.first)]
+          else
+            lefts = state_target_group(tree[:lefts][:group]).map{ |c| try(tree[:lefts][:do].keys.first, tree[:lefts][:do].values.first.merge(:group_target => c)) }
+          end
+          if tree[:right]
+            rights = [try(tree[:right].keys.first, tree[:right].values.first)]
+          else
+            rights = state_target_group(tree[:rights][:group]).map{ |c| try(tree[:rights][:do].keys.first, tree[:rights][:do].values.first.merge(:group_target => c)) }
+          end
+          lambda do
+            begin
+              lefts.product(rights).any?{ |l,r| l.call < r.call }
             rescue
               nil
             end

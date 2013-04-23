@@ -2,10 +2,7 @@ module DNU
   module Event
     module Condition
       include Calculate
-        
-      def random_percent(tree)
-        rand(100) < check_condition(tree)
-      end
+      include DNU::Fight::Scene::Condition
       
       def present_place(tree)
         map_name  = tree[:place][:name].to_s
@@ -15,38 +12,22 @@ module DNU
         map_arel     = GameData::Map.arel_table
         map_tip_arel = GameData::MapTip.arel_table
         
-        result_places.where(:arrival => true).
-                      where(map_arel[:name].eq(map_name)).
-                      where(map_tip_arel[:x].eq(map_tip_x)).
-                      where(map_tip_arel[:y].eq(map_tip_y)).includes(:map).includes(:map_tip).exists?
+        lambda{
+          result_places.where(:arrival => true).
+                        where(map_arel[:name].eq(map_name)).
+                        where(map_tip_arel[:x].eq(map_tip_x)).
+                        where(map_tip_arel[:y].eq(map_tip_y)).includes(:map).includes(:map_tip).exists?
+        }
       end
       
       def get_flag(tree)
-        flag = event_variables.where(:kind => "boolean", :name => tree[:name]).first.try(:value).present?
-        if tree[:off].present?
-          flag = !flag
-        end
-        flag
-      end
-      
-      def condition_gt(tree)
-        check_condition(tree[:left]) > check_condition(tree[:right])
-      end
-      
-      def condition_lt(tree)
-        check_condition(tree[:left]) < check_condition(tree[:right])
-      end
-      
-      def condition_ge(tree)
-        check_condition(tree[:left]) >= check_condition(tree[:right])
-      end
-      
-      def condition_le(tree)
-        check_condition(tree[:left]) <= check_condition(tree[:right])
-      end
-      
-      def condition_and(tree)
-        tree.all?{ |h| check_condition(h) }
+        lambda{
+          flag = event_variables.where(:kind => "boolean", :name => tree[:name]).first.try(:value).present?
+          if tree[:off].present?
+            flag = !flag
+          end
+          flag
+        }
       end
       
       def check_condition(tree)

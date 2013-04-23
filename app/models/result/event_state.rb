@@ -57,6 +57,6 @@ class Result::EventState < ActiveRecord::Base
   end
   
   def satisfy?
-    check_condition(self.event_step.condition)
+    check_condition(self.event_step.condition).call
   end
 end

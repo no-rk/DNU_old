@@ -4,7 +4,7 @@ class EffectParser < Parslet::Parser
   # single character rules
   
   rule(:spaces) {
-    match('[ \t　]').repeat(1)
+    match[' \t　'].repeat(1)
   }
   
   rule(:spaces?) {
@@ -12,95 +12,95 @@ class EffectParser < Parslet::Parser
   }
   
   rule(:newline) {
-    match('[\r\n]').repeat(1)
+    match['\r\n'].repeat(1)
   }
   
   rule(:num_1_to_9) {
-    match('[1-9１-９]')
+    match['1-9１-９']
   }
   
   rule(:num_0_to_9) {
-    match('[0-9０-９]')
+    match['0-9０-９']
   }
   
   rule(:color) {
-    match('[0-9a-fA-F０-９ａ-ｆＡ-Ｆ]').repeat(6,6)
+    match['0-9a-fA-F０-９ａ-ｆＡ-Ｆ'].repeat(6,6)
   }
   
   rule(:bra) {
-    spaces? >> match('[(\[{（［｛「【]') >> spaces?
+    spaces? >> match['(\[{（［｛「【'] >> spaces?
   }
   
   rule(:ket) {
-    spaces? >> match('[)\]}）］｝」】]') >> spaces?
+    spaces? >> match[')\]}）］｝」】'] >> spaces?
   }
   
   rule(:at) {
-    match('[@＠]')
+    match['@＠']
   }
   
   rule(:separator) {
-    spaces? >> match('[|:/｜：／・]') >> spaces?
+    spaces? >> match['|:/｜：／・'] >> spaces?
   }
   
   rule(:partition) {
-    match('[-]').repeat(1) >> newline
+    match['-'].repeat(1) >> newline
   }
   
   rule(:partition_end) {
-    match('[-]').repeat(1) >> newline.maybe
+    match['-'].repeat(1) >> newline.maybe
   }
   
   rule(:from_to) {
-    match('[-~‐－―ー～]') | str('から')
+    match['~～'] | str('から')
   }
   
   rule(:dot) {
-    match('[.．]')
+    match['.．']
   }
   
   rule(:plus) {
-    spaces? >> match('[+＋]') >> spaces?
+    spaces? >> match['+＋'] >> spaces?
   }
   
   rule(:minus) {
-    spaces? >> match('[-－]') >> spaces?
+    spaces? >> match['-－'] >> spaces?
   }
   
   rule(:multiply) {
-    spaces? >> match('[*xX＊ｘＸ×]') >> spaces?
+    spaces? >> match['*xX＊ｘＸ×'] >> spaces?
   }
   
   rule(:percent) {
-    match('[%％]')
+    match['%％']
   }
   
   rule(:arrow) {
     spaces? >>
     (
-      match('[→⇒]') |
-      match('[=＝]') >> match('[>＞]')
+      match['→⇒'] |
+      match['=＝'] >> match['>＞']
     ) >>
     spaces?
   }
   
   rule(:op_gt) {
     spaces? >>
-    match('[>＞]') >>
+    match['>＞'] >>
     spaces?
   }
   
   rule(:op_lt) {
     spaces? >>
-    match('[<＜]') >>
+    match['<＜'] >>
     spaces?
   }
   
   rule(:op_ge) {
     spaces? >>
     (
-      match('[≧]') |
-      match('[>＞]') >> match('[=＝]')
+      match['≧'] |
+      match['>＞'] >> match['=＝']
     ) >>
     spaces?
   }
@@ -108,15 +108,15 @@ class EffectParser < Parslet::Parser
   rule(:op_le) {
     spaces? >>
     (
-      match('[≦]') |
-      match('[<＜]') >> match('[=＝]')
+      match['≦'] |
+      match['<＜'] >> match['=＝']
     ) >>
     spaces?
   }
   
   rule(:op_eq) {
     spaces? >>
-    match('[=＝]') >>
+    match['=＝'] >>
     spaces?
   }
   
@@ -148,7 +148,7 @@ class EffectParser < Parslet::Parser
   }
   
   rule(:alphabet) {
-    match('[A-ZＡ-Ｚ]').as(:alphabet)
+    match['A-ZＡ-Ｚ'].as(:alphabet)
   }
   
   rule(:variable) {
@@ -166,6 +166,10 @@ class EffectParser < Parslet::Parser
     ).as(:place)
   }
   
+  rule(:eno) {
+    match['eEｅＥ'] >> match['nNｎＮ'] >> match['oOｏＯ'] >> dot >> natural_number.as(:eno)
+  }
+  
   rule(:string) {
     str('"') >> 
     (
@@ -179,31 +183,34 @@ class EffectParser < Parslet::Parser
   # name rule
   
   rule(:hp_mp) {
-    str('HP') | str('MP')
+    (
+      (str('HP') | str('MP')).as(:name)
+    ).as(:battle_value)
   }
   
-  rule(:status_name) {
+  rule(:battle_value) {
     (
-      (hp_mp.absent? >> str('M')).maybe >> hp_mp |
-      str('隊列').as(:position) |
-      str('行動数').as(:act_count) |
-      str('ターン優先度').as(:turn_priority) |
-      str('射程').as(:range)
-    ).as(:status_name) |
-    (
-      str('能力').as(:status) |
-      str('装備').as(:equip)
-    ).maybe >> (
-      str('M').maybe >> str('AT') |
-      str('M').maybe >> str('DF') |
-      str('M').maybe >> str('HIT') |
-      str('M').maybe >> str('EVA') |
-      str('SPD') |
-      str('CRI') |
       (
-        (disease_name | element_name.as(:element)) >> (str('特性').as(:Value) | str('耐性').as(:Resist))
-      ).as(:value_resist)
-    ).as(:status_name)
+        str('最大').as(:max).maybe >>
+        (
+          str('能力') |
+          str('装備').as(:equip)
+        ).maybe >>
+        alternation_from_array(GameData::BattleValue.has_max_and_equip_value(true, true)).as(:name)
+      ) |
+      (
+        str('最大').as(:max).maybe >>
+        alternation_from_array(GameData::BattleValue.has_max_and_equip_value(true, false)).as(:name)
+      ) |
+      (
+        (
+          str('能力') |
+          str('装備').as(:equip)
+        ).maybe >>
+        alternation_from_array(GameData::BattleValue.has_max_and_equip_value(false, true)).as(:name)
+      ) |
+      alternation_from_array(GameData::BattleValue.has_max_and_equip_value(false, false)).as(:name)
+    ).as(:battle_value)
   }
   
   rule(:disease_type) {
@@ -282,7 +289,11 @@ class EffectParser < Parslet::Parser
   }
   
   rule(:character_kind_and_name) {
-    alternation_from_hash(GameData::Character.all.map{|r| { r.kind => r.name } })
+    dynamic{ |s,c|
+      character_list = GameData::Character.all.map{|r| { r.kind => r.name } }
+      character_list += character_list_temp if character_list_temp.present?
+      alternation_from_hash(character_list)
+    }
   }
   
   rule(:enemy_list_name) {
@@ -310,7 +321,7 @@ class EffectParser < Parslet::Parser
   
   rule(:disease_name_union) {
     (
-      disease_name_set_warp >> (match('[&＆と]').maybe >> disease_name_set_warp).repeat(1)
+      disease_name_set_warp >> (match['&＆と'].maybe >> disease_name_set_warp).repeat(1)
     ).as(:disease_name_union)
   }
   
@@ -438,7 +449,7 @@ class EffectParser < Parslet::Parser
         str('低').as(:min)
       ).as(:target_condition) >>
       (
-        status_name >> str('割合').as(:ratio).maybe |
+        battle_value >> str('割合').as(:ratio).maybe |
         disease_name
       ) >> str('追尾')
     ).as(:target_find_state)
@@ -467,7 +478,7 @@ class EffectParser < Parslet::Parser
   # effect_coeff
   
   rule(:level) {
-    match('[LＬ]') >> match('[VＶ]')
+    match['LＬ'] >> match['VＶ']
   }
   
   rule(:equip_strength) {
@@ -491,11 +502,20 @@ class EffectParser < Parslet::Parser
     distance.as(:distance) |
     position_to_fixnum.as(:fixnum) |
     variable.as(:variable) |
+    number_of_people.as(:number_of_people) |
     bra >> (
       random_number |
       add_coeff |
+      diff_coeff |
       multi_coeff
     ) >> ket
+  }
+  
+  rule(:number_of_people) {
+    (
+      str('PT').as(:party_members)
+    ) >>
+    str('人数')
   }
   
   rule(:random_number) {
@@ -507,17 +527,35 @@ class EffectParser < Parslet::Parser
   rule(:add_coeff) {
     (
       (
+        diff_coeff |
         multi_coeff |
         calculable
       ) >>
       (
         plus >>
         (
+          diff_coeff |
           multi_coeff |
           calculable
         )
       ).repeat(1)
     ).as(:add_coeff)
+  }
+  
+  rule(:diff_coeff) {
+    (
+      (
+        multi_coeff |
+        calculable
+      ) >>
+      (
+        minus >>
+        (
+          multi_coeff |
+          calculable
+        )
+      ).repeat(1)
+    ).as(:diff_coeff)
   }
   
   rule(:multi_coeff) {
@@ -531,7 +569,7 @@ class EffectParser < Parslet::Parser
   }
   
   rule(:effect_coeff) {
-     random_number | add_coeff | multi_coeff | calculable
+     random_number | add_coeff | diff_coeff | multi_coeff | calculable
   }
   
   # effect
@@ -580,7 +618,7 @@ class EffectParser < Parslet::Parser
   }
   
   rule(:switch_physical_magical_attack) {
-    match('[SＳ]') >> match('[WＷ]') >> str('物魔攻撃')
+    match['SＳ'] >> match['WＷ'] >> str('物魔攻撃')
   }
   
   rule(:effect_hit) {
@@ -630,34 +668,34 @@ class EffectParser < Parslet::Parser
   
   rule(:heal) {
     (
-      hp_mp.as(:status_name) >> str('回復') >> bra >> effect_coeff.as(:change_value) >> ket
+      hp_mp >> str('回復') >> bra >> effect_coeff.as(:change_value) >> ket
     ).as(:heal)
   }
   
   rule(:change) {
     (
-      status_name >> str('増加') >> bra >> effect_coeff.as(:change_value) >> ket
+      battle_value >> str('増加') >> bra >> effect_coeff.as(:change_value) >> ket
     ).as(:increase) |
     (
-      status_name >> str('減少') >> bra >> effect_coeff.as(:change_value) >> ket
+      battle_value >> str('減少') >> bra >> effect_coeff.as(:change_value) >> ket
     ).as(:decrease) |
     (
-      status_name >> str('上昇') >> bra >> effect_coeff.as(:change_value) >> ket
+      battle_value >> str('上昇') >> bra >> effect_coeff.as(:change_value) >> ket
     ).as(:up) |
     (
-      status_name >> str('低下') >> bra >> effect_coeff.as(:change_value) >> ket
+      battle_value >> str('低下') >> bra >> effect_coeff.as(:change_value) >> ket
     ).as(:down) |
     (
       disease_name >> str('軽減') >> bra >> effect_coeff.as(:change_value) >> ket
     ).as(:reduce) |
     (
-      status_name >> str('奪取') >> bra >> effect_coeff.as(:change_value) >> ket
+      battle_value >> str('奪取') >> bra >> effect_coeff.as(:change_value) >> ket
     ).as(:steal) |
     (
-      status_name >> str('強奪') >> bra >> effect_coeff.as(:change_value) >> ket
+      battle_value >> str('強奪') >> bra >> effect_coeff.as(:change_value) >> ket
     ).as(:rob) |
     (
-      status_name >> str('変換') >> bra >> minus.as(:minus).maybe >> effect_coeff.as(:change_to) >> ket
+      battle_value >> str('変換') >> bra >> minus.as(:minus).maybe >> effect_coeff.as(:change_to) >> ket
     ).as(:convert) |
     (
       (bra >> str('技') >> ket >> ((str('消費増加') | excepts).absent? >> any).repeat(1).as(:name)).maybe >>
@@ -779,7 +817,7 @@ class EffectParser < Parslet::Parser
   
   rule(:next_status) {
     (
-      str('次の') >> state_target >> status_name >> str('を') >> effect_coeff.as(:change_to) >> str('にする')
+      str('次の') >> state_target >> battle_value >> str('を') >> effect_coeff.as(:change_to) >> str('にする')
     ).as(:next_status)
   }
   
@@ -1008,15 +1046,15 @@ class EffectParser < Parslet::Parser
       str('直前') >> (
         str('ダメージ').as(:attack) |
         (disease_name.maybe >> str('追加量')).as(:disease) |
-        (status_name.maybe  >> str('回復量')).as(:heal) |
-        (status_name.maybe  >> str('上昇量')).as(:up) |
-        (status_name.maybe  >> str('低下量')).as(:down) |
-        (status_name.maybe  >> str('増加量')).as(:increase) |
-        (status_name.maybe  >> str('減少量')).as(:decrease) |
+        (battle_value.maybe  >> str('回復量')).as(:heal) |
+        (battle_value.maybe  >> str('上昇量')).as(:up) |
+        (battle_value.maybe  >> str('低下量')).as(:down) |
+        (battle_value.maybe  >> str('増加量')).as(:increase) |
+        (battle_value.maybe  >> str('減少量')).as(:decrease) |
         (disease_name.maybe >> str('軽減量')).as(:reduce) |
-        (status_name.maybe  >> str('奪取量')).as(:steal) |
-        (status_name.maybe  >> str('強奪量')).as(:rob) |
-        (status_name.maybe  >> str('変換量')).as(:convert) |
+        (battle_value.maybe  >> str('奪取量')).as(:steal) |
+        (battle_value.maybe  >> str('強奪量')).as(:rob) |
+        (battle_value.maybe  >> str('変換量')).as(:convert) |
         str('消費量').as(:cost)
       )
     ).as(:state_effects_just_before_change) |
@@ -1024,15 +1062,15 @@ class EffectParser < Parslet::Parser
       str('直後') >> (
         str('ダメージ').as(:attack) |
         (disease_name.maybe >> str('追加量')).as(:disease) |
-        (status_name.maybe  >> str('回復量')).as(:heal) |
-        (status_name.maybe  >> str('上昇量')).as(:up) |
-        (status_name.maybe  >> str('低下量')).as(:down) |
-        (status_name.maybe  >> str('増加量')).as(:increase) |
-        (status_name.maybe  >> str('減少量')).as(:decrease) |
+        (battle_value.maybe  >> str('回復量')).as(:heal) |
+        (battle_value.maybe  >> str('上昇量')).as(:up) |
+        (battle_value.maybe  >> str('低下量')).as(:down) |
+        (battle_value.maybe  >> str('増加量')).as(:increase) |
+        (battle_value.maybe  >> str('減少量')).as(:decrease) |
         (disease_name.maybe >> str('軽減量')).as(:reduce) |
-        (status_name.maybe  >> str('奪取量')).as(:steal) |
-        (status_name.maybe  >> str('強奪量')).as(:rob) |
-        (status_name.maybe  >> str('変換量')).as(:convert) |
+        (battle_value.maybe  >> str('奪取量')).as(:steal) |
+        (battle_value.maybe  >> str('強奪量')).as(:rob) |
+        (battle_value.maybe  >> str('変換量')).as(:convert) |
         str('消費量').as(:cost)
       )
     ).as(:state_effects_just_after_change) |
@@ -1040,15 +1078,15 @@ class EffectParser < Parslet::Parser
       (
         str('ダメージ').as(:attack) |
         (disease_name.maybe >> str('追加')).as(:disease) |
-        (status_name.maybe  >> str('回復')).as(:heal) |
-        (status_name.maybe  >> str('上昇')).as(:up) |
-        (status_name.maybe  >> str('低下')).as(:down) |
-        (status_name.maybe  >> str('増加')).as(:increase) |
-        (status_name.maybe  >> str('減少')).as(:decrease) |
+        (battle_value.maybe  >> str('回復')).as(:heal) |
+        (battle_value.maybe  >> str('上昇')).as(:up) |
+        (battle_value.maybe  >> str('低下')).as(:down) |
+        (battle_value.maybe  >> str('増加')).as(:increase) |
+        (battle_value.maybe  >> str('減少')).as(:decrease) |
         (disease_name.maybe >> str('軽減')).as(:reduce) |
-        (status_name.maybe  >> str('奪取')).as(:steal) |
-        (status_name.maybe  >> str('強奪')).as(:rob) |
-        (status_name.maybe  >> str('変換')).as(:convert) |
+        (battle_value.maybe  >> str('奪取')).as(:steal) |
+        (battle_value.maybe  >> str('強奪')).as(:rob) |
+        (battle_value.maybe  >> str('変換')).as(:convert) |
         str('消費').as(:cost)
       ).as(:scene) >>
       (
@@ -1080,8 +1118,8 @@ class EffectParser < Parslet::Parser
   
   rule(:state_character) {
     (
-      state_target       >> status_name >> (str('の') >> non_negative_integer.as(:percent) >> percent | str('割合').as(:ratio)).maybe |
-      state_target_group >> status_name >> (str('の') >> non_negative_integer.as(:percent) >> percent | str('割合').as(:ratio)).maybe >> group_value
+      state_target       >> battle_value >> (str('の') >> non_negative_integer.as(:percent) >> percent | str('割合').as(:ratio)).maybe |
+      state_target_group >> battle_value >> (str('の') >> non_negative_integer.as(:percent) >> percent | str('割合').as(:ratio)).maybe >> group_value
     ).as(:state_character)
   }
   
@@ -1097,12 +1135,12 @@ class EffectParser < Parslet::Parser
       (
         (
           (
-            state_target       >> hp_mp.as(:status_name) |
-            state_target_group >> hp_mp.as(:status_name) >> group_value
+            state_target       >> hp_mp |
+            state_target_group >> hp_mp >> group_value
           ).as(:state_character).as(:left) |
           (
             state_target_group >>
-            hp_mp.as(:status_name).as(:state_character).as(:do)
+            hp_mp.as(:state_character).as(:do)
           ).as(:lefts)
         ) >>
         non_negative_integer.as(:percent).as(:fixnum).as(:right) >>
@@ -1111,12 +1149,12 @@ class EffectParser < Parslet::Parser
       (
         (
           (
-            state_target       >> hp_mp.as(:status_name) |
-            state_target_group >> hp_mp.as(:status_name) >> group_value
+            state_target       >> hp_mp |
+            state_target_group >> hp_mp >> group_value
           ).as(:state_character).as(:left) |
           (
             state_target_group >>
-            hp_mp.as(:status_name).as(:state_character).as(:do)
+            hp_mp.as(:state_character).as(:do)
           ).as(:lefts)
         ) >>
         non_negative_integer.as(:percent).as(:fixnum).as(:right) >>
@@ -1125,12 +1163,12 @@ class EffectParser < Parslet::Parser
       (
         (
           (
-            state_target       >> hp_mp.as(:status_name) |
-            state_target_group >> hp_mp.as(:status_name) >> group_value
+            state_target       >> hp_mp |
+            state_target_group >> hp_mp >> group_value
           ).as(:state_character).as(:left) |
           (
             state_target_group >>
-            hp_mp.as(:status_name).as(:state_character).as(:do)
+            hp_mp.as(:state_character).as(:do)
           ).as(:lefts)
         ) >>
         non_negative_integer.as(:percent).as(:fixnum).as(:right) >>
@@ -1150,7 +1188,7 @@ class EffectParser < Parslet::Parser
   
   rule(:wrap_random_percent) {
     (
-      str('頻度') >> match('[1-5１-５]').as(:number).as(:frequency) |
+      str('頻度') >> match['1-5１-５'].as(:number).as(:frequency) |
       str('通常時').as(:normal)
     ).as(:wrap_random_percent)
   }
@@ -1229,7 +1267,7 @@ class EffectParser < Parslet::Parser
   rule(:comparable) {
     state_target_group >> (
       (
-        status_name >> (
+        battle_value >> (
           str('の') >> non_negative_integer.as(:percent) >> percent |
           str('割合').as(:ratio)
         ).maybe
@@ -1445,7 +1483,7 @@ class EffectParser < Parslet::Parser
   }
   
   rule(:status_timing_options) {
-    status_name.maybe
+    battle_value.maybe
   }
   
   rule(:timing) {
@@ -1800,16 +1838,24 @@ class EffectParser < Parslet::Parser
   }
   
   rule(:character_definition) {
-    bra >> character_type.as(:kind) >> ket >> (newline.absent? >> any).repeat(1).as(:name) >> newline >>
+    bra >> character_type.capture(:kind).as(:kind) >> ket >> (newline.absent? >> any).repeat(1).capture(:name).as(:name) >>
+    dynamic{ |s,c|
+      character_list_temp.push(c.captures[:kind] => c.captures[:name])
+      any.present?
+    } >> newline >>
     definitions.as(:definitions).maybe >>
     settings.as(:settings)
   }
   
   rule(:character_definitions) {
+    dynamic{ |s,c|
+      character_list_temp.clear
+      any.present?
+    } >>
     character_definition.repeat(1)
   }
   
-  # character_settings
+  # character_setting
   
   rule(:correction) {
     (plus.as(:plus) | minus.as(:minus)) >> natural_number.as(:value)
@@ -1822,21 +1868,35 @@ class EffectParser < Parslet::Parser
     ).maybe
   }
   
-  rule(:character_settings) {
-    (character_setting >> newline.maybe).repeat(1)
-  }
-  
   # pt_settings
   
-  rule(:pt_setting) {
+  rule(:character_pc) {
+    bra >> str('PC').as(:kind) >> ket >> eno >> (spaces? >> str('第') >> natural_number.as(:day_i) >> str('回')).maybe
+  }
+  
+  rule(:pt_definition) {
     bra >> str('PT') >> ket >> (newline.absent? >> any).repeat(1).as(:pt_name) >> newline >>
     string.as(:pt_caption).maybe >> newline.maybe >>
-    character_settings.as(:members)
+    (
+      (
+        character_setting |
+        character_pc
+      ) >>
+      (
+        multiply >> calculable.as(:number)
+      ).maybe >>
+      (newline | any.absent?)
+    ).repeat(1).as(:members)
+  }
+  
+  rule(:pt_setting) {
+    character_definitions.as(:definitions).maybe >>
+    pt_definition
   }
   
   rule(:pt_settings) {
     character_definitions.as(:definitions).maybe >>
-    pt_setting.repeat(2).as(:settings)
+    pt_definition.repeat(2).as(:settings)
   }
   
   # event_timing
@@ -1927,12 +1987,17 @@ class EffectParser < Parslet::Parser
     ).as(:add_item)
   }
   
+  rule(:add_notice) {
+    pt_definition.as(:add_notice)
+  }
+  
   rule(:event_content) {
     print_text |
     set_flag |
     set_integer |
     add_event |
     add_item |
+    add_notice |
     change_place |
     end_step |
     end_event
@@ -2083,8 +2148,14 @@ class EffectParser < Parslet::Parser
   root(:root_processes)
   
   private
+  def character_list_temp
+    @character_list_temp ||= []
+    @character_list_temp
+  end
   def alternation_from_array(words)
     result = nil
+    
+    words.sort!{|a,b| b.size <=> a.size}
     
     words.each do |word|
       if result.nil?
@@ -2094,11 +2165,15 @@ class EffectParser < Parslet::Parser
       end
     end
     
+    result ||= any.absent? >> any
+    
     result
   end
   
   def alternation_from_hash(words)
     result = nil
+    
+    words.sort!{|a,b| b.values.first.size <=> a.values.first.size}
     
     words.each do |h|
       kind = h.keys.first
@@ -2109,6 +2184,8 @@ class EffectParser < Parslet::Parser
         result = result | bra >> str(kind).as(:kind) >> ket >> str(name).as(:name)
       end
     end
+    
+    result ||= any.absent? >> any
     
     result
   end

@@ -91,8 +91,11 @@ ActiveRecord::Schema.define(:version => 20130422085125) do
   create_table "game_data_battle_values", :force => true do |t|
     t.string   "name"
     t.text     "caption"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.boolean  "only_caption"
+    t.boolean  "has_max"
+    t.boolean  "has_equip_value"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
   end
 
   create_table "game_data_characters", :force => true do |t|
@@ -1103,6 +1106,7 @@ ActiveRecord::Schema.define(:version => 20130422085125) do
     t.integer  "party_id"
     t.integer  "character_id"
     t.string   "character_type"
+    t.integer  "correction"
     t.datetime "created_at",     :null => false
     t.datetime "updated_at",     :null => false
   end

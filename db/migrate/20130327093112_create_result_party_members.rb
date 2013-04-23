@@ -3,6 +3,7 @@ class CreateResultPartyMembers < ActiveRecord::Migration
     create_table :result_party_members do |t|
       t.references :party
       t.references :character, :polymorphic => true
+      t.integer :correction
 
       t.timestamps
     end

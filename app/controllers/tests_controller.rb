@@ -74,7 +74,7 @@ class TestsController < ApplicationController
       begin
         tree = parser.pt_settings.parse(@text)
         tree = transform.apply(tree)
-        character = DNU::Fight::State::Character.new(tree)
+        character = DNU::Fight::State::Characters.new(tree)
         battle = DNU::Fight::Scene::Battle.new(character)
         history = battle.play
         @result = history.to_html + "<pre>#{history.pretty_inspect}</pre>" + "<pre>#{tree.pretty_inspect}</pre>"
@@ -133,21 +133,21 @@ class TestsController < ApplicationController
   def pt_text
     @pt_text ||= <<-"PT"
 [PT]自分たち
-[PC]自分
-[PC]味方Ａ
-[PC]味方Ｂ
+[PC]ENo.1
+[PC]ENo.2
+[PC]ENo.3
 
 [PT]モンスターズ
-[モンスター]敵Ａ
-[モンスター]敵Ｂ
-[モンスター]敵Ｃ
+[モンスター]キュアプルプル
+[モンスター]ピコピコテール
+[モンスター]酔いどれドラゴン
     PT
   end
   
   def pt_character(tree)
     if @pt_character.nil?
       name = tree[:name]
-      kind = tree[:kind].values.first
+      kind = tree[:kind]
       pt_character_text = <<-"PT"
 #{@text}
 
@@ -157,13 +157,13 @@ class TestsController < ApplicationController
 [PT]Ｂチーム
 [#{kind}]#{name}
       PT
-      @pt_character = DNU::Fight::State::Character.new(transform.apply(parser.pt_settings.parse(pt_character_text)))
+      @pt_character = DNU::Fight::State::Characters.new(transform.apply(parser.pt_settings.parse(pt_character_text)))
     end
     @pt_character
   end
   
   def characters
-    @characters ||= DNU::Fight::State::Character.new(transform.apply(parser.pt_settings.parse(pt_text)))
+    @characters ||= DNU::Fight::State::Characters.new(transform.apply(parser.pt_settings.parse(pt_text)))
   end
   
   def es(tree)
