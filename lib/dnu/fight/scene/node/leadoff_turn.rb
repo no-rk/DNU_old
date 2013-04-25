@@ -35,10 +35,10 @@ module DNU
         
         def log_before_each_scene
           super
-          history[:HP]  = @active.call.HP.val
-          history[:MHP] = @active.call.MHP.val
-          history[:MP]  = @active.call.MP.val
-          history[:MMP] = @active.call.MMP.val
+          history[:HP]  = @active.call.HP.to_i
+          history[:MHP] = @active.call.最大HP.to_i
+          history[:MP]  = @active.call.MP.to_i
+          history[:MMP] = @active.call.最大MP.to_i
         end
         
       end

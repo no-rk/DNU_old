@@ -5,7 +5,7 @@ module DNU
       class Hit < BaseEffect
         
         def attack_element
-          @data.values.first[:element].keys.first.to_s.camelize
+          @data.values.first[:element]
         end
         
         def attack_type
@@ -44,7 +44,7 @@ module DNU
             raise @data.to_s
           end
           
-          state_change!(:HP, nil, calcu_tree, attacks) do |s,t,c|
+          state_change!(:HP, calcu_tree, attacks) do |s,c|
             対象.send(s).change_value(-c)
           end
           

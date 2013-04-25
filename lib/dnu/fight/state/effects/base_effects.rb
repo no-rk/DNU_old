@@ -16,8 +16,8 @@ module DNU
         def initialize(tree)
           @parent = tree[:parent]
           tree = Marshal.load(Marshal.dump(tree)) # parentはcloneしない
-          @name = tree[:name].try(:to_sym)
-          @LV = tree[:lv].nil? ? nil : DNU::Fight::State::LV.new(tree[:lv])
+          @name = tree[:name].try(:to_sym) || "名称未定義"
+          @LV = tree[:lv].nil? ? nil : DNU::Fight::State::LV.new(nil, tree[:lv])
           @history = []
           when_initialize(tree)
           tree[:effects].each do |effect|
@@ -36,7 +36,6 @@ module DNU
         def name
           @LV.nil? ? @name : "#{@name}LV#{@LV.to_i}"
         end
-        
       end
     end
   end

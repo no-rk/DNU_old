@@ -13,7 +13,7 @@ module DNU
           
           # 重複不可でかつ既に付加追加済みの場合はもう追加しない
           unless effects_setting[:unique] and 対象.effects.find_by_name(%Q|#{effects_name}#{"LV#{effects_setting[:lv]}" if effects_setting[:lv]}|).find_by_parent(@stack.last).present?
-            対象.add_effects(effects_type, effects_name, effects_setting, effects_definitions, @stack.last)
+            対象.add_effects(@tree, @stack.last, effects_definitions)
             success = true
           end
           

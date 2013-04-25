@@ -5,12 +5,11 @@ module DNU
       class Heal < BaseEffect
         
         def play_children
+          battle_value = @tree[:battle_value].to_s
+          calcu_tree   = @tree[:change_value]
           
-          status_name = @tree[:status_name].to_s
-          calcu_tree  = @tree[:change_value]
-          
-          # status_nameをcalcu_treeの計算値分だけ変化させる
-          state_change!(status_name, nil, calcu_tree, [status_name]) do |s,t,c|
+          # battle_valueをcalcu_treeの計算値分だけ変化させる
+          state_change!(battle_value, calcu_tree, [battle_value]) do |s,c|
             対象.send(s).change_value(c)
           end
           

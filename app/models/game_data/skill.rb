@@ -8,9 +8,12 @@ class GameData::Skill < ActiveRecord::Base
   before_validation :set_game_data
   after_save        :sync_game_data
   
+  def tree
+    @tree ||= DNU::Data.parse_from_model(self)
+  end
+  
   private
   def set_game_data
-    tree = DNU::Data.parse(self)
     if tree.present?
       self.name = tree[:name].to_s
       DNU::Data.set_learning_conditions(self, tree[:learning_conditions])

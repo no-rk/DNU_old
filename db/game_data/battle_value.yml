@@ -2,7 +2,7 @@
   caption: |-
     キャラクターの体力を表す値です。
     ターンの最後にHPが0未満の場合、戦闘離脱します。
-  only_caption: false
+  min: -100000000
   has_max: true
   has_equip_value: false
 
@@ -10,7 +10,7 @@
   caption: |-
     キャラクターの持つ不思議な力を表す値です。
     主に技を使用する際に消費されます。
-  only_caption: false
+  min: 0
   has_max: true
   has_equip_value: false
 
@@ -18,7 +18,6 @@
   caption: |-
     キャラクターの攻撃力の値です。
     値が高いほど与えるダメージが増加します。
-  only_caption: false
   has_max: false
   has_equip_value: true
 
@@ -26,7 +25,6 @@
   caption: |-
     キャラクターの魔法攻撃力の値です。
     値が高いほど与えるダメージが増加します。
-  only_caption: false
   has_max: false
   has_equip_value: true
 
@@ -34,7 +32,6 @@
   caption: |-
     キャラクターの防御力の値です。
     値が高いほど受けるダメージが減少します。
-  only_caption: false
   has_max: false
   has_equip_value: true
 
@@ -42,7 +39,6 @@
   caption: |-
     キャラクターの魔法防御力の値です。
     値が高いほど受けるダメージが減少します。
-  only_caption: false
   has_max: false
   has_equip_value: true
 
@@ -50,7 +46,6 @@
   caption: |-
     キャラクターの攻撃命中補正の値です。
     値が高いほど攻撃が当たりやすくなります。
-  only_caption: false
   has_max: false
   has_equip_value: true
 
@@ -58,7 +53,6 @@
   caption: |-
     キャラクターの魔法攻撃命中補正の値です。
     値が高いほど攻撃が当たりやすくなります。
-  only_caption: false
   has_max: false
   has_equip_value: true
 
@@ -66,7 +60,6 @@
   caption: |-
     キャラクターの攻撃回避補正の値です。
     値が高いほど攻撃を避けやすくなります。
-  only_caption: false
   has_max: false
   has_equip_value: true
 
@@ -74,7 +67,6 @@
   caption: |-
     キャラクターの魔法攻撃回避補正の値です。
     値が高いほど攻撃を避けやすくなります。
-  only_caption: false
   has_max: false
   has_equip_value: true
 
@@ -82,7 +74,6 @@
   caption: |-
     キャラクターのクリティカル攻撃補正の値です。
     値が高いほどクリティカル攻撃が出やすくなります。
-  only_caption: false
   has_max: false
   has_equip_value: true
 
@@ -90,7 +81,6 @@
   caption: |-
     キャラクターの行動速度の値です。
     値が高いほど早く行動でき、追加行動が発生しやすくなります。
-  only_caption: false
   has_max: false
   has_equip_value: true
 
@@ -99,70 +89,35 @@
     キャラクターの行動待機時間の値です。
     値が高いほど行動が遅くなり、行動毎に値が減っていきます。
     値が0以下になると追加行動が発生します。
-  only_caption: false
-  has_max: false
-  has_equip_value: true
-
-- name: 異常特性
-  caption: |-
-    各種状態異常それぞれの特性を表す値です。
-    猛毒特性、麻痺特性...のように表記されます。
-    異常特性が高いほど<b>その状態異常を追加出来る確率が増加</b>します。
-  only_caption: true
-  has_max: false
-  has_equip_value: true
-
-- name: 異常耐性
-  caption: |-
-    各種状態異常それぞれの耐性を表す値です。
-    猛毒耐性、麻痺耐性...のように表記されます。
-    異常耐性が高いほど<b>その状態異常を追加される確率が減少</b>します。
-  only_caption: true
-  has_max: false
-  has_equip_value: true
-
-- name: 属性特性
-  caption: |-
-    各種属性それぞれの特性を表す値です。
-    火特性、水特性...のように表記されます。
-    属性特性が高いほど<b>その属性攻撃で与えるダメージが増加</b>します。
-  only_caption: true
-  has_max: false
-  has_equip_value: true
-
-- name: 属性耐性
-  caption: |-
-    各種属性それぞれの耐性を表す値です。
-    火耐性、水耐性...のように表記されます。
-    属性耐性が高いほど<b>その属性攻撃で受けるダメージが減少</b>します。
-  only_caption: true
   has_max: false
   has_equip_value: true
 
 - name: 隊列
   caption: |-
     説明
-  only_caption: false
+  min: 1
+  max: 5
   has_max: false
   has_equip_value: false
 
 - name: 行動数
   caption: |-
     説明
-  only_caption: false
+  min: 0
+  max: 100
   has_max: false
   has_equip_value: false
 
 - name: ターン優先度
   caption: |-
     説明
-  only_caption: false
   has_max: false
   has_equip_value: false
 
 - name: 射程
   caption: |-
     説明
-  only_caption: false
+  min: 1
+  max: 5
   has_max: false
   has_equip_value: false

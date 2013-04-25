@@ -20,9 +20,7 @@ module DNU
 自/{次の被追加量減少(1)＋一時効果消滅}
           DEFINITION
           
-          parser    = EffectParser.new
-          transform = EffectTransform.new
-          effects_definitions = [{ effects_type => transform.apply(parser.temporary_effect_definition.parse(effects_definitions)) }]
+          effects_definitions = [{ effects_type => DNU::Data.parse_definition(:temporary_effect, effects_definitions) }]
           
           # 重複不可でかつ既に付加追加済みの場合はもう追加しない
           unless unique and 対象.effects.find_by_name(%Q|#{effects_name}#{"LV#{effects_setting[:lv]}" if effects_setting[:lv]}|).find_by_parent(@stack.last).present?

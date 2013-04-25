@@ -5,6 +5,8 @@ module DNU
       class Characters < Array
         include Target
         
+        @@definitions = []
+        
         def initialize(tree)
           tree[:settings].each do |pt|
             team = DNU::Fight::State::Team.new(pt[:pt_name].to_s)
@@ -14,18 +16,17 @@ module DNU
           end
         end
         
-        def add_character(setting, definitions, parent=nil, parent_effect=nil, turn_end=nil)
+        def add_character(setting, def_plus = [], parent=nil, parent_effect=nil, turn_end=nil)
           kind = setting[:kind].to_s
           name = setting[:name].to_s
-          definition = definitions.try(:find){|d| d[:kind]==kind and d[:name]==name } || {}
+          
+          definition = def_plus.try(:find){|d| d[:kind]==kind and d[:name]==name } || {}
+          definition = @@definitions.find{ |d| d[:kind]==kind and d[:name]==name } if definition.blank?
           # 定義されていない場合はデータベースから読み込みを試みる
           if definition.blank?
-            tree = GameData::Character.select(:definition).find_by_kind_and_name(kind, name)
-            if tree.present?
-              parser    = EffectParser.new
-              transform = EffectTransform.new
-              tree = parser.character_definition.parse(tree.definition)
-              definition = transform.apply(tree)
+            definition = GameData::Character.find_by_kind_and_name(kind, name).try(:tree) || {}
+            if definition.present?
+              @@definitions.push(definition)
             end
           end
           definition.merge!(setting).merge!({ :parent => parent, :parent_effect => parent_effect })
@@ -34,7 +35,7 @@ module DNU
           # 戦闘値決定時の特殊効果適用
           DNU::Fight::Scene::SetBattleValue.new([character].extend Target).play
           # この時点での戦闘値を元に最大値と最小値を決定する
-          character.set_min_max
+          character.start
           self << character
         end
         

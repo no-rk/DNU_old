@@ -5,12 +5,11 @@ module DNU
       class Cost < BaseEffect
         
         def play_children
-          
-          calcu_tree  = @tree[:change_value]
+          calcu_tree = @tree[:change_value]
           
           # MPをcalcu_treeの計算値分だけ変化させる
-          state_change!(:MP, nil, calcu_tree) do |s,t,c|
-            対象.MP.change_value(-c)
+          state_change!(:MP, calcu_tree) do |s,c|
+            対象.send(s).change_value(-c)
           end
           
         end

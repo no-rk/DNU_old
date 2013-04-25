@@ -50,7 +50,7 @@ module DNU
         # 集合検索
         
         def random(set)
-          set.find_all{ |child| ((child.team == @active.call.team ? -1 : 1)*child.Position + @active.call.Position).abs <= @active.call.Range + 1 }.sample || set.sample
+          set.find_all{ |child| ((child.team == @active.call.team ? -1 : 1)*child.隊列 + @active.call.隊列).abs <= @active.call.射程 + 1 }.sample || set.sample
         end
         
         def target_find_random(tree, set)
@@ -63,7 +63,7 @@ module DNU
         
         def target_find_state(tree, set)
           min_or_max = tree[:target_condition].keys.first
-          status_or_disease_name = tree[:status_name] || tree[:disease_name].keys.first
+          status_or_disease_name = tree[:battle_value] || tree[:disease]
           ratio = tree[:ratio] ? :ratio : :to_f
           [lambda{ set.send(min_or_max){ |a,b| a.send(status_or_disease_name).send(ratio) <=> b.send(status_or_disease_name).send(ratio) } }]
         end

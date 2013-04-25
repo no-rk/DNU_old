@@ -23,12 +23,12 @@ module DNU
             @active.call.find_by_team(team).each do |char|
                child.values.first << {
                 :active => char.name,
-                :HP  => char.HP.val,
-                :MHP => char.MHP.val,
-                :MP  => char.MP.val,
-                :MMP => char.MMP.val,
-                :Position => char.Position.val,
-                :Range => char.Range.val
+                :HP  => char.HP.to_i,
+                :MHP => char.最大HP.to_i,
+                :MP  => char.MP.to_i,
+                :MMP => char.最大MP.to_i,
+                :Position => char.隊列.to_i,
+                :Range => char.射程.to_i
               }
             end
             history[:active] << child

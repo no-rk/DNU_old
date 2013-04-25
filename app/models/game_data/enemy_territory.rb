@@ -15,9 +15,12 @@ class GameData::EnemyTerritory < ActiveRecord::Base
   before_validation :set_game_data
   after_save        :sync_game_data
   
+  def tree
+    @tree ||= DNU::Data.parse_from_model(self)
+  end
+  
   private
   def set_game_data
-    tree = DNU::Data.parse(self)
     if tree.present?
       if tree[:coordinates].present?
         self.map_tip = GameData::MapTip.find_by_place({
@@ -30,7 +33,7 @@ class GameData::EnemyTerritory < ActiveRecord::Base
         self.map      = GameData::Map.find_by_name(tree[:map_name].to_s)      if tree[:map_name].present?
       end
       self.enemy_list = GameData::EnemyList.find_by_name(tree[:name].to_s)
-      self.correction = tree[:correction].nil? ? 0 : "#{tree[:correction][:minus].present? ? '-' : '+'}#{tree[:correction][:value]}".to_i
+      self.correction = tree[:correction].to_i
     else
       errors.add(:definition, :invalid)
     end

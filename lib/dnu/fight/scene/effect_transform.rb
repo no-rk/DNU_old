@@ -25,6 +25,14 @@ class EffectTransform < Parslet::Transform
     filter[position.to_sym]
   }
   
+  rule(:correction_wrap => subtree(:correction)) {
+    correction[:minus].present? ? -(correction[:value].to_i) : correction[:value].to_i
+  }
+  
+  rule(:battle_value_wrap => subtree(:battle_value)) {
+    "#{battle_value[:max]}#{(battle_value[:status_or_equip] || '能力') if battle_value.key?(:status_or_equip)}#{battle_value[:name]}"
+  }
+  
   rule(:timing_transform => subtree(:timing)) {
     def return_timing(k,v)
       if k==:element
@@ -187,7 +195,7 @@ class EffectTransform < Parslet::Transform
   
   rule(:effect => { :attack => subtree(:attack) }) {
     attack_type = attack.keys.first
-    attack[attack_type][:element] ||= { :None => '無' }
+    attack[attack_type][:element] ||= '無'
     
     def effect_tree(tree)
       {

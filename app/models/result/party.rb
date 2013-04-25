@@ -64,7 +64,7 @@ class Result::Party < ActiveRecord::Base
             result_party_member.correction = member[:day_i]
           else
             result_party_member.character  = GameData::Character.find_by_kind_and_name(member[:kind], member[:name])
-            result_party_member.correction = member[:correction].nil? ? 0 : "#{member[:correction][:minus].present? ? '-' : '+'}#{member[:correction][:value]}".to_i
+            result_party_member.correction = member[:correction].to_i
           end
         end
       end

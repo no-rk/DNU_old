@@ -4,7 +4,7 @@ module DNU
       class Act < BaseScene
         
         def before_each_scene
-          @active.call.ActCount.change_value(1)
+          @active.call.行動数.change_value(1)
         end
         
         def play_children

@@ -5,12 +5,11 @@ module DNU
       class Reduce < BaseEffect
         
         def play_children
-          
-          disease_name = child_name(@tree[:disease_name])
+          disease_name = @tree[:disease]
           calcu_tree   = @tree[:change_value]
           
           # status_nameをcalcu_treeの計算値分だけ変化させる
-          state_change!(disease_name, nil, calcu_tree, [disease_name]) do |s,t,c|
+          state_change!(disease_name, calcu_tree, [disease_name]) do |s,c|
             対象.send(s).change_value(-c)
           end
           

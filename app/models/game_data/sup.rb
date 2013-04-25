@@ -28,9 +28,12 @@ class GameData::Sup < ActiveRecord::Base
     end
   end
   
+  def tree
+    @tree ||= DNU::Data.parse_from_model(self)
+  end
+  
   private
   def set_game_data
-    tree = DNU::Data.parse(self)
     if tree.present?
       self.name = tree[:name].to_s
     else

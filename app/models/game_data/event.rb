@@ -13,6 +13,10 @@ class GameData::Event < ActiveRecord::Base
   before_validation :set_game_data
   after_save        :sync_game_data
   
+  def tree
+    @tree ||= DNU::Data.parse_from_model(self)
+  end
+  
   def used?
     self.events.exists?
   end
@@ -23,7 +27,6 @@ class GameData::Event < ActiveRecord::Base
   
   private
   def set_game_data
-    tree = DNU::Data.parse(self)
     if tree.present?
       # Event
       self.kind    = (tree[:kind] || "通常").to_s

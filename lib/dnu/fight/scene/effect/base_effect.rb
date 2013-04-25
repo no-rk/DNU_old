@@ -17,10 +17,9 @@ module DNU
           @create_change_value ||= lambda{ calcu_value(calcu_tree).call.to_i }
         end
         
-        def state_change!(status_name, status_or_equip, calcu_tree, timings=[])
-          
+        def state_change!(battle_value, calcu_tree, timings=[])
           change_value = create_change_value(calcu_tree).call
-          history[:children] = { :status_name => status_name, :status_or_equip => status_or_equip, :just_after => just_after(change_value) }
+          history[:children] = { :battle_value => battle_value, :just_after => just_after(change_value) }
           
           # 変化量決定前
           ["",timings].flatten.each do |timing|
@@ -29,11 +28,11 @@ module DNU
           
           change_value = next_change!(change_value)
           
-          before_change = status_or_equip.nil? ? 対象.send(status_name).val : 対象.send(status_name).send(status_or_equip).val
-          yield(status_name, status_or_equip, change_value)
-          after_change  = status_or_equip.nil? ? 対象.send(status_name).val : 対象.send(status_name).send(status_or_equip).val
+          before_change = 対象.send(battle_value).to_i
+          yield(battle_value, change_value)
+          after_change  = 対象.send(battle_value).to_i
           
-          history[:children] = { :status_name => status_name, :status_or_equip => status_or_equip, :change_value => change_value, :before_change => before_change, :after_change => after_change }
+          history[:children] = { :battle_value => battle_value, :change_value => change_value, :before_change => before_change, :after_change => after_change }
           
           # 変化量決定後
           ["",timings].flatten.each do |timing|

@@ -42,6 +42,9 @@ module DNU
           @done = true
         end
         
+        def pretty_print(q)
+          q.pp "[#{timing}#{before_after}#{type}]#{name}"
+        end
       end
     end
   end

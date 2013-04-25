@@ -12,6 +12,10 @@ class GameData::Ability < ActiveRecord::Base
   before_validation :set_game_data
   after_save        :sync_game_data
   
+  def tree
+    @tree ||= DNU::Data.parse_from_model(self)
+  end
+  
   def used?
     self.abilities.exists?
   end
@@ -22,7 +26,6 @@ class GameData::Ability < ActiveRecord::Base
   
   private
   def set_game_data
-    tree = DNU::Data.parse(self)
     if tree.present?
       self.name    = tree[:name].to_s
       self.caption = tree[:caption].to_s

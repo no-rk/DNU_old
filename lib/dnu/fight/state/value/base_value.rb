@@ -2,109 +2,89 @@ module DNU
   module Fight
     module State
       class BaseValue < SimpleDelegator
-        attr_reader :ini, :val, :min, :max, :history
-        
-        def status
-          self
+        attr_reader :ini, :min, :max, :history
+       
+        def initialize(parent = nil, initial_value = 0)
+          @parent        = parent
+          @current_value = initial_value.to_i
+          @history       = []
+          @next_value    = []
+          sync_value
         end
         
-        def equip
-          self
+        def start(min_val = nil, max_val = nil)
+          @min = self.class.new(self, min_val || min_cal(@current_value))
+          @max = self.class.new(self, max_val || max_cal(@current_value))
+          @validate = true
+          sync_value
+          @ini = @current_value
         end
         
-        def next
-          @next.last
+        def change_value(n)
+          @current_value = (@current_value + n).to_i
+          sync_value
         end
         
-        def next!
-          @next.pop
+        def change_to(n)
+          @current_value = n.to_i
+          sync_value
+        end
+         
+        def next_value=(n)
+          @next_value = [n]
+        end
+         
+        def next_value
+          @next_value.last
+        end
+         
+        def next_value!
+          @next_value.pop
         end
         
-        def status_next
-          @next.last
+        def val
+          (next_value || @current_value).to_i
         end
         
-        def status_next!
-          @next.pop
+        def val!
+          (next_value! || @current_value).to_i
         end
         
-        def status_next=(val)
-          @next = [val]
+        def ratio
+          max.to_f==0 ? 0 : val.to_f/max.to_f
         end
         
-        def equip_next
-          @next.last
+        private
+        def sync_value
+          if @validate.present?
+            validate_value
+            record_history
+          end
+          __setobj__ @current_value
+          @parent.send(:sync_value) if @parent.present?
         end
         
-        def equip_next!
-          @next.pop
+        def validate_value
+          @current_value = min if @current_value < min
+          @current_value = max if @current_value > max
+          @current_value = @current_value.to_i
         end
         
-        def equip_next=(val)
-          @next = [val]
+        def record_history
+          @history << @current_value
         end
         
         def larger_of(a,b)
           a > b ? a : b
         end
         
-        def min_val(n)
+        def min_cal(n)
           larger_of(n/4, 50)
         end
         
-        def max_val(n)
+        def max_cal(n)
           larger_of(n*4, 200)
         end
-        
-        def set_min_max
-          @min = min_val(val)
-          @max = max_val(val)
-          @validate = true
-          set_val
-          @ini = val
-        end
-        
-        def initialize(n, parent = nil)
-          @parent = parent
-          @val = n.to_i
-          @history = [val]
-          @next = []
-          super val
-        end
-        
-        def validate_value
-          if @validate.present?
-            @val = min if @val < min
-            @val = max if @val > max
-            @val = @val.to_i
-          end
-        end
-        
-        def history_value
-          @history << val
-        end
-        
-        def set_val
-          validate_value
-          history_value
-          __setobj__ val
-          @parent.nil? ? val : @parent.send(:set_val)
-        end
-        
-        def ratio
-          max==0 ? 0 : val.to_f/max.to_f
-        end
-        
-        def change_value(n)
-          @val += n
-          set_val
-        end
-        
-        def change_to(n)
-          @val = n
-          set_val
-        end
-        
       end
     end
   end

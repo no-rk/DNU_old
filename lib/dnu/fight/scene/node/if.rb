@@ -5,7 +5,7 @@ module DNU
         include Condition
         
         def attack_element
-          @data.values.first[:element].keys.first.to_s.camelize
+          @data.values.first[:element]
         end
         
         def attack_type

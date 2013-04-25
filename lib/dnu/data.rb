@@ -15,15 +15,9 @@ module DNU
       end
     end
     
-    def self.parse(model)
-      kind = model.class.name.split("::").last.underscore
-      text = model.definition
-      
-      parser    = EffectParser.new
-      transform = EffectTransform.new
-      
+    def self.parse(kind, text)
       begin
-        tree = parser.send("#{kind}_definition").parse(text)
+        tree = parser.send(kind).parse(text)
         tree = transform.apply(tree)
       rescue
         tree = nil
@@ -33,19 +27,18 @@ module DNU
       tree
     end
     
+    def self.parse_from_model(model)
+      kind = model.class.name.split("::").last.underscore
+      text = model.definition
+      self.parse_definition(kind, text) || {}
+    end
+    
     def self.parse_definition(kind, text)
-      parser    = EffectParser.new
-      transform = EffectTransform.new
-      
-      begin
-        tree = parser.send("#{kind}_definition").parse(text)
-        tree = transform.apply(tree)
-      rescue
-        tree = nil
-      else
-        tree = self.clean_tree(tree)
-      end
-      tree
+      self.parse("#{kind}_definition", text)
+    end
+    
+    def self.parse_settings(kind, text)
+      self.parse("#{kind}_settings", text)
     end
     
     def self.sync(model)
@@ -104,6 +97,14 @@ module DNU
           model.learning_conditions.build(learning_conditions.merge({ :condition_group => condition_group, :group_count => group_count }))
         end
       end
+    end
+    
+    def self.parser
+      @@parser ||= EffectParser.new
+    end
+    
+    def self.transform
+      @@transform ||= EffectTransform.new
     end
   end
 end

@@ -185,7 +185,7 @@ class EffectParser < Parslet::Parser
   rule(:hp_mp) {
     (
       (str('HP') | str('MP')).as(:name)
-    ).as(:battle_value)
+    ).as(:battle_value_wrap).as(:battle_value)
   }
   
   rule(:battle_value) {
@@ -194,8 +194,8 @@ class EffectParser < Parslet::Parser
         str('最大').as(:max).maybe >>
         (
           str('能力') |
-          str('装備').as(:equip)
-        ).maybe >>
+          str('装備')
+        ).maybe.as(:status_or_equip) >>
         alternation_from_array(GameData::BattleValue.has_max_and_equip_value(true, true)).as(:name)
       ) |
       (
@@ -205,12 +205,12 @@ class EffectParser < Parslet::Parser
       (
         (
           str('能力') |
-          str('装備').as(:equip)
-        ).maybe >>
+          str('装備')
+        ).maybe.as(:status_or_equip) >>
         alternation_from_array(GameData::BattleValue.has_max_and_equip_value(false, true)).as(:name)
       ) |
       alternation_from_array(GameData::BattleValue.has_max_and_equip_value(false, false)).as(:name)
-    ).as(:battle_value)
+    ).as(:battle_value_wrap).as(:battle_value)
   }
   
   rule(:status_name) {
@@ -219,10 +219,9 @@ class EffectParser < Parslet::Parser
   
   rule(:disease_name) {
     dynamic{ |s,c|
-      disease_list = GameData::Disease.pluck(:name)
-      disease_list += disease_list_temp if disease_list_temp.present?
-      alternation_from_array(disease_list)
-    }
+      alternation_from_array(disease_list_temp)
+    } |
+    alternation_from_array(GameData::Disease.pluck(:name))
   }
   
   rule(:disease_value) {
@@ -291,10 +290,9 @@ class EffectParser < Parslet::Parser
   
   rule(:character_kind_and_name) {
     dynamic{ |s,c|
-      character_list = GameData::Character.all.map{|r| { r.kind => r.name } }
-      character_list += character_list_temp if character_list_temp.present?
-      alternation_from_hash(character_list)
-    }
+      alternation_from_hash(character_list_temp)
+    } |
+    alternation_from_hash(GameData::Character.all.map{|r| { r.kind => r.name } })
   }
   
   rule(:enemy_list_name) {
@@ -1759,7 +1757,7 @@ class EffectParser < Parslet::Parser
   # point_setting
   
   rule(:point_setting) {
-    bra >> str('ポイント') >> ket >> point_name >> spaces? >> correction >> newline.maybe
+    bra >> str('ポイント') >> ket >> point_name >> spaces? >> correction.as(:correction) >> newline.maybe
   }
   
   # status_setting
@@ -1847,7 +1845,9 @@ class EffectParser < Parslet::Parser
   # character_setting
   
   rule(:correction) {
-    (plus.as(:plus) | minus.as(:minus)) >> natural_number.as(:value)
+    (
+      (plus | minus.as(:minus)) >> natural_number.as(:value)
+    ).as(:correction_wrap)
   }
   
   rule(:character_setting) {

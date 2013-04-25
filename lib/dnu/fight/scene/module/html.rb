@@ -156,14 +156,14 @@ module DNU
           h = tree[:children]
           nested_div(tree[:before])   +
           (h[:critical] ? "クリティカル！<br>" : "") +
-          %Q|\n<span class="passive">#{tree[:passive]}</span>に#{(h[:after_change]-h[:before_change]).abs}の#{I18n.t(h[:attack_element], :scope => "DNU.Fight.Scene")}属性#{I18n.t(h[:attack_type], :scope => "DNU.Fight.Scene")}ダメージを与えた！（ #{h[:before_change]} ⇒ #{h[:after_change]} ）| +
+          %Q|\n<span class="passive">#{tree[:passive]}</span>に#{(h[:after_change]-h[:before_change]).abs}の#{h[:attack_element]}属性#{I18n.t(h[:attack_type], :scope => "DNU.Fight.Scene")}ダメージを与えた！（ #{h[:before_change]} ⇒ #{h[:after_change]} ）| +
           nested_div(tree[:after])
         end
         
         def Miss(tree)
           h = tree[:children]
           nested_div(tree[:before])   +
-          %Q|\n<span class="passive">#{tree[:passive]}</span>は#{I18n.t(h[:attack_element], :scope => "DNU.Fight.Scene")}属性#{I18n.t(h[:attack_type], :scope => "DNU.Fight.Scene")}攻撃を回避した！| +
+          %Q|\n<span class="passive">#{tree[:passive]}</span>は#{h[:attack_element]}属性#{I18n.t(h[:attack_type], :scope => "DNU.Fight.Scene")}攻撃を回避した！| +
           nested_div(tree[:after])
         end
         
@@ -176,77 +176,77 @@ module DNU
         def Add(tree)
           h = tree[:children]
           nested_div(tree[:before])   +
-          %Q|\n<span class="passive">#{tree[:passive]}</span>に#{I18n.t(h[:status_name], :scope => "DNU.Fight.Scene")}を#{(h[:after_change]-h[:before_change]).abs}追加した！（ #{h[:before_change]} ⇒ #{h[:after_change]} ）| +
+          %Q|\n<span class="passive">#{tree[:passive]}</span>に#{h[:battle_value]}を#{(h[:after_change]-h[:before_change]).abs}追加した！（ #{h[:before_change]} ⇒ #{h[:after_change]} ）| +
           nested_div(tree[:after])
         end
         
         def Resist(tree)
           h = tree[:children]
           nested_div(tree[:before])   +
-          %Q|\n<span class="passive">#{tree[:passive]}</span>は#{I18n.t(h[:status_name], :scope => "DNU.Fight.Scene")}に抵抗した！| +
+          %Q|\n<span class="passive">#{tree[:passive]}</span>は#{h[:battle_value]}に抵抗した！| +
           nested_div(tree[:after])
         end
         
         def Reduce(tree)
           h = tree[:children]
           nested_div(tree[:before])   +
-          %Q|\n<span class="passive">#{tree[:passive]}</span>は#{I18n.t(h[:status_name], :scope => "DNU.Fight.Scene")}を#{(h[:after_change]-h[:before_change]).abs}軽減した！（ #{h[:before_change]} ⇒ #{h[:after_change]} ）| +
+          %Q|\n<span class="passive">#{tree[:passive]}</span>は#{h[:battle_value]}を#{(h[:after_change]-h[:before_change]).abs}軽減した！（ #{h[:before_change]} ⇒ #{h[:after_change]} ）| +
           nested_div(tree[:after])
         end
         
         def Heal(tree)
           h = tree[:children]
           nested_div(tree[:before])   +
-          %Q|\n<span class="passive">#{tree[:passive]}</span>の#{I18n.t(h[:status_name], :scope => "DNU.Fight.Scene")}は#{h[:change_value].abs}回復した！（ #{h[:before_change]} ⇒ #{h[:after_change]} ）| +
+          %Q|\n<span class="passive">#{tree[:passive]}</span>の#{h[:battle_value]}は#{h[:change_value].abs}回復した！（ #{h[:before_change]} ⇒ #{h[:after_change]} ）| +
           nested_div(tree[:after])
         end
         
         def Up(tree)
           h = tree[:children]
           nested_div(tree[:before])   +
-          %Q|\n<span class="passive">#{tree[:passive]}</span>の#{I18n.t(h[:status_name], :scope => "DNU.Fight.Scene")}が#{(h[:after_change]-h[:before_change]).abs}上昇した！（ #{h[:before_change]} ⇒ #{h[:after_change]} ）| +
+          %Q|\n<span class="passive">#{tree[:passive]}</span>の#{h[:battle_value]}が#{(h[:after_change]-h[:before_change]).abs}上昇した！（ #{h[:before_change]} ⇒ #{h[:after_change]} ）| +
           nested_div(tree[:after])
         end
         
         def Down(tree)
           h = tree[:children]
           nested_div(tree[:before])   +
-          %Q|\n<span class="passive">#{tree[:passive]}</span>の#{I18n.t(h[:status_name], :scope => "DNU.Fight.Scene")}が#{(h[:after_change]-h[:before_change]).abs}低下した！（ #{h[:before_change]} ⇒ #{h[:after_change]} ）| +
+          %Q|\n<span class="passive">#{tree[:passive]}</span>の#{h[:battle_value]}が#{(h[:after_change]-h[:before_change]).abs}低下した！（ #{h[:before_change]} ⇒ #{h[:after_change]} ）| +
           nested_div(tree[:after])
         end
         
         def Steal(tree)
           h = tree[:children]
           nested_div(tree[:before])   +
-          %Q|\n<span class="passive">#{tree[:passive]}</span>の#{I18n.t(h[:status_name], :scope => "DNU.Fight.Scene")}を#{(h[:after_change]-h[:before_change]).abs}奪取した！（ #{h[:before_change]} ⇒ #{h[:after_change]} ）| +
+          %Q|\n<span class="passive">#{tree[:passive]}</span>の#{h[:battle_value]}を#{(h[:after_change]-h[:before_change]).abs}奪取した！（ #{h[:before_change]} ⇒ #{h[:after_change]} ）| +
           nested_div(tree[:after])
         end
         
         def Increase(tree)
           h = tree[:children]
           nested_div(tree[:before])   +
-          %Q|\n<span class="passive">#{tree[:passive]}</span>の#{I18n.t(h[:status_name], :scope => "DNU.Fight.Scene")}が#{(h[:after_change]-h[:before_change]).abs}増加した！（ #{h[:before_change]} ⇒ #{h[:after_change]} ）| +
+          %Q|\n<span class="passive">#{tree[:passive]}</span>の#{h[:battle_value]}が#{(h[:after_change]-h[:before_change]).abs}増加した！（ #{h[:before_change]} ⇒ #{h[:after_change]} ）| +
           nested_div(tree[:after])
         end
         
         def Decrease(tree)
           h = tree[:children]
           nested_div(tree[:before])   +
-          %Q|\n<span class="passive">#{tree[:passive]}</span>の#{I18n.t(h[:status_name], :scope => "DNU.Fight.Scene")}が#{(h[:after_change]-h[:before_change]).abs}減少した！（ #{h[:before_change]} ⇒ #{h[:after_change]} ）| +
+          %Q|\n<span class="passive">#{tree[:passive]}</span>の#{h[:battle_value]}が#{(h[:after_change]-h[:before_change]).abs}減少した！（ #{h[:before_change]} ⇒ #{h[:after_change]} ）| +
           nested_div(tree[:after])
         end
         
         def Rob(tree)
           h = tree[:children]
           nested_div(tree[:before])   +
-          %Q|\n<span class="passive">#{tree[:passive]}</span>の#{I18n.t(h[:status_name], :scope => "DNU.Fight.Scene")}を#{(h[:after_change]-h[:before_change]).abs}強奪した！（ #{h[:before_change]} ⇒ #{h[:after_change]} ）| +
+          %Q|\n<span class="passive">#{tree[:passive]}</span>の#{h[:battle_value]}を#{(h[:after_change]-h[:before_change]).abs}強奪した！（ #{h[:before_change]} ⇒ #{h[:after_change]} ）| +
           nested_div(tree[:after])
         end
         
         def Convert(tree)
           h = tree[:children]
           nested_div(tree[:before])   +
-          %Q|\n<span class="passive">#{tree[:passive]}</span>の#{I18n.t(h[:status_name], :scope => "DNU.Fight.Scene")}を#{h[:after_change]}にした！（ #{h[:before_change]} ⇒ #{h[:after_change]} ）| +
+          %Q|\n<span class="passive">#{tree[:passive]}</span>の#{h[:battle_value]}を#{h[:after_change]}にした！（ #{h[:before_change]} ⇒ #{h[:after_change]} ）| +
           nested_div(tree[:after])
         end
         
@@ -328,9 +328,9 @@ module DNU
           h = tree[:children]
           nested_div(tree[:before])   +
           if h[:success]
-            %Q|\n<span class="passive">#{tree[:passive]}</span>の次の#{h[:repeat_value]}回分の攻撃が#{I18n.t(h[:element], :scope => "DNU.Fight.Scene")}属性化！|
+            %Q|\n<span class="passive">#{tree[:passive]}</span>の次の#{h[:repeat_value]}回分の攻撃が#{h[:element]}属性化！|
           else
-            %Q|\n<span class="passive">#{tree[:passive]}</span>の次の#{h[:repeat_value]}回分の攻撃が#{I18n.t(h[:element], :scope => "DNU.Fight.Scene")}属性化はもうできない。|
+            %Q|\n<span class="passive">#{tree[:passive]}</span>の次の#{h[:repeat_value]}回分の攻撃が#{h[:element]}属性化はもうできない。|
           end +
           nested_div(tree[:after])
         end
@@ -451,7 +451,7 @@ module DNU
         def NextStatus(tree)
           h = tree[:children]
           nested_div(tree[:before])   +
-           %Q|\n<span class="passive">#{h[:state_target]}</span>の次の#{I18n.t(h[:status_name], :scope => "DNU.Fight.Scene")}を#{h[:change_to]}にした！| +
+           %Q|\n<span class="passive">#{h[:state_target]}</span>の次の#{h[:battle_value]}を#{h[:change_to]}にした！| +
           nested_div(tree[:after])
         end
         

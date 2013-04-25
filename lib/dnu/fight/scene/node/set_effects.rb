@@ -6,7 +6,7 @@ module DNU
         
         def default_default_attack
           @default_default_attack ||= DNU::Fight::State::DefaultAttack.new({
-            :effects => [ { :do => EffectTransform.new.apply(EffectParser.new.root_processes.parse("敵単/SW物魔攻撃(1.0)")) } ]
+            :effects => [ { :do => DNU::Data.parse(:root_processes, "敵単/SW物魔攻撃(1.0)") } ]
           }).first
         end
         
