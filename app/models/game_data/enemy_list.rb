@@ -27,11 +27,12 @@ class GameData::EnemyList < ActiveRecord::Base
   
   private
   def set_game_data
-    if tree.present?
-      self.name = tree[:name].to_s
+    definition_tree = DNU::Data.parse_from_model(self, true)
+    if definition_tree.present?
+      self.name = definition_tree[:name].to_s
       if self.unused?
         self.enemy_list_elements.destroy_all unless self.new_record?
-        tree[:list].each do |enemy|
+        definition_tree[:list].each do |enemy|
           self.enemy_list_elements.build do |enemy_list_element|
             enemy_list_element.character  = GameData::Character.find_by_kind_and_name(enemy[:kind], enemy[:name])
             enemy_list_element.correction = enemy[:correction].to_i

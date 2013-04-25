@@ -14,9 +14,10 @@ class GameData::Character < ActiveRecord::Base
   
   private
   def set_game_data
-    if tree.present?
-      self.kind = tree[:kind].to_s
-      self.name = tree[:name].to_s
+    definition_tree = DNU::Data.parse_from_model(self, true)
+    if definition_tree.present?
+      self.kind = definition_tree[:kind].to_s
+      self.name = definition_tree[:name].to_s
     else
       errors.add(:definition, :invalid)
     end

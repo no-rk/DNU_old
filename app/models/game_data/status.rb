@@ -14,9 +14,10 @@ class GameData::Status < ActiveRecord::Base
   
   private
   def set_game_data
-    if tree.present?
-      self.name    = tree[:name].to_s
-      self.caption = tree[:caption].to_s
+    definition_tree = DNU::Data.parse_from_model(self, true)
+    if definition_tree.present?
+      self.name    = definition_tree[:name].to_s
+      self.caption = definition_tree[:caption].to_s
     else
       errors.add(:definition, :invalid)
     end

@@ -26,14 +26,15 @@ class GameData::Ability < ActiveRecord::Base
   
   private
   def set_game_data
-    if tree.present?
-      self.name    = tree[:name].to_s
-      self.caption = tree[:caption].to_s
+    definition_tree = DNU::Data.parse_from_model(self, true)
+    if definition_tree.present?
+      self.name    = definition_tree[:name].to_s
+      self.caption = definition_tree[:caption].to_s
       # アビリティ詳細
       if self.unused?
         self.ability_definitions.destroy_all unless self.new_record?
         check_first = true
-        tree[:definitions].each do |effect|
+        definition_tree[:definitions].each do |effect|
           if effect[:pull_down].present?
             if check_first
               self.ability_definitions.build(:kind => :pull_down, :lv => 1, :caption => "無効")
@@ -44,7 +45,7 @@ class GameData::Ability < ActiveRecord::Base
             self.ability_definitions.build(:kind => :lv,        :lv => effect[:lv], :caption => effect[:caption].to_s)
           end
         end
-        DNU::Data.set_learning_conditions(self, tree[:learning_conditions])
+        DNU::Data.set_learning_conditions(self, definition_tree[:learning_conditions])
       else
         errors[:base] << "使用中の#{self.class.model_name.human}のため編集できません。"
       end

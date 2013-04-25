@@ -11,29 +11,36 @@ module DNU
                    :hit_val, :add_val, :heal_val, :convert_val, :cost_val, :rob_val, :steal_val,
                    :increase_val, :decrease_val, :up_val, :down_val, :reduce_val]
         
-        attr_reader *GameData::BattleValue.pluck(:name)
-        attr_reader *GameData::BattleValue.pluck(:name).map{|name| "能力#{name}"}
-        attr_reader *GameData::BattleValue.where(:has_equip_value => true).pluck(:name).map{|name| "装備#{name}"}
-        attr_reader *GameData::BattleValue.where(:has_max => true).pluck(:name).map{|name| "最大#{name}"}
+        if GameData::BattleValue.table_exists?
+          attr_reader *GameData::BattleValue.pluck(:name)
+          attr_reader *GameData::BattleValue.pluck(:name).map{|name| "能力#{name}"}
+          attr_reader *GameData::BattleValue.where(:has_equip_value => true).pluck(:name).map{|name| "装備#{name}"}
+          attr_reader *GameData::BattleValue.where(:has_max => true).pluck(:name).map{|name| "最大#{name}"}
+        end
         
         attr_accessor :id, :name, :team, :parent, :parent_effect, :double, :dead, :turn_end
         
         attr_reader :effects
         
         def status_from_rank(rank)
-          rank.to_i*15+50
+          rank.to_i*20+50
         end
         
-        def set_status_from_rank!(tree)
+        def equip_from_rank(rank)
+          rank.to_i*10+50
+        end
+        
+        def set_strength_from_rank!(tree)
           if tree[:rank].present?
             rank = tree[:rank].to_i + tree[:correction].to_i
             rank = 0 if rank < 0
             
+            # 能力
             GameData::Status.pluck(:name).each do |status_name|
               unset = true
               
               tree[:settings].find_all{ |s| s[:status].try('[]', :name).to_s == status_name.to_s }.each do |setting|
-                setting[:status][:status_strength] = ((setting[:status][:status_rate] || 1).to_f*status_from_rank(rank)).to_i
+                setting[:status][:status_strength] ||= ((setting[:status][:status_rate] || 1).to_f*status_from_rank(rank)).to_i
                 unset = false
               end
               
@@ -46,12 +53,17 @@ module DNU
                 }
               end
             end
+            
+            # 装備
+            tree[:settings].find_all{ |s| s.keys.first == :equip }.each do |setting|
+              setting[:equip][:equip_strength] ||= ((setting[:equip][:equip_rate] || 1).to_f*equip_from_rank(rank)).to_i
+            end
           end
           tree
         end
         
         def initialize(tree)
-          set_status_from_rank!(tree)
+          set_strength_from_rank!(tree)
           GameData::BattleValue.find_each do |battle_value|
             instance_variable_set("@#{battle_value.name}", DNU::Fight::State::BattleValue.new(battle_value))
             instance_variable_set("@能力#{battle_value.name}", instance_variable_get("@#{battle_value.name}").status)
@@ -97,7 +109,8 @@ module DNU
         
         def add_effects(setting, parent_obj=nil, def_plus = [])
           type = setting.keys.first
-          name = setting.values.first[:name]
+          kind = setting.values.first[:kind].to_s
+          name = setting.values.first[:name].to_s
           setting = setting.values.first
           
           return if type == :drop or type == :point
@@ -106,7 +119,11 @@ module DNU
           effects = { :serif => setting } if type == :serif
           # 定義されていない場合はデータベースから読み込みを試みる
           if effects.blank?
-            tree = "GameData::#{type.to_s.camelize}".constantize.find_by_name(name.to_s).try(:tree)
+            if kind.present?
+              tree = "GameData::#{type.to_s.camelize}".constantize.find_by_kind_and_name(kind, name).try(:tree)
+            else
+              tree = "GameData::#{type.to_s.camelize}".constantize.find_by_name(name).try(:tree)
+            end
             if tree.present?
               effects = { type => tree }
               @@definitions.push(effects)

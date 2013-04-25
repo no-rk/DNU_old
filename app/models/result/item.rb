@@ -188,7 +188,7 @@ class Result::Item < ActiveRecord::Base
   end
   
   def equip_type
-    self.type.item_equip.try(:kind)
+    self.type.equip.try(:kind)
   end
 
   private

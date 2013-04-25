@@ -15,9 +15,9 @@ module DNU
       end
     end
     
-    def self.parse(kind, text)
+    def self.parse(kind, text, is_reload = false)
       begin
-        tree = parser.send(kind).parse(text)
+        tree = parser(is_reload).send(kind).parse(text)
         tree = transform.apply(tree)
       rescue
         tree = nil
@@ -27,18 +27,18 @@ module DNU
       tree
     end
     
-    def self.parse_from_model(model)
+    def self.parse_from_model(model, is_reload = false)
       kind = model.class.name.split("::").last.underscore
       text = model.definition
-      self.parse_definition(kind, text) || {}
+      self.parse_definition(kind, text, is_reload) || {}
     end
     
-    def self.parse_definition(kind, text)
-      self.parse("#{kind}_definition", text)
+    def self.parse_definition(kind, text, is_reload = false)
+      self.parse("#{kind}_definition", text, is_reload)
     end
     
-    def self.parse_settings(kind, text)
-      self.parse("#{kind}_settings", text)
+    def self.parse_settings(kind, text, is_reload = false)
+      self.parse("#{kind}_settings", text, is_reload)
     end
     
     def self.sync(model)
@@ -99,11 +99,13 @@ module DNU
       end
     end
     
-    def self.parser
+    def self.parser(is_reload = false)
+      @@parser   = EffectParser.new if is_reload
       @@parser ||= EffectParser.new
     end
     
-    def self.transform
+    def self.transform(is_reload = false)
+      @@transform   = EffectTransform.new if is_reload
       @@transform ||= EffectTransform.new
     end
   end

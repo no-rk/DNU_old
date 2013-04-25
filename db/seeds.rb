@@ -50,7 +50,7 @@ end
 
 # アイテム種, 装備種
 ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_item_types")
-ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_item_equips")
+ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_equips")
 item_types = YAML.load(ERB.new(File.read("#{Rails.root}/db/game_data/item_type.yml")).result)
 item_types.each do |item_type|
   # p item_type.except("equip")
@@ -64,9 +64,10 @@ item_types.each do |item_type|
       p "文法エラー"
       p item_type["equip"]
     else
-      item_type_model.build_item_equip
-      item_type_model.item_equip.kind = tree[:kind].to_s
-      item_type_model.item_equip.definition = item_type["equip"]
+      item_type_model.build_equip
+      item_type_model.equip.kind = tree[:kind].to_s
+      item_type_model.equip.name = tree[:name].to_s
+      item_type_model.equip.definition = item_type["equip"]
     end
   end
   item_type_model.save!

@@ -249,7 +249,7 @@ class EffectParser < Parslet::Parser
   }
   
   rule(:equip_name) {
-    alternation_from_array(GameData::ItemType.joins(:item_equip).pluck(:name))
+    alternation_from_array(GameData::Equip.pluck(:name))
   }
   
   rule(:art_name) {
@@ -1607,16 +1607,6 @@ class EffectParser < Parslet::Parser
     root_processes.as(:do).repeat(1).as(:effects)
   }
   
-  # weapon_definition
-  
-  rule(:weapon_definition) {
-    bra >> str('武器').as(:kind) >> ket >>
-    (separator.absent? >> any).repeat(1).as(:name) >> separator >>
-    str('射程') >> natural_number.as(:range) >> newline >>
-    sup_effects.as(:effects) >>
-    (default_attack_definition.as(:default_attack)).maybe
-  }
-  
   # equip_definition
   
   rule(:equip_definition) {
@@ -1649,7 +1639,7 @@ class EffectParser < Parslet::Parser
   rule(:disease_definition) {
     bra >> str('状態異常') >> ket >> (separator.absent? >> any).repeat(1).capture(:name).as(:name) >> separator >> color.as(:color) >> newline >>
     dynamic{ |s,c|
-      disease_list_temp.push(c.captures[:name])
+      disease_list_temp.push(c.captures[:name].to_s)
       any.present?
     } >>
     partition >> (partition.absent? >> any).repeat(1).as(:caption) >> partition >>
@@ -1730,22 +1720,15 @@ class EffectParser < Parslet::Parser
     ).maybe >> newline.maybe
   }
   
-  # disease_setting
+  # equip_setting
   
-  rule(:disease_setting) {
-    bra >> str('異常') >> ket >> disease_name.as(:name) >> newline.maybe
-  }
-  
-  # weapon_setting
-  
-  rule(:weapon_setting) {
-    bra >> str('武器') >> ket >> (
-      (separator | newline).absent? >> any
-    ).repeat(1).as(:name) >> separator >>
-    natural_number.as(:equip_strength) >>
+  rule(:equip_setting) {
+    bra >> equip_type.as(:kind) >> ket >> equip_name.as(:name) >> spaces? >>
     (
-      newline >> partition >> sup_setting.as(:sup).repeat(1).as(:settings) >> partition
-    ).maybe >> newline.maybe
+      natural_number.as(:equip_strength) |
+      str('比率') >> decimal.as(:equip_rate)
+    ) >> newline.maybe >>
+    sup_setting.as(:sup).repeat(0).as(:settings)
   }
   
   # drop_setting
@@ -1763,7 +1746,11 @@ class EffectParser < Parslet::Parser
   # status_setting
   
   rule(:status_setting) {
-    bra >> str('能力') >> ket >> status_name.as(:name) >> spaces? >> decimal.as(:status_rate) >> newline.maybe
+    bra >> str('能力') >> ket >> status_name.as(:name) >> spaces? >>
+    (
+      natural_number.as(:status_strength) |
+      str('比率') >> decimal.as(:status_rate)
+    ) >> newline.maybe
   }
   
   # skill_setting
@@ -1809,13 +1796,13 @@ class EffectParser < Parslet::Parser
       comment |
       ability_setting.as(:ability) |
       status_setting.as(:status) |
-      weapon_setting.as(:weapon) |
+      equip_setting.as(:equip) |
       sup_setting.as(:sup) |
       skill_setting.as(:skill) |
       serif_setting.as(:serif) |
       drop_setting.as(:drop) |
       point_setting.as(:point)
-    ).repeat(1)
+    ).repeat(0)
   }
   
   # character_definitions
@@ -1825,20 +1812,16 @@ class EffectParser < Parslet::Parser
   }
   
   rule(:character_definition) {
-    bra >> character_type.capture(:kind).as(:kind) >> ket >> ((newline | separator).absent? >> any).repeat(1).capture(:name).as(:name) >>
+    bra >> character_type.capture(:kind).as(:kind) >> ket >> (separator.absent? >> any).repeat(1).capture(:name).as(:name) >>
     dynamic{ |s,c|
-      character_list_temp.push(c.captures[:kind] => c.captures[:name])
+      character_list_temp.push(c.captures[:kind].to_s => c.captures[:name].to_s)
       any.present?
-    } >> rank >> newline >>
+    } >> rank >> (newline | any.absent?) >>
     definitions.as(:definitions).maybe >>
     settings.as(:settings)
   }
   
   rule(:character_definitions) {
-    dynamic{ |s,c|
-      character_list_temp.clear
-      any.present?
-    } >>
     character_definition.repeat(1)
   }
   
@@ -1878,14 +1861,13 @@ class EffectParser < Parslet::Parser
     ).repeat(1).as(:members)
   }
   
-  rule(:pt_setting) {
-    character_definitions.as(:definitions).maybe >>
-    pt_definition
-  }
-  
   rule(:pt_settings) {
     character_definitions.as(:definitions).maybe >>
-    pt_definition.repeat(2).as(:settings)
+    pt_definition.repeat(1).as(:settings) >>
+    dynamic{ |s,c|
+      character_list_temp.clear
+      any.maybe
+    }
   }
   
   # event_timing
@@ -2150,6 +2132,7 @@ class EffectParser < Parslet::Parser
   def alternation_from_array(words)
     result = nil
     
+    words.uniq!
     words.sort!{|a,b| b.size <=> a.size}
     
     words.each do |word|

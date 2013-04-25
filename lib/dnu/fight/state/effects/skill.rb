@@ -7,7 +7,8 @@ module DNU
         attr_reader :cost, :require, :hostility, :pre_phasable, :targetable, :target, :definitions
         
         def when_initialize(tree)
-          @cost         = DNU::Fight::State::Cost.new(nil, tree[:cost])
+          @cost         = DNU::Fight::State::BaseValue.new(nil, tree[:cost])
+          @cost.start(0, 10**10)
           @require      = tree[:require]
           set_hostility(tree[:effects])
           @pre_phasable = tree[:pre_phasable]

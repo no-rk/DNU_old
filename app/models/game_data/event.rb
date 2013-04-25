@@ -27,15 +27,16 @@ class GameData::Event < ActiveRecord::Base
   
   private
   def set_game_data
-    if tree.present?
+    definition_tree = DNU::Data.parse_from_model(self, true)
+    if definition_tree.present?
       # Event
-      self.kind    = (tree[:kind] || "通常").to_s
-      self.name    = tree[:name].to_s
-      self.caption = tree[:caption].to_s
+      self.kind    = (definition_tree[:kind] || "通常").to_s
+      self.name    = definition_tree[:name].to_s
+      self.caption = definition_tree[:caption].to_s
       # EventStep
       if self.unused?
         self.event_steps.destroy_all unless self.new_record?
-        tree[:steps].each do |step|
+        definition_tree[:steps].each do |step|
           self.event_steps.build do |event_step|
             event_step.timing    = step[:timing].keys.first.to_s
             event_step.condition = step[:condition].to_hash

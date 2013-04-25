@@ -1,5 +1,5 @@
 class GameData::ItemType < ActiveRecord::Base
   attr_accessible :caption, :name
   
-  has_one :item_equip
+  has_one :equip
 end

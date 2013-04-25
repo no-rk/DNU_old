@@ -14,9 +14,10 @@ class GameData::Skill < ActiveRecord::Base
   
   private
   def set_game_data
-    if tree.present?
-      self.name = tree[:name].to_s
-      DNU::Data.set_learning_conditions(self, tree[:learning_conditions])
+    definition_tree = DNU::Data.parse_from_model(self, true)
+    if definition_tree.present?
+      self.name = definition_tree[:name].to_s
+      DNU::Data.set_learning_conditions(self, definition_tree[:learning_conditions])
     else
       errors.add(:definition, :invalid)
     end

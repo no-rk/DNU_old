@@ -21,19 +21,20 @@ class GameData::EnemyTerritory < ActiveRecord::Base
   
   private
   def set_game_data
-    if tree.present?
-      if tree[:coordinates].present?
+    definition_tree = DNU::Data.parse_from_model(self, true)
+    if definition_tree.present?
+      if definition_tree[:coordinates].present?
         self.map_tip = GameData::MapTip.find_by_place({
-          :name => tree[:map_name].to_s,
-          :x    => tree[:coordinates][:x].to_i,
-          :y    => tree[:coordinates][:y].to_i
+          :name => definition_tree[:map_name].to_s,
+          :x    => definition_tree[:coordinates][:x].to_i,
+          :y    => definition_tree[:coordinates][:y].to_i
         }).first
       else
-        self.landform = GameData::Landform.find_by_name(tree[:landform].to_s) if tree[:landform].present?
-        self.map      = GameData::Map.find_by_name(tree[:map_name].to_s)      if tree[:map_name].present?
+        self.landform = GameData::Landform.find_by_name(definition_tree[:landform].to_s) if definition_tree[:landform].present?
+        self.map      = GameData::Map.find_by_name(definition_tree[:map_name].to_s)      if definition_tree[:map_name].present?
       end
-      self.enemy_list = GameData::EnemyList.find_by_name(tree[:name].to_s)
-      self.correction = tree[:correction].to_i
+      self.enemy_list = GameData::EnemyList.find_by_name(definition_tree[:name].to_s)
+      self.correction = definition_tree[:correction].to_i
     else
       errors.add(:definition, :invalid)
     end

@@ -13,7 +13,7 @@ class Register::Battle < ActiveRecord::Base
   def build_battle
     (8-self.battle_settings.size).times{self.battle_settings.build}
     
-    kinds = ["武器", "頭", "腕", "身体", "装飾"]
+    kinds = GameData::EquipType.pluck(:name)
     kinds.each do |kind|
       self.equips.build(:kind => kind) unless self.equips.exists?(:kind => kind)
     end

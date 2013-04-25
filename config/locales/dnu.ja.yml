@@ -527,4 +527,6 @@ ja:
         SkillDefinition: 技定義
         SupDefinition: 付加定義
         TrapDefinition: 罠定義
+        CharacterDefinition: キャラクター定義
         EventDefinition: イベント定義
+        PtSettings: PT編成定義

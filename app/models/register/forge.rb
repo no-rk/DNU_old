@@ -38,7 +38,7 @@ class Register::Forge < ActiveRecord::Base
     if material.plan.try(:definition).present?
       material_data = parser.item_definition.parse(material.plan.definition)
       material_data = transform.apply(material_data)
-      material_data = material_data[:item_sups].find{ |e| e[:equip_type].to_s == self.item_type.item_equip.try(:kind).to_s }
+      material_data = material_data[:item_sups].find{ |e| e[:equip_type].to_s == self.item_type.equip.try(:kind).to_s }
     end
     material_data ||= {}
     

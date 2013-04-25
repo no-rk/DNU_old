@@ -174,6 +174,17 @@ ActiveRecord::Schema.define(:version => 20130423104136) do
     t.datetime "updated_at", :null => false
   end
 
+  create_table "game_data_equips", :force => true do |t|
+    t.integer  "item_type_id"
+    t.string   "kind"
+    t.string   "name"
+    t.text     "definition"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
+  end
+
+  add_index "game_data_equips", ["item_type_id"], :name => "index_game_data_equips_on_item_type_id"
+
   create_table "game_data_event_contents", :force => true do |t|
     t.integer  "event_step_id"
     t.string   "kind"
@@ -209,16 +220,6 @@ ActiveRecord::Schema.define(:version => 20130423104136) do
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
-
-  create_table "game_data_item_equips", :force => true do |t|
-    t.integer  "item_type_id"
-    t.string   "kind"
-    t.text     "definition"
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
-  end
-
-  add_index "game_data_item_equips", ["item_type_id"], :name => "index_game_data_item_equips_on_item_type_id"
 
   create_table "game_data_item_types", :force => true do |t|
     t.string   "name"

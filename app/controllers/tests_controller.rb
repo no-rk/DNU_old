@@ -71,16 +71,16 @@ class TestsController < ApplicationController
     @text  = params[:text]
     @type  = :battle
     if @text.present?
-      #begin
+      begin
         tree = parser.pt_settings.parse(@text)
         tree = transform.apply(tree)
         character = DNU::Fight::State::Characters.new(tree)
         battle = DNU::Fight::Scene::Battle.new(character)
         history = battle.play
         @result = history.to_html + "<pre>#{history.pretty_inspect}</pre>" + "<pre>#{tree.pretty_inspect}</pre>"
-      #rescue => msg
-      #  @error = msg
-      #end
+      rescue => msg
+        @error = msg
+      end
     end
     render 'test'
   end
@@ -132,10 +132,14 @@ class TestsController < ApplicationController
   
   def pt_text
     @pt_text ||= <<-"PT"
+[PC]自分/1
+[PC]味方A/1
+[PC]味方B/1
+
 [PT]自分たち
-[PC]ENo.1
-[PC]ENo.2
-[PC]ENo.3
+[PC]自分
+[PC]味方A
+[PC]味方B
 
 [PT]モンスターズ
 [モンスター]キュアプルプル
@@ -160,13 +164,13 @@ class TestsController < ApplicationController
 [PT]Ｃチーム
 [#{kind}]#{name}+1
       PT
-      @pt_character = DNU::Fight::State::Characters.new(transform.apply(parser.pt_settings.parse(pt_character_text)))
+      @pt_character = DNU::Fight::State::Characters.new(DNU::Data.parse_settings(:pt, pt_character_text))
     end
     @pt_character
   end
   
   def characters
-    @characters ||= DNU::Fight::State::Characters.new(transform.apply(parser.pt_settings.parse(pt_text)))
+    @characters ||= DNU::Fight::State::Characters.new(DNU::Data.parse_settings(:pt, pt_text))
   end
   
   def es(tree)
@@ -231,13 +235,13 @@ class TestsController < ApplicationController
   
   def parse_from_text(type, name = :definition)
     if @text.present?
-      #begin
+      begin
         tree = parser.send("#{type}_#{name}").parse(@text)
         tree = transform.apply(tree)
         @result = send("history_html_#{@type}", tree) + "<pre>#{tree.pretty_inspect}</pre>"
-      #rescue => msg
-      #  @error = msg
-      #end
+      rescue => msg
+        @error = msg
+      end
     end
     render 'test'
   end
