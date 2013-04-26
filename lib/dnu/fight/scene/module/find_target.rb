@@ -36,7 +36,7 @@ module DNU
         
         def target_dependency(tree, l_or_d=[])
           master = send(tree[:master].keys.first, tree[:master].values.first, l_or_d)
-          kind   = tree[:kind].keys.first.to_s.camelize.to_sym
+          kind   = tree[:kind]
           master.inject([]){ |a,c| a = a | @character.find_by_kind(kind).find_by_parent(c) }
         end
         

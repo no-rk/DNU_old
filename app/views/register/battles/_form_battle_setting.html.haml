@@ -6,15 +6,15 @@
     %br
     = form_battle_setting.input :priority
     = form_battle_setting.input :skill_id
-    = form_battle_setting.input :frequency
-    = form_battle_setting.input :use_condition
+    = form_battle_setting.input :frequency_id
+    = form_battle_setting.input :use_condition_id
     = form_battle_setting.input :use_condition_variable
-    = form_battle_setting.input :target
+    = form_battle_setting.input :target_id
     = form_battle_setting.input :target_variable
     = form_battle_setting.input :message
     [技]#{current_user.result(:skill).where(skill_arel[:id].eq(form_battle_setting.object.skill_id)).includes(:skill).first.try(:skill).try(:name)}
     %br
-    優先度#{form_battle_setting.object.priority}：#{@use_conditions.invert[form_battle_setting.object.use_condition.to_i]}のとき#{@frequencies.invert[form_battle_setting.object.frequency.to_i]}
+    優先度#{form_battle_setting.object.priority}：#{form_battle_setting.object.use_condition.name}のとき#{form_battle_setting.object.frequency.name}
     - i += 1
 - else
   %a{:href => helps_path('戦闘設定'), :target=>"_blank"} 戦闘設定
@@ -27,15 +27,15 @@
     .controls.controls-row
       %span.label.span1 技
       = form_battle_setting.input :skill_id, :collection => @learned_skills, :input_html => { :class => :'span6' }, :error_class => :'error'
-      = form_battle_setting.input :frequency, :collection => @frequencies, :selected => (form_battle_setting.object.frequency || @selected_frequency), :input_html => { :'data-url' => help_path(:battle_settings), :'data-remote' => true, :'data-params' => "id=#{register_battle.battle_settings.try(:[], i).try(:[], :frequency).nil? ? @selected_frequency : register_battle.battle_settings[i][:frequency]}", :'data-type' => :json, :'data-help-path' => help_path(:battle_settings), :class => :'span2' }
+      = form_battle_setting.input :frequency_id, :collection => @frequencies, :selected => (form_battle_setting.object.frequency_id || @selected_frequency), :input_html => { :'data-url' => help_path(:battle_settings), :'data-remote' => true, :'data-params' => "id=#{register_battle.battle_settings.try(:[], i).try(:[], :frequency).nil? ? @selected_frequency : register_battle.battle_settings[i][:frequency]}", :'data-type' => :json, :'data-help-path' => help_path(:battle_settings), :class => :'span2' }
     .controls.controls-row
       %span.label.span2 使用条件
-      = form_battle_setting.input :use_condition, :collection => @use_conditions, :selected => (form_battle_setting.object.use_condition || @selected_use_condition), :input_html => { :'data-url' => help_path(:battle_settings), :'data-remote' => true, :'data-params' => "id=#{register_battle.battle_settings.try(:[], i).try(:[], :use_condition).nil? ? @selected_use_condition : register_battle.battle_settings[i][:use_condition]}", :'data-type' => :json, :'data-help-path' => help_path(:battle_settings), :class => :'span4' }
+      = form_battle_setting.input :use_condition_id, :collection => @use_conditions, :selected => (form_battle_setting.object.use_condition_id || @selected_use_condition), :input_html => { :'data-url' => help_path(:battle_settings), :'data-remote' => true, :'data-params' => "id=#{register_battle.battle_settings.try(:[], i).try(:[], :use_condition).nil? ? @selected_use_condition : register_battle.battle_settings[i][:use_condition]}", :'data-type' => :json, :'data-help-path' => help_path(:battle_settings), :class => :'span4' }
       %span.label.span1 (A)
       = form_battle_setting.input :use_condition_variable, :input_html => { :class => :'span2' }
     .controls.controls-row
       %span.label.span2 対象指定
-      = form_battle_setting.input :target, :collection => @targets, :input_html => { :'data-url' => help_path(:battle_settings), :'data-remote' => true, :'data-params' => ("id=#{register_battle.battle_settings[i][:target]}" if register_battle.battle_settings.try(:[], i).try(:[], :target).present?), :'data-type' => :json, :'data-help-path' => help_path(:battle_settings), :class => :'span4' }
+      = form_battle_setting.input :target_id, :collection => @targets, :input_html => { :'data-url' => help_path(:battle_settings), :'data-remote' => true, :'data-params' => ("id=#{register_battle.battle_settings[i][:target]}" if register_battle.battle_settings.try(:[], i).try(:[], :target).present?), :'data-type' => :json, :'data-help-path' => help_path(:battle_settings), :class => :'span4' }
       %span.label.span1 (B)
       = form_battle_setting.input :target_variable, :input_html => { :class => :'span2' }
     = form_battle_setting.input :message, :wrapper => :bootstrap, :input_html => { :class => :'message span9', :rows => 2 }, :wrapper_html => { :class => :clearfix }

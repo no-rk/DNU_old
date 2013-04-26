@@ -12,4 +12,18 @@ class Result::Equip < ActiveRecord::Base
   validates :passed_day, :presence => true
   validates :equip,      :presence => true
   validates :success,    :inclusion => { :in => [true, false] }
+  
+  def tree
+    @tree ||= {
+      :equip => {
+        :name => inventory.type_name,
+        :equip_strength => inventory.strength,
+        :settings => [
+          inventory.item_sup(:A).try(:tree),
+          inventory.item_sup(:B).try(:tree),
+          inventory.item_sup(:G).try(:tree)
+        ].flatten.compact
+      }
+    }
+  end
 end

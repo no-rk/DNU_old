@@ -7,6 +7,19 @@ class Result::PartyMember < ActiveRecord::Base
   
   validates :character, :presence => true
   
+  def setting_tree
+    if @setting_tree.nil?
+      @setting_tree = { :kind => character.kind, :correction => correction }
+      if character_type.to_sym == :User
+        @setting_tree.merge!(:eno => character_id)
+        @setting_tree[:correction] ||= day.day + 1
+      else
+        @setting_tree.merge!(:name => character.name)
+      end
+    end
+    @setting_tree
+  end
+  
   def pp_correction
     if correction.present?
       if correction>0

@@ -5,15 +5,13 @@ module DNU
       class Convert < BaseEffect
         
         def play_children
-          
-          status_name     = @tree[:status_name]
-          status_or_equip = @tree[:equip].nil? ? :status : :equip
+          battle_value    = @tree[:battle_value]
           sign            = @tree[:minus] ? -1 : 1
           calcu_tree      = @tree[:change_to]
           
-          # status_nameをcalcu_treeの計算値分だけ変化させる
-          state_change!(status_name, status_or_equip, calcu_tree, [status_name]) do |s,t,c|
-            対象.send(s).send(t).change_to(sign*c)
+          # battle_valueをcalcu_treeの計算値分だけ変化させる
+          state_change!(battle_value, calcu_tree, [battle_value]) do |s,c|
+            対象.send(s).change_to(sign*c)
           end
           
         end

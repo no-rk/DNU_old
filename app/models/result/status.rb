@@ -13,6 +13,10 @@ class Result::Status < ActiveRecord::Base
   validates :passed_day, :presence => true
   validates :status,     :presence => true
   
+  def tree
+    @tree ||= { :status => { :name => status.name, :status_strength => value + bonus } }
+  end
+  
   def grow_using_point_name!(point_name)
     success = false
     point_arel = GameData::Point.arel_table

@@ -6,10 +6,14 @@ class EffectTransform < Parslet::Transform
   }
   
   rule(:alphabet => simple(:alphabet)) {
+    alphabet.to_s.tr("Ａ-Ｚ．","A-Z.")
+  }
+  
+  rule(:alphabet_number => simple(:alphabet_number)) {
     offset_num = 'A'.ord - 1
     
-    alphabet.to_s.tr!("Ａ-Ｚ．","A-Z.")
-    alphabet.to_s.ord - offset_num
+    alphabet_number.to_s.tr!("Ａ-Ｚ．","A-Z.")
+    alphabet_number.to_s.ord - offset_num
   }
   
   rule(:inner_text => simple(:inner_text)) {
@@ -46,20 +50,13 @@ class EffectTransform < Parslet::Transform
     { timing.map{ |k,v| return_timing(k,v).to_s.underscore }.join("_").to_sym => timing.map{ |k,v| k==:element ? "#{v.values.first}属性" : v }.join } if timing.respond_to?(:map)
   }
   
-  rule(:range => simple(:range)) {
-    "Range"
-  }
-  
-  rule(:position => simple(:position)) {
-    "Position"
-  }
-  
-  rule(:act_count => simple(:act_count)) {
-    "ActCount"
-  }
-  
-  rule(:turn_priority => simple(:turn_priority)) {
-    "TurnPriority"
+  rule(:act_count => subtree(:act_count)) {
+    {
+      :condition_eq => {
+        :left  => { :state_character => { :battle_value => "行動数" } },
+        :right => act_count
+      }
+    }
   }
   
   rule(:wrap_random_percent => subtree(:wrap_random_percent)) {
@@ -160,7 +157,7 @@ class EffectTransform < Parslet::Transform
   rule(:fixnum => { :percent => subtree(:percent) } ) {
     {
       :multi_coeff => [
-        { :fixnum => percent },
+        percent,
         { :fixnum => 0.01 }
       ]
     }

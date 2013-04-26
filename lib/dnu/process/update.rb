@@ -7,6 +7,7 @@ module DNU
       extend Forge
       extend Supplement
       extend Equip
+      extend Battle
       extend Train
       extend Learn
       extend Forget
@@ -41,6 +42,9 @@ module DNU
           
           # 装備
           equip
+          
+          # 戦闘
+          battle
           
           # 能力や技能や生産やアビリティの訓練
           train

@@ -1,6 +1,7 @@
 - name: PC
   caption: |-
     プレイヤーキャラクター
+  player: true
 
 - name: NPC
   caption: |-

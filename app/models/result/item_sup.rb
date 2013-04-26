@@ -13,6 +13,10 @@ class Result::ItemSup < ActiveRecord::Base
   validates :sup,  :presence => true
   validates :lv,   :allow_nil => true, :numericality => { :only_integer => true, :greater_than => 0 }
   
+  def tree
+    @tree ||= { :sup => self.to_hash }
+  end
+  
   def to_hash
     { :name => self.sup.name, :lv => self.lv }
   end

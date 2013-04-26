@@ -309,6 +309,21 @@ class User < ActiveRecord::Base
     success
   end
   
+  def kind
+    @@kind ||= GameData::CharacterType.select(:name).where(:player => true).first.name
+  end
+  
+  def tree(day_i = Day.last_day_i)
+    @tree ||= {
+      :kind => kind,
+      :name => nickname(day_i),
+      :settings => result(:status,  day_i).map{|r| r.tree } +
+                   result(:ability, day_i).map{|r| r.tree } +
+                   result(:equip,   day_i).where(:success => true).map{|r| r.tree } +
+                   (register(:battle, day_i).try(:battle_settings).try(:map){|r| r.tree } || [])
+    }
+  end
+  
   def icons
     begin
       self.character.icons.select([:number,:url,:upload_icon_id]).includes(:upload_icon).inject({}){|h,v| h[v.number]=v.url.blank? ? v.upload_icon.icon_url(:icon) : v.url;h}
@@ -317,7 +332,11 @@ class User < ActiveRecord::Base
     end
   end
   
-  def name
-    self.character.profile.name
+  def name(day_i = Day.last_day_i)
+    self.result(:character, day_i).profile.name
+  end
+  
+  def nickname(day_i = Day.last_day_i)
+    self.result(:character, day_i).profile.nickname
   end
 end

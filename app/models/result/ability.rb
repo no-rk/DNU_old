@@ -12,7 +12,9 @@ class Result::Ability < ActiveRecord::Base
   has_one :train,                :through => :ability, :class_name => "GameData::Train"
   has_many :ability_definitions, :through => :ability, :class_name => "GameData::AbilityDefinition"
   
-  has_one :ability_name, :through => :ability_conf, :class_name => "Register::AbilityName"
+  has_one  :ability_name,        :through => :ability_conf,     :class_name => "Register::AbilityName"
+  has_many :ability_settings,    :through => :ability_conf,     :class_name => "Register::AbilitySetting"
+  has_many :register_ability_definitions, :through => :ability_settings, :class_name => "GameData::AbilityDefinition", :source => :ability_definition
   
   validates :passed_day, :presence => true
   validates :ability,    :presence => true
@@ -21,7 +23,39 @@ class Result::Ability < ActiveRecord::Base
     day_arel = Day.arel_table
     !self.where(day_arel[:day].lteq(day_i.to_i-1)).includes(:day).exists?(:ability_id => ability_id)
   end
-
+  
+  def tree
+    @tree ||= {
+      :ability => {
+        :name => ability.name,
+        :lv => lv
+      }.merge(lv_effects).merge(pull_down)
+    }
+  end
+  
+  def lv_effects
+    if @lv_effects.nil?
+      definition_arel = GameData::AbilityDefinition.arel_table
+      if ability_settings.where(:setting => false).where(definition_arel[:kind].eq(:lv)).includes(:ability_definition).exists?
+        @lv_effects = { :lv_effects => ability_settings.where(:setting => false).where(definition_arel[:kind].eq(:lv)).includes(:ability_definition).map{|r| r.ability_definition.lv} }
+      else
+        @lv_effects = {}
+      end
+    end
+    @lv_effects
+  end
+  
+  def pull_down
+    if @pull_down.nil?
+      if register_ability_definitions.where(:kind => :pull_down).exists?
+        @pull_down = { :pull_down => register_ability_definitions.where(:kind => :pull_down).first.caption }
+      else
+        @pull_down = {}
+      end
+    end
+    @pull_down
+  end
+  
   def grow_using_point_name!(point_name)
     success = false
     point_arel = GameData::Point.arel_table

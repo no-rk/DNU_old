@@ -27,11 +27,27 @@ class Result::Party < ActiveRecord::Base
     end
   }
   
-  def add_notice!(tree, battle_kind = :battle)
+  def characters
+    @characters ||= DNU::Fight::State::Characters.new(pt_settings_tree)
+  end
+  
+  def pt_settings_tree
+    @pt_settings ||= { :settings => [definition_tree] }
+  end
+  
+  def definition_tree
+    @definition_tree ||= {
+      :pt_name    => nickname,
+      :pt_caption => caption,
+      :members    => party_members.map{|r| r.setting_tree}
+    }
+  end
+  
+  def add_notice!(party_tree, battle_kind = :battle)
     unless self.notices.exists?
       self.notices.build do |notice|
         notice.kind  = battle_kind.to_s
-        notice.enemy = self.class.new_from_definition(tree)
+        notice.enemy = self.class.new_from_definition_tree(party_tree)
       end
       self.save!
     end
@@ -51,21 +67,20 @@ class Result::Party < ActiveRecord::Base
     name || "第#{id}PT"
   end
   
-  def self.new_from_definition(tree, battle_kind = :battle, day = Day.last)
+  def self.new_from_definition_tree(tree, battle_kind = :battle, day = Day.last)
     result_party = self.new(:name => tree[:pt_name], :caption => tree[:pt_caption])
     result_party.kind = battle_kind.to_s
     result_party.day = day
     
     tree[:members].each do |member|
-      member[:number].times do
+      (member[:number] || 1).times do
         result_party.party_members.build do |result_party_member|
-          if member[:kind].to_sym == :PC and member[:eno].present?
-            result_party_member.character  = User.find(member[:eno])
-            result_party_member.correction = member[:day_i]
+          if member[:eno].present?
+            result_party_member.character = User.find(member[:eno])
           else
-            result_party_member.character  = GameData::Character.find_by_kind_and_name(member[:kind], member[:name])
-            result_party_member.correction = member[:correction].to_i
+            result_party_member.character = GameData::Character.find_by_kind_and_name(member[:kind], member[:name])
           end
+          result_party_member.correction = member[:correction].to_i
         end
       end
     end

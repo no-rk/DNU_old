@@ -127,7 +127,7 @@ class EffectParser < Parslet::Parser
       str('に') |
       str('のとき') |
       str('and')
-    ) >>
+    ).maybe >>
     spaces?
   }
   
@@ -148,16 +148,17 @@ class EffectParser < Parslet::Parser
   }
   
   rule(:alphabet) {
-    match['A-ZＡ-Ｚ'].as(:alphabet)
+    match['A-ZＡ-Ｚ']
   }
   
   rule(:variable) {
     at >> bra >> (ket.absent? >> any).repeat(1).as(:name) >> ket >> spaces? |
-    at >> (spaces.absent? >> any).repeat(1).as(:name) >> spaces
+    at >> (spaces.absent? >> any).repeat(1).as(:name) >> spaces |
+    bra >> alphabet.as(:alphabet).as(:name) >> ket
   }
   
   rule(:coordinates) {
-    alphabet.as(:x) >> natural_number.as(:y)
+    alphabet.as(:alphabet_number).as(:x) >> natural_number.as(:y)
   }
   
   rule(:place) {
@@ -347,9 +348,7 @@ class EffectParser < Parslet::Parser
   }
   
   rule(:target_dependency_element) {
-    str('竜').as(:Dragon) |
-    str('人形').as(:Puppet) |
-    str('召喚').as(:Summon)
+    character_type
   }
   
   rule(:target_live_or_dead) {
@@ -512,7 +511,8 @@ class EffectParser < Parslet::Parser
   
   rule(:number_of_people) {
     (
-      str('PT').as(:party_members)
+      str('PT').as(:party_members) |
+      target_set
     ) >>
     str('人数')
   }
@@ -1137,7 +1137,7 @@ class EffectParser < Parslet::Parser
             hp_mp.as(:state_character).as(:do)
           ).as(:lefts)
         ) >>
-        non_negative_integer.as(:percent).as(:fixnum).as(:right) >>
+        calculable.as(:percent).as(:fixnum).as(:right) >>
         percent >> str('以上')
       ).as(:condition_ge) |
       (
@@ -1151,7 +1151,7 @@ class EffectParser < Parslet::Parser
             hp_mp.as(:state_character).as(:do)
           ).as(:lefts)
         ) >>
-        non_negative_integer.as(:percent).as(:fixnum).as(:right) >>
+        calculable.as(:percent).as(:fixnum).as(:right) >>
         percent >> str('以下')
       ).as(:condition_le) |
       (
@@ -1165,7 +1165,7 @@ class EffectParser < Parslet::Parser
             hp_mp.as(:state_character).as(:do)
           ).as(:lefts)
         ) >>
-        non_negative_integer.as(:percent).as(:fixnum).as(:right) >>
+        calculable.as(:percent).as(:fixnum).as(:right) >>
         percent
       ).as(:condition_eq)
     ).as(:hp_mp_percent)
@@ -1185,6 +1185,10 @@ class EffectParser < Parslet::Parser
       str('頻度') >> match['1-5１-５'].as(:number).as(:frequency) |
       str('通常時').as(:normal)
     ).as(:wrap_random_percent)
+  }
+  
+  rule(:act_count) {
+    str('第') >> calculable.as(:act_count) >> str('行動') >> str('時').maybe
   }
   
   rule(:next_not_change) {
@@ -1246,6 +1250,7 @@ class EffectParser < Parslet::Parser
         next_not_change |
         in_pre_phase |
         in_phase |
+        act_count |
         present_place |
         get_flag
       ) >> str('になった').absent?
@@ -1763,13 +1768,30 @@ class EffectParser < Parslet::Parser
     (newline.absent? >> any).repeat(1).as(:find_by_name)
   }
   
+  rule(:skill_condition) {
+    (
+      pre_phase.as(:timing) |
+      str('必殺技').as(:special)
+    ).maybe >> spaces? >>
+    (
+      conditions |
+      condition |
+      (
+        any.present? |
+        any.absent?
+      ).as(:condition_default)
+    ).as(:condition) >>
+    (
+      (newline | separator) >> str('対象') >> separator >> skill_target.as(:target)
+    ).maybe
+  }
+  
   rule(:skill_setting) {
     bra >> str('技') >> ket >> skill_name.as(:name) >> (
       level >> natural_number.as(:lv)
     ).maybe >> newline >>
-    priority >> separator >> pre_phase.as(:timing).maybe >> (conditions | condition).as(:condition) >> (
-      (newline | separator) >> str('対象') >> separator >> skill_target.as(:target)
-    ).maybe >> (
+    priority >> separator >> skill_condition >>
+    (
       newline >> root_processes.as(:serif)
     ).maybe >> newline.maybe
   }
@@ -1842,7 +1864,7 @@ class EffectParser < Parslet::Parser
   # pt_settings
   
   rule(:character_pc) {
-    bra >> str('PC').as(:kind) >> ket >> eno >> (spaces? >> str('第') >> natural_number.as(:day_i) >> str('回')).maybe
+    bra >> str('PC').as(:kind) >> ket >> eno >> (spaces? >> str('第') >> natural_number.as(:correction) >> str('回')).maybe
   }
   
   rule(:pt_definition) {

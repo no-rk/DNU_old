@@ -18,7 +18,7 @@ module DNU
     def self.parse(kind, text, is_reload = false)
       begin
         tree = parser(is_reload).send(kind).parse(text)
-        tree = transform.apply(tree)
+        tree = transform(is_reload).apply(tree)
       rescue
         tree = nil
       else

@@ -5,12 +5,14 @@ module DNU
       class Characters < Array
         include Target
         
-        def initialize(tree)
-          tree[:settings].each do |pt|
-            team = DNU::Fight::State::Team.new(pt[:pt_name].to_s)
-            pt[:members].each do |character|
-              character.merge!(:team => team)
-              add_character(character, tree[:definitions])
+        def initialize(tree = {})
+          if tree[:settings].present?
+            tree[:settings].each do |pt|
+              team = DNU::Fight::State::Team.new(pt[:pt_name].to_s, pt[:pt_caption].to_s)
+              pt[:members].each do |character|
+                character.merge!(:team => team)
+                add_character(character, tree[:definitions])
+              end
             end
           end
         end
@@ -22,7 +24,12 @@ module DNU
           definition = def_plus.try(:find){|d| d[:kind]==kind and d[:name]==name }
           # 定義されていない場合はデータベースから読み込みを試みる
           if definition.blank?
-            definition = GameData::Character.find_by_kind_and_name(kind, name).try(:tree) || {}
+            if setting[:eno].present?
+              definition = User.find_by_id(setting[:eno].to_i).try(:tree, (setting[:correction] || Day.last_day_i).to_i)
+            else
+              definition = GameData::Character.find_by_kind_and_name(kind, name).try(:tree)
+            end
+            definition ||= {}
           end
           definition.merge!(setting).merge!({ :parent => parent, :parent_effect => parent_effect })
           character = DNU::Fight::State::Character.new(definition)

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130423104136) do
+ActiveRecord::Schema.define(:version => 20130426124415) do
 
   create_table "admins", :force => true do |t|
     t.string   "email",               :default => "", :null => false
@@ -103,6 +103,7 @@ ActiveRecord::Schema.define(:version => 20130423104136) do
   create_table "game_data_character_types", :force => true do |t|
     t.string   "name"
     t.text     "caption"
+    t.boolean  "player"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
@@ -454,18 +455,22 @@ ActiveRecord::Schema.define(:version => 20130423104136) do
     t.string   "battlable_type"
     t.integer  "skill_id"
     t.integer  "priority"
-    t.string   "use_condition"
-    t.string   "use_condition_variable"
-    t.string   "frequency"
-    t.string   "target"
-    t.string   "target_variable"
+    t.integer  "use_condition_id"
+    t.integer  "use_condition_variable"
+    t.integer  "frequency_id"
+    t.integer  "target_id"
+    t.integer  "target_variable"
+    t.text     "condition"
     t.text     "message"
     t.datetime "created_at",             :null => false
     t.datetime "updated_at",             :null => false
   end
 
   add_index "register_battle_settings", ["battlable_id"], :name => "index_register_battle_settings_on_battlable_id"
+  add_index "register_battle_settings", ["frequency_id"], :name => "index_register_battle_settings_on_frequency_id"
   add_index "register_battle_settings", ["skill_id"], :name => "index_register_battle_settings_on_skill_id"
+  add_index "register_battle_settings", ["target_id"], :name => "index_register_battle_settings_on_target_id"
+  add_index "register_battle_settings", ["use_condition_id"], :name => "index_register_battle_settings_on_use_condition_id"
 
   create_table "register_battles", :force => true do |t|
     t.integer  "user_id"
@@ -852,6 +857,15 @@ ActiveRecord::Schema.define(:version => 20130423104136) do
 
   add_index "result_battle_values", ["battle_value_id"], :name => "index_result_battle_values_on_battle_value_id"
   add_index "result_battle_values", ["passed_day_id"], :name => "index_result_battle_values_on_passed_day_id"
+
+  create_table "result_battles", :force => true do |t|
+    t.integer  "notice_id"
+    t.text     "tree"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "result_battles", ["notice_id"], :name => "index_result_battles_on_notice_id"
 
   create_table "result_blossoms", :force => true do |t|
     t.integer  "passed_day_id"
