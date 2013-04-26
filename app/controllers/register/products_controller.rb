@@ -10,6 +10,6 @@ class Register::ProductsController < Register::ApplicationController
     c_record
   end
   def set_instance_variables
-    @item_type_select ||= GameData::ItemType.joins(:equip).inject({}){|h,r|h.tap{h[r.name]=r.id}}
+    @item_type_select ||= GameData::ItemType.select([:id, :name]).where(:forge => true).inject({}){|h,r|h.tap{h[r.name]=r.id}}
   end
 end

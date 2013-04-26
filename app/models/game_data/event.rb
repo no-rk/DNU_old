@@ -13,10 +13,6 @@ class GameData::Event < ActiveRecord::Base
   before_validation :set_game_data
   after_save        :sync_game_data
   
-  def tree
-    @tree ||= DNU::Data.parse_from_model(self)
-  end
-  
   def used?
     self.events.exists?
   end

@@ -6,7 +6,7 @@ module DNU
         
         def play_children
           disease_name = @tree[:disease]
-          history[:children] = { :status_name => disease_name }
+          history[:children] = { :battle_value => disease_name }
         end
         
         def play_(b_or_a)

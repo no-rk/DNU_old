@@ -5,8 +5,8 @@ class CreateGameDataBattleValues < ActiveRecord::Migration
       t.text :caption
       t.integer :min
       t.integer :max
-      t.boolean :has_max
-      t.boolean :has_equip_value
+      t.boolean :has_max, :default => false
+      t.boolean :has_equip_value, :default => false
 
       t.timestamps
     end

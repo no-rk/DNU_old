@@ -20,8 +20,6 @@ module DNU
 自/{次の攻撃属性#{element_name}＋一時効果消滅}
           DEFINITION
           
-          parser    = EffectParser.new
-          transform = EffectTransform.new
           effects_definitions = [{ effects_type => DNU::Data.parse_definition(:temporary_effect, effects_definitions) }]
           
           # 重複不可でかつ既に付加追加済みの場合はもう追加しない

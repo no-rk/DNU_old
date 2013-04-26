@@ -5,13 +5,12 @@ module DNU
       class Characters < Array
         include Target
         
-        @@definitions = []
-        
         def initialize(tree)
           tree[:settings].each do |pt|
             team = DNU::Fight::State::Team.new(pt[:pt_name].to_s)
             pt[:members].each do |character|
-              add_character(character.merge(:team => team), tree[:definitions])
+              character.merge!(:team => team)
+              add_character(character, tree[:definitions])
             end
           end
         end
@@ -20,14 +19,10 @@ module DNU
           kind = setting[:kind].to_s
           name = setting[:name].to_s
           
-          definition = def_plus.try(:find){|d| d[:kind]==kind and d[:name]==name } || {}
-          definition = @@definitions.find{ |d| d[:kind]==kind and d[:name]==name } if definition.blank?
+          definition = def_plus.try(:find){|d| d[:kind]==kind and d[:name]==name }
           # 定義されていない場合はデータベースから読み込みを試みる
           if definition.blank?
             definition = GameData::Character.find_by_kind_and_name(kind, name).try(:tree) || {}
-            if definition.present?
-              @@definitions.push(definition)
-            end
           end
           definition.merge!(setting).merge!({ :parent => parent, :parent_effect => parent_effect })
           character = DNU::Fight::State::Character.new(definition)

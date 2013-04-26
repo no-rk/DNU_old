@@ -13,10 +13,6 @@ class GameData::EnemyList < ActiveRecord::Base
   before_validation :set_game_data
   after_save        :sync_game_data
   
-  def tree
-    @tree ||= DNU::Data.parse_from_model(self)
-  end
-  
   def used?
     enemy_territories.exists? or result_party_members.exists?
   end

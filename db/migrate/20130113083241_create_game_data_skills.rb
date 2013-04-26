@@ -3,6 +3,7 @@ class CreateGameDataSkills < ActiveRecord::Migration
     create_table :game_data_skills do |t|
       t.string :name
       t.text :definition
+      t.text :tree
 
       t.timestamps
     end

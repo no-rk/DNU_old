@@ -5,7 +5,6 @@ module DNU
       class Character
         
         @@id = 0
-        @@definitions = []
         
         @@nexts = [:target_set, :target, :hitrate, :attack_element, :attack_type, :attack_target, :turn, :act, :add_act,
                    :hit_val, :add_val, :heal_val, :convert_val, :cost_val, :rob_val, :steal_val,
@@ -33,7 +32,7 @@ module DNU
         def set_strength_from_rank!(tree)
           if tree[:rank].present?
             rank = tree[:rank].to_i + tree[:correction].to_i
-            rank = 0 if rank < 0
+            rank = 1 if rank < 1
             
             # 能力
             GameData::Status.pluck(:name).each do |status_name|
@@ -59,7 +58,6 @@ module DNU
               setting[:equip][:equip_strength] ||= ((setting[:equip][:equip_rate] || 1).to_f*equip_from_rank(rank)).to_i
             end
           end
-          tree
         end
         
         def initialize(tree)
@@ -74,11 +72,11 @@ module DNU
           GameData::BattleValue.where(:has_max => true).pluck(:name).each do |battle_value_name|
             instance_variable_set("@最大#{battle_value_name}", instance_variable_get("@#{battle_value_name}").status.max)
           end
-          @id   = @@id += 1
-          @parent        = tree[:parent]
-          @parent_effect = tree[:parent_effect]
-          @name = tree[:name].to_s
-          @team = tree[:team]
+          @id              = @@id += 1
+          @parent          = tree[:parent]
+          @parent_effect   = tree[:parent_effect]
+          @name            = tree[:name].to_s
+          @team            = tree[:team]
           @effects         = [].extend FindEffects
           @effects_removed = [].extend FindEffects
           @@nexts.each do |n|
@@ -112,25 +110,20 @@ module DNU
           kind = setting.values.first[:kind].to_s
           name = setting.values.first[:name].to_s
           setting = setting.values.first
-          
           return if type == :drop or type == :point
-          effects = def_plus.try(:find){|d| d.keys.first==type and d[type][:name] == name } || {}
-          effects = @@definitions.find{ |d| d.keys.first==type and d[type][:name] == name } if effects.blank?
-          effects = { :serif => setting } if type == :serif
+          
+          effects = def_plus.try(:find){|d| d.keys.first==type and d[type][:name] == name }.try('[]', type)
+          effects = setting if type == :serif
           # 定義されていない場合はデータベースから読み込みを試みる
           if effects.blank?
             if kind.present?
-              tree = "GameData::#{type.to_s.camelize}".constantize.find_by_kind_and_name(kind, name).try(:tree)
+              effects = "GameData::#{type.to_s.camelize}".constantize.find_by_kind_and_name(kind, name).try(:tree)
             else
-              tree = "GameData::#{type.to_s.camelize}".constantize.find_by_name(name).try(:tree)
-            end
-            if tree.present?
-              effects = { type => tree }
-              @@definitions.push(effects)
+              effects = "GameData::#{type.to_s.camelize}".constantize.find_by_name(name).try(:tree)
             end
           end
           raise "[#{I18n.t(type.to_s.camelize, :scope => 'DNU.Fight.Scene')}]#{name}は定義されてない" if effects.blank?
-          effects = effects[type].merge(setting).merge(:parent => parent_obj)
+          effects.merge!(setting).merge!(:parent => parent_obj)
           es = "DNU::Fight::State::#{type.to_s.camelize}".constantize.new(effects)
           es.each do |e|
             @effects << e

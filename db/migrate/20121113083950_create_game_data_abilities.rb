@@ -4,6 +4,7 @@ class CreateGameDataAbilities < ActiveRecord::Migration
       t.string :name
       t.text :caption
       t.text :definition
+      t.text :tree
 
       t.timestamps
     end

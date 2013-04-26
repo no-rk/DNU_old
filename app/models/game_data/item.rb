@@ -1,5 +1,6 @@
 class GameData::Item < ActiveRecord::Base
-  attr_accessible :definition, :kind, :name
+  attr_accessible :definition, :kind, :name, :tree
+  serialize :tree
   
   validates :kind,       :presence => true
   validates :name,       :presence => true, :uniqueness => {:scope => :kind }
@@ -8,16 +9,13 @@ class GameData::Item < ActiveRecord::Base
   before_validation :set_game_data
   after_save        :sync_game_data
   
-  def tree
-    @tree ||= DNU::Data.parse_from_model(self)
-  end
-  
   private
   def set_game_data
     definition_tree = DNU::Data.parse_from_model(self, true)
     if definition_tree.present?
       self.kind = definition_tree[:kind].to_s
       self.name = definition_tree[:name].to_s
+      self.tree = definition_tree
     else
       errors.add(:definition, :invalid)
     end

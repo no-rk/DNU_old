@@ -22,10 +22,6 @@ class Result::Skill < ActiveRecord::Base
   end
   
   def cost
-    parser    = EffectParser.new
-    transform = EffectTransform.new
-    tree = parser.skill_definition.parse(skill.definition)
-    tree = transform.apply(tree)
-    tree[:cost]
+    skill.tree[:cost]
   end
 end

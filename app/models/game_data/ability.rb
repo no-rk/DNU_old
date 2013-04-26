@@ -2,7 +2,8 @@ class GameData::Ability < ActiveRecord::Base
   has_many :ability_definitions, :dependent => :destroy
   has_many :learning_conditions, :as => :learnable, :dependent => :destroy
   has_one :train, :as => :trainable, :dependent => :destroy
-  attr_accessible :caption, :definition, :name
+  attr_accessible :caption, :definition, :name, :tree
+  serialize :tree
   
   has_many :abilities, :class_name => "Result::Ability"
   
@@ -11,10 +12,6 @@ class GameData::Ability < ActiveRecord::Base
   
   before_validation :set_game_data
   after_save        :sync_game_data
-  
-  def tree
-    @tree ||= DNU::Data.parse_from_model(self)
-  end
   
   def used?
     self.abilities.exists?
@@ -30,6 +27,7 @@ class GameData::Ability < ActiveRecord::Base
     if definition_tree.present?
       self.name    = definition_tree[:name].to_s
       self.caption = definition_tree[:caption].to_s
+      self.tree    = definition_tree
       # アビリティ詳細
       if self.unused?
         self.ability_definitions.destroy_all unless self.new_record?

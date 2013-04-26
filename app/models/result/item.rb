@@ -49,7 +49,7 @@ class Result::Item < ActiveRecord::Base
             item_element.user    = user
             item_element.day     = day
             item_element.way     = way
-            item_element.element = GameData::Element.find_by_name(item_data[:element].values.first.to_s)
+            item_element.element = GameData::Element.find_by_name(item_data[:element])
             item_element.source  = item_data[:source] if item_data[:source].present?
           end
         when :strength
@@ -131,11 +131,7 @@ class Result::Item < ActiveRecord::Base
     item_plan = GameData::Item.where(:kind => item_type, :name => item_name).first
     
     if item_plan.present?
-      parser    = EffectParser.new
-      transform = EffectTransform.new
-      
-      item_data = parser.item_definition.parse(item_plan.definition)
-      item_data = transform.apply(item_data)
+      item_data = item_plan.tree
       
       result_item = self.new_item_by_data(item_data, user, way, day_i)
       result_item.user    = user

@@ -1,8 +1,5 @@
 # encoding: UTF-8
 
-parser    = EffectParser.new
-transform = EffectTransform.new
-
 ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_trains")
 ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_learning_conditions")
 
@@ -11,8 +8,8 @@ if Day.last.nil?
   Day.create!(:day => 0, :state => 2)
 end
 
-# ジョブ, 守護, 言葉, 戦闘値, 生産, 属性, 戦闘設定, ポイント, 装備種, 地形, キャラクター種類
-[:job, :guardian, :word, :battle_value, :product, :element, :battle_setting, :point, :equip_type, :landform, :character_type].each do |table|
+# ジョブ, 守護, 言葉, 戦闘値, 生産, 属性, 戦闘設定, ポイント, 装備種, 地形, キャラクター種類, アイテム種類
+[:job, :guardian, :word, :battle_value, :product, :element, :battle_setting, :point, :equip_type, :landform, :character_type, :item_type].each do |table|
   ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_#{table.to_s.tableize}")
   list = YAML.load(ERB.new(File.read("#{Rails.root}/db/game_data/#{table}.yml")).result)
   list.each do |data|
@@ -36,49 +33,13 @@ art_types.each do |art_type|
   art_type_model.save!
 end
 
-# マップ
+# マップ, 能力, 状態異常, 装備, 付加, 罠, 技, アビリティ, アイテム, キャラクター, 敵リスト, 敵出現地, イベント
 ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_map_tips")
-[:map].each do |table|
-  ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_#{table.to_s.tableize}")
-  list = YAML.load(ERB.new(File.read("#{Rails.root}/db/game_data/#{table}.yml")).result)
-  list[:data].each do |data|
-    model = "GameData::#{table.to_s.camelize}".constantize.new
-    model.definition = data
-    model.save!
-  end
-end
-
-# アイテム種, 装備種
-ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_item_types")
-ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_equips")
-item_types = YAML.load(ERB.new(File.read("#{Rails.root}/db/game_data/item_type.yml")).result)
-item_types.each do |item_type|
-  # p item_type.except("equip")
-  item_type_model = GameData::ItemType.new(item_type.except("equip"))
-  if item_type["equip"].present?
-    # p item_type["equip"]
-    begin
-      tree = parser.equip_definition.parse(item_type["equip"])
-      tree = transform.apply(tree)
-    rescue
-      p "文法エラー"
-      p item_type["equip"]
-    else
-      item_type_model.build_equip
-      item_type_model.equip.kind = tree[:kind].to_s
-      item_type_model.equip.name = tree[:name].to_s
-      item_type_model.equip.definition = item_type["equip"]
-    end
-  end
-  item_type_model.save!
-end
-
-# 能力, 状態異常, 付加, 罠, 技, アビリティ, キャラクター, 敵リスト, 敵出現地 アイテム, イベント
 ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_ability_definitions")
 ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_enemy_list_elements")
 ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_event_steps")
 ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_event_contents")
-[:status, :disease, :sup, :trap, :skill, :ability, :item, :character, :enemy_list, :enemy_territory, :event].each do |table|
+[:map, :status, :disease, :equip, :sup, :trap, :skill, :ability, :item, :character, :enemy_list, :enemy_territory, :event].each do |table|
   ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_#{table.to_s.tableize}")
   list = YAML.load(ERB.new(File.read("#{Rails.root}/db/game_data/#{table}.yml")).result)
   list[:data].each do |data|

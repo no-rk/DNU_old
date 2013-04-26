@@ -1611,9 +1611,8 @@ class EffectParser < Parslet::Parser
   
   rule(:equip_definition) {
     bra >> equip_type.as(:kind) >> ket >>
-    ((separator | newline).absent? >> any).repeat(1).as(:name) >>
-    (separator >> str('射程') >> natural_number.as(:range)).maybe >>
-    newline >>
+    (newline.absent? >> any).repeat(1).as(:name) >> newline >>
+    string.as(:caption).maybe >>
     sup_effects.as(:effects) >>
     (default_attack_definition.as(:default_attack)).maybe
   }

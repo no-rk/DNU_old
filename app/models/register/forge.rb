@@ -32,13 +32,8 @@ class Register::Forge < ActiveRecord::Base
   end
   
   def item_data_from_material(material, day_i = self.day.day)
-    parser    = EffectParser.new
-    transform = EffectTransform.new
-    
-    if material.plan.try(:definition).present?
-      material_data = parser.item_definition.parse(material.plan.definition)
-      material_data = transform.apply(material_data)
-      material_data = material_data[:item_sups].find{ |e| e[:equip_type].to_s == self.item_type.equip.try(:kind).to_s }
+    if material.plan.present?
+      material_data = material.plan.tree[:item_sups].find{ |e| e[:equip_type].to_s == self.item_type.equip.try(:kind).to_s }
     end
     material_data ||= {}
     

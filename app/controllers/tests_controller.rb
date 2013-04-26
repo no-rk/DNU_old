@@ -56,8 +56,7 @@ class TestsController < ApplicationController
     @text  = params[:text]
     if @text.present?
       begin
-        tree = parser.send(params[:type]).parse(@text)
-        tree = transform.apply(tree)
+        tree = DNU::Data.parse(params[:type], @text, true)
         @result = "<pre>#{tree.pretty_inspect}</pre>"
       rescue => msg
         @error = msg
@@ -72,8 +71,7 @@ class TestsController < ApplicationController
     @type  = :battle
     if @text.present?
       begin
-        tree = parser.pt_settings.parse(@text)
-        tree = transform.apply(tree)
+        tree = DNU::Data.parse_settings(:pt, @text, true)
         character = DNU::Fight::State::Characters.new(tree)
         battle = DNU::Fight::Scene::Battle.new(character)
         history = battle.play
@@ -121,15 +119,6 @@ class TestsController < ApplicationController
   end
   
   private
-  
-  def parser
-    @parser ||= EffectParser.new
-  end
-  
-  def transform
-    @transform ||= EffectTransform.new
-  end
-  
   def pt_text
     @pt_text ||= <<-"PT"
 [PC]自分/1
@@ -164,13 +153,13 @@ class TestsController < ApplicationController
 [PT]Ｃチーム
 [#{kind}]#{name}+1
       PT
-      @pt_character = DNU::Fight::State::Characters.new(DNU::Data.parse_settings(:pt, pt_character_text))
+      @pt_character = DNU::Fight::State::Characters.new(DNU::Data.parse_settings(:pt, pt_character_text, true))
     end
     @pt_character
   end
   
   def characters
-    @characters ||= DNU::Fight::State::Characters.new(DNU::Data.parse_settings(:pt, pt_text))
+    @characters ||= DNU::Fight::State::Characters.new(DNU::Data.parse_settings(:pt, pt_text, true))
   end
   
   def es(tree)
@@ -236,8 +225,7 @@ class TestsController < ApplicationController
   def parse_from_text(type, name = :definition)
     if @text.present?
       begin
-        tree = parser.send("#{type}_#{name}").parse(@text)
-        tree = transform.apply(tree)
+        tree = DNU::Data.parse("#{type}_#{name}", @text)
         @result = send("history_html_#{@type}", tree) + "<pre>#{tree.pretty_inspect}</pre>"
       rescue => msg
         @error = msg

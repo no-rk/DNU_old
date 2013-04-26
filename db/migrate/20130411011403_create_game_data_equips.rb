@@ -4,7 +4,9 @@ class CreateGameDataEquips < ActiveRecord::Migration
       t.references :item_type
       t.string :kind
       t.string :name
+      t.text :caption
       t.text :definition
+      t.text :tree
 
       t.timestamps
     end

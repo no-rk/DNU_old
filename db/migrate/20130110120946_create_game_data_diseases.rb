@@ -5,6 +5,7 @@ class CreateGameDataDiseases < ActiveRecord::Migration
       t.string :color
       t.text :caption
       t.text :definition
+      t.text :tree
 
       t.timestamps
     end

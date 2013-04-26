@@ -1,5 +1,6 @@
 class GameData::Trap < ActiveRecord::Base
-  attr_accessible :definition, :name
+  attr_accessible :definition, :name, :tree
+  serialize :tree
   
   validates :name,       :presence => true, :uniqueness => true
   validates :definition, :presence => true
@@ -7,14 +8,12 @@ class GameData::Trap < ActiveRecord::Base
   before_validation :set_game_data
   after_save        :sync_game_data
   
-  def tree
-    @tree ||= DNU::Data.parse_from_model(self)
-  end
-  
   private
   def set_game_data
-    if tree.present?
-      self.name = tree[:name].to_s
+    definition_tree = DNU::Data.parse_from_model(self, true)
+    if definition_tree.present?
+      self.name = definition_tree[:name].to_s
+      self.tree = definition_tree
     else
       errors.add(:definition, :invalid)
     end

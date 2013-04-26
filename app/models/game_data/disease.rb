@@ -1,5 +1,6 @@
 class GameData::Disease < ActiveRecord::Base
-  attr_accessible :caption, :color, :definition, :name
+  attr_accessible :caption, :color, :definition, :name, :tree
+  serialize :tree
   
   validates :name,       :presence => true, :uniqueness => true
   validates :color,      :presence => true
@@ -8,10 +9,6 @@ class GameData::Disease < ActiveRecord::Base
   before_validation :set_game_data
   after_save        :sync_game_data
   
-  def tree
-    @tree ||= DNU::Data.parse_from_model(self)
-  end
-  
   private
   def set_game_data
     definition_tree = DNU::Data.parse_from_model(self, true)
@@ -19,6 +16,7 @@ class GameData::Disease < ActiveRecord::Base
       self.name    = definition_tree[:name].to_s
       self.color   = definition_tree[:color].to_s
       self.caption = definition_tree[:caption].to_s
+      self.tree    = definition_tree
     else
       errors.add(:definition, :invalid)
     end

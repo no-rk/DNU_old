@@ -45,6 +45,7 @@ ActiveRecord::Schema.define(:version => 20130423104136) do
     t.string   "name"
     t.text     "caption"
     t.text     "definition"
+    t.text     "tree"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
@@ -93,10 +94,10 @@ ActiveRecord::Schema.define(:version => 20130423104136) do
     t.text     "caption"
     t.integer  "min"
     t.integer  "max"
-    t.boolean  "has_max"
-    t.boolean  "has_equip_value"
-    t.datetime "created_at",      :null => false
-    t.datetime "updated_at",      :null => false
+    t.boolean  "has_max",         :default => false
+    t.boolean  "has_equip_value", :default => false
+    t.datetime "created_at",                         :null => false
+    t.datetime "updated_at",                         :null => false
   end
 
   create_table "game_data_character_types", :force => true do |t|
@@ -110,6 +111,7 @@ ActiveRecord::Schema.define(:version => 20130423104136) do
     t.string   "kind"
     t.string   "name"
     t.text     "definition"
+    t.text     "tree"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
@@ -119,6 +121,7 @@ ActiveRecord::Schema.define(:version => 20130423104136) do
     t.string   "color"
     t.text     "caption"
     t.text     "definition"
+    t.text     "tree"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
@@ -178,7 +181,9 @@ ActiveRecord::Schema.define(:version => 20130423104136) do
     t.integer  "item_type_id"
     t.string   "kind"
     t.string   "name"
+    t.text     "caption"
     t.text     "definition"
+    t.text     "tree"
     t.datetime "created_at",   :null => false
     t.datetime "updated_at",   :null => false
   end
@@ -224,14 +229,16 @@ ActiveRecord::Schema.define(:version => 20130423104136) do
   create_table "game_data_item_types", :force => true do |t|
     t.string   "name"
     t.text     "caption"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.boolean  "forge",      :default => false
+    t.datetime "created_at",                    :null => false
+    t.datetime "updated_at",                    :null => false
   end
 
   create_table "game_data_items", :force => true do |t|
     t.string   "kind"
     t.string   "name"
     t.text     "definition"
+    t.text     "tree"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
@@ -308,6 +315,7 @@ ActiveRecord::Schema.define(:version => 20130423104136) do
   create_table "game_data_skills", :force => true do |t|
     t.string   "name"
     t.text     "definition"
+    t.text     "tree"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
@@ -316,6 +324,7 @@ ActiveRecord::Schema.define(:version => 20130423104136) do
     t.string   "name"
     t.text     "caption"
     t.text     "definition"
+    t.text     "tree"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
@@ -323,6 +332,7 @@ ActiveRecord::Schema.define(:version => 20130423104136) do
   create_table "game_data_sups", :force => true do |t|
     t.string   "name"
     t.text     "definition"
+    t.text     "tree"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
@@ -340,6 +350,7 @@ ActiveRecord::Schema.define(:version => 20130423104136) do
   create_table "game_data_traps", :force => true do |t|
     t.string   "name"
     t.text     "definition"
+    t.text     "tree"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
