@@ -61,6 +61,7 @@ class User < ActiveRecord::Base
   has_many :result_parties,       :through => :through_party_members, :class_name => "Result::Party",       :source => :party
   has_many :result_party_members, :through => :result_parties,        :class_name => "Result::PartyMember", :source => :party_members
   has_many :result_notices,       :through => :result_parties,        :class_name => "Result::Notice",      :source => :notices
+  has_many :result_battles,       :through => :result_notices,        :class_name => "Result::Battle",      :source => :battle
 
   scope :new_commer,   lambda{ where(arel_table[:creation_day].eq(Day.last_day_i)) }
   scope :already_make, lambda{ where(arel_table[:creation_day].lt(Day.last_day_i)) }
@@ -180,6 +181,9 @@ class User < ActiveRecord::Base
       else
         self.send("result_#{type.to_s.pluralize}").where(day_arel[:day].eq(day_i - 1)).includes(:day)
       end
+    when :battle
+      day_arel  = Day.arel_table
+      self.send("result_#{type.to_s.pluralize}").where(day_arel[:day].eq(day_i - 1)).includes(:day)
     else
       day_arel  = Day.arel_table
       self.send("result_#{type.to_s.pluralize}").where(day_arel[:day].eq(day_i)).includes(:day)

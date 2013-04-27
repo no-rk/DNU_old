@@ -40,6 +40,9 @@
 - if @battle.present?
   .row-fluid
     #battle.span12
+      .well
+        %h3 戦闘
+        = render 'result_notice', { :notice => @battle.notice }
       = render 'result_battle'
 - if @trains.present?
   .row-fluid
@@ -72,7 +75,8 @@
 - if @notice.present?
   .row-fluid
     #notice.span12.well
-      = render 'result_notice'
+      %h3 戦闘予告
+      = render 'result_notice', { :notice => @notice }
 .row-fluid
   #character_data.span12.well
     = render 'result_character_data'

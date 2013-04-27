@@ -183,9 +183,12 @@ class EffectParser < Parslet::Parser
   
   # name rule
   
-  rule(:hp_mp) {
+  rule(:has_max) {
     (
-      (str('HP') | str('MP')).as(:name)
+      (
+        alternation_from_array(GameData::BattleValue.has_max_and_equip_value(true, true)) |
+        alternation_from_array(GameData::BattleValue.has_max_and_equip_value(true, false))
+      ).as(:name)
     ).as(:battle_value_wrap).as(:battle_value)
   }
   
@@ -667,7 +670,7 @@ class EffectParser < Parslet::Parser
   
   rule(:heal) {
     (
-      hp_mp >> str('回復') >> bra >> effect_coeff.as(:change_value) >> ket
+      has_max >> str('回復') >> bra >> effect_coeff.as(:change_value) >> ket
     ).as(:heal)
   }
   
@@ -1124,17 +1127,17 @@ class EffectParser < Parslet::Parser
     ).as(:state_disease)
   }
   
-  rule(:hp_mp_percent) {
+  rule(:has_max_percent) {
     (
       (
         (
           (
-            state_target       >> hp_mp |
-            state_target_group >> hp_mp >> group_value
+            state_target       >> has_max |
+            state_target_group >> has_max >> group_value
           ).as(:state_character).as(:left) |
           (
             state_target_group >>
-            hp_mp.as(:state_character).as(:do)
+            has_max.as(:state_character).as(:do)
           ).as(:lefts)
         ) >>
         calculable.as(:percent).as(:fixnum).as(:right) >>
@@ -1143,12 +1146,12 @@ class EffectParser < Parslet::Parser
       (
         (
           (
-            state_target       >> hp_mp |
-            state_target_group >> hp_mp >> group_value
+            state_target       >> has_max |
+            state_target_group >> has_max >> group_value
           ).as(:state_character).as(:left) |
           (
             state_target_group >>
-            hp_mp.as(:state_character).as(:do)
+            has_max.as(:state_character).as(:do)
           ).as(:lefts)
         ) >>
         calculable.as(:percent).as(:fixnum).as(:right) >>
@@ -1157,18 +1160,18 @@ class EffectParser < Parslet::Parser
       (
         (
           (
-            state_target       >> hp_mp |
-            state_target_group >> hp_mp >> group_value
+            state_target       >> has_max |
+            state_target_group >> has_max >> group_value
           ).as(:state_character).as(:left) |
           (
             state_target_group >>
-            hp_mp.as(:state_character).as(:do)
+            has_max.as(:state_character).as(:do)
           ).as(:lefts)
         ) >>
         calculable.as(:percent).as(:fixnum).as(:right) >>
         percent
       ).as(:condition_eq)
-    ).as(:hp_mp_percent)
+    ).as(:has_max_percent)
   }
   
   rule(:random_percent) {
@@ -1323,7 +1326,7 @@ class EffectParser < Parslet::Parser
   
   rule(:simple_condition) {
     condition_boolean |
-    hp_mp_percent |
+    has_max_percent |
     condition_ge |
     condition_le |
     condition_gt |

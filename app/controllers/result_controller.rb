@@ -47,7 +47,7 @@ class ResultController < ApplicationController
     # 装備
     @equips       = this_user.result(:equip, @day_i).all
     # 戦闘
-    @battle       = this_user.result(:party, @day_i-1).last.try(:notices).try(:last).try(:battle).try(:tree).extend DNU::Fight::Scene::Html
+    @battle       = this_user.result(:battle, @day_i).first
     # 訓練
     @trains       = this_user.result(:train, @day_i).all
     # 習得

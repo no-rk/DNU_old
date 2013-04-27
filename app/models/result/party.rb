@@ -27,19 +27,19 @@ class Result::Party < ActiveRecord::Base
     end
   }
   
-  def characters
-    @characters ||= DNU::Fight::State::Characters.new(pt_settings_tree)
+  def characters(day_i = Day.last_day_i)
+    @characters ||= DNU::Fight::State::Characters.new(pt_settings_tree(day_i))
   end
   
-  def pt_settings_tree
-    @pt_settings ||= { :settings => [definition_tree] }
+  def pt_settings_tree(day_i = Day.last_day_i)
+    @pt_settings ||= { :settings => [definition_tree(day_i)] }
   end
   
-  def definition_tree
+  def definition_tree(day_i = Day.last_day_i)
     @definition_tree ||= {
       :pt_name    => nickname,
       :pt_caption => caption,
-      :members    => party_members.map{|r| r.setting_tree}
+      :members    => party_members.map{|r| r.setting_tree(day_i) }
     }
   end
   

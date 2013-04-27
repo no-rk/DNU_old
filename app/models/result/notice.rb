@@ -13,7 +13,11 @@ class Result::Notice < ActiveRecord::Base
   validates :kind,  :inclusion => { :in => ["battle"] }
   validates :enemy, :presence => true
   
-  def characters
-    @characters ||= DNU::Fight::State::Characters.new.concat(party.characters).concat(enemy.characters)
+  def characters(day_i = Day.last_day_i)
+    @characters ||= DNU::Fight::State::Characters.new.concat(party.characters(day_i)).concat(enemy.characters(day_i))
+  end
+  
+  def pt_settings_tree(day_i = Day.last_day_i)
+    @pt_settings ||= { :settings => party.pt_settings_tree(day_i)[:settings] + enemy.pt_settings_tree(day_i)[:settings] }
   end
 end

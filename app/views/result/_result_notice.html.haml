@@ -1,15 +1,13 @@
-%h3 戦闘予告
-
-#{@notice.party.nickname}
+#{notice.party.nickname}
 %br
-- @notice.party_members.each do |member|
+- notice.party_members.each do |member|
   = link_to("ENo.#{member.character.id}", result_eno_path(@day_i, member.character.id), :target => :_blank)
   #{member.character.result_character(@day_i).profile.name}
   %br
 VS
 %br
-#{@notice.enemy.nickname}
+#{notice.enemy.nickname}
 %br
-- @notice.enemy_members.each do |member|
+- notice.enemy_members.each do |member|
   #{member.character.name}#{member.pp_correction}
   %br

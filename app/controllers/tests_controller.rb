@@ -55,12 +55,12 @@ class TestsController < ApplicationController
     @type  = :parse
     @text  = params[:text]
     if @text.present?
-      begin
-        tree = DNU::Data.parse(params[:type], @text, true)
+      #begin
+        tree = DNU::Data.parse!(params[:type], @text, true)
         @result = "<pre>#{tree.pretty_inspect}</pre>"
-      rescue => msg
-        @error = msg
-      end
+      #rescue => msg
+      #  @error = msg
+      #end
     end
     render 'test'
   end
@@ -71,7 +71,7 @@ class TestsController < ApplicationController
     @type  = :battle
     if @text.present?
       begin
-        tree = DNU::Data.parse_settings(:pt, @text, true)
+        tree = DNU::Data.parse!(:pt_settings, @text, true)
         character = DNU::Fight::State::Characters.new(tree)
         battle = DNU::Fight::Scene::Battle.new(character)
         history = battle.play
@@ -225,7 +225,7 @@ class TestsController < ApplicationController
   def parse_from_text(type, name = :definition)
     if @text.present?
       begin
-        tree = DNU::Data.parse("#{type}_#{name}", @text)
+        tree = DNU::Data.parse!("#{type}_#{name}", @text)
         @result = send("history_html_#{@type}", tree) + "<pre>#{tree.pretty_inspect}</pre>"
       rescue => msg
         @error = msg

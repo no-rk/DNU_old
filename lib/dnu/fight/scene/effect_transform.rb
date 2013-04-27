@@ -163,13 +163,13 @@ class EffectTransform < Parslet::Transform
     }
   }
   
-  rule(:hp_mp_percent => subtree(:hp_mp_percent)) {
-    if hp_mp_percent.values.first[:left]
-      hp_mp_percent.values.first[:left].values.first.merge!(:ratio => "割合")
+  rule(:has_max_percent => subtree(:has_max_percent)) {
+    if has_max_percent.values.first[:left]
+      has_max_percent.values.first[:left].values.first.merge!(:ratio => "割合")
     else
-      hp_mp_percent.values.first[:lefts][:do].values.first.merge!(:ratio => "割合")
+      has_max_percent.values.first[:lefts][:do].values.first.merge!(:ratio => "割合")
     end
-    hp_mp_percent
+    has_max_percent
   }
   
   rule(:condition_become => subtree(:condition_become)) {

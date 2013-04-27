@@ -860,6 +860,7 @@ ActiveRecord::Schema.define(:version => 20130426124415) do
 
   create_table "result_battles", :force => true do |t|
     t.integer  "notice_id"
+    t.text     "html"
     t.text     "tree"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false

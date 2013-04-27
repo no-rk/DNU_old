@@ -27,6 +27,12 @@ module DNU
       tree
     end
     
+    def self.parse!(kind, text, is_reload = false)
+      tree = parser(is_reload).send(kind).parse(text)
+      tree = transform(is_reload).apply(tree)
+      tree
+    end
+    
     def self.parse_from_model(model, is_reload = false)
       kind = model.class.name.split("::").last.underscore
       text = model.definition

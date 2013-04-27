@@ -9,10 +9,12 @@ module DNU
             notice = party.notices.first
             
             notice.battle.try(:destroy)
+            battle_tree = DNU::Fight::Scene::Battle.new(notice.characters).play
             
             result_battle = Result::Battle.new
             result_battle.notice = notice
-            result_battle.tree   = DNU::Fight::Scene::Battle.new(notice.characters).play
+            result_battle.html   = battle_tree.to_html
+            result_battle.tree   = battle_tree
             result_battle.save!
           end
         end
