@@ -2124,7 +2124,7 @@ class EffectParser < Parslet::Parser
       ).as(:B)
     ) >>
     ket >>
-    (bra >> str('送品不可') >> ket).maybe.as(:protect) >>
+    (bra >> str('破棄').as(:dispose_protect).maybe >> str('送品').as(:send_protect).maybe >> str('不可') >> ket).maybe >>
     (newline >> string.as(:caption)).maybe >>
     newline.maybe >>
     item_sup.repeat(0).as(:item_sups) >>

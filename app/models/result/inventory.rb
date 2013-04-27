@@ -14,7 +14,7 @@ class Result::Inventory < ActiveRecord::Base
   
   has_one :type, :through => :item, :class_name => "GameData::ItemType"
   
-  has_one :result_equip, :class_name => "Result::Equip"
+  has_many :result_equips, :class_name => "Result::Equip"
   
   validates :passed_day, :presence => true
   validates :item,       :presence => true
@@ -22,7 +22,7 @@ class Result::Inventory < ActiveRecord::Base
   
   def send_to_user!(to_user)
     success = false
-    unless self.item.protect
+    unless self.item.send_protect
       if to_user.present?
         result_inventory = to_user.new_inventory(self.day.day)
         if result_inventory.number.present?
@@ -38,7 +38,7 @@ class Result::Inventory < ActiveRecord::Base
   end
   
   def equip?
-    if self.result_equip.try(:success)
+    if self.result_equips.where(:success => true).exists?
       item.equip_type
     end
   end

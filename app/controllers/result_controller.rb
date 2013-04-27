@@ -32,6 +32,8 @@ class ResultController < ApplicationController
     @max_inventory = this_user.max_inventory(@day_i)
     # 日記
     @diary        = this_user.register(:main, @day_i).try(:diary).try(:diary)
+    # アイテム破棄
+    @disposes     = this_user.result(:dispose, @day_i).includes(:dispose).includes(:item).all
     # 送信ポイント
     @send_points  = this_user.result(:send_point, @day_i).includes(:send_point).includes(:point).includes(:to).all
     # 受信ポイント
@@ -76,7 +78,7 @@ class ResultController < ApplicationController
     @products     = this_user.result(:product,   @day_i).where(:forget => false).includes(:product).all
     @abilities    = this_user.result(:ability,   @day_i).where(:forget => false).includes(:ability).all
     @skills       = this_user.result(:skill,     @day_i).where(:forget => false).includes(:skill).all
-    @inventories  = this_user.result(:inventory, @day_i).includes(:type).includes(:result_equip).order(:number).all
+    @inventories  = this_user.result(:inventory, @day_i).includes(:type).includes(:result_equips).order(:number).all
     @events       = this_user.result(:event, @day_i).where(GameData::Event.arel_table[:kind].in(["共通", "通常"])).includes(:event).all
     
     render :layout => 'plain'

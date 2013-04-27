@@ -6,7 +6,8 @@ class CreateResultItems < ActiveRecord::Migration
       t.references :way, :polymorphic => true
       t.references :plan
       t.references :type
-      t.boolean :protect
+      t.boolean :dispose_protect
+      t.boolean :send_protect
       t.references :source
 
       t.timestamps

@@ -1,0 +1,9 @@
+%h3 アイテム破棄
+
+- @disposes.each do |dispose|
+  - if dispose.success
+    [#{dispose.dispose.number}]#{dispose.item.item_name(@day_i).name} をポイした。
+    %br
+  - else
+    [#{dispose.dispose.number}] をポイしようとして失敗。
+    %br

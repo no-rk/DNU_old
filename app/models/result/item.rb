@@ -11,15 +11,16 @@ class Result::Item < ActiveRecord::Base
   has_many :item_elements,  :dependent => :destroy
   has_many :item_sups,      :dependent => :destroy
 
-  attr_accessible :protect
+  attr_accessible :dispose_protect, :send_protect
   
   has_many :result_inventories, :class_name => "Result::Inventory"
   has_many :passed_days, :through => :result_inventories, :class_name => "Result::PassedDay"
   
-  validates :user,    :presence => true
-  validates :day,     :presence => true
-  validates :type,    :presence => true
-  validates :protect, :inclusion => { :in => [true, false] }
+  validates :user,            :presence => true
+  validates :day,             :presence => true
+  validates :type,            :presence => true
+  validates :dispose_protect, :inclusion => { :in => [true, false] }
+  validates :send_protect,    :inclusion => { :in => [true, false] }
   
   validate :has_name?, :has_strength?
   
@@ -134,11 +135,12 @@ class Result::Item < ActiveRecord::Base
       item_data = item_plan.tree
       
       result_item = self.new_item_by_data(item_data, user, way, day_i)
-      result_item.user    = user
-      result_item.day     = Day.find_by_day(day_i)
-      result_item.way     = way
-      result_item.plan    = item_plan
-      result_item.protect = item_data[:protect].present?
+      result_item.user            = user
+      result_item.day             = Day.find_by_day(day_i)
+      result_item.way             = way
+      result_item.plan            = item_plan
+      result_item.dispose_protect = item_data[:dispose_protect].present?
+      result_item.send_protect    = item_data[:send_protect].present?
     end
     result_item
   end
@@ -147,11 +149,12 @@ class Result::Item < ActiveRecord::Base
     item_data = register_forge.item_data_from_material(material, day_i)
     
     result_item = self.new_item_by_data(item_data, register_forge.smith, way, day_i)
-    result_item.user    = register_forge.smith
-    result_item.day     = Day.find_by_day(day_i)
-    result_item.way     = way
-    result_item.source  = material
-    result_item.protect = material.protect
+    result_item.user            = register_forge.smith
+    result_item.day             = Day.find_by_day(day_i)
+    result_item.way             = way
+    result_item.source          = material
+    result_item.dispose_protect = material.dispose_protect
+    result_item.send_protect    = material.send_protect
     result_item
   end
   

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130427080753) do
+ActiveRecord::Schema.define(:version => 20130427122437) do
 
   create_table "admins", :force => true do |t|
     t.string   "email",               :default => "", :null => false
@@ -529,6 +529,15 @@ ActiveRecord::Schema.define(:version => 20130427080753) do
 
   add_index "register_diaries", ["main_id"], :name => "index_register_diaries_on_main_id"
 
+  create_table "register_disposes", :force => true do |t|
+    t.integer  "main_id"
+    t.integer  "number"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "register_disposes", ["main_id"], :name => "index_register_disposes_on_main_id"
+
   create_table "register_duels", :force => true do |t|
     t.integer  "user_id"
     t.integer  "day_id"
@@ -908,6 +917,19 @@ ActiveRecord::Schema.define(:version => 20130427080753) do
   add_index "result_blossoms", ["blossomable_id"], :name => "index_result_blossoms_on_blossomable_id"
   add_index "result_blossoms", ["passed_day_id"], :name => "index_result_blossoms_on_passed_day_id"
 
+  create_table "result_disposes", :force => true do |t|
+    t.integer  "passed_day_id"
+    t.integer  "dispose_id"
+    t.integer  "item_id"
+    t.boolean  "success"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
+  end
+
+  add_index "result_disposes", ["dispose_id"], :name => "index_result_disposes_on_dispose_id"
+  add_index "result_disposes", ["item_id"], :name => "index_result_disposes_on_item_id"
+  add_index "result_disposes", ["passed_day_id"], :name => "index_result_disposes_on_passed_day_id"
+
   create_table "result_equips", :force => true do |t|
     t.integer  "passed_day_id"
     t.integer  "equip_id"
@@ -1076,10 +1098,11 @@ ActiveRecord::Schema.define(:version => 20130427080753) do
     t.string   "way_type"
     t.integer  "plan_id"
     t.integer  "type_id"
-    t.boolean  "protect"
+    t.boolean  "dispose_protect"
+    t.boolean  "send_protect"
     t.integer  "source_id"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
   end
 
   add_index "result_items", ["day_id"], :name => "index_result_items_on_day_id"

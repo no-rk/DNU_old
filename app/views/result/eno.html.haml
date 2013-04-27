@@ -9,6 +9,10 @@
   .row-fluid
     #diary.span12.well
       = render 'result_diary'
+- if @disposes.present?
+  .row-fluid
+    #dispose.span12.well
+      = render 'result_dispose'
 - if @send_points.present?
   .row-fluid
     #send_point.span12.well

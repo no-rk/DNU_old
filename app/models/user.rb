@@ -39,6 +39,7 @@ class User < ActiveRecord::Base
   has_many :result_learns,        :through => :result_passed_days, :class_name => "Result::Learn"
   has_many :result_forgets,       :through => :result_passed_days, :class_name => "Result::Forget"
   has_many :result_blossoms,      :through => :result_passed_days, :class_name => "Result::Blossom"
+  has_many :result_disposes,      :through => :result_passed_days, :class_name => "Result::Dispose"
   has_many :result_moves,         :through => :result_passed_days, :class_name => "Result::Move"
   
   has_many :result_events,        :through => :result_passed_days, :class_name => "Result::Event"
@@ -208,6 +209,18 @@ class User < ActiveRecord::Base
     record = new_result(type, data, day_i)
     record.save!
     record
+  end
+  
+  def dispose!(number, day_i = Day.last_day_i)
+    result_item = nil
+    if self.result(:inventory, day_i).where(:number => number).exists?
+      result_inventory = self.result(:inventory, day_i).where(:number => number).first
+      result_item = result_inventory.item
+      unless result_item.dispose_protect
+        result_inventory.destroy
+      end
+    end
+    result_item
   end
   
   def blossom!(art, day_i = Day.last_day_i)
