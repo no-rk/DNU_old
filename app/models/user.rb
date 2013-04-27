@@ -319,12 +319,15 @@ class User < ActiveRecord::Base
   
   def tree(day_i = Day.last_day_i)
     @tree ||= {
-      :kind => kind,
-      :name => nickname(day_i),
+      :kind  => kind,
+      :name  => nickname(day_i),
+      :user  => self,
+      :day_i => day_i,
       :settings => result(:status,  day_i).map{|r| r.tree } +
                    result(:ability, day_i).map{|r| r.tree } +
                    result(:equip,   day_i).where(:success => true).map{|r| r.tree } +
-                   (register(:battle, day_i).try(:battle_settings).try(:map){|r| r.tree } || [])
+                   (register(:battle, day_i).try(:battle_settings).try(:map){|r| r.tree } || []) +
+                   (register(:battle, day_i).try(:item_skill_settings).try(:map){|r| r.tree }.try(:compact) || [])
     }
   end
   

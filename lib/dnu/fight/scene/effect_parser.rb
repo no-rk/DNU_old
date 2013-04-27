@@ -240,6 +240,10 @@ class EffectParser < Parslet::Parser
     alternation_from_array(GameData::Skill.pluck(:name))
   }
   
+  rule(:item_skill_name) {
+    alternation_from_array(GameData::ItemSkill.pluck(:name))
+  }
+  
   rule(:character_type) {
     alternation_from_array(GameData::CharacterType.pluck(:name))
   }
@@ -1684,6 +1688,21 @@ class EffectParser < Parslet::Parser
     root_processes.as(:do).repeat(1).as(:effects)
   }
   
+  # item_skill_definition
+  
+  rule(:item_skill_definition) {
+    bra >> str('戦物') >> ket >> (newline.absent? >> any).repeat(1).as(:name) >> newline >>
+    (
+      partition >>
+      (
+        sup_definition.as(:sup) |
+        trap_definition.as(:trap)
+      ).repeat(1).as(:definitions) >>
+      partition
+    ).maybe >>
+    root_processes.as(:do).repeat(1).as(:effects)
+  }
+  
   # ability_definition
   
   rule(:lv_effects) {
@@ -1799,6 +1818,16 @@ class EffectParser < Parslet::Parser
     ).maybe >> newline.maybe
   }
   
+  # item_skill_setting
+  
+  rule(:item_skill_setting) {
+    bra >> str('戦物') >> ket >> item_skill_name.as(:name) >> newline >>
+    priority >> separator >> skill_condition >>
+    (
+      newline >> root_processes.as(:serif)
+    ).maybe >> newline.maybe
+  }
+  
   # serif_setting
   
   rule(:serif_setting) {
@@ -1823,6 +1852,7 @@ class EffectParser < Parslet::Parser
       equip_setting.as(:equip) |
       sup_setting.as(:sup) |
       skill_setting.as(:skill) |
+      item_skill_setting.as(:item_skill) |
       serif_setting.as(:serif) |
       drop_setting.as(:drop) |
       point_setting.as(:point)
@@ -2062,6 +2092,10 @@ class EffectParser < Parslet::Parser
     (separator | newline).maybe
   }
   
+  rule(:item_skill) {
+    bra >> str('戦物') >> ket >> item_skill_name.as(:name)
+  }
+  
   rule(:item_definition) {
     (newline.absent? >> any).repeat(1).as(:name) >> newline >>
     spaces? >> (bra >> element_name.as(:element) >> ket).maybe >>
@@ -2093,7 +2127,8 @@ class EffectParser < Parslet::Parser
     (bra >> str('送品不可') >> ket).maybe.as(:protect) >>
     (newline >> string.as(:caption)).maybe >>
     newline.maybe >>
-    (item_sup.repeat(0).as(:item_sups)).maybe >>
+    item_sup.repeat(0).as(:item_sups) >>
+    item_skill.maybe.as(:item_skill) >>
     newline.maybe
   }
   

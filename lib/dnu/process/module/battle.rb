@@ -6,6 +6,9 @@ module DNU
         # キャラ作成済みの各パーティー
         Result::Party.already_make.find_each do |party|
           if party.notices.exists?
+            # 戦物設定
+            party.set_item_skill!
+            
             notice = party.notices.first
             
             notice.battle.try(:destroy)

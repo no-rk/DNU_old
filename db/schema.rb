@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130426124415) do
+ActiveRecord::Schema.define(:version => 20130427080753) do
 
   create_table "admins", :force => true do |t|
     t.string   "email",               :default => "", :null => false
@@ -223,6 +223,14 @@ ActiveRecord::Schema.define(:version => 20130426124415) do
   create_table "game_data_guardians", :force => true do |t|
     t.string   "name"
     t.text     "caption"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "game_data_item_skills", :force => true do |t|
+    t.string   "name"
+    t.text     "definition"
+    t.text     "tree"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
@@ -639,6 +647,26 @@ ActiveRecord::Schema.define(:version => 20130426124415) do
   end
 
   add_index "register_initials", ["user_id"], :name => "index_register_initials_on_user_id"
+
+  create_table "register_item_skill_settings", :force => true do |t|
+    t.integer  "battlable_id"
+    t.string   "battlable_type"
+    t.integer  "number"
+    t.integer  "item_id"
+    t.integer  "priority"
+    t.integer  "use_condition_id"
+    t.integer  "use_condition_variable"
+    t.integer  "frequency_id"
+    t.text     "condition"
+    t.text     "message"
+    t.datetime "created_at",             :null => false
+    t.datetime "updated_at",             :null => false
+  end
+
+  add_index "register_item_skill_settings", ["battlable_id"], :name => "index_register_item_skill_settings_on_battlable_id"
+  add_index "register_item_skill_settings", ["frequency_id"], :name => "index_register_item_skill_settings_on_frequency_id"
+  add_index "register_item_skill_settings", ["item_id"], :name => "index_register_item_skill_settings_on_item_id"
+  add_index "register_item_skill_settings", ["use_condition_id"], :name => "index_register_item_skill_settings_on_use_condition_id"
 
   create_table "register_mains", :force => true do |t|
     t.integer  "user_id"

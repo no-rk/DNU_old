@@ -27,6 +27,18 @@ class Result::Party < ActiveRecord::Base
     end
   }
   
+  def party_users
+    party_members.where(:character_type => :User)
+  end
+  
+  def set_item_skill!(day_i = Day.last_day_i)
+    party_users.find_each do |party_user|
+      party_user.character.register(:battle, day_i).try(:item_skill_settings).try(:each) do |item_skill_setting|
+        item_skill_setting.set_item!
+      end
+    end
+  end
+  
   def characters(day_i = Day.last_day_i)
     @characters ||= DNU::Fight::State::Characters.new(pt_settings_tree(day_i))
   end

@@ -62,8 +62,9 @@ class Register::Initial < ActiveRecord::Base
     self.user.add_item!({
       self.init_arts.first.art.name => "初期装備"
     })
-    # テスト用の材料を結果に反映
+    # テスト用のアイテムを結果に反映
     5.times{ self.user.add_item!("材料"=>"テスト材料") }
+    self.user.add_item!("戦物"=>"謎の物質")
     # イベントを結果に反映
     GameData::Event.where(:kind=>["共通", "内部"]).select([:kind, :name]).find_each do |event|
       self.user.add_event!(event.kind => event.name)

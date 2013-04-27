@@ -6,6 +6,7 @@ class Result::Inventory < ActiveRecord::Base
   has_one :user, :through => :passed_day
   has_one :day,  :through => :passed_day
   
+  has_one  :plan,           :through => :item
   has_many :item_names,     :through => :item
   has_many :item_strengths, :through => :item
   has_many :item_elements,  :through => :item

@@ -8,7 +8,7 @@ module DNU
         def create_tree
           temp = []
           tree = { :sequence => [] }
-          while effects = @active.call.effects.type(:Skill).timing(:PrePhase).children.pre_phasable.leadoff.done_not.high_priority
+          while effects = @active.call.effects.type([:Skill, :ItemSkill]).timing(:PrePhase).children.pre_phasable.leadoff.done_not.high_priority
             effects.off
             temp << effects
             tree[:sequence] << {

@@ -18,6 +18,7 @@ ja:
       game_data/sup: 付加
       game_data/trap: 罠
       game_data/skill: 技
+      game_data/item_skill: 戦物
       game_data/job: 職業
       game_data/guardian: 守護竜
       game_data/status: 能力
@@ -371,6 +372,7 @@ ja:
         Children: 時
         After: 後
         Skill: 技
+        ItemSkill: 戦物
         Sup: 付加
         Trap: 罠
         Serif: セリフ

@@ -8,8 +8,9 @@ module DNU
           self.find_all{ |child| child.timing.try(:to_sym) == name.to_sym }.extend FindEffects
         end
         
-        def type(name)
-          self.find_all{ |child| child.type.try(:to_sym) == name.to_sym }.extend FindEffects
+        def type(names)
+          names = [names].flatten.map{|name| name.to_sym}
+          self.find_all{ |child| names.include?(child.type.try(:to_sym)) }.extend FindEffects
         end
         
         def before
