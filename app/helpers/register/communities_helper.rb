@@ -1,0 +1,2 @@
+module Register::CommunitiesHelper
+end

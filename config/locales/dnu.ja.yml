@@ -63,6 +63,10 @@ ja:
       register/ability: &ability
         アビリティ
 
+      register/message: &message
+        メッセージ
+      register/community: &community
+        コミュニティー
       register/character: &character
         キャラクター
       register/image: &image

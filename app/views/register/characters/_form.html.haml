@@ -1,4 +1,4 @@
-- upload_icons = (upload_icons.nil? && !current_user.image.nil?) ? current_user.image.upload_icons.select([:id,:name]).inject({}){|u,i| u[i.id]=i.name;u} : {}
+- upload_icons = (upload_icons.nil? && !current_user.register_image.nil?) ? current_user.register_image.upload_icons.select([:id,:name]).inject({}){|u,i| u[i.id]=i.name;u} : {}
 = simple_form_for(register_character) do |form_character|
   = register_character.updated_at
   = render 'register/error', { :register_error     => register_character }

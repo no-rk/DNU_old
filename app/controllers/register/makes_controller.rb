@@ -96,7 +96,7 @@ class Register::MakesController < Register::ApplicationController
 
   private
   def make_check
-    if current_user.make.present?
+    if current_user.register_make.present?
       redirect_to register_index_path
       return false
     end

@@ -6,8 +6,8 @@ class Result::Place < ActiveRecord::Base
   has_one :user, :through => :passed_day
   has_one :day,  :through => :passed_day
   
-  has_one :map,    :through => :map_tip, :class_name => "GameData::Map"
-  has_many :mains, :through => :user,    :class_name => "Register::Main"
+  has_one  :map,   :through => :map_tip, :class_name => "GameData::Map"
+  has_many :mains, :through => :user,    :class_name => "Register::Main", :source => :register_main
   
   validates :passed_day, :presence => true
   validates :map_tip,    :presence => true

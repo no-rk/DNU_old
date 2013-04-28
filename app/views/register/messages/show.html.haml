@@ -1,0 +1,3 @@
+%h1= @register_message.class.model_name.human.downcase
+= render 'form', { :register_message => @register_message }
+= link_to 'Back', new_register_message_path

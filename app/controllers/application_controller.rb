@@ -15,7 +15,7 @@ class ApplicationController < ActionController::Base
     @conversations ||= mailbox.conversations
   end
   def make_check
-    if current_user.make.nil?
+    if current_user.register_make.nil?
       redirect_to new_register_make_path, :alert => I18n.t("make_check", :scope => "register.message")
       return false
     end
@@ -23,7 +23,7 @@ class ApplicationController < ActionController::Base
   def nickname_by_id(id)
     begin
       @nickname_by_id ||= Hash.new
-      @nickname_by_id[id] ||= User.find(id).character.profile.nickname
+      @nickname_by_id[id] ||= User.find(id).register_character.profile.nickname
     rescue
       "no id"
     end
@@ -31,7 +31,7 @@ class ApplicationController < ActionController::Base
   def name_by_id(id)
     begin
       @name_by_id ||= Hash.new
-      @name_by_id[id] ||= User.find(id).character.profile.name
+      @name_by_id[id] ||= User.find(id).register_character.profile.name
     rescue
       "no id"
     end

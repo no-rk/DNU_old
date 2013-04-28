@@ -1,32 +1,36 @@
 class User < ActiveRecord::Base
-  has_one  :main        , :order => "updated_at DESC", :class_name => "Register::Main"
-  has_many :mains       , :order => "updated_at DESC", :class_name => "Register::Main"
-  has_one  :trade       , :order => "updated_at DESC", :class_name => "Register::Trade"
-  has_many :trades      , :order => "updated_at DESC", :class_name => "Register::Trade"
-  has_one  :product     , :order => "updated_at DESC", :class_name => "Register::Product"
-  has_many :products    , :order => "updated_at DESC", :class_name => "Register::Product"
+  has_one  :register_main        , :order => "updated_at DESC", :class_name => "Register::Main"
+  has_many :register_mains       , :order => "updated_at DESC", :class_name => "Register::Main"
+  has_one  :register_trade       , :order => "updated_at DESC", :class_name => "Register::Trade"
+  has_many :register_trades      , :order => "updated_at DESC", :class_name => "Register::Trade"
+  has_one  :register_product     , :order => "updated_at DESC", :class_name => "Register::Product"
+  has_many :register_products    , :order => "updated_at DESC", :class_name => "Register::Product"
 
-  has_one  :battle      , :order => "updated_at DESC", :class_name => "Register::Battle"
-  has_many :battles     , :order => "updated_at DESC", :class_name => "Register::Battle"
-  has_one  :duel        , :order => "updated_at DESC", :class_name => "Register::Duel"
-  has_many :duels       , :order => "updated_at DESC", :class_name => "Register::Duel"
-  has_one  :competition , :order => "updated_at DESC", :class_name => "Register::Competition"
-  has_many :competitions, :order => "updated_at DESC", :class_name => "Register::Competition"
+  has_one  :register_battle      , :order => "updated_at DESC", :class_name => "Register::Battle"
+  has_many :register_battles     , :order => "updated_at DESC", :class_name => "Register::Battle"
+  has_one  :register_duel        , :order => "updated_at DESC", :class_name => "Register::Duel"
+  has_many :register_duels       , :order => "updated_at DESC", :class_name => "Register::Duel"
+  has_one  :register_competition , :order => "updated_at DESC", :class_name => "Register::Competition"
+  has_many :register_competitions, :order => "updated_at DESC", :class_name => "Register::Competition"
 
-  has_one  :skill       , :order => "updated_at DESC", :class_name => "Register::Skill"
-  has_many :skills      , :order => "updated_at DESC", :class_name => "Register::Skill"
-  has_one  :ability     , :order => "updated_at DESC", :class_name => "Register::Ability"
-  has_many :abilities   , :order => "updated_at DESC", :class_name => "Register::Ability"
+  has_one  :register_skill       , :order => "updated_at DESC", :class_name => "Register::Skill"
+  has_many :register_skills      , :order => "updated_at DESC", :class_name => "Register::Skill"
+  has_one  :register_ability     , :order => "updated_at DESC", :class_name => "Register::Ability"
+  has_many :register_abilities   , :order => "updated_at DESC", :class_name => "Register::Ability"
 
-  has_one  :character   , :order => "updated_at DESC", :class_name => "Register::Character"
-  has_many :characters  , :order => "updated_at DESC", :class_name => "Register::Character"
-  has_one  :image       , :order => "updated_at DESC", :class_name => "Register::Image"
-  has_many :images      , :order => "updated_at DESC", :class_name => "Register::Image"
-  has_one  :initial     , :order => "updated_at DESC", :class_name => "Register::Initial"
-  has_many :initials    , :order => "updated_at DESC", :class_name => "Register::Initial"
+  has_one  :register_message     , :order => "updated_at DESC", :class_name => "Register::Message"
+  has_many :register_messages    , :order => "updated_at DESC", :class_name => "Register::Message"
+  has_one  :register_community   , :order => "updated_at DESC", :class_name => "Register::Community"
+  has_many :register_communities , :order => "updated_at DESC", :class_name => "Register::Community"
+  has_one  :register_character   , :order => "updated_at DESC", :class_name => "Register::Character"
+  has_many :register_characters  , :order => "updated_at DESC", :class_name => "Register::Character"
+  has_one  :register_image       , :order => "updated_at DESC", :class_name => "Register::Image"
+  has_many :register_images      , :order => "updated_at DESC", :class_name => "Register::Image"
+  has_one  :register_initial     , :order => "updated_at DESC", :class_name => "Register::Initial"
+  has_many :register_initials    , :order => "updated_at DESC", :class_name => "Register::Initial"
 
-  has_one  :make        , :order => "updated_at DESC", :class_name => "Register::Make"
-  has_many :makes       , :order => "updated_at DESC", :class_name => "Register::Make"
+  has_one  :register_make        , :order => "updated_at DESC", :class_name => "Register::Make"
+  has_many :register_makes       , :order => "updated_at DESC", :class_name => "Register::Make"
 
   has_many :result_passed_days, :class_name => "Result::PassedDay"
   
@@ -95,23 +99,23 @@ class User < ActiveRecord::Base
   def register(type, day_i = Day.last_day_i)
     day_arel  = Day.arel_table
     
-    self.send("#{type.to_s.pluralize}").except(:order).where(day_arel[:day].eq(day_i)).includes(:day).first
+    self.send("register_#{type.to_s.pluralize}").except(:order).where(day_arel[:day].eq(day_i)).includes(:day).first
   end
   
   def result_character(day_i = Day.last_day_i)
     if self.creation_day == Day.last_day_i
-      character
+      register_character
     else
       day_i += 1 if self.creation_day == day_i
       
       day_arel  = Day.arel_table
       
-      self.characters.except(:order).where(day_arel[:day].eq(day_i)).includes(:day).includes(:profile).first
+      self.register_characters.except(:order).where(day_arel[:day].eq(day_i)).includes(:day).includes(:profile).first
     end
   end
   
   def result_guardian
-    initial.guardian
+    register_initial.guardian
   end
   
   def result_state(day_i = Day.last_day_i)

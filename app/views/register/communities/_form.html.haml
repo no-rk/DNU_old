@@ -1,0 +1,10 @@
+= simple_form_for(register_community) do |form_community|
+  = register_community.updated_at
+  = render 'register/error', { :register_error     => register_community }
+  - unless @read_only
+    .actions
+      %button.btn.btn-large.btn-warning{"data-remote" => "true"} 確認する
+      = form_community.submit :class => "btn btn-large btn-success"
+  - if @update_time
+    .actions
+      = form_community.submit :class => "btn btn-large btn-warning"

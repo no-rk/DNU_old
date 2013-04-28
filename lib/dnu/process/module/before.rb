@@ -19,7 +19,7 @@ module DNU
         User.already_make.find_each do |user|
           # 最新宣言に日数の情報を付与する
           [:main, :trade, :product, :battle, :duel, :competition, :skill, :ability, :character].each do |form_name|
-            user_form = user.send(form_name)
+            user_form = user.send("register_#{form_name}")
             if user_form and @new_day
               # 新登録があるならそれを採用
               if user_form.day.nil?
@@ -45,7 +45,7 @@ module DNU
                 end
               end
               # この時点で日数の情報が付いていない登録は削除
-              user.send(form_name.to_s.pluralize).where(:day_id => nil).destroy_all
+              user.send("register_#{form_name.to_s.pluralize}").where(:day_id => nil).destroy_all
             end
           end
           

@@ -8,37 +8,30 @@
       %a{:href => register_index_path} 宣言トップ
     - unless Day.updating?
       %li.nav-header 行動設定
-      %li{:class => active_current(new_register_main_path)}
-        %a{:href => new_register_main_path}= Register::Main.model_name.human.downcase
-      %li{:class => active_current(new_register_trade_path)}
-        %a{:href => new_register_trade_path}= Register::Trade.model_name.human.downcase
-      %li{:class => active_current(new_register_product_path)}
-        %a{:href => new_register_product_path}= Register::Product.model_name.human.downcase
+      - [:main, :trade, :product].each do |action|
+        %li{:class => active_current(send("new_register_#{action}_path"))}
+          %a{:href => send("new_register_#{action}_path")}= "Register::#{action.to_s.camelize}".constantize.model_name.human
       %li.nav-header 戦闘設定
-      %li{:class => active_current(new_register_battle_path)}
-        %a{:href => new_register_battle_path}= Register::Battle.model_name.human.downcase
-      %li{:class => active_current(new_register_duel_path)}
-        %a{:href => new_register_duel_path}= Register::Duel.model_name.human.downcase
-      %li{:class => active_current(new_register_competition_path)}
-        %a{:href => new_register_competition_path}= Register::Competition.model_name.human.downcase
+      - [:battle, :duel, :competition].each do |battle|
+        %li{:class => active_current(send("new_register_#{battle}_path"))}
+          %a{:href => send("new_register_#{battle}_path")}= "Register::#{battle.to_s.camelize}".constantize.model_name.human
       %li.nav-header 設定
       %li{:class => active_current(new_register_skill_path)}
-        %a{:href => new_register_skill_path}= Register::Skill.model_name.human.downcase
+        %a{:href => new_register_skill_path}= Register::Skill.model_name.human
       - if abilities.count > 0
         %li{:class => active_current(new_register_ability_path)}
-          %a{:href => new_register_ability_path}= Register::Ability.model_name.human.downcase
+          %a{:href => new_register_ability_path}= Register::Ability.model_name.human
         - abilities.each do |ability|
           %li{:class => active_current(register_ability_id_path(ability.ability_id))}
             %a{:href => register_ability_id_path(ability.ability_id)} └ #{ability.nickname}
-      %li.nav-header 設定
-      %li{:class => active_current(new_register_character_path)}
-        %a{:href => new_register_character_path}= Register::Character.model_name.human.downcase
-      %li{:class => active_current(new_register_image_path)}
-        %a{:href => new_register_image_path}= Register::Image.model_name.human.downcase
+      %li.nav-header 交流
+      - [:message, :community, :character, :image].each do |exchange|
+        %li{:class => active_current(send("new_register_#{exchange}_path"))}
+          %a{:href => send("new_register_#{exchange}_path")}= "Register::#{exchange.to_s.camelize}".constantize.model_name.human
       - if current_user.creation_day.nil? or current_user.creation_day == Day.last_day_i
         %li.nav-header 初回登録
         %li{:class => active_current(new_register_initial_path)}
-          %a{:href => new_register_initial_path}= Register::Initial.model_name.human.downcase
+          %a{:href => new_register_initial_path}= Register::Initial.model_name.human
     %li.nav-header 履歴一覧
     %li
       = form_tag(register_history_path, :class => "no_diff select_submit") do

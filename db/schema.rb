@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130427122437) do
+ActiveRecord::Schema.define(:version => 20130428024912) do
 
   create_table "admins", :force => true do |t|
     t.string   "email",               :default => "", :null => false
@@ -510,6 +510,16 @@ ActiveRecord::Schema.define(:version => 20130427122437) do
   add_index "register_characters", ["day_id"], :name => "index_register_characters_on_day_id"
   add_index "register_characters", ["user_id"], :name => "index_register_characters_on_user_id"
 
+  create_table "register_communities", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "day_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "register_communities", ["day_id"], :name => "index_register_communities_on_day_id"
+  add_index "register_communities", ["user_id"], :name => "index_register_communities_on_user_id"
+
   create_table "register_competitions", :force => true do |t|
     t.integer  "user_id"
     t.integer  "day_id"
@@ -694,6 +704,16 @@ ActiveRecord::Schema.define(:version => 20130427122437) do
   end
 
   add_index "register_makes", ["user_id"], :name => "index_register_makes_on_user_id"
+
+  create_table "register_messages", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "day_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "register_messages", ["day_id"], :name => "index_register_messages_on_day_id"
+  add_index "register_messages", ["user_id"], :name => "index_register_messages_on_user_id"
 
   create_table "register_moves", :force => true do |t|
     t.integer  "main_id"

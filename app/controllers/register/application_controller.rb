@@ -11,7 +11,7 @@ class Register::ApplicationController < ApplicationController
     names = self.class.controller_name
     set_instance_variables
 
-    registers = current_user.send(names).page(params[:page]).per(Settings.register.history.per)
+    registers = current_user.send("register_#{names}").page(params[:page]).per(Settings.register.history.per)
 
     self.instance_variable_set("@register_#{names}",registers)
     @update_time = true
@@ -37,7 +37,7 @@ class Register::ApplicationController < ApplicationController
     name  = names.singularize
     set_instance_variables
 
-    register = current_user.send(names).find(params[:id])
+    register = current_user.send("register_#{names}").find(params[:id])
 
     self.instance_variable_set("@register_#{name}",register)
 
@@ -54,7 +54,7 @@ class Register::ApplicationController < ApplicationController
     name  = names.singularize
     set_instance_variables
 
-    register = current_user.send(name) || "Register::#{names.classify}".constantize.new
+    register = current_user.send("register_#{name}") || "Register::#{names.classify}".constantize.new
     register.send("build_#{name}")
     build_record(register)
 
@@ -72,7 +72,7 @@ class Register::ApplicationController < ApplicationController
     name  = names.singularize
     set_instance_variables
 
-    register = current_user.send(names).find(params[:id])
+    register = current_user.send("register_#{names}").find(params[:id])
     register.send("build_#{name}")
     build_record(register)
 
@@ -160,7 +160,7 @@ class Register::ApplicationController < ApplicationController
     name  = names.singularize
     set_instance_variables
 
-    register = current_user.send(names).find(params[:id])
+    register = current_user.send("register_#{names}").find(params[:id])
     register.destroy
 
     self.instance_variable_set("@register_#{name}",register)
