@@ -169,8 +169,12 @@ class EffectParser < Parslet::Parser
     ).as(:place)
   }
   
+  rule(:eno_name) {
+    match['eEｅＥ'] >> match['nNｎＮ'] >> match['oOｏＯ'] >> dot
+  }
+  
   rule(:eno) {
-    match['eEｅＥ'] >> match['nNｎＮ'] >> match['oOｏＯ'] >> dot >> natural_number.as(:eno)
+    eno_name >> natural_number.as(:eno)
   }
   
   rule(:string) {
@@ -1784,12 +1788,13 @@ class EffectParser < Parslet::Parser
   # skill_setting
   
   rule(:position_to_fixnum) {
-    (str('前') | str('中') | str('後')).as(:position_to_fixnum) >> str('列')
+    (str('前') | str('中') | str('後')).as(:position_to_fixnum)
   }
   
   rule(:skill_target) {
-    position_to_fixnum.as(:find_by_position) |
-    (newline.absent? >> any).repeat(1).as(:find_by_name)
+    (str('上から') >> calculable.as(:number) >> str('番目')).as(:find_by_number) |
+    (calculable.as(:position) >> str('列')).as(:find_by_position) |
+    (eno_name >> calculable.as(:eno)).as(:find_by_eno)
   }
   
   rule(:skill_condition) {
@@ -1806,7 +1811,7 @@ class EffectParser < Parslet::Parser
       ).as(:condition_default)
     ).as(:condition) >>
     (
-      (newline | separator) >> str('対象') >> separator >> skill_target.as(:target)
+      (newline | separator).maybe >> str('対象').maybe >> separator.maybe >> skill_target.as(:target)
     ).maybe
   }
   

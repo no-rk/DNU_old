@@ -1,0 +1,8 @@
+= link_to("新規#{@battle_settings.first.class.model_name.human}作成", new_game_data_battle_setting_path)
+%br
+- @battle_settings.each do |battle_setting|
+  [#{battle_setting.kind}]
+  #{battle_setting.name}
+  = link_to("編集", edit_game_data_battle_setting_path(battle_setting.id))
+  %br
+= paginate @battle_settings

@@ -3,7 +3,7 @@
     %li{:class => active_current(game_data_index_path)}
       %a{:href => game_data_index_path} ゲームデータトップ
     %li.nav-header 最初に決めるべきもの
-    - [:battle_values, :elements, :diseases, :statuses, :item_types, :equip_types, :character_types, :landforms, :points].each do |table|
+    - [:battle_values, :elements, :diseases, :statuses, :item_types, :equip_types, :character_types, :landforms, :points, :battle_settings].each do |table|
       %li{:class => active_current(send("game_data_#{table}_path"))}
         %a{:href => send("game_data_#{table}_path")}= "GameData::#{table.to_s.classify}".constantize.model_name.human
     %li.nav-header 後で決めても良いもの
