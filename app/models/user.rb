@@ -153,6 +153,10 @@ class User < ActiveRecord::Base
     Result::Map.find_by_name_and_day_i(result(:place, day_i).first.map.name, day_i)
   end
   
+  def result_shouts(day_i = Day.last_day_i)
+    result(:place, day_i).first.map_tip.where_shouts_by_day_i(day_i)
+  end
+  
   def result_event_states_by_timing(timing, day_i = Day.last_day_i)
     event_arel      = Result::Event.arel_table
     event_step_arel = GameData::EventStep.arel_table
@@ -170,6 +174,8 @@ class User < ActiveRecord::Base
       result_guardian
     when :map
       result_map(day_i)
+    when :shout
+      result_shouts(day_i)
     when :state
       result_state(day_i)
     when :trainable

@@ -1,0 +1,7 @@
+%h3 叫び
+
+- @shouts.each do |shout|
+  #{link_to("ENo.#{shout.user.id}", result_eno_path(@day_i, shout.user.id), :target => :_blank)} #{shout.user.result_character(@day_i).profile.nickname}
+  %br
+  = shout.shout.message
+  %br

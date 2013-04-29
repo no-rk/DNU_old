@@ -2,6 +2,7 @@
   = register_main.updated_at.try(:to_s, :jp)
   = render 'register/error', { :register_error => register_main }
   = render 'form_diary',        { :register_main => register_main, :form_main => form_main }
+  = render 'form_shout',        { :register_main => register_main, :form_main => form_main }
   = render 'form_dispose',      { :register_main => register_main, :form_main => form_main }
   = render 'form_move',         { :register_main => register_main, :form_main => form_main }
   = render 'form_train',        { :register_main => register_main, :form_main => form_main }

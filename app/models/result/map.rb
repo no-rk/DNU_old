@@ -4,6 +4,10 @@ class Result::Map < ActiveRecord::Base
   has_many :map_tips, :through => :map, :class_name => "GameData::MapTip"
   attr_accessible :image
   
+  validates :day,  :presence => true
+  validates :map,  :presence => true
+  validates :image,:presence => true
+  
   scope :find_by_name_and_day_i, lambda{ |name, day_i|
     day_arel = Day.arel_table
     map_arel = GameData::Map.arel_table

@@ -18,6 +18,7 @@ module DNU
       extend Party
       extend AfterMove
       extend Notice
+      extend Shout
       extend Map
       extend After
       
@@ -76,6 +77,9 @@ module DNU
           
           # 戦闘予告
           notice
+          
+          # 叫び
+          shout
           
           # マップ生成
           map

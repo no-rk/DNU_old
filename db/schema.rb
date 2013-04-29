@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130428024912) do
+ActiveRecord::Schema.define(:version => 20130429103123) do
 
   create_table "admins", :force => true do |t|
     t.string   "email",               :default => "", :null => false
@@ -788,6 +788,16 @@ ActiveRecord::Schema.define(:version => 20130428024912) do
   add_index "register_send_points", ["trade_id"], :name => "index_register_send_points_on_trade_id"
   add_index "register_send_points", ["user_id"], :name => "index_register_send_points_on_user_id"
 
+  create_table "register_shouts", :force => true do |t|
+    t.integer  "main_id"
+    t.integer  "volume",     :default => 1
+    t.text     "message"
+    t.datetime "created_at",                :null => false
+    t.datetime "updated_at",                :null => false
+  end
+
+  add_index "register_shouts", ["main_id"], :name => "index_register_shouts_on_main_id"
+
   create_table "register_skill_confs", :force => true do |t|
     t.integer  "skill_id"
     t.integer  "game_data_skill_id"
@@ -1298,6 +1308,18 @@ ActiveRecord::Schema.define(:version => 20130428024912) do
 
   add_index "result_send_points", ["passed_day_id"], :name => "index_result_send_points_on_passed_day_id"
   add_index "result_send_points", ["send_point_id"], :name => "index_result_send_points_on_send_point_id"
+
+  create_table "result_shouts", :force => true do |t|
+    t.integer  "day_id"
+    t.integer  "map_tip_id"
+    t.integer  "shout_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "result_shouts", ["day_id"], :name => "index_result_shouts_on_day_id"
+  add_index "result_shouts", ["map_tip_id"], :name => "index_result_shouts_on_map_tip_id"
+  add_index "result_shouts", ["shout_id"], :name => "index_result_shouts_on_shout_id"
 
   create_table "result_skills", :force => true do |t|
     t.integer  "passed_day_id"

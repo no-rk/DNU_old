@@ -202,6 +202,9 @@ ja:
       
       register/diary: &diary
         diary: 日記
+      register/shout: &shout
+        volume: 声量
+        message: 叫ぶ内容
       register/dispose: &dispose
         number: アイテムNo.
       register/move: &move
@@ -209,12 +212,14 @@ ja:
       register/party_slogan: &party_slogan
         slogan: 合言葉
       register/main:
+        shouts: 叫び
         disposes: 破棄
         moves: 移動
         forgets: 忘却
         blossoms: 開花
         trains: 訓練
       register/main/diary: *diary
+      register/main/shouts: *shout
       register/main/disposes: *dispose
       register/main/moves: *move
       register/main/party_slogan: *party_slogan

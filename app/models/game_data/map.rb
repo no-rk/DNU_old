@@ -23,6 +23,21 @@ class GameData::Map < ActiveRecord::Base
     @map_size || map_tips.maximum(:x)
   end
   
+  def where_shouts_by_day_i(day_i = Day.last_day_i)
+    where_places_by_day_i(day_i).map{ |place|
+      if place.user.register(:main, day_i).present?
+        place.user.register(:main, day_i).shouts.map{ |shout|
+          {
+            :x      => place.map_tip.x,
+            :y      => place.map_tip.y,
+            :volume => shout.volume,
+            :shout  => shout
+          }
+        }
+      end
+    }.flatten.compact
+  end
+  
   def where_places_by_day_i(day_i = Day.last_day_i)
     day_arel = Day.arel_table
     places.where(:arrival => true).where(day_arel[:day].eq(day_i)).includes(:day).includes(:user)
@@ -40,6 +55,11 @@ class GameData::Map < ActiveRecord::Base
   def through_map_tips_by_day_i(day_i = Day.last_day_i)
     day_arel = Day.arel_table
     places.where(day_arel[:day].lteq(day_i)).includes(:day).includes(:map_tip).group(:map_tip_id).map{ |r| r.map_tip }
+  end
+  
+  def arrival_map_tips_by_day_i(day_i = Day.last_day_i)
+    day_arel = Day.arel_table
+    places.where(:arrival => true).where(day_arel[:day].eq(day_i)).includes(:day).includes(:map_tip).group(:map_tip_id).map{ |r| r.map_tip }
   end
   
   def definition

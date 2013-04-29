@@ -4,6 +4,7 @@ class GameData::MapTip < ActiveRecord::Base
   attr_accessible :collision, :opacity, :x, :y, :landform_image
   
   has_many :places, :class_name => "Result::Place"
+  has_many :shouts, :class_name => "Result::Shout"
   
   has_many :map_tip_enemy_territories,  :class_name => "GameData::EnemyTerritory"
   has_many :landform_enemy_territories, :through => :landform, :source => :enemy_territories
@@ -19,6 +20,11 @@ class GameData::MapTip < ActiveRecord::Base
     map_arel = GameData::Map.arel_table
     where(map_arel[:name].eq(place[:name].to_s)).includes(:map).where(:x => place[:x], :y => place[:y])
   }
+  
+  def where_shouts_by_day_i(day_i = Day.last_day_i)
+    day_arel = Day.arel_table
+    shouts.where(day_arel[:day].eq(day_i)).includes(:day)
+  end
   
   def enemy_territory
     if map_tip_enemy_territories.where(:map_id => nil, :landform_id => nil).exists?

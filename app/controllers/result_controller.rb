@@ -67,6 +67,8 @@ class ResultController < ApplicationController
     @after_moves  = this_user.result(:after_move, @day_i)
     # 戦闘予告
     @notice       = this_user.result(:notice, @day_i).includes(:party).includes(:enemy).first
+    # 叫び
+    @shouts       = this_user.result(:shout, @day_i).all
     # キャラデータ
     @profile      = this_user.result(:character, @day_i).profile
     @guardian     = this_user.result(:guardian,  @day_i)
