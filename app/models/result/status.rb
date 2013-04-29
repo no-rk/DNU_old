@@ -13,11 +13,15 @@ class Result::Status < ActiveRecord::Base
   validates :passed_day, :presence => true
   validates :status,     :presence => true
   
+  def self.train_point
+    @@train_point ||= GameData::Point.find_by_train(self.name.split("::").last)
+  end
+  
   def tree
     @tree ||= { :status => { :name => status.name, :status_strength => value + bonus } }
   end
   
-  def grow_using_point_name!(point_name)
+  def grow_using_point_name!(point_name = self.class.train_point.name)
     success = false
     point_arel = GameData::Point.arel_table
     result_point = self.result_points.where(point_arel[:name].eq(point_name)).includes(:point).first

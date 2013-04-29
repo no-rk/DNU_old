@@ -18,6 +18,7 @@ ja:
       game_data/equip_type: 装備種類
       game_data/character_type: キャラクター種類
       game_data/landform: 地形
+      game_data/point: ポイント
       game_data/item: アイテム
       game_data/sup: 付加
       game_data/trap: 罠
@@ -144,6 +145,13 @@ ja:
         color: 地形色
         collision: デフォルト衝突判定
         opacity: デフォルト視界妨害
+      
+      game_data/point:
+        name: ポイント名
+        caption: ポイント説明
+        non_negative: 非負
+        protect: 送付不可
+        train: 訓練
       
       game_data/map:
         name: マップ名

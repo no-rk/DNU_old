@@ -11,6 +11,10 @@ class Result::Job < ActiveRecord::Base
   validates :passed_day, :presence => true
   validates :job,        :presence => true
   
+  def self.train_point
+    @@train_point ||= GameData::Point.find_by_train(self.name.split("::").last)
+  end
+  
   def nickname
     name || job.name
   end

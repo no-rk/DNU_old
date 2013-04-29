@@ -1,0 +1,8 @@
+= link_to("新規#{@points.first.class.model_name.human}作成", new_game_data_point_path)
+%br
+- @points.each do |point|
+  [#{@points.first.class.model_name.human}]
+  #{point.name}
+  = link_to("編集", edit_game_data_point_path(point.id))
+  %br
+= paginate @points

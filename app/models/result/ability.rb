@@ -19,6 +19,10 @@ class Result::Ability < ActiveRecord::Base
   validates :passed_day, :presence => true
   validates :ability,    :presence => true
   
+  def self.train_point
+    @@train_point ||= GameData::Point.find_by_train(self.name.split("::").last)
+  end
+  
   def self.first_learn?(ability_id, day_i = Day.last_day_i)
     day_arel = Day.arel_table
     !self.where(day_arel[:day].lteq(day_i.to_i-1)).includes(:day).exists?(:ability_id => ability_id)
@@ -56,7 +60,7 @@ class Result::Ability < ActiveRecord::Base
     @pull_down
   end
   
-  def grow_using_point_name!(point_name)
+  def grow_using_point_name!(point_name = self.class.train_point.name)
     success = false
     point_arel = GameData::Point.arel_table
     result_point = self.result_points.where(point_arel[:name].eq(point_name)).includes(:point).first

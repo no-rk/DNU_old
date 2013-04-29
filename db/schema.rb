@@ -314,6 +314,7 @@ ActiveRecord::Schema.define(:version => 20130429103123) do
     t.text     "caption"
     t.boolean  "non_negative"
     t.boolean  "protect"
+    t.string   "train"
     t.datetime "created_at",   :null => false
     t.datetime "updated_at",   :null => false
   end

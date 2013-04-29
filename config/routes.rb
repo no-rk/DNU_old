@@ -14,6 +14,7 @@ DNU::Application.routes.draw do
   namespace :game_data do resources :equip_types,       :except => [:show, :destroy] end
   namespace :game_data do resources :character_types,   :except => [:show, :destroy] end
   namespace :game_data do resources :landforms,         :except => [:show, :destroy] end
+  namespace :game_data do resources :points,            :except => [:show, :destroy] end
   namespace :game_data do resources :maps,              :except => [:show, :destroy] end
   namespace :game_data do resources :sups,              :except => [:show, :destroy] end
   namespace :game_data do resources :traps,             :except => [:show, :destroy] end
