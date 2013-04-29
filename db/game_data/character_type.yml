@@ -1,24 +1,20 @@
-- name: PC
-  caption: |-
-    プレイヤーキャラクター
-  player: true
-
-- name: NPC
-  caption: |-
-    ノンプレイヤーキャラクター
-
-- name: モンスター
-  caption: |-
-    モンスター
-
-- name: 召喚
-  caption: |-
-    戦闘中に特殊効果によって呼ばれる
-
-- name: 人形
-  caption: |-
-    一人が数体もてる
-
-- name: 竜
-  caption: |-
-    一人に一匹だけ
+---
+:data:
+- :name: PC
+  :caption: "プレイヤーキャラクター"
+  :player: true
+- :name: NPC
+  :caption: "ノンプレイヤーキャラクター"
+  :player: 
+- :name: "モンスター"
+  :caption: "モンスター"
+  :player: 
+- :name: "召喚"
+  :caption: "戦闘中に特殊効果によって呼ばれる"
+  :player: 
+- :name: "人形"
+  :caption: "一人が数体もてる"
+  :player: 
+- :name: "竜"
+  :caption: "一人に一匹だけ"
+  :player: 
