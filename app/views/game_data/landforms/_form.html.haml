@@ -1,0 +1,9 @@
+= render 'game_data/error', { game_data_error: @landform }
+= simple_form_for(@landform) do |form_landform|
+  = form_landform.input :name
+  = form_landform.input :caption
+  = form_landform.input :image
+  = form_landform.input :color
+  = form_landform.input :collision
+  = form_landform.input :opacity
+  = form_landform.submit class: "btn btn-large btn-success"

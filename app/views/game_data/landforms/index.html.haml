@@ -1,0 +1,8 @@
+= link_to("新規#{@landforms.first.class.model_name.human}作成", new_game_data_landform_path)
+%br
+- @landforms.each do |landform|
+  [#{@landforms.first.class.model_name.human}]
+  %font{ color: "##{landform.color}" } #{landform.name}
+  = link_to("編集", edit_game_data_landform_path(landform.id))
+  %br
+= paginate @landforms

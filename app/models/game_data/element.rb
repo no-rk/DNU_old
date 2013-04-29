@@ -4,7 +4,7 @@ class GameData::Element < ActiveRecord::Base
   attr_accessible :anti, :caption, :color, :name
   
   validates :name,  :presence => true, :uniqueness => true
-  validates :color, :presence => true
+  validates :color, :length => { :is => 6 }
   validates :anti,  :presence => true
   
   before_validation :set_game_data

@@ -268,10 +268,10 @@ ActiveRecord::Schema.define(:version => 20130428024912) do
     t.text     "caption"
     t.string   "image"
     t.string   "color"
-    t.boolean  "collision"
-    t.integer  "opacity"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.boolean  "collision",  :default => false
+    t.integer  "opacity",    :default => 0
+    t.datetime "created_at",                    :null => false
+    t.datetime "updated_at",                    :null => false
   end
 
   create_table "game_data_learning_conditions", :force => true do |t|
