@@ -16,6 +16,7 @@ ja:
       game_data/enemy_territory: 敵出現地
       game_data/item_type: アイテム種類
       game_data/equip_type: 装備種類
+      game_data/equip: 装備
       game_data/character_type: キャラクター種類
       game_data/landform: 地形
       game_data/point: ポイント
@@ -169,6 +170,11 @@ ja:
         collision: 衝突判定
         opacity: 不透明度
       game_data/map/map_tips: *map_tip
+      
+      game_data/equip:
+        kind: 装備種類
+        name: 装備名
+        definition: 装備定義
       
       game_data/sup:
         name: 付加名

@@ -1,0 +1,4 @@
+= render 'game_data/error', { game_data_error: @equip }
+= simple_form_for(@equip) do |form_equip|
+  = form_equip.input :definition, :input_html => { :class => :span9 }
+  = form_equip.submit class: "btn btn-large btn-success"

@@ -17,6 +17,7 @@ DNU::Application.routes.draw do
   namespace :game_data do resources :points,            :except => [:show, :destroy] end
   namespace :game_data do resources :battle_settings,   :except => [:show, :destroy] end
   namespace :game_data do resources :maps,              :except => [:show, :destroy] end
+  namespace :game_data do resources :equips,            :except => [:show, :destroy] end
   namespace :game_data do resources :sups,              :except => [:show, :destroy] end
   namespace :game_data do resources :traps,             :except => [:show, :destroy] end
   namespace :game_data do resources :skills,            :except => [:show, :destroy] end
