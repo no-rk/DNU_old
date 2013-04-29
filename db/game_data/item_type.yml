@@ -1,132 +1,111 @@
-- name: 剣
-  caption: |-
+---
+:data:
+- :name: "剣"
+  :caption: |-
     射程が<b>1</b>で、戦闘時に<b>HIT/AT</b>が増加します。
     また、通常攻撃が<b>物理攻撃</b>になります。
-  forge: true
-
-- name: 槍
-  caption: |-
+  :forge: true
+- :name: "槍"
+  :caption: |-
     射程が<b>2</b>で、戦闘時に<b>CRI/HIT</b>が増加します。
     また、通常攻撃が<b>物理攻撃</b>になります。
-  forge: true
-
-- name: 斧
-  caption: |-
+  :forge: true
+- :name: "斧"
+  :caption: |-
     射程が<b>1</b>で、戦闘時に<b>AT</b>が増加します。
     また、通常攻撃が<b>物理攻撃</b>になります。
-  forge: true
-
-- name: 弓
-  caption: |-
+  :forge: true
+- :name: "弓"
+  :caption: |-
     射程が<b>3</b>で、戦闘時に<b>HIT</b>が増加します。
     また、通常攻撃が<b>物理攻撃</b>になります。
-  forge: true
-
-- name: 銃
-  caption: |-
+  :forge: true
+- :name: "銃"
+  :caption: |-
     射程が<b>3</b>で、戦闘時に<b>CRI</b>が増加します。
     また、通常攻撃が<b>物理攻撃</b>になります。
-  forge: true
-
-- name: 刀
-  caption: |-
+  :forge: true
+- :name: "刀"
+  :caption: |-
     射程が<b>1</b>で、戦闘時に<b>AT/CRI</b>が増加します。
     また、通常攻撃が<b>物理攻撃</b>になります。
-  forge: true
-
-- name: 本
-  caption: |-
+  :forge: true
+- :name: "本"
+  :caption: |-
     射程が<b>2</b>で、戦闘時に<b>DF/MDF</b>が増加します。
     また、通常攻撃が<b>魔法攻撃</b>になります。
-  forge: true
-
-- name: 魔石
-  caption: |-
+  :forge: true
+- :name: "魔石"
+  :caption: |-
     射程が<b>3</b>で、戦闘時に<b>MAT/最大MP</b>が増加します。
     また、通常攻撃が<b>魔法攻撃</b>になります。
-  forge: true
-
-- name: 杖
-  caption: |-
-    射程が<b>1</b>で、戦闘時に<b>AT/MAT</b>が増加します。
-  forge: true
-
-- name: 兜
-  caption: |-
+  :forge: true
+- :name: "杖"
+  :caption: "射程が<b>1</b>で、戦闘時に<b>AT/MAT</b>が増加します。"
+  :forge: true
+- :name: "兜"
+  :caption: |-
     受ける物理ダメージが減少します。
     また、<b>DF</b>が増加します。
-  forge: true
-
-- name: 帽子
-  caption: |-
+  :forge: true
+- :name: "帽子"
+  :caption: |-
     受ける物理ダメージが減少します。
     また、<b>最大MP</b>が増加します。
-  forge: true
-
-- name: 耳
-  caption: |-
+  :forge: true
+- :name: "耳"
+  :caption: |-
     受ける物理ダメージが減少します。
     また、<b>SPD</b>が増加します。
-  forge: true
-
-- name: 盾
-  caption: |-
+  :forge: true
+- :name: "盾"
+  :caption: |-
     受ける魔法ダメージが減少します。
     また、<b>MEVA</b>が増加します。
-  forge: true
-
-- name: 小手
-  caption: |-
+  :forge: true
+- :name: "小手"
+  :caption: |-
     受ける魔法ダメージが減少します。
     また、<b>AT</b>が増加します。
-  forge: true
-
-- name: 腕輪
-  caption: |-
+  :forge: true
+- :name: "腕輪"
+  :caption: |-
     受ける魔法ダメージが減少します。
     また、<b>MAT</b>が増加します。
-  forge: true
-
-- name: 鎧
-  caption: |-
+  :forge: true
+- :name: "鎧"
+  :caption: |-
     受ける物理ダメージが減少します。
     また、<b>DF</b>が増加します。
-  forge: true
-
-- name: ローブ
-  caption: |-
+  :forge: true
+- :name: "ローブ"
+  :caption: |-
     受ける物理ダメージが減少します。
     また、<b>MDF</b>が増加します。
-  forge: true
-
-- name: 服
-  caption: |-
+  :forge: true
+- :name: "服"
+  :caption: |-
     受ける物理ダメージが減少します。
     また、<b>EVA</b>が増加します。
-  forge: true
-
-- name: レンズ
-  caption: |-
+  :forge: true
+- :name: "レンズ"
+  :caption: |-
     受ける魔法ダメージが減少します。
     また、<b>HIT/MHIT</b>が増加します。
-  forge: true
-
-- name: ピアス
-  caption: |-
+  :forge: true
+- :name: "ピアス"
+  :caption: |-
     受ける魔法ダメージが減少します。
     また、<b>CRI</b>が増加します。
-  forge: true
-
-- name: オーブ
-  caption: |-
+  :forge: true
+- :name: "オーブ"
+  :caption: |-
     受ける魔法ダメージが減少します。
     また、<b>最大HP</b>が増加します。
-  forge: true
-
-- name: 材料
-  caption: |-
-    生産などに用いる。
-
-- name: 戦物
-  caption: |-
-    戦闘中に技的な感じで使える。
+  :forge: true
+- :name: "材料"
+  :caption: "生産などに用いる。"
+  :forge: false
+- :name: "戦物"
+  :caption: "戦闘中に技的な感じで使える。"
+  :forge: false

@@ -30,6 +30,7 @@ module DNU
     def self.parse!(kind, text, is_reload = false)
       tree = parser(is_reload).send(kind).parse(text)
       tree = transform(is_reload).apply(tree)
+      tree = self.clean_tree(tree)
       tree
     end
     
@@ -60,7 +61,7 @@ module DNU
             end
           end
         else
-          attributes = model.to_sync_hash
+          attributes = self.clean_tree(model.to_sync_hash)
           db.transaction do
             if db[:data][id-1] != attributes
               db[:data][id-1] = attributes

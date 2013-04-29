@@ -14,6 +14,7 @@ ja:
       game_data/character: キャラクター
       game_data/enemy_list: 敵リスト
       game_data/enemy_territory: 敵出現地
+      game_data/item_type: アイテム種類
       game_data/item: アイテム
       game_data/sup: 付加
       game_data/trap: 罠
@@ -118,6 +119,11 @@ ja:
         name: 状態異常名
         color: 状態異常色
         definition: 状態異常定義
+      
+      game_data/item_type:
+        name: アイテム種類名
+        caption: アイテム種類説明
+        forge: 鍛治で作製可能かどうか
       
       game_data/map:
         name: マップ名

@@ -1,0 +1,6 @@
+= render 'game_data/error', { game_data_error: @item_type }
+= simple_form_for(@item_type) do |form_item_type|
+  = form_item_type.input :name
+  = form_item_type.input :caption
+  = form_item_type.input :forge
+  = form_item_type.submit class: "btn btn-large btn-success"
