@@ -188,6 +188,10 @@ ja:
         name: 技名
         definition: 技定義
       
+      game_data/item_skill:
+        name: 戦物名
+        definition: 戦物定義
+      
       game_data/ability:
         name: アビリティ名
         definition: アビリティ定義
