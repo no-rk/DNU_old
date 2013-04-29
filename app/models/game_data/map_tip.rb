@@ -2,7 +2,6 @@ class GameData::MapTip < ActiveRecord::Base
   belongs_to :map
   belongs_to :landform
   attr_accessible :collision, :opacity, :x, :y, :landform_image
-  attr_writer :landform_image
   
   has_many :places, :class_name => "Result::Place"
   
@@ -15,8 +14,6 @@ class GameData::MapTip < ActiveRecord::Base
   validates :landform,  :presence => true
   validates :collision, :inclusion => { :in => [true, false] }
   validates :opacity,   :numericality => { :only_integer => true, :greater_than_or_equal_to => 0 }
-  
-  before_validation :set_landform
   
   scope :find_by_place, lambda{ |place|
     map_arel = GameData::Map.arel_table
@@ -37,6 +34,11 @@ class GameData::MapTip < ActiveRecord::Base
   
   def name
     "#{map.name} #{('A'.ord-1+x).chr}#{y} #{landform.name}"
+  end
+  
+  def landform_image=(image)
+    self.landform = GameData::Landform.find_by_image(image)
+    @landform_image = image
   end
   
   def landform_image
@@ -71,10 +73,5 @@ class GameData::MapTip < ActiveRecord::Base
   end
   def left_up
     map.map_tips.where(:x=>x-1, :y=>y-1).includes(:map).first
-  end
-  
-  private
-  def set_landform
-    self.landform = GameData::Landform.find_by_image(self.landform_image)
   end
 end

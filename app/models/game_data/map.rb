@@ -1,5 +1,5 @@
 class GameData::Map < ActiveRecord::Base
-  has_many :map_tips
+  has_many :map_tips, :include => :landform
   attr_accessible :base, :caption, :name, :map_tips_attributes, :map_size
   attr_writer :map_size, :definition
   
