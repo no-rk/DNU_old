@@ -1,22 +1,49 @@
 class GameData::Element < ActiveRecord::Base
+  has_many :battle_values, :as => :source, :dependent => :destroy
+  accepts_nested_attributes_for :battle_values
   attr_accessible :anti, :caption, :color, :name
   
-  after_save :sync_game_data
+  validates :name,  :presence => true, :uniqueness => true
+  validates :color, :presence => true
+  validates :anti,  :presence => true
   
-  private
-  def sync_game_data
-    battle_value
+  before_validation :set_game_data
+  after_save        :sync_game_data
+  
+  def to_sync_hash
+    self.attributes.except("id","created_at","updated_at")
   end
   
-  def battle_value
-    ["特性", "耐性"].each do |v|
-      bv = GameData::BattleValue.where(:name => "#{self.name}#{v}").first_or_initialize
-      
-      bv.caption         = "#{self.name}の#{v}。"
-      bv.min             =  0
-      bv.has_max         = false
-      bv.has_equip_value = false
-      bv.save!
+  private
+  def set_game_data
+    color = DNU::Data.parse(:color, self.color)
+    if color.present?
+      self.color = color
+      set_battle_values
+    else
+      errors.add(:color, :invalid)
     end
+  end
+  
+  def set_battle_values
+    if self.battle_values.exists?
+      ["特性", "耐性"].each_with_index do |v,i|
+        self.battle_values[i].name    = "#{self.name}#{v}"
+        self.battle_values[i].caption = "#{self.name}の#{v}。"
+        self.battle_values[i].min     =  0
+      end
+    else
+      ["特性", "耐性"].each do |v|
+        self.battle_values.build do |bv|
+          bv.name    = "#{self.name}#{v}"
+          bv.caption = "#{self.name}の#{v}。"
+          bv.min     =  0
+        end
+      end
+    end
+  end
+  
+  def sync_game_data
+    DNU::Data.sync(self)
   end
 end

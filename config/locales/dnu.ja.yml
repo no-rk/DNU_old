@@ -96,6 +96,20 @@ ja:
       register/init_guardian: 初期守護竜
 
     attributes:
+      game_data/battle_value:
+        name: 戦闘値名
+        caption: 戦闘値説明
+        min: 最小値
+        max: 最大値
+        has_max: 最大値が可変かどうか
+        has_equip_value: 装備値が存在するかどうか
+      
+      game_data/element:
+        name: 属性名
+        caption: 属性説明
+        color: 属性色
+        anti: 反属性
+      
       game_data/status:
         name: 能力名
         definition: 能力定義

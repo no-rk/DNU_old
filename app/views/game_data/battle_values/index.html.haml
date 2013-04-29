@@ -1,0 +1,8 @@
+= link_to("新規#{@battle_values.first.class.model_name.human}作成", new_game_data_battle_value_path)
+%br
+- @battle_values.each do |battle_value|
+  [#{@battle_values.first.class.model_name.human}]
+  #{battle_value.name}
+  = link_to("編集", edit_game_data_battle_value_path(battle_value.id))
+  %br
+= paginate @battle_values

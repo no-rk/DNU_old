@@ -1,6 +1,7 @@
 class CreateGameDataBattleValues < ActiveRecord::Migration
   def change
     create_table :game_data_battle_values do |t|
+      t.references :source, :polymorphic => true
       t.string :name
       t.text :caption
       t.integer :min
@@ -10,5 +11,6 @@ class CreateGameDataBattleValues < ActiveRecord::Migration
 
       t.timestamps
     end
+    add_index :game_data_battle_values, :source_id
   end
 end

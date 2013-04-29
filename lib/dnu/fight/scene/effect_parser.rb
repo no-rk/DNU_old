@@ -24,7 +24,9 @@ class EffectParser < Parslet::Parser
   }
   
   rule(:color) {
-    match['0-9a-fA-F０-９ａ-ｆＡ-Ｆ'].repeat(6,6)
+    (
+      match['0-9a-fA-F０-９ａ-ｆＡ-Ｆ'].repeat(6,6)
+    ).as(:color_wrap)
   }
   
   rule(:bra) {

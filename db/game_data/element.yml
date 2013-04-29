@@ -1,35 +1,26 @@
-- name: 火
-  caption: |-
-    反対の属性：水
+---
+:data:
+- name: "火"
+  caption: "反対の属性：水"
   color: cc3333
-  anti: 水
-
-- name: 水
-  caption: |-
-    反対の属性：火
+  anti: "水"
+- name: "水"
+  caption: "反対の属性：火"
   color: 3366ff
-  anti: 火
-
-- name: 地
-  caption: |-
-    反対の属性：風
+  anti: "火"
+- name: "地"
+  caption: "反対の属性：風"
   color: cc9966
-  anti: 風
-
-- name: 風
-  caption: |-
-    反対の属性：地
+  anti: "風"
+- name: "風"
+  caption: "反対の属性：地"
   color: 66cc66
-  anti: 地
-
-- name: 光
-  caption: |-
-    反対の属性：闇
+  anti: "地"
+- name: "光"
+  caption: "反対の属性：闇"
   color: cccc00
-  anti: 闇
-
-- name: 闇
-  caption: |-
-    反対の属性：光
+  anti: "闇"
+- name: "闇"
+  caption: "反対の属性：光"
   color: cc33cc
-  anti: 光
+  anti: "光"

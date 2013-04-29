@@ -6,8 +6,10 @@ DNU::Application.routes.draw do
   mount RailsAdmin::Engine => '/admin', :as => 'rails_admin'
 
   get 'game_data' => 'game_data#index' , :as => 'game_data_index'
-  namespace :game_data do resources :statuses,          :except => [:show, :destroy] end
+  namespace :game_data do resources :battle_values,     :except => [:show, :destroy] end
+  namespace :game_data do resources :elements,          :except => [:show, :destroy] end
   namespace :game_data do resources :diseases,          :except => [:show, :destroy] end
+  namespace :game_data do resources :statuses,          :except => [:show, :destroy] end
   namespace :game_data do resources :maps,              :except => [:show, :destroy] end
   namespace :game_data do resources :sups,              :except => [:show, :destroy] end
   namespace :game_data do resources :traps,             :except => [:show, :destroy] end

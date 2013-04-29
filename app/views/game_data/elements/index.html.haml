@@ -1,0 +1,8 @@
+= link_to("新規#{@elements.first.class.model_name.human}作成", new_game_data_element_path)
+%br
+- @elements.each do |element|
+  [#{@elements.first.class.model_name.human}]
+  %font{ color: "##{element.color}" } #{element.name}
+  = link_to("編集", edit_game_data_element_path(element.id))
+  %br
+= paginate @elements

@@ -9,6 +9,10 @@ class EffectTransform < Parslet::Transform
     alphabet.to_s.tr("Ａ-Ｚ．","A-Z.")
   }
   
+  rule(:color_wrap => simple(:color)) {
+    color.to_s.tr("A-ZＡ-Ｚａ-ｚ","a-za-za-z")
+  }
+  
   rule(:alphabet_number => simple(:alphabet_number)) {
     offset_num = 'A'.ord - 1
     

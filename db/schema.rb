@@ -90,6 +90,8 @@ ActiveRecord::Schema.define(:version => 20130428024912) do
   end
 
   create_table "game_data_battle_values", :force => true do |t|
+    t.integer  "source_id"
+    t.string   "source_type"
     t.string   "name"
     t.text     "caption"
     t.integer  "min"
@@ -99,6 +101,8 @@ ActiveRecord::Schema.define(:version => 20130428024912) do
     t.datetime "created_at",                         :null => false
     t.datetime "updated_at",                         :null => false
   end
+
+  add_index "game_data_battle_values", ["source_id"], :name => "index_game_data_battle_values_on_source_id"
 
   create_table "game_data_character_types", :force => true do |t|
     t.string   "name"

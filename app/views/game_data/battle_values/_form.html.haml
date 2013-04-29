@@ -1,0 +1,12 @@
+= render 'game_data/error', { game_data_error: @battle_value }
+= simple_form_for(@battle_value) do |form_battle_value|
+  = form_battle_value.input :name
+  = form_battle_value.input :caption
+  = form_battle_value.input :min
+  = form_battle_value.input :max
+  = form_battle_value.input :has_max
+  = form_battle_value.input :has_equip_value
+  - if @battle_value.updateable?
+    = form_battle_value.submit class: "btn btn-large btn-success"
+  - else
+    %span.label [#{@battle_value.source.class.model_name.human}] #{@battle_value.source.name} から自動生成された戦闘値なので編集不可
