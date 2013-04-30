@@ -64,6 +64,10 @@ module DNU
         user.add_item!({ kind => name }, game_data_event, day.day)
       end
       
+      def purchase(tree)
+        user.add_event_form!(event_content)
+      end
+      
       def end_step(dummy)
         self.state = "終了"
         self.save!
@@ -72,6 +76,15 @@ module DNU
       def end_event(dummy)
         event.state = "終了"
         event.save!
+      end
+      
+      def event_content
+        @event_content
+      end
+      
+      def start_content(event_content)
+        @event_content = event_content
+        send(event_content.kind, event_content.content)
       end
     end
   end

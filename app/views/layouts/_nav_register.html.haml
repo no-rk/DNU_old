@@ -11,6 +11,11 @@
       - [:main, :trade, :product].each do |action|
         %li{:class => active_current(send("new_register_#{action}_path"))}
           %a{:href => send("new_register_#{action}_path")}= "Register::#{action.to_s.camelize}".constantize.model_name.human
+      - if current_user.new_register_events.exists?
+        %li.nav-header イベント
+        - current_user.form_event_content_ids.each do |event_content_id|
+          %li{:class => active_current(register_event_content_id_path(event_content_id))}
+            %a{:href => register_event_content_id_path(event_content_id)}= GameData::EventContent.find(event_content_id).nickname
       %li.nav-header 戦闘設定
       - [:battle, :duel, :competition].each do |battle|
         %li{:class => active_current(send("new_register_#{battle}_path"))}

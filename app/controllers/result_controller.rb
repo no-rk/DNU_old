@@ -42,6 +42,8 @@ class ResultController < ApplicationController
     @send_items   = this_user.result(:send_item, @day_i).includes(:to).all
     # 受信アイテム
     @receive_items = Result::SendItem.receives(@id, @day_i).all
+    # 購入アイテム
+    @purchases    = this_user.result(:purchase, @day_i).all
     # 鍛治
     @forges       = this_user.result(:forge, @day_i).all
     # 付加

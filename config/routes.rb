@@ -32,12 +32,15 @@ DNU::Application.routes.draw do
   namespace :communication do resources :messages, :only => [ :index, :new, :create, :update ] end
   namespace :communication do resources :conversations end
 
-  namespace :register do resources :mains end
-  namespace :register do resources :trades end
+  namespace :register do resources :mains    end
+  namespace :register do resources :trades   end
   namespace :register do resources :products end
 
-  namespace :register do resources :battles end
-  namespace :register do resources :duels end
+  namespace :register do resources :events, :except => [:new, :destroy] end
+  namespace :register do get 'events/:event_content_id/new' => 'events#event_content_id', :as => 'event_content_id' end
+
+  namespace :register do resources :battles      end
+  namespace :register do resources :duels        end
   namespace :register do resources :competitions end
 
   namespace :register do resources :messages,    :only => [ :show, :new, :create, :update ] end
@@ -48,7 +51,7 @@ DNU::Application.routes.draw do
 
   namespace :register do resources :skills end
   namespace :register do resources :abilities end
-  namespace :register do get 'abilities/:ability_id/new' => 'abilities#ability_id'  , :as => 'ability_id' end
+  namespace :register do get 'abilities/:ability_id/new' => 'abilities#ability_id', :as => 'ability_id' end
 
   namespace :register do resources :makes, :only => [ :new, :create ] end
 

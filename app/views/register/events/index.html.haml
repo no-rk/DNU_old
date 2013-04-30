@@ -1,0 +1,8 @@
+%h1= @register_events.first.class.model_name.human
+- @register_events.each do |register_event|
+  .alert
+    - if register_event.day.present?
+      %span.badge.badge-important #{register_event.day.day}日
+    = render 'form', { :register_event => register_event }
+    = link_to 'Show', register_event
+= paginate @register_events

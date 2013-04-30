@@ -1,0 +1,9 @@
+%h3 アイテム購入
+
+- @purchases.each do |purchase|
+  [#{purchase.item.kind}]#{purchase.item.name} を購入
+  - if purchase.success
+    した。
+  - else
+    ・・・しようと思ったがダメだった。
+  %br

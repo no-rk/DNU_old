@@ -178,13 +178,20 @@ class EffectParser < Parslet::Parser
   }
   
   rule(:string) {
-    str('"') >> 
     (
-      str('\\') >> any |
-      str('"').absent? >> any
-    ).repeat.as(:inner_text) >> 
-    str('"') |
-    partition >> (partition_end.absent? >> any).repeat(1).as(:inner_text) >> partition_end
+      str('"') >> 
+      (
+        str('\\') >> any |
+        str('"').absent? >> any
+      ).repeat.as(:inner_text) >> 
+      str('"') >>
+      newline.maybe
+    ) |
+    (
+      partition >>
+      (partition_end.absent? >> any).repeat(1).as(:inner_text) >>
+      partition_end
+    )
   }
   
   # name rule
@@ -1660,7 +1667,11 @@ class EffectParser < Parslet::Parser
       any.present?
     } >>
     partition >> (partition.absent? >> any).repeat(1).as(:caption) >> partition >>
-    sup_effects.as(:effects)
+    sup_effects.as(:effects) >>
+    dynamic{ |s,c|
+      disease_list_temp.clear
+      any.present? | any.absent?
+    }
   }
   
   # skill_definition
@@ -1909,7 +1920,7 @@ class EffectParser < Parslet::Parser
   
   rule(:pt_definition) {
     bra >> str('PT') >> ket >> (newline.absent? >> any).repeat(1).as(:pt_name) >> newline >>
-    string.as(:pt_caption).maybe >> newline.maybe >>
+    string.as(:pt_caption).maybe >>
     (
       (
         character_setting |
@@ -1927,7 +1938,7 @@ class EffectParser < Parslet::Parser
     pt_definition.repeat(1).as(:settings) >>
     dynamic{ |s,c|
       character_list_temp.clear
-      any.maybe
+      any.present? | any.absent?
     }
   }
   
@@ -2019,6 +2030,13 @@ class EffectParser < Parslet::Parser
     ).as(:add_item)
   }
   
+  rule(:purchase) {
+    (
+      item_kind_and_name >> spaces? >>
+      non_negative_integer.as(:price) >> point_name.as(:point) >> newline.maybe
+    ).repeat(1).as(:purchase)
+  }
+  
   rule(:add_notice) {
     pt_definition.as(:add_notice)
   }
@@ -2029,6 +2047,7 @@ class EffectParser < Parslet::Parser
     set_integer |
     add_event |
     add_item |
+    purchase |
     add_notice |
     change_place |
     end_step |
@@ -2048,7 +2067,22 @@ class EffectParser < Parslet::Parser
   
   # event_steps
   
+  rule(:event_step_name) {
+    (
+      dynamic{ |s,c|
+        alternation_from_array(event_step_list_temp)
+      } >> newline
+    ).absent? >> (newline .absent? >> any).repeat(1)
+  }
+  
   rule(:event_step) {
+    (
+      bra >> str('ステップ') >> ket >> event_step_name.capture(:name).as(:name) >> newline >>
+      dynamic{ |s,c|
+        event_step_list_temp.push(c.captures[:name].to_s)
+        any.present?
+      }
+    ).maybe >>
     bra >> event_timing >> ket >> event_condition >> newline >>
     event_contents >> newline.maybe
   }
@@ -2068,7 +2102,11 @@ class EffectParser < Parslet::Parser
   rule(:event_definition) {
     bra >> event_kind.as(:kind) >> str('イベント') >> ket >> (newline.absent? >> any).repeat(1).as(:name) >> newline >>
     string.as(:caption).maybe >>
-    event_steps
+    event_steps >>
+    dynamic{ |s,c|
+      event_step_list_temp.clear
+      any.present? | any.absent?
+    }
   }
   
   # item_definition
@@ -2132,8 +2170,8 @@ class EffectParser < Parslet::Parser
     ) >>
     ket >>
     (bra >> str('破棄').as(:dispose_protect).maybe >> str('送品').as(:send_protect).maybe >> str('不可') >> ket).maybe >>
-    (newline >> string.as(:caption)).maybe >>
     newline.maybe >>
+    string.as(:caption).maybe >>
     item_sup.repeat(0).as(:item_sups) >>
     item_skill.maybe.as(:item_skill) >>
     newline.maybe
@@ -2185,6 +2223,11 @@ class EffectParser < Parslet::Parser
   root(:root_processes)
   
   private
+  def event_step_list_temp
+    @event_step_list_temp ||= []
+    @event_step_list_temp
+  end
+  
   def disease_list_temp
     @disease_list_temp ||= []
     @disease_list_temp

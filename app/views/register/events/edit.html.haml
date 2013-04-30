@@ -1,0 +1,6 @@
+%h1= @register_event.event_content.nickname
+= render 'form', { :register_event => @register_event }
+
+= link_to 'Show', register_event_path
+|
+= link_to 'Back', register_events_path

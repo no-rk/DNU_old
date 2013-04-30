@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130429103123) do
+ActiveRecord::Schema.define(:version => 20130430102044) do
 
   create_table "admins", :force => true do |t|
     t.string   "email",               :default => "", :null => false
@@ -207,6 +207,7 @@ ActiveRecord::Schema.define(:version => 20130429103123) do
 
   create_table "game_data_event_steps", :force => true do |t|
     t.integer  "event_id"
+    t.string   "name"
     t.string   "timing"
     t.text     "condition"
     t.datetime "created_at", :null => false
@@ -574,6 +575,18 @@ ActiveRecord::Schema.define(:version => 20130429103123) do
 
   add_index "register_equips", ["battlable_id"], :name => "index_register_equips_on_battlable_id"
 
+  create_table "register_events", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "day_id"
+    t.integer  "event_content_id"
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
+  end
+
+  add_index "register_events", ["day_id"], :name => "index_register_events_on_day_id"
+  add_index "register_events", ["event_content_id"], :name => "index_register_events_on_event_content_id"
+  add_index "register_events", ["user_id"], :name => "index_register_events_on_user_id"
+
   create_table "register_forges", :force => true do |t|
     t.integer  "product_id"
     t.integer  "user_id"
@@ -762,6 +775,19 @@ ActiveRecord::Schema.define(:version => 20130429103123) do
   end
 
   add_index "register_profiles", ["character_id"], :name => "index_register_profiles_on_character_id"
+
+  create_table "register_purchases", :force => true do |t|
+    t.integer  "event_id"
+    t.integer  "item_id"
+    t.integer  "point_id"
+    t.integer  "price"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "register_purchases", ["event_id"], :name => "index_register_purchases_on_event_id"
+  add_index "register_purchases", ["item_id"], :name => "index_register_purchases_on_item_id"
+  add_index "register_purchases", ["point_id"], :name => "index_register_purchases_on_point_id"
 
   create_table "register_send_items", :force => true do |t|
     t.integer  "trade_id"
@@ -1284,6 +1310,17 @@ ActiveRecord::Schema.define(:version => 20130429103123) do
 
   add_index "result_products", ["passed_day_id"], :name => "index_result_products_on_passed_day_id"
   add_index "result_products", ["product_id"], :name => "index_result_products_on_product_id"
+
+  create_table "result_purchases", :force => true do |t|
+    t.integer  "passed_day_id"
+    t.integer  "purchase_id"
+    t.boolean  "success"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
+  end
+
+  add_index "result_purchases", ["passed_day_id"], :name => "index_result_purchases_on_passed_day_id"
+  add_index "result_purchases", ["purchase_id"], :name => "index_result_purchases_on_purchase_id"
 
   create_table "result_send_items", :force => true do |t|
     t.integer  "passed_day_id"

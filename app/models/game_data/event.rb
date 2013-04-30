@@ -1,10 +1,10 @@
 class GameData::Event < ActiveRecord::Base
   attr_accessible :caption, :kind, :name, :definition
   
+  has_many :events, :class_name => "Result::Event"
+  
   has_many :event_steps
   has_many :event_contents, :through => :event_steps
-  
-  has_many :events, :class_name => "Result::Event"
   
   validates :kind,       :inclusion => { :in => ["通常", "共通", "内部"] }
   validates :name,       :presence => true, :uniqueness => {:scope => :kind }
@@ -34,6 +34,7 @@ class GameData::Event < ActiveRecord::Base
         self.event_steps.destroy_all unless self.new_record?
         definition_tree[:steps].each do |step|
           self.event_steps.build do |event_step|
+            event_step.name      = step[:name]
             event_step.timing    = step[:timing].keys.first.to_s
             event_step.condition = step[:condition].to_hash
             step[:contents].each do |content|

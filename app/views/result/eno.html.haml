@@ -29,6 +29,10 @@
   .row-fluid
     #receive_item.span12.well
       = render 'result_receive_item'
+- if @purchases.present?
+  .row-fluid
+    #purchase.span12.well
+      = render 'result_purchase'
 - if @forges.present?
   .row-fluid
     #forge.span12.well

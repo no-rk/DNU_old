@@ -1,9 +1,11 @@
 class GameData::EventStep < ActiveRecord::Base
   belongs_to :event
-  attr_accessible :condition, :timing
+  attr_accessible :condition, :timing, :name
+  serialize :condition
   
   has_many :event_contents, :dependent => :destroy
   
-  validates :timing,    :inclusion => { :in => ["before_move", "each_move", "after_move"] }
-  serialize :condition, Hash
+  def nickname
+    @nickname ||= (name || event.name)
+  end
 end

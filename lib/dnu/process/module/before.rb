@@ -9,8 +9,9 @@ module DNU
         
         now_day = Day.where(:day => now_day).first_or_create!
         
-        # 再更新の場合は叫び, PT結果, マップクリア
+        # 再更新の場合はイベント宣言, 叫び, PT結果, マップクリア
         unless @new_day
+          Register::Event.where(:day_id => nil).destroy_all
           day_arel = Day.arel_table
           Result::Shout.where(day_arel[:day].eq(now_day.day)).includes(:day).destroy_all
           Result::Party.where(day_arel[:day].eq(now_day.day)).includes(:day).destroy_all
@@ -19,8 +20,8 @@ module DNU
         # キャラ作成済みの各ユーザー
         User.already_make.find_each do |user|
           # 最新宣言に日数の情報を付与する
-          [:main, :trade, :product, :battle, :duel, :competition, :skill, :ability, :character].each do |form_name|
-            user_form = user.send("register_#{form_name}")
+          [:main, :trade, :product, :event, :battle, :duel, :competition, :skill, :ability, :character].each do |form_name|
+            user_form = user.send("register_#{form_name.to_s.pluralize}").first
             if user_form and @new_day
               # 新登録があるならそれを採用
               if user_form.day.nil?

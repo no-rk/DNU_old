@@ -55,12 +55,12 @@ class TestsController < ApplicationController
     @type  = :parse
     @text  = params[:text]
     if @text.present?
-      #begin
+      begin
         tree = DNU::Data.parse!(params[:type], @text, true)
         @result = "<pre>#{tree.pretty_inspect}</pre>"
-      #rescue => msg
-      #  @error = msg
-      #end
+      rescue => msg
+        @error = msg
+      end
     end
     render 'test'
   end

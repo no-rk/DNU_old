@@ -56,6 +56,8 @@ ja:
         取引行動
       register/product: &product
         生産行動
+      register/event: &event
+        イベント
 
       register/battle: &battle
         通常戦
@@ -92,6 +94,7 @@ ja:
       register/send_item: 送品
       register/forge: 鍛治
       register/supplement: 付加
+      register/purchase: アイテム購入
       register/battle_setting: 戦闘設定
       register/profile: プロフィール
       register/upload_icon: アップロードアイコン
@@ -278,6 +281,14 @@ ja:
       register/product/forges: *forge
       register/product/supplements: *supplement
       
+      register/purchase: &purchase
+        item: アイテム
+        price: 値段
+        point: ポイント
+      register/event:
+        purchases: アイテム購入
+      register/event/purchases: *purchase
+      
       register/equip: &equip
         number: アイテムNo.
       register/battle_setting: &battle_setting
@@ -399,6 +410,9 @@ ja:
         -
           - *product
           - products
+        -
+          - *event
+          - events
         -
           - *battle
           - battles

@@ -1,41 +1,32 @@
 class User < ActiveRecord::Base
-  has_one  :register_main        , :order => "updated_at DESC", :class_name => "Register::Main"
-  has_many :register_mains       , :order => "updated_at DESC", :class_name => "Register::Main"
-  has_one  :register_trade       , :order => "updated_at DESC", :class_name => "Register::Trade"
-  has_many :register_trades      , :order => "updated_at DESC", :class_name => "Register::Trade"
-  has_one  :register_product     , :order => "updated_at DESC", :class_name => "Register::Product"
-  has_many :register_products    , :order => "updated_at DESC", :class_name => "Register::Product"
-
-  has_one  :register_battle      , :order => "updated_at DESC", :class_name => "Register::Battle"
-  has_many :register_battles     , :order => "updated_at DESC", :class_name => "Register::Battle"
-  has_one  :register_duel        , :order => "updated_at DESC", :class_name => "Register::Duel"
-  has_many :register_duels       , :order => "updated_at DESC", :class_name => "Register::Duel"
-  has_one  :register_competition , :order => "updated_at DESC", :class_name => "Register::Competition"
+  # 宣言
+  has_many :register_mains,        :order => "updated_at DESC", :class_name => "Register::Main"
+  has_many :register_trades,       :order => "updated_at DESC", :class_name => "Register::Trade"
+  has_many :register_products,     :order => "updated_at DESC", :class_name => "Register::Product"
+  
+  has_many :register_events,       :order => "updated_at DESC", :class_name => "Register::Event", :include => [:event, :event_step, :event_content]
+  
+  has_many :register_battles,      :order => "updated_at DESC", :class_name => "Register::Battle"
+  has_many :register_duels,        :order => "updated_at DESC", :class_name => "Register::Duel"
   has_many :register_competitions, :order => "updated_at DESC", :class_name => "Register::Competition"
-
-  has_one  :register_skill       , :order => "updated_at DESC", :class_name => "Register::Skill"
-  has_many :register_skills      , :order => "updated_at DESC", :class_name => "Register::Skill"
-  has_one  :register_ability     , :order => "updated_at DESC", :class_name => "Register::Ability"
-  has_many :register_abilities   , :order => "updated_at DESC", :class_name => "Register::Ability"
-
-  has_one  :register_message     , :order => "updated_at DESC", :class_name => "Register::Message"
-  has_many :register_messages    , :order => "updated_at DESC", :class_name => "Register::Message"
-  has_one  :register_community   , :order => "updated_at DESC", :class_name => "Register::Community"
-  has_many :register_communities , :order => "updated_at DESC", :class_name => "Register::Community"
-  has_one  :register_character   , :order => "updated_at DESC", :class_name => "Register::Character"
-  has_many :register_characters  , :order => "updated_at DESC", :class_name => "Register::Character"
-  has_one  :register_image       , :order => "updated_at DESC", :class_name => "Register::Image"
-  has_many :register_images      , :order => "updated_at DESC", :class_name => "Register::Image"
-  has_one  :register_initial     , :order => "updated_at DESC", :class_name => "Register::Initial"
-  has_many :register_initials    , :order => "updated_at DESC", :class_name => "Register::Initial"
-
-  has_one  :register_make        , :order => "updated_at DESC", :class_name => "Register::Make"
-  has_many :register_makes       , :order => "updated_at DESC", :class_name => "Register::Make"
-
-  has_many :result_passed_days, :class_name => "Result::PassedDay"
+  
+  has_many :register_skills,       :order => "updated_at DESC", :class_name => "Register::Skill"
+  has_many :register_abilities,    :order => "updated_at DESC", :class_name => "Register::Ability"
+  
+  has_many :register_messages,     :order => "updated_at DESC", :class_name => "Register::Message"
+  has_many :register_communities,  :order => "updated_at DESC", :class_name => "Register::Community"
+  has_many :register_characters,   :order => "updated_at DESC", :class_name => "Register::Character"
+  has_many :register_images,       :order => "updated_at DESC", :class_name => "Register::Image"
+  has_many :register_initials,     :order => "updated_at DESC", :class_name => "Register::Initial"
+  
+  has_one  :register_make,         :class_name => "Register::Make"
+  
+  # 結果
+  has_many :result_passed_days,   :class_name => "Result::PassedDay"
   
   has_many :result_send_points,   :through => :result_passed_days, :class_name => "Result::SendPoint"
   has_many :result_send_items,    :through => :result_passed_days, :class_name => "Result::SendItem"
+  has_many :result_purchases,     :through => :result_passed_days, :class_name => "Result::Purchase"
   has_many :result_forges,        :through => :result_passed_days, :class_name => "Result::Forge"
   has_many :result_supplements,   :through => :result_passed_days, :class_name => "Result::Supplement"
   has_many :result_equips ,       :through => :result_passed_days, :class_name => "Result::Equip"
@@ -60,33 +51,33 @@ class User < ActiveRecord::Base
   has_many :result_skills,        :through => :result_passed_days, :class_name => "Result::Skill"
   has_many :result_inventories,   :through => :result_passed_days, :class_name => "Result::Inventory"
   has_many :result_places,        :through => :result_passed_days, :class_name => "Result::Place"
-
+  
   has_many :through_party_members, :as => :character, :class_name => "Result::PartyMember"
   
   has_many :result_parties,       :through => :through_party_members, :class_name => "Result::Party",       :source => :party
   has_many :result_party_members, :through => :result_parties,        :class_name => "Result::PartyMember", :source => :party_members
   has_many :result_notices,       :through => :result_parties,        :class_name => "Result::Notice",      :source => :notices
   has_many :result_battles,       :through => :result_notices,        :class_name => "Result::Battle",      :source => :battle
-
+  
   scope :new_commer,   lambda{ where(arel_table[:creation_day].eq(Day.last_day_i)) }
   scope :already_make, lambda{ where(arel_table[:creation_day].lt(Day.last_day_i)) }
-
+  
   acts_as_tagger
   acts_as_messageable
-
+  
   # Include default devise modules. Others available are:
   # :token_authenticatable, :confirmable,
   # :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable, :lockable
-
+  
   # Virtual attribute for authenticating by either username or email
   # This is in addition to a real persisted field like 'username'
   attr_accessor :login
-
+  
   # Setup accessible (or protected) attributes for your model
   attr_accessible :email, :password, :password_confirmation, :remember_me, :login
-
+  
   def self.find_first_by_auth_conditions(warden_conditions)
     conditions = warden_conditions.dup
     if login = conditions.delete(:login)
@@ -96,15 +87,27 @@ class User < ActiveRecord::Base
     end
   end
   
+  def new_register_events
+    self.register_events.where(:day_id => nil)
+  end
+  
+  def form_event_content_ids
+    new_register_events.uniq.pluck(:event_content_id)
+  end
+  
   def register(type, day_i = Day.last_day_i)
     day_arel  = Day.arel_table
-    
-    self.send("register_#{type.to_s.pluralize}").except(:order).where(day_arel[:day].eq(day_i)).includes(:day).first
+    case type.to_sym
+    when :event
+      self.send("register_#{type.to_s.pluralize}").except(:order).where(day_arel[:day].eq(day_i)).includes(:day)
+    else
+      self.send("register_#{type.to_s.pluralize}").except(:order).where(day_arel[:day].eq(day_i)).includes(:day).first
+    end
   end
   
   def result_character(day_i = Day.last_day_i)
     if self.creation_day == Day.last_day_i
-      register_character
+      register_characters.first
     else
       day_i += 1 if self.creation_day == day_i
       
@@ -115,7 +118,7 @@ class User < ActiveRecord::Base
   end
   
   def result_guardian
-    register_initial.guardian
+    register_initials.first.guardian
   end
   
   def result_state(day_i = Day.last_day_i)
@@ -297,6 +300,13 @@ class User < ActiveRecord::Base
       end
     end
     success
+  end
+  
+  def add_event_form!(event_content)
+    self.register_events.build do |register_event|
+      register_event.event_content = event_content
+    end
+    self.save
   end
   
   def add_event!(event, day_i = Day.last_day_i)

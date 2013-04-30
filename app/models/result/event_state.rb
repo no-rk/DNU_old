@@ -49,7 +49,7 @@ class Result::EventState < ActiveRecord::Base
         when :print_text
           print_texts.push(event_content)
         else
-          send(event_content.kind, event_content.content)
+          start_content(event_content)
         end
       end
     end

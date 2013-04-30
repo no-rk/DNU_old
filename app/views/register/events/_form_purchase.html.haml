@@ -1,0 +1,8 @@
+%br
+- i = 0
+= form_event.label :purchases
+= form_event.simple_fields_for :purchases, :wrapper => :simple, :defaults => { :as => (:plain if @read_only), :user => current_user, :input_html => { :class => :'span3' } } do |form_purchase|
+  = form_purchase.input :index, :collection => register_event.event_content.collection
+  - if (i + 1)%4 == 0
+    %br
+  - i = i + 1

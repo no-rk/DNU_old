@@ -8,10 +8,9 @@ class Register::ApplicationController < ApplicationController
   # GET /register/controller_name.json
   def index
     @read_only = true
-    names = self.class.controller_name
     set_instance_variables
 
-    registers = current_user.send("register_#{names}").page(params[:page]).per(Settings.register.history.per)
+    registers = register_index_records
 
     self.instance_variable_set("@register_#{names}",registers)
     @update_time = true
@@ -33,11 +32,9 @@ class Register::ApplicationController < ApplicationController
   # GET /register/controller_name/1.json
   def show
     @read_only = true
-    names = self.class.controller_name
-    name  = names.singularize
     set_instance_variables
 
-    register = current_user.send("register_#{names}").find(params[:id])
+    register = register_show_record
 
     self.instance_variable_set("@register_#{name}",register)
 
@@ -50,11 +47,9 @@ class Register::ApplicationController < ApplicationController
   # GET /register/controller_name/new
   # GET /register/controller_name/new.json
   def new
-    names = self.class.controller_name
-    name  = names.singularize
     set_instance_variables
 
-    register = current_user.send("register_#{name}") || "Register::#{names.classify}".constantize.new
+    register = register_new_record
     register.send("build_#{name}")
     build_record(register)
 
@@ -68,11 +63,9 @@ class Register::ApplicationController < ApplicationController
 
   # GET /register/controller_name/1/edit
   def edit
-    names = self.class.controller_name
-    name  = names.singularize
     set_instance_variables
 
-    register = current_user.send("register_#{names}").find(params[:id])
+    register = register_edit_record
     register.send("build_#{name}")
     build_record(register)
 
@@ -83,8 +76,6 @@ class Register::ApplicationController < ApplicationController
   # POST /register/controller_name.json
   def create
     @read_only = true if request.xhr?
-    names = self.class.controller_name
-    name  = names.singularize
     set_instance_variables
 
     register = "Register::#{names.classify}".constantize.new(params[:"register_#{name}"])
@@ -103,7 +94,7 @@ class Register::ApplicationController < ApplicationController
       else
         if register.save
           save_success(register)
-          format.html { redirect_to register, notice: I18n.t("create", :scope => "register.message", :model_name => "Register::#{names.classify}".constantize.model_name.human) }
+          format.html { redirect_to redirect_create(register), notice: I18n.t("create", :scope => "register.message", :model_name => "Register::#{names.classify}".constantize.model_name.human) }
           format.json { render json: register, status: :created, location: register }
         else
           format.html { render action: "new" }
@@ -117,8 +108,6 @@ class Register::ApplicationController < ApplicationController
   # PUT /register/controller_name/1.json
   def update
     @read_only = true if request.xhr?
-    names = self.class.controller_name
-    name  = names.singularize
     set_instance_variables
 
     register = "Register::#{names.classify}".constantize.find(params[:id])
@@ -143,7 +132,7 @@ class Register::ApplicationController < ApplicationController
       else
         if register.save
           save_success(register)
-          format.html { redirect_to register, notice: I18n.t("update", :scope => "register.message", :model_name => "Register::#{names.classify}".constantize.model_name.human) }
+          format.html { redirect_to redirect_update(register), notice: I18n.t("update", :scope => "register.message", :model_name => "Register::#{names.classify}".constantize.model_name.human) }
           format.json { head :no_content }
         else
           format.html { render action: edit_action }
@@ -156,8 +145,6 @@ class Register::ApplicationController < ApplicationController
   # DELETE /register/controller_name/1
   # DELETE /register/controller_name/1.json
   def destroy
-    names = self.class.controller_name
-    name  = names.singularize
     set_instance_variables
 
     register = current_user.send("register_#{names}").find(params[:id])
@@ -166,28 +153,70 @@ class Register::ApplicationController < ApplicationController
     self.instance_variable_set("@register_#{name}",register)
 
     respond_to do |format|
-      format.html { redirect_to send("register_#{names}_url") }
+      format.html { redirect_to redirect_destroy(register) }
       format.json { head :no_content }
     end
   end
 
   private
+  def redirect_create(register)
+    register
+  end
+  
+  def redirect_update(register)
+    register
+  end
+  
+  def redirect_destroy(register)
+    send("register_#{names}_url")
+  end
+  
+  def names
+    @names ||= self.class.controller_name
+  end
+  
+  def name
+    @name ||= names.singularize
+  end
+  
+  def register_index_records
+    current_user.send("register_#{names}").page(params[:page]).per(Settings.register.history.per)
+  end
+  
+  def register_show_record
+    current_user.send("register_#{names}").find(params[:id])
+  end
+  
+  def register_new_record
+    current_user.send("register_#{names}").first || "Register::#{names.classify}".constantize.new
+  end
+  
+  def register_edit_record
+    current_user.send("register_#{names}").find(params[:id])
+  end
+  
   def set_title
     @title = "ENo.#{current_user.id} " + "Register::#{controller_name.classify}".constantize.model_name.human
   end
+  
   def wrap_clone_record(record)
     clone_record(record)
   end
+  
   def clone_record(record)
     DNU::DeepClone.register(record)
   end
+  
   def edit_action
     "edit"
   end
+  
   def save_success(register)
   end
+  
   def set_instance_variables
   end
+  
   def build_record(record)
   end
 end
