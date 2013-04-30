@@ -8,9 +8,13 @@ module DNU
           if user.register(:event).exists?
             user.register(:event).each do |event|
               event.purchases.each do |purchase|
+                result_inventory = purchase.purchase!
+                
                 user.create_result!(:purchase, {
                   :purchase => purchase,
-                  :success  => purchase.purchase!
+                  :number   => result_inventory.number,
+                  :item     => result_inventory.item,
+                  :success  => result_inventory.present?
                 })
               end
             end

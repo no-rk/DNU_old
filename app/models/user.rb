@@ -296,7 +296,7 @@ class User < ActiveRecord::Base
       if result_item.try(:save)
         result_inventory.item = result_item
         result_inventory.save!
-        success = true
+        success = result_inventory
       end
     end
     success

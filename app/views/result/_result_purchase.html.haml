@@ -1,9 +1,11 @@
 %h3 アイテム購入
 
 - @purchases.each do |purchase|
-  [#{purchase.item.kind}]#{purchase.item.name} を購入
+  [#{purchase.game_data_item.kind}]#{purchase.game_data_item.name}
   - if purchase.success
-    した。
+    ※アイテム#{link_to("ID:#{purchase.item.id}", result_item_path(@day_i, purchase.item.id), :target => :_blank)}
+    を購入し
+    [#{purchase.number}] へ。
   - else
-    ・・・しようと思ったがダメだった。
+    を購入・・・しようと思ったがダメだった。
   %br

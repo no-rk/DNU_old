@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130430102044) do
+ActiveRecord::Schema.define(:version => 20130430115621) do
 
   create_table "admins", :force => true do |t|
     t.string   "email",               :default => "", :null => false
@@ -1272,6 +1272,46 @@ ActiveRecord::Schema.define(:version => 20130430102044) do
   add_index "result_passed_days", ["day_id"], :name => "index_result_passed_days_on_day_id"
   add_index "result_passed_days", ["user_id"], :name => "index_result_passed_days_on_user_id"
 
+  create_table "result_pet_names", :force => true do |t|
+    t.integer  "pet_id"
+    t.integer  "user_id"
+    t.integer  "day_id"
+    t.integer  "way_id"
+    t.string   "way_type"
+    t.string   "name"
+    t.text     "caption"
+    t.integer  "source_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "result_pet_names", ["day_id"], :name => "index_result_pet_names_on_day_id"
+  add_index "result_pet_names", ["pet_id"], :name => "index_result_pet_names_on_pet_id"
+  add_index "result_pet_names", ["source_id"], :name => "index_result_pet_names_on_source_id"
+  add_index "result_pet_names", ["user_id"], :name => "index_result_pet_names_on_user_id"
+  add_index "result_pet_names", ["way_id"], :name => "index_result_pet_names_on_way_id"
+
+  create_table "result_pets", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "day_id"
+    t.integer  "way_id"
+    t.string   "way_type"
+    t.integer  "plan_id"
+    t.integer  "kind_id"
+    t.boolean  "dispose_protect"
+    t.boolean  "send_protect"
+    t.integer  "source_id"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
+  end
+
+  add_index "result_pets", ["day_id"], :name => "index_result_pets_on_day_id"
+  add_index "result_pets", ["kind_id"], :name => "index_result_pets_on_kind_id"
+  add_index "result_pets", ["plan_id"], :name => "index_result_pets_on_plan_id"
+  add_index "result_pets", ["source_id"], :name => "index_result_pets_on_source_id"
+  add_index "result_pets", ["user_id"], :name => "index_result_pets_on_user_id"
+  add_index "result_pets", ["way_id"], :name => "index_result_pets_on_way_id"
+
   create_table "result_places", :force => true do |t|
     t.integer  "passed_day_id"
     t.integer  "map_tip_id"
@@ -1314,11 +1354,14 @@ ActiveRecord::Schema.define(:version => 20130430102044) do
   create_table "result_purchases", :force => true do |t|
     t.integer  "passed_day_id"
     t.integer  "purchase_id"
+    t.integer  "number"
+    t.integer  "item_id"
     t.boolean  "success"
     t.datetime "created_at",    :null => false
     t.datetime "updated_at",    :null => false
   end
 
+  add_index "result_purchases", ["item_id"], :name => "index_result_purchases_on_item_id"
   add_index "result_purchases", ["passed_day_id"], :name => "index_result_purchases_on_passed_day_id"
   add_index "result_purchases", ["purchase_id"], :name => "index_result_purchases_on_purchase_id"
 

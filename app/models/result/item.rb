@@ -1,9 +1,9 @@
 class Result::Item < ActiveRecord::Base
   belongs_to :user
   belongs_to :day
-  belongs_to :way, :polymorphic => true
-  belongs_to :plan, :class_name => "GameData::Item"
-  belongs_to :type, :class_name => "GameData::ItemType"
+  belongs_to :way,    :polymorphic => true
+  belongs_to :plan,   :class_name => "GameData::Item"
+  belongs_to :type,   :class_name => "GameData::ItemType"
   belongs_to :source, :class_name => "Result::Item"
 
   has_many :item_names,     :dependent => :destroy
