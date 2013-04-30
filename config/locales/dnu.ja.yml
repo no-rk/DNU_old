@@ -25,6 +25,7 @@ ja:
       game_data/trap: 罠
       game_data/skill: 技
       game_data/item_skill: 戦物
+      game_data/item_use: 使用
       game_data/job: 職業
       game_data/guardian: 守護竜
       game_data/status: 能力
@@ -85,6 +86,7 @@ ja:
         キャラ作成
 
       register/dispose: 破棄
+      register/item_use: 使用
       register/move: 移動
       register/forget: 忘却
       register/blossom: 開花
@@ -195,6 +197,10 @@ ja:
         name: 戦物名
         definition: 戦物定義
       
+      game_data/item_use:
+        name: 使用名
+        definition: 使用定義
+      
       game_data/ability:
         name: アビリティ名
         definition: アビリティ定義
@@ -233,6 +239,9 @@ ja:
         message: 叫ぶ内容
       register/dispose: &dispose
         number: アイテムNo.
+      register/item_use: &item_use
+        number: アイテムNo.
+        message: 使用時メッセージ
       register/move: &move
         direction: 方向
       register/party_slogan: &party_slogan
@@ -240,6 +249,7 @@ ja:
       register/main:
         shouts: 叫び
         disposes: 破棄
+        item_uses: 使用※未実装
         moves: 移動
         forgets: 忘却
         blossoms: 開花
@@ -247,6 +257,7 @@ ja:
       register/main/diary: *diary
       register/main/shouts: *shout
       register/main/disposes: *dispose
+      register/main/item_uses: *item_use
       register/main/moves: *move
       register/main/party_slogan: *party_slogan
       

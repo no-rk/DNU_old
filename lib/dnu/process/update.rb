@@ -6,6 +6,7 @@ module DNU
       extend SendPoint
       extend SendItem
       extend Purchase
+      extend ItemUse
       extend Forge
       extend Supplement
       extend Equip
@@ -42,6 +43,9 @@ module DNU
           
           # アイテム購入
           purchase
+          
+          # アイテム購入
+          item_use
           
           # 鍛治
           forge

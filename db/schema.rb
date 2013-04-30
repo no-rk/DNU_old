@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130430115621) do
+ActiveRecord::Schema.define(:version => 20130430132103) do
 
   create_table "admins", :force => true do |t|
     t.string   "email",               :default => "", :null => false
@@ -246,6 +246,14 @@ ActiveRecord::Schema.define(:version => 20130430115621) do
     t.boolean  "forge",      :default => false
     t.datetime "created_at",                    :null => false
     t.datetime "updated_at",                    :null => false
+  end
+
+  create_table "game_data_item_uses", :force => true do |t|
+    t.string   "name"
+    t.text     "definition"
+    t.text     "tree"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "game_data_items", :force => true do |t|
@@ -704,6 +712,16 @@ ActiveRecord::Schema.define(:version => 20130430115621) do
   add_index "register_item_skill_settings", ["frequency_id"], :name => "index_register_item_skill_settings_on_frequency_id"
   add_index "register_item_skill_settings", ["item_id"], :name => "index_register_item_skill_settings_on_item_id"
   add_index "register_item_skill_settings", ["use_condition_id"], :name => "index_register_item_skill_settings_on_use_condition_id"
+
+  create_table "register_item_uses", :force => true do |t|
+    t.integer  "main_id"
+    t.integer  "number"
+    t.text     "message"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "register_item_uses", ["main_id"], :name => "index_register_item_uses_on_main_id"
 
   create_table "register_mains", :force => true do |t|
     t.integer  "user_id"

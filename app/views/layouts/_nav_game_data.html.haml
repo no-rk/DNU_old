@@ -7,6 +7,6 @@
       %li{:class => active_current(send("game_data_#{table}_path"))}
         %a{:href => send("game_data_#{table}_path")}= "GameData::#{table.to_s.classify}".constantize.model_name.human
     %li.nav-header 後で決めても良いもの
-    - [:maps, :equips, :sups, :traps, :skills, :item_skills, :abilities, :items, :characters, :enemy_lists, :enemy_territories, :events].each do |table|
+    - [:maps, :equips, :sups, :traps, :skills, :item_skills, :item_uses, :abilities, :items, :characters, :enemy_lists, :enemy_territories, :events].each do |table|
       %li{:class => active_current(send("game_data_#{table}_path"))}
         %a{:href => send("game_data_#{table}_path")}= "GameData::#{table.to_s.classify}".constantize.model_name.human

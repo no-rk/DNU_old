@@ -257,6 +257,10 @@ class EffectParser < Parslet::Parser
     alternation_from_array(GameData::ItemSkill.pluck(:name))
   }
   
+  rule(:item_use_name) {
+    alternation_from_array(GameData::ItemUse.pluck(:name))
+  }
+  
   rule(:character_type) {
     alternation_from_array(GameData::CharacterType.pluck(:name))
   }
@@ -2109,6 +2113,13 @@ class EffectParser < Parslet::Parser
     }
   }
   
+  # item_use_definition
+  
+  rule(:item_use_definition) {
+    bra >> str('使用') >> ket >> (newline.absent? >> any).repeat(1).as(:name) >> newline >>
+    event_contents
+  }
+  
   # item_definition
   
   rule(:item_sup) {
@@ -2139,6 +2150,10 @@ class EffectParser < Parslet::Parser
   
   rule(:item_skill) {
     bra >> str('戦物') >> ket >> item_skill_name.as(:name)
+  }
+  
+  rule(:item_use) {
+    bra >> str('使用') >> ket >> item_use_name.as(:name)
   }
   
   rule(:item_definition) {
@@ -2173,8 +2188,8 @@ class EffectParser < Parslet::Parser
     newline.maybe >>
     string.as(:caption).maybe >>
     item_sup.repeat(0).as(:item_sups) >>
-    item_skill.maybe.as(:item_skill) >>
-    newline.maybe
+    item_skill.maybe.as(:item_skill) >> newline.maybe >>
+    item_use.maybe.as(:item_use) >> newline.maybe
   }
   
   # enemy_list_definition

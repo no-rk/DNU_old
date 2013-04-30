@@ -109,3 +109,6 @@
 - :name: "戦物"
   :caption: "戦闘中に技的な感じで使える。"
   :forge: false
+- :name: "消耗"
+  :caption: "使用すると効果がある。"
+  :forge: false
