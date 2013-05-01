@@ -28,7 +28,7 @@ ja:
       game_data/item_use: 使用
       game_data/guardian: 守護
       game_data/status: 能力
-      game_data/art_type: 技能種別
+      game_data/art_type: 技能種類
       game_data/art: 技能
       game_data/word: 言葉
       game_data/disease: 状態異常
@@ -159,6 +159,19 @@ ja:
         kind: 戦闘設定種類
         name: 戦闘設定名
         caption: 戦闘設定説明
+      
+      game_data/art_type:
+        name: 技能種類名
+        caption: 技能種類説明
+        blossom: 開花
+        forget: 忘却
+        lv_cap: 熟練
+        train: 訓練
+      
+      game_data/art:
+        art_type: 技能種類
+        name: 技能名
+        caption: 技能説明
       
       game_data/guardian:
         art: 技能

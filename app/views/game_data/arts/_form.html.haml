@@ -1,0 +1,6 @@
+= render 'game_data/error', { game_data_error: @art }
+= simple_form_for(@art) do |form_art|
+  = form_art.association :art_type
+  = form_art.input :name
+  = form_art.input :caption
+  = form_art.submit class: "btn btn-large btn-success"

@@ -1,7 +1,7 @@
 class GameData::Art < ActiveRecord::Base
   belongs_to :art_type
   has_one :train, :as => :trainable
-  attr_accessible :name, :caption, :type
+  attr_accessible :name, :caption, :type, :art_type_id
   
   validates :art_type, :presence => true
   validates :name,     :presence => true, :uniqueness => true
