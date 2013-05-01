@@ -33,15 +33,22 @@ class Result::Art < ActiveRecord::Base
     success
   end
   
+  def effective_lv
+    (self.lv_cap.nil? ? self.lv : [self.lv, self.lv_cap].min).to_i
+  end
+  
   def value(n = lv)
     "LV#{n.to_i}"
   end
+  
   def require_point(n = lv)
     n.to_i
   end
+  
   def forget_point(n = lv)
     n.to_i*2
   end
+  
   def nickname
     name || art.name
   end

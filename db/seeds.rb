@@ -18,8 +18,8 @@ end
   end
 end
 
-# 守護, 言葉, 生産
-[:guardian, :word, :product].each do |table|
+# 守護, 言葉
+[:guardian, :word].each do |table|
   ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_#{table.to_s.tableize}")
   list = YAML.load(ERB.new(File.read("#{Rails.root}/db/game_data/#{table}.yml")).result)
   list.each do |data|
@@ -45,20 +45,10 @@ ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_event_contents")
   end
 end
 
-# 訓練可能なものをまとめる
-[:Product].each do |class_name|
-  "GameData::#{class_name}".constantize.find_each do |trainable|
-    train = GameData::Train.new
-    train.trainable = trainable
-    train.visible = true
-    train.save!
-  end
-end
-
 # 単語自動リンク用のインデックス保存
 tx_map = []
-[:Guardian, :Status, :ArtType, :Art, :Word, :Disease, :BattleValue, :Product, :Element, :Point].each do |class_name|
-  tx_map += "GameData::#{class_name}".constantize.all.map{ |a| [a.name, "#{class_name.to_s.tableize}/#{a.id}/#{a.color if a.respond_to?(:color)}"] }.flatten
+[:Guardian, :Status, :ArtType, :Art, :Word, :Disease, :BattleValue, :Element, :Point].each do |class_name|
+  tx_map += "GameData::#{class_name}".constantize.all.map{ |r| [r.name, "#{class_name.to_s.tableize}/#{r.id}/#{r.color if r.respond_to?(:color)}"] }.flatten
 end
 builder = Tx::MapBuilder.new
 builder.add_all(tx_map.flatten)

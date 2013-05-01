@@ -44,7 +44,6 @@ class User < ActiveRecord::Base
   has_many :result_points,        :through => :result_passed_days, :class_name => "Result::Point"
   has_many :result_statuses,      :through => :result_passed_days, :class_name => "Result::Status"
   has_many :result_arts,          :through => :result_passed_days, :class_name => "Result::Art"
-  has_many :result_products,      :through => :result_passed_days, :class_name => "Result::Product"
   has_many :result_abilities,     :through => :result_passed_days, :class_name => "Result::Ability"
   has_many :result_battle_values, :through => :result_passed_days, :class_name => "Result::BattleValue"
   has_many :result_skills,        :through => :result_passed_days, :class_name => "Result::Skill"
@@ -122,9 +121,8 @@ class User < ActiveRecord::Base
   
   def result_state(day_i = Day.last_day_i)
     state = {}
-    state = result(:art,     day_i).where(:forget => false).includes(:art    ).inject(state){ |h,r| h.tap{ h[r.art.name]     = r.lv_cap.nil? ? r.lv : [r.lv, r.lv_cap].min } }
-    state = result(:product, day_i).where(:forget => false).includes(:product).inject(state){ |h,r| h.tap{ h[r.product.name] = r.lv_cap.nil? ? r.lv : [r.lv, r.lv_cap].min } }
-    state = result(:ability, day_i).where(:forget => false).includes(:ability).inject(state){ |h,r| h.tap{ h[r.ability.name] = r.lv_cap.nil? ? r.lv : [r.lv, r.lv_cap].min } }
+    state = result(:art,     day_i).where(:forget => false).includes(:art    ).inject(state){ |h,r| h.tap{ h[r.art.name]     = r.effective_lv } }
+    state = result(:ability, day_i).where(:forget => false).includes(:ability).inject(state){ |h,r| h.tap{ h[r.ability.name] = r.effective_lv } }
     state
   end
   
@@ -132,9 +130,8 @@ class User < ActiveRecord::Base
     train_arel = GameData::Train.arel_table
     train = {}
     train = result(:status,  day_i).where(train_arel[:visible].eq(true)).includes(:status,  :train).inject(train){ |h,r| h.tap{ h[r.nickname] = r.train.id } }
-    train = result(:art,     day_i).where(:forget => false).where(train_arel[:visible].eq(true)).includes(:art,     :train).inject(train){ |h,r| h.tap{ h[r.nickname] = r.train.id } }
-    train = result(:product, day_i).where(:forget => false).where(train_arel[:visible].eq(true)).includes(:product, :train).inject(train){ |h,r| h.tap{ h[r.nickname] = r.train.id } }
-    train = result(:ability, day_i).where(:forget => false).where(train_arel[:visible].eq(true)).includes(:ability, :train).inject(train){ |h,r| h.tap{ h[r.nickname] = r.train.id } }
+    train = result(:art,     day_i).where(train_arel[:visible].eq(true)).where(:forget => false).includes(:art,     :train).inject(train){ |h,r| h.tap{ h[r.nickname] = r.train.id } }
+    train = result(:ability, day_i).where(train_arel[:visible].eq(true)).where(:forget => false).includes(:ability, :train).inject(train){ |h,r| h.tap{ h[r.nickname] = r.train.id } }
     train
   end
   
@@ -143,7 +140,6 @@ class User < ActiveRecord::Base
     train = {}
     train = result(:status,  day_i).where(train_arel[:visible].eq(true)).includes(:status,  :train).inject(train){ |h,r| h.tap{ h[r.nickname] = r.train.id } }
     train = result(:art,     day_i).where(train_arel[:visible].eq(true)).includes(:art,     :train).inject(train){ |h,r| h.tap{ h[r.nickname] = r.train.id } }
-    train = result(:product, day_i).where(train_arel[:visible].eq(true)).includes(:product, :train).inject(train){ |h,r| h.tap{ h[r.nickname] = r.train.id } }
     train = result(:ability, day_i).where(train_arel[:visible].eq(true)).includes(:ability, :train).inject(train){ |h,r| h.tap{ h[r.nickname] = r.train.id } }
     train
   end
@@ -232,22 +228,43 @@ class User < ActiveRecord::Base
     result_item
   end
   
+  def add_art!(art, lv = 1, day_i = Day.last_day_i)
+    success = false
+    art_type = art.keys.first
+    art_name = art.values.first
+    
+    model_art = GameData::Art.find_by_type_and_name(art_type, art_name).first
+    if model_art.present?
+      result_art = self.result(:art, day_i).merge(GameData::Art.find_by_type_and_name(art_type, art_name)).first
+      if result_art.present?
+        if result_art.forget
+          result_art.lv     = lv
+          result_art.forget = false
+          result_art.save!
+          success = true
+        end
+      else
+        success = create_result!(:art, {
+          :art        => model_art,
+          :lv         => lv,
+          :lv_exp     => 0,
+          :lv_cap     => model_art.art_type.lv_cap ? 5 : nil,
+          :lv_cap_exp => model_art.art_type.lv_cap ? 0 : nil,
+          :forget     => false
+        }, day_i)
+      end
+    end
+    success
+  end
+  
   def blossom!(art, day_i = Day.last_day_i)
     success = false
-    if !self.result(:art, day_i).exists?(:art_id => art.id, :forget => false) and self.result(:art, day_i).where(:forget => false).count < 5
+    if !self.result(:art, day_i).exists?(:art_id => art.id, :forget => false) and self.result(:art, day_i).where(:forget => false).count < 6
       point_arel = GameData::Point.arel_table
       result_point = self.result(:point, day_i).where(point_arel[:name].eq(:GP)).includes(:point).first
       result_point.value -= 10
       if result_point.save
-        result_art = result_point.result_arts.where(:art_id=>art.id).first_or_initialize
-        result_art.passed_day ||= result_point.passed_day
-        result_art.lv = 1
-        result_art.lv_exp ||= 0
-        result_art.lv_cap ||= 5
-        result_art.lv_cap_exp ||= 0
-        result_art.forget = false
-        result_art.save!
-        success = true
+        success = add_art!({ art.type => art.name }, 1, day_i)
       end
     end
     success

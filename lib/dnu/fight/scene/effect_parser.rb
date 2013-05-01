@@ -281,10 +281,6 @@ class EffectParser < Parslet::Parser
     alternation_from_array(GameData::Art.pluck(:name))
   }
   
-  rule(:product_name) {
-    alternation_from_array(GameData::Product.pluck(:name))
-  }
-  
   rule(:item_type) {
     alternation_from_array(GameData::ItemType.pluck(:name))
   }

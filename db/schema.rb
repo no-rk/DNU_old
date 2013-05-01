@@ -322,13 +322,6 @@ ActiveRecord::Schema.define(:version => 20130430132103) do
     t.datetime "updated_at",   :null => false
   end
 
-  create_table "game_data_products", :force => true do |t|
-    t.string   "name"
-    t.text     "caption"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
-  end
-
   create_table "game_data_skills", :force => true do |t|
     t.string   "name"
     t.text     "definition"
@@ -1318,23 +1311,6 @@ ActiveRecord::Schema.define(:version => 20130430132103) do
 
   add_index "result_points", ["passed_day_id"], :name => "index_result_points_on_passed_day_id"
   add_index "result_points", ["point_id"], :name => "index_result_points_on_point_id"
-
-  create_table "result_products", :force => true do |t|
-    t.integer  "passed_day_id"
-    t.integer  "product_id"
-    t.string   "name"
-    t.text     "caption"
-    t.integer  "lv"
-    t.integer  "lv_exp"
-    t.integer  "lv_cap"
-    t.integer  "lv_cap_exp"
-    t.boolean  "forget"
-    t.datetime "created_at",    :null => false
-    t.datetime "updated_at",    :null => false
-  end
-
-  add_index "result_products", ["passed_day_id"], :name => "index_result_products_on_passed_day_id"
-  add_index "result_products", ["product_id"], :name => "index_result_products_on_product_id"
 
   create_table "result_purchases", :force => true do |t|
     t.integer  "passed_day_id"

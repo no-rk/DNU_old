@@ -8,9 +8,18 @@ class GameData::Art < ActiveRecord::Base
   
   after_save :sync_game_data
   
-  scope :find_all_by_art_type_name, lambda{ |art_type_name|
+  scope :find_all_by_type, lambda{ |art_type_name|
     art_type_arel = GameData::ArtType.arel_table
     where(art_type_arel[:name].eq(art_type_name)).includes(:art_type)
+  }
+  
+  scope :find_by_name, lambda{ |name|
+    where(:name => name).includes(:art_type)
+  }
+  
+  scope :find_by_type_and_name, lambda{ |art_type_name,name|
+    art_type_arel = GameData::ArtType.arel_table
+    where(art_type_arel[:name].eq(art_type_name)).includes(:art_type).where(:name => name)
   }
   
   def type=(name)

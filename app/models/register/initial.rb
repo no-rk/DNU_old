@@ -52,19 +52,10 @@ class Register::Initial < ActiveRecord::Base
     end
     # 初期技能を結果に反映
     self.init_arts.each do |init_art|
-      self.user.create_result!(:art, {
-        :art        => init_art.art,
-        :lv         => 5,
-        :lv_exp     => 0,
-        :lv_cap     => 5,
-        :lv_cap_exp => 0,
-        :forget     => false
-      })
+      self.user.add_art!({ init_art.type => init_art.name }, 5)
     end
     # 初期技能に対応した装備を結果に反映
-    self.user.add_item!({
-      self.init_arts.first.art.name => "初期装備"
-    })
+    self.user.add_item!({ self.init_arts.find{|v| v.type == "武器" }.name => "初期装備" })
     # テスト用のアイテムを結果に反映
     5.times{ self.user.add_item!("材料"=>"テスト材料") }
     self.user.add_item!("戦物"=>"謎の物質")
@@ -73,21 +64,11 @@ class Register::Initial < ActiveRecord::Base
       self.user.add_event!(event.kind => event.name)
     end
     # 守護竜に対応した竜魂を結果に反映
-    dragon_souls = GameData::ArtType.where(:name => "竜魂").first.arts
-    self.user.create_result!(:art, {
-      :art    => dragon_souls[self.init_guardian.guardian.id.to_i-1],
-      :lv     => 5,
-      :lv_exp => 0,
-      :forget => false
-    })
+    dragon_soul = GameData::ArtType.where(:name => "竜魂").first.arts[self.init_guardian.guardian.id.to_i-1]
+    self.user.add_art!({ dragon_soul.type => dragon_soul.name }, 5)
     # 初期生産を結果に反映
-    GameData::Product.find_each do |product|
-      self.user.create_result!(:product, {
-        :product => product,
-        :lv      => 1,
-        :lv_exp  => 0,
-        :forget  => false
-      })
+    GameData::Art.find_all_by_type("生産").each do |product|
+      self.user.add_art!(product.type => product.name)
     end
     # 初期ポイントを結果に反映
     GameData::Point.find_each do |point|

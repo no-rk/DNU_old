@@ -6,6 +6,10 @@ class Register::InitArt < ActiveRecord::Base
   
   has_one :art_type, :through => :art, :class_name => "GameData::ArtType"
   
+  def name
+    self.art.try(:name)
+  end
+  
   def type
     @type || self.art_type.try(:name)
   end
