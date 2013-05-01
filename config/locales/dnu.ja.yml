@@ -26,20 +26,18 @@ ja:
       game_data/skill: 技
       game_data/item_skill: 戦物
       game_data/item_use: 使用
-      game_data/guardian: 守護竜
+      game_data/guardian: 守護
       game_data/status: 能力
       game_data/art_type: 技能種別
       game_data/art: 技能
       game_data/word: 言葉
       game_data/disease: 状態異常
       game_data/battle_value: 戦闘値
-      game_data/product: 生産
       game_data/element: 属性
       game_data/battle_setting: 戦闘設定
 
       result/status: 能力
       result/art: 技能
-      result/product: 生産
       result/ability: アビリティ
       result/skill: 技
       result/inventory: 所持品
@@ -161,6 +159,11 @@ ja:
         kind: 戦闘設定種類
         name: 戦闘設定名
         caption: 戦闘設定説明
+      
+      game_data/guardian:
+        art: 技能
+        name: 守護名
+        caption: 守護説明
       
       game_data/map:
         name: マップ名

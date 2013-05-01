@@ -1,0 +1,6 @@
+= render 'game_data/error', { game_data_error: @guardian }
+= simple_form_for(@guardian) do |form_guardian|
+  = form_guardian.association :art
+  = form_guardian.input :name
+  = form_guardian.input :caption
+  = form_guardian.submit class: "btn btn-large btn-success"

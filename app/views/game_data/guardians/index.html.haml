@@ -1,0 +1,8 @@
+= link_to("新規#{@guardians.first.class.model_name.human}作成", new_game_data_guardian_path)
+%br
+- @guardians.each do |guardian|
+  [#{@guardians.first.class.model_name.human}]
+  #{guardian.name}
+  = link_to("編集", edit_game_data_guardian_path(guardian.id))
+  %br
+= paginate @guardians
