@@ -1,0 +1,4 @@
+= render 'game_data/error', { game_data_error: @art_effect }
+= simple_form_for(@art_effect) do |form_art_effect|
+  = form_art_effect.input :definition, :input_html => { :class => :span9, :rows => 40 }
+  = form_art_effect.submit class: "btn btn-large btn-success"

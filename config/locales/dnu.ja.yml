@@ -30,6 +30,7 @@ ja:
       game_data/status: 能力
       game_data/art_type: 技能種類
       game_data/art: 技能
+      game_data/art_effect: 技能効果
       game_data/word: 言葉
       game_data/disease: 状態異常
       game_data/battle_value: 戦闘値
@@ -174,6 +175,13 @@ ja:
         art_type: 技能種類
         name: 技能名
         caption: 技能説明
+      
+      game_data/art_effect:
+        art: 技能
+        art_id: 技能
+        kind: 技能効果種類
+        name: 技能効果名
+        definition: 技能効果定義
       
       game_data/guardian:
         art: 技能

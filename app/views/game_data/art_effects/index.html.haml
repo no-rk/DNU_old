@@ -1,0 +1,8 @@
+= link_to("新規#{@art_effects.first.class.model_name.human}作成", new_game_data_art_effect_path)
+%br
+- @art_effects.each do |art_effect|
+  [#{art_effect.kind}]
+  #{art_effect.name}
+  = link_to("編集", edit_game_data_art_effect_path(art_effect.id))
+  %br
+= paginate @art_effects

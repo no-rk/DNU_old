@@ -1,0 +1,2 @@
+module GameData::ArtEffectsHelper
+end
