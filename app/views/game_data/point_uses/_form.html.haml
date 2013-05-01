@@ -1,0 +1,6 @@
+= render 'game_data/error', { game_data_error: @point_use }
+= simple_form_for(@point_use) do |form_point_use|
+  = form_point_use.association :point
+  = form_point_use.input :status
+  = form_point_use.association :art_type
+  = form_point_use.submit class: "btn btn-large btn-success"

@@ -20,7 +20,7 @@ module DNU
         # キャラ作成済みの各ユーザー
         User.already_make.find_each do |user|
           # 最新宣言に日数の情報を付与する
-          [:main, :trade, :product, :event, :battle, :duel, :competition, :skill, :ability, :character].each do |form_name|
+          [:main, :trade, :product, :event, :battle, :duel, :competition, :skill, :character].each do |form_name|
             user_form = user.send("register_#{form_name.to_s.pluralize}").first
             if user_form and @new_day
               # 新登録があるならそれを採用
@@ -57,7 +57,7 @@ module DNU
           end
           user.create_result!(:passed_day, { :day => now_day, :passed_day => (now_day.day.to_i - user.creation_day.to_i) })
           # 前日の結果を初期値としてコピー
-          [:ability, :art, :inventory, :place, :point, :skill, :status, :event].each do |result_name|
+          [:art, :inventory, :place, :point, :skill, :status, :event].each do |result_name|
             user.result(result_name, now_day.before_i).each do |result|
               result_c = DNU::DeepClone.register(result)
               result_c.passed_day = user.result(:passed_day, now_day.day).last
@@ -66,7 +66,7 @@ module DNU
           end
           
           # 設定を結果に反映
-          [:skill, :ability].each do |setting_name|
+          [:skill].each do |setting_name|
             if user.register(setting_name).present?
               user.register(setting_name).send("#{setting_name}_confs").each do |conf|
                 result = user.result(setting_name).where("#{setting_name}_id" => conf.send("game_data_#{setting_name}_id")).first

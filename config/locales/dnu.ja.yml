@@ -10,7 +10,6 @@ ja:
       game_data/weapon: 武器
       game_data/train: 訓練
       game_data/learning_condition: 習得条件
-      game_data/ability: アビリティ
       game_data/character: キャラクター
       game_data/enemy_list: 敵リスト
       game_data/enemy_territory: 敵出現地
@@ -20,6 +19,7 @@ ja:
       game_data/character_type: キャラクター種類
       game_data/landform: 地形
       game_data/point: ポイント
+      game_data/point_use: ポイント用途
       game_data/item: アイテム
       game_data/sup: 付加
       game_data/trap: 罠
@@ -38,7 +38,6 @@ ja:
 
       result/status: 能力
       result/art: 技能
-      result/ability: アビリティ
       result/skill: 技
       result/inventory: 所持品
       result/item: アイテム
@@ -66,8 +65,6 @@ ja:
 
       register/skill: &skill
         技
-      register/ability: &ability
-        アビリティ
 
       register/message: &message
         メッセージ
@@ -153,7 +150,12 @@ ja:
         caption: ポイント説明
         non_negative: 非負
         protect: 送付不可
-        train: 訓練
+      
+      game_data/point_use:
+        point: ポイント
+        status: 能力
+        art_type: 技能種類
+        art_type_id: 技能種類
       
       game_data/battle_setting:
         kind: 戦闘設定種類
@@ -214,10 +216,6 @@ ja:
       game_data/item_use:
         name: 使用名
         definition: 使用定義
-      
-      game_data/ability:
-        name: アビリティ名
-        definition: アビリティ定義
       
       game_data/item:
         kind: アイテム種類
@@ -335,11 +333,6 @@ ja:
         caption: 技の説明
       register/skill/skill_confs/skill_name: *skill_name
       
-      register/ability_name: &ability_name
-        name: アビリティ名
-        caption: アビリティの説明
-      register/ability/ability_confs/ability_name: *ability_name
-      
       register/profile: &profile
         age: 年齢
         gender: 性別
@@ -446,9 +439,6 @@ ja:
         -
           - *skill
           - skills
-        -
-          - *ability
-          - abilities
 
   ajax:
     message:
@@ -488,7 +478,6 @@ ja:
         Sup: 付加
         Trap: 罠
         Serif: セリフ
-        Ability: アビリティ
         TemporaryEffect: 一時効果
         PC: PC
         NPC: NPC

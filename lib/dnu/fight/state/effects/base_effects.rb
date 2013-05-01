@@ -3,7 +3,7 @@ module DNU
     module State
       class BaseEffects < Array
         
-        attr_reader :LV, :history, :parent
+        attr_reader :LV, :history, :parent, :kind
         attr_accessor :interrupt
         
         def child_name(tree)
@@ -16,6 +16,7 @@ module DNU
         def initialize(tree)
           @parent = tree[:parent]
           tree = Marshal.load(Marshal.dump(tree)) # parentはcloneしない
+          @kind = tree[:kind].try(:to_sym)
           @name = tree[:name].try(:to_sym) || "名称未定義"
           @LV = tree[:lv].nil? ? nil : DNU::Fight::State::BaseValue.new(nil, tree[:lv])
           @LV.start(1, 5) if @LV.present?

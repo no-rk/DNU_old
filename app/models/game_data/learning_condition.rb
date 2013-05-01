@@ -34,8 +34,11 @@ class GameData::LearningCondition < ActiveRecord::Base
   }
   
   def self.find_learnable(state, type = nil)
-    if type.present?
-      find_by_state(state).where(:learnable_type => "GameData::#{type.to_s.camelize}").map{ |r| r.learnable }
+    case type.try(:to_sym)
+    when :skill
+      find_by_state(state).where(:learnable_type => "GameData::Skill").map{ |r| r.learnable }
+    when :art
+      find_by_state(state).where(:learnable_type => "GameData::ArtEffect").map{ |r| r.learnable.art }
     else
       find_by_state(state).map{ |r| r.learnable }
     end

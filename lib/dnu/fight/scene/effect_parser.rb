@@ -293,16 +293,16 @@ class EffectParser < Parslet::Parser
     alternation_from_array(GameData::Sup.pluck(:name))
   }
   
-  rule(:ability_name) {
-    alternation_from_array(GameData::Ability.pluck(:name))
-  }
-  
   rule(:point_name) {
     alternation_from_array(GameData::Point.pluck(:name))
   }
   
   rule(:item_kind_and_name) {
     alternation_from_hash(GameData::Item.all.map{|r| { r.kind => r.name } })
+  }
+  
+  rule(:art_kind_and_name) {
+    alternation_from_hash(GameData::Art.includes(:art_type).all.map{|r| { r.type => r.name } })
   }
   
   rule(:character_kind_and_name) {
@@ -1576,7 +1576,7 @@ class EffectParser < Parslet::Parser
   # learning_conditions
   
   rule(:learning_condition) {
-    (art_name | ability_name).as(:name) >> level >> natural_number.as(:lv)
+    art_name.as(:name) >> level >> natural_number.as(:lv)
   }
   
   rule(:learning_condition_wrap) {
@@ -1716,7 +1716,7 @@ class EffectParser < Parslet::Parser
     root_processes.as(:do).repeat(1).as(:effects)
   }
   
-  # ability_definition
+  # art_effect_definition
   
   rule(:lv_effects) {
     level >> natural_number.as(:lv) >> separator >> (newline.absent? >> any).repeat(1).as(:caption) >> newline >>
@@ -1728,10 +1728,9 @@ class EffectParser < Parslet::Parser
     sup_effects.as(:effects)
   }
   
-  rule(:ability_definition) {
-    bra >> str('アビリティ') >> ket >> (newline.absent? >> any).repeat(1).as(:name) >> newline >>
+  rule(:art_effect_definition) {
+    art_kind_and_name >> newline >>
     learning_conditions.maybe >>
-    partition >> (partition.absent? >> any).repeat(1).as(:caption) >> partition >>
     sup_effects.as(:effects).maybe >>
     (
       lv_effects |
@@ -1744,7 +1743,7 @@ class EffectParser < Parslet::Parser
   rule(:definitions) {
     (
       comment |
-      ability_definition.as(:ability) |
+      art_effect_definition.as(:art_effect) |
       sup_definition.as(:sup) |
       disease_definition.as(:disease) |
       skill_definition.as(:skill)
@@ -1849,10 +1848,10 @@ class EffectParser < Parslet::Parser
     sup_effects.as(:effects)
   }
   
-  # ability_setting
+  # art_effect_setting
   
-  rule(:ability_setting) {
-    bra >> str('アビリティ') >> ket >> ability_name.as(:name) >>
+  rule(:art_effect_setting) {
+    art_kind_and_name >>
     level >> natural_number.as(:lv) >> newline.maybe
   }
   
@@ -1861,7 +1860,7 @@ class EffectParser < Parslet::Parser
   rule(:settings) {
     (
       comment |
-      ability_setting.as(:ability) |
+      art_effect_setting.as(:art_effect) |
       status_setting.as(:status) |
       equip_setting.as(:equip) |
       sup_setting.as(:sup) |

@@ -1,6 +1,0 @@
-%h1
-  - if @ability_id.present?
-    = @abilities[@ability_id][:nickname]
-  - else
-    = @register_ability.class.model_name.human.downcase
-= render 'form', { :register_ability => @register_ability }

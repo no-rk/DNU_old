@@ -78,7 +78,6 @@ class ResultController < ApplicationController
     @points       = this_user.result(:point,     @day_i).includes(:point).all
     @statuses     = this_user.result(:status,    @day_i).includes(:status).all
     @arts         = this_user.result(:art,       @day_i).where(:forget => false).includes(:art).all
-    @abilities    = this_user.result(:ability,   @day_i).where(:forget => false).includes(:ability).all
     @skills       = this_user.result(:skill,     @day_i).where(:forget => false).includes(:skill).all
     @inventories  = this_user.result(:inventory, @day_i).includes(:type).includes(:result_equips).order(:number).all
     @events       = this_user.result(:event, @day_i).where(GameData::Event.arel_table[:kind].in(["共通", "通常"])).includes(:event).all

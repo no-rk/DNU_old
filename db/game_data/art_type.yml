@@ -34,3 +34,9 @@
   :forget: false
   :lv_cap: false
   :train: true
+- :name: "アビリティ"
+  :caption: "上位技能的なの。"
+  :blossom: false
+  :forget: true
+  :lv_cap: false
+  :train: true

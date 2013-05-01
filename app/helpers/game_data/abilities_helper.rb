@@ -1,2 +1,0 @@
-module GameData::AbilitiesHelper
-end

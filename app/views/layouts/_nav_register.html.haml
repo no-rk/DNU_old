@@ -1,4 +1,4 @@
-- abilities = current_user.result(:ability).where(:forget => false).includes(:ability).all
+- art_effects = current_user.result(:art_effect).includes(:art).all
 
 .sidebar-nav
   %ul.nav.nav-list
@@ -23,12 +23,9 @@
       %li.nav-header 設定
       %li{:class => active_current(new_register_skill_path)}
         %a{:href => new_register_skill_path}= Register::Skill.model_name.human
-      - if abilities.count > 0
-        %li{:class => active_current(new_register_ability_path)}
-          %a{:href => new_register_ability_path}= Register::Ability.model_name.human
-        - abilities.each do |ability|
-          %li{:class => active_current(register_ability_id_path(ability.ability_id))}
-            %a{:href => register_ability_id_path(ability.ability_id)} └ #{ability.nickname}
+      - if art_effects.count > 0
+        - art_effects.each do |art_effect|
+          = art_effect.art.name
       %li.nav-header 交流
       - [:message, :community, :character, :image].each do |exchange|
         %li{:class => active_current(send("new_register_#{exchange}_path"))}

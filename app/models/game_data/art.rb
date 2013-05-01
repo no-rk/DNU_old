@@ -3,6 +3,9 @@ class GameData::Art < ActiveRecord::Base
   has_one :train, :as => :trainable
   attr_accessible :name, :caption, :type, :art_type_id
   
+  has_one  :art_effect
+  has_many :result_arts, :class_name => "Result::Art"
+  
   validates :art_type, :presence => true
   validates :name,     :presence => true, :uniqueness => true
   
@@ -21,6 +24,10 @@ class GameData::Art < ActiveRecord::Base
     art_type_arel = GameData::ArtType.arel_table
     where(art_type_arel[:name].eq(art_type_name)).includes(:art_type).where(:name => name)
   }
+  
+  def train_point
+    @train_point ||= GameData::Point.find_by_use(:art_type_id, self.art_type.id)
+  end
   
   def type=(name)
     self.art_type = GameData::ArtType.find_by_name(name)

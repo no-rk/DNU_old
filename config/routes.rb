@@ -15,6 +15,7 @@ DNU::Application.routes.draw do
   namespace :game_data do resources :character_types,   :except => [:show, :destroy] end
   namespace :game_data do resources :landforms,         :except => [:show, :destroy] end
   namespace :game_data do resources :points,            :except => [:show, :destroy] end
+  namespace :game_data do resources :point_uses,        :except => [:show, :destroy] end
   namespace :game_data do resources :battle_settings,   :except => [:show, :destroy] end
   namespace :game_data do resources :art_types,         :except => [:show, :destroy] end
   namespace :game_data do resources :arts,              :except => [:show, :destroy] end
@@ -27,7 +28,6 @@ DNU::Application.routes.draw do
   namespace :game_data do resources :skills,            :except => [:show, :destroy] end
   namespace :game_data do resources :item_skills,       :except => [:show, :destroy] end
   namespace :game_data do resources :item_uses,         :except => [:show, :destroy] end
-  namespace :game_data do resources :abilities,         :except => [:show, :destroy] end
   namespace :game_data do resources :items,             :except => [:show, :destroy] end
   namespace :game_data do resources :characters,        :except => [:show, :destroy] end
   namespace :game_data do resources :enemy_lists,       :except => [:show, :destroy] end
@@ -55,8 +55,6 @@ DNU::Application.routes.draw do
   namespace :register do resources :initials,    :only => [ :show, :new, :create, :update ] end
 
   namespace :register do resources :skills end
-  namespace :register do resources :abilities end
-  namespace :register do get 'abilities/:ability_id/new' => 'abilities#ability_id', :as => 'ability_id' end
 
   namespace :register do resources :makes, :only => [ :new, :create ] end
 
@@ -95,8 +93,8 @@ DNU::Application.routes.draw do
   post "tests/skill"
   get  "tests/sup"
   post "tests/sup"
-  get  "tests/ability"
-  post "tests/ability"
+  get  "tests/art_effect"
+  post "tests/art_effect"
   get  "tests/effects"
   post "tests/effects"
 

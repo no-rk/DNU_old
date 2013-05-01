@@ -34,12 +34,6 @@ ENo.#{@id} #{@profile.name}
   #{art.nickname} LV#{art.lv}#{"(熟練#{art.lv_cap})" if art.lv_cap.present?}
   %br
 %br
-アビリティ
-%br
-- @abilities.each do |ability|
-  #{ability.nickname} LV#{ability.lv}#{"(熟練#{ability.lv_cap})" if ability.lv_cap.present?}
-  %br
-%br
 技
 %br
 - @skills.each do |skill|

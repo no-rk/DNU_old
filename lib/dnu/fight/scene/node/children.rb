@@ -21,6 +21,7 @@ module DNU
           history[:b_or_a] = @tree[:b_or_a]
           history[:id]     = @tree[:effects].object_id
           history[:type]   = @tree[:effects].type
+          history[:kind]   = @tree[:effects].kind
           history[:name]   = @tree[:effects].name
           @tree[:effects].history << (history[:children].extend FindHistory)
           catch :"#{@tree[:effects].type}#{@tree[:effects].object_id}" do

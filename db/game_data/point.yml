@@ -4,24 +4,19 @@
   :caption: "使用されるお金の単位です。増殖しません。"
   :non_negative: false
   :protect: false
-  :train: 
 - :name: NP
   :caption: "能力を鍛錬する際に使用するポイントです。"
   :non_negative: true
   :protect: true
-  :train: Status
 - :name: GP
   :caption: "技能を鍛錬する際に使用するポイントです。"
   :non_negative: true
   :protect: true
-  :train: Art
 - :name: SP
   :caption: "生産を鍛錬する際に使用するポイントです。"
   :non_negative: true
   :protect: true
-  :train: Product
 - :name: AP
   :caption: "アビリティを鍛錬する際に使用するポイントです。"
   :non_negative: true
   :protect: true
-  :train: Ability

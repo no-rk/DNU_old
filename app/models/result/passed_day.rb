@@ -23,7 +23,6 @@ class Result::PassedDay < ActiveRecord::Base
   has_many :result_points,        :dependent => :destroy, :class_name => "Result::Point"
   has_many :result_statuses,      :dependent => :destroy, :class_name => "Result::Status"
   has_many :result_arts,          :dependent => :destroy, :class_name => "Result::Art"
-  has_many :result_abilities,     :dependent => :destroy, :class_name => "Result::Ability"
   has_many :result_skills,        :dependent => :destroy, :class_name => "Result::Skill"
   has_many :result_inventories,   :dependent => :destroy, :class_name => "Result::Inventory"
   has_many :result_places,        :dependent => :destroy, :class_name => "Result::Place"

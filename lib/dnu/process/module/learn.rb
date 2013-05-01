@@ -21,19 +21,14 @@ module DNU
               })
             end
           end
-          # アビリティ習得
-          GameData::LearningCondition.find_learnable(result_state, :ability).each do |ability|
+          # 技能習得
+          GameData::LearningCondition.find_learnable(result_state, :art).each do |art|
             # いままで未修得だったら習得
-            if user.result(:ability).where(:ability_id => ability.id).count == 0
-              user.create_result!(:ability, {
-                :ability => ability,
-                :lv => 1,
-                :lv_exp => 0,
-                :forget => false
-              })
+            if user.result(:art).where(:art_id => art.id).count == 0
+              user.add_art!(art.type => art.name)
               user.create_result!(:learn, {
-                :learnable => ability,
-                :first     => Result::Ability.first_learn?(ability.id)
+                :learnable => art,
+                :first     => Result::Art.first_learn?(art.id)
               })
             end
           end

@@ -1,8 +1,0 @@
-- ability_id = form_ability_conf.object.game_data_ability_id
-= form_ability_conf.simple_fields_for :ability_name, :wrapper => :simple, :defaults => { :as => (:plain if @read_only), :user => current_user, :input_html => { :class => :'span2' } } do |form_ability_name|
-  - if @ability_id.present? and @ability_id != ability_id
-    = form_ability_name.input :name, :as => :hidden
-    = form_ability_name.input :caption, :as => :hidden
-  - else
-    = form_ability_name.input :name, :wrapper => :bootstrap, :input_html => { :class => :'span6' }
-    = form_ability_name.input :caption, :wrapper => :bootstrap, :input_html => { :class => :'document span9', :rows => 2 }, :wrapper_html => { :class => :clearfix }

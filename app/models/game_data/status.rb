@@ -9,6 +9,10 @@ class GameData::Status < ActiveRecord::Base
   before_validation :set_game_data
   after_save        :sync_game_data
   
+  def train_point
+    @train_point ||= GameData::Point.find_by_use(:status, true)
+  end
+  
   private
   def set_game_data
     definition_tree = DNU::Data.parse_from_model(self, true)

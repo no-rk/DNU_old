@@ -32,7 +32,6 @@ class Result::EventState < ActiveRecord::Base
   has_many :result_statuses,      :through => :passed_day, :class_name => "Result::Status"
   has_many :result_arts,          :through => :passed_day, :class_name => "Result::Art"
   has_many :result_products,      :through => :passed_day, :class_name => "Result::Product"
-  has_many :result_abilities,     :through => :passed_day, :class_name => "Result::Ability"
   has_many :result_skills,        :through => :passed_day, :class_name => "Result::Skill"
   has_many :result_inventories,   :through => :passed_day, :class_name => "Result::Inventory"
   has_many :result_places,        :through => :passed_day, :class_name => "Result::Place"

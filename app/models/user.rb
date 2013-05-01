@@ -11,7 +11,6 @@ class User < ActiveRecord::Base
   has_many :register_competitions, :order => "updated_at DESC", :class_name => "Register::Competition"
   
   has_many :register_skills,       :order => "updated_at DESC", :class_name => "Register::Skill"
-  has_many :register_abilities,    :order => "updated_at DESC", :class_name => "Register::Ability"
   
   has_many :register_messages,     :order => "updated_at DESC", :class_name => "Register::Message"
   has_many :register_communities,  :order => "updated_at DESC", :class_name => "Register::Community"
@@ -44,7 +43,7 @@ class User < ActiveRecord::Base
   has_many :result_points,        :through => :result_passed_days, :class_name => "Result::Point"
   has_many :result_statuses,      :through => :result_passed_days, :class_name => "Result::Status"
   has_many :result_arts,          :through => :result_passed_days, :class_name => "Result::Art"
-  has_many :result_abilities,     :through => :result_passed_days, :class_name => "Result::Ability"
+  has_many :result_art_effects,   :through => :result_arts,        :class_name => "GameData::ArtEffect", :source => :art_effect
   has_many :result_battle_values, :through => :result_passed_days, :class_name => "Result::BattleValue"
   has_many :result_skills,        :through => :result_passed_days, :class_name => "Result::Skill"
   has_many :result_inventories,   :through => :result_passed_days, :class_name => "Result::Inventory"
@@ -122,7 +121,6 @@ class User < ActiveRecord::Base
   def result_state(day_i = Day.last_day_i)
     state = {}
     state = result(:art,     day_i).where(:forget => false).includes(:art    ).inject(state){ |h,r| h.tap{ h[r.art.name]     = r.effective_lv } }
-    state = result(:ability, day_i).where(:forget => false).includes(:ability).inject(state){ |h,r| h.tap{ h[r.ability.name] = r.effective_lv } }
     state
   end
   
@@ -131,7 +129,6 @@ class User < ActiveRecord::Base
     train = {}
     train = result(:status,  day_i).where(train_arel[:visible].eq(true)).includes(:status,  :train).inject(train){ |h,r| h.tap{ h[r.nickname] = r.train.id } }
     train = result(:art,     day_i).where(train_arel[:visible].eq(true)).where(:forget => false).includes(:art,     :train).inject(train){ |h,r| h.tap{ h[r.nickname] = r.train.id } }
-    train = result(:ability, day_i).where(train_arel[:visible].eq(true)).where(:forget => false).includes(:ability, :train).inject(train){ |h,r| h.tap{ h[r.nickname] = r.train.id } }
     train
   end
   
@@ -140,7 +137,6 @@ class User < ActiveRecord::Base
     train = {}
     train = result(:status,  day_i).where(train_arel[:visible].eq(true)).includes(:status,  :train).inject(train){ |h,r| h.tap{ h[r.nickname] = r.train.id } }
     train = result(:art,     day_i).where(train_arel[:visible].eq(true)).includes(:art,     :train).inject(train){ |h,r| h.tap{ h[r.nickname] = r.train.id } }
-    train = result(:ability, day_i).where(train_arel[:visible].eq(true)).includes(:ability, :train).inject(train){ |h,r| h.tap{ h[r.nickname] = r.train.id } }
     train
   end
   
@@ -190,6 +186,9 @@ class User < ActiveRecord::Base
     when :battle
       day_arel  = Day.arel_table
       self.send("result_#{type.to_s.pluralize}").where(day_arel[:day].eq(day_i - 1)).includes(:day)
+    when :art_effect
+      day_arel  = Day.arel_table
+      self.send("result_#{type.to_s.pluralize}").where(day_arel[:day].eq(day_i)).includes(:days)
     else
       day_arel  = Day.arel_table
       self.send("result_#{type.to_s.pluralize}").where(day_arel[:day].eq(day_i)).includes(:day)
@@ -261,7 +260,7 @@ class User < ActiveRecord::Base
     success = false
     if !self.result(:art, day_i).exists?(:art_id => art.id, :forget => false) and self.result(:art, day_i).where(:forget => false).count < 6
       point_arel = GameData::Point.arel_table
-      result_point = self.result(:point, day_i).where(point_arel[:name].eq(:GP)).includes(:point).first
+      result_point = self.result(:point, day_i).where(point_arel[:name].eq(art.train_point.name)).includes(:point).first
       result_point.value -= 10
       if result_point.save
         success = add_art!({ art.type => art.name }, 1, day_i)
@@ -277,7 +276,7 @@ class User < ActiveRecord::Base
       result_art.forget = true
       if result_art.save
         point_arel = GameData::Point.arel_table
-        result_point = result_art.result_points.where(point_arel[:name].eq(:GP)).includes(:point).first
+        result_point = result_art.result_points.where(point_arel[:name].eq(art.train_point.name)).includes(:point).first
         result_point.value += result_art.forget_point
         result_point.save!
         success = true
@@ -370,7 +369,7 @@ class User < ActiveRecord::Base
       :user  => self,
       :day_i => day_i,
       :settings => result(:status,  day_i).map{|r| r.tree } +
-                   result(:ability, day_i).map{|r| r.tree } +
+                   result(:art, day_i).map{|r| r.tree }.compact +
                    result(:equip,   day_i).where(:success => true).map{|r| r.tree } +
                    (register(:battle, day_i).try(:battle_settings).try(:map){|r| r.tree } || []) +
                    (register(:battle, day_i).try(:item_skill_settings).try(:map){|r| r.tree }.try(:compact) || [])

@@ -97,11 +97,11 @@ class TestsController < ApplicationController
     parse_from_text(:sup)
   end
   
-  def ability
-    @words = ["アビリティ定義"]
+  def art_effect
+    @words = ["技能効果定義"]
     @text  = params[:text]
-    @type  = :ability
-    parse_from_text(:ability)
+    @type  = :art_effect
+    parse_from_text(:art_effect)
   end
   
   def skill
@@ -201,7 +201,7 @@ class TestsController < ApplicationController
     html
   end
   
-  def history_html_ability(tree)
+  def history_html_art_effect(tree)
     html = ""
     lv = rand(40)+1
     tree.merge!(:lv => lv) if lv>=1
