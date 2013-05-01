@@ -37,14 +37,10 @@ class Register::MakesController < Register::ApplicationController
     
     # ランダム生成
     if params[:random].present?
-      @register_character.profile.name     = 8.times.inject(""){ |s,v| s << [0x3041 + rand(0x3094 - 0x3041)].pack('U') } if @register_character.profile.name.blank?
-      @register_character.profile.nickname = 4.times.inject(""){ |s,v| s << [0x3041 + rand(0x3094 - 0x3041)].pack('U') } if @register_character.profile.nickname.blank?
+      @register_character.profile.name     = (6+rand(3)).times.inject(""){ |s,v| s << [0x3041 + rand(0x3094 - 0x3041)].pack('U') } if @register_character.profile.name.blank?
+      @register_character.profile.nickname = (2+rand(3)).times.inject(""){ |s,v| s << [0x3041 + rand(0x3094 - 0x3041)].pack('U') } if @register_character.profile.nickname.blank?
       
-      @register_initial.init_job.job_id           ||= @jobs.values.sample
       @register_initial.init_guardian.guardian_id ||= @guardians.values.sample
-      @arts.values.sample(@register_initial.init_arts.length).each_with_index do |art_id, i|
-        @register_initial.init_arts[i].art_id ||= art_id
-      end
       
       status_values = []
       until status_values.sum == Settings.init_status.counter.total
@@ -55,6 +51,15 @@ class Register::MakesController < Register::ApplicationController
       end
       status_values.each_with_index do |status_value, i|
         @register_initial.init_statuses[i].count = status_value
+      end
+      
+      @register_initial.init_arts.each do |init_art|
+        case init_art.type
+        when "職業"
+          init_art.art_id ||= @jobs.values.sample
+        when "武器"
+          init_art.art_id ||= @arts.values.sample
+        end
       end
     end
     
@@ -102,9 +107,9 @@ class Register::MakesController < Register::ApplicationController
     end
   end
   def set_instance_variables
-    @jobs      ||= GameData::Job.all.inject({}){|h,r| h.tap{h[r.name]=r.id} }
+    @jobs      ||= GameData::Art.find_all_by_art_type_name("職業").all.inject({}){|h,r| h.tap{h[r.name]=r.id} }
     @guardians ||= GameData::Guardian.all.inject({}){|h,r| h.tap{h[r.name]=r.id} }
     @statuses  ||= GameData::Status.all.map{|t| {:id => t.id, :name => t.name} }
-    @arts      ||= GameData::Art.where(GameData::ArtType.arel_table[:name].eq("武器")).includes(:art_type).all.inject({}){|h,r| h.tap{h[r.name]=r.id} }
+    @arts      ||= GameData::Art.find_all_by_art_type_name("武器").all.inject({}){|h,r| h.tap{h[r.name]=r.id} }
   end
 end

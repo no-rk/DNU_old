@@ -5,8 +5,6 @@ ENo.#{@id} #{@profile.name}
 %br
 愛称 #{@profile.nickname}
 %br
-職業 #{@job.nickname} LV#{@job.lv}
-%br
 守護竜 #{@guardian.name}
 %br
 現在地 #{link_to(@place.name, result_map_path(@day_i, @place.map.name), :target => :_blank)}

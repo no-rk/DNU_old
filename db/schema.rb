@@ -64,11 +64,12 @@ ActiveRecord::Schema.define(:version => 20130430132103) do
   create_table "game_data_art_types", :force => true do |t|
     t.string   "name"
     t.text     "caption"
-    t.boolean  "blossom"
-    t.boolean  "forget"
-    t.boolean  "lv_cap"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.boolean  "blossom",    :default => false
+    t.boolean  "forget",     :default => false
+    t.boolean  "lv_cap",     :default => false
+    t.boolean  "train",      :default => true
+    t.datetime "created_at",                    :null => false
+    t.datetime "updated_at",                    :null => false
   end
 
   create_table "game_data_arts", :force => true do |t|
@@ -261,13 +262,6 @@ ActiveRecord::Schema.define(:version => 20130430132103) do
     t.string   "name"
     t.text     "definition"
     t.text     "tree"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
-  end
-
-  create_table "game_data_jobs", :force => true do |t|
-    t.string   "name"
-    t.text     "caption"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
@@ -663,16 +657,6 @@ ActiveRecord::Schema.define(:version => 20130430132103) do
 
   add_index "register_init_guardians", ["guardian_id"], :name => "index_register_init_guardians_on_guardian_id"
   add_index "register_init_guardians", ["initial_id"], :name => "index_register_init_guardians_on_initial_id"
-
-  create_table "register_init_jobs", :force => true do |t|
-    t.integer  "initial_id"
-    t.integer  "job_id"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
-  end
-
-  add_index "register_init_jobs", ["initial_id"], :name => "index_register_init_jobs_on_initial_id"
-  add_index "register_init_jobs", ["job_id"], :name => "index_register_init_jobs_on_job_id"
 
   create_table "register_init_statuses", :force => true do |t|
     t.integer  "initial_id"
@@ -1190,23 +1174,6 @@ ActiveRecord::Schema.define(:version => 20130430132103) do
   add_index "result_items", ["type_id"], :name => "index_result_items_on_type_id"
   add_index "result_items", ["user_id"], :name => "index_result_items_on_user_id"
   add_index "result_items", ["way_id"], :name => "index_result_items_on_way_id"
-
-  create_table "result_jobs", :force => true do |t|
-    t.integer  "passed_day_id"
-    t.integer  "job_id"
-    t.string   "name"
-    t.text     "caption"
-    t.integer  "lv"
-    t.integer  "lv_exp"
-    t.integer  "lv_cap"
-    t.integer  "lv_cap_exp"
-    t.boolean  "forget"
-    t.datetime "created_at",    :null => false
-    t.datetime "updated_at",    :null => false
-  end
-
-  add_index "result_jobs", ["job_id"], :name => "index_result_jobs_on_job_id"
-  add_index "result_jobs", ["passed_day_id"], :name => "index_result_jobs_on_passed_day_id"
 
   create_table "result_learns", :force => true do |t|
     t.integer  "passed_day_id"

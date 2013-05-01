@@ -5,7 +5,6 @@
   = simple_fields_for(register_character) do |form_character|
     = render :partial => 'register/characters/form_profile', :locals=>{:register_character=>register_character,:form_character=>form_character,:only_required=>true}
   = simple_fields_for(register_initial) do |form_initial|
-    = render :partial => 'register/initials/form_init_job',      :locals=>{:register_initial=>register_initial,:form_initial=>form_initial}
     = render :partial => 'register/initials/form_init_guardian', :locals=>{:register_initial=>register_initial,:form_initial=>form_initial}
     = render :partial => 'register/initials/form_init_statuses', :locals=>{:register_initial=>register_initial,:form_initial=>form_initial}
     = render :partial => 'register/initials/form_init_arts',     :locals=>{:register_initial=>register_initial,:form_initial=>form_initial}

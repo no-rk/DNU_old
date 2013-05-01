@@ -75,7 +75,6 @@ class ResultController < ApplicationController
     @profile      = this_user.result(:character, @day_i).profile
     @guardian     = this_user.result(:guardian,  @day_i)
     @place        = this_user.result(:place,     @day_i).includes(:map_tip).includes(:map).first
-    @job          = this_user.result(:job,       @day_i).where(:forget => false).includes(:job).first
     @points       = this_user.result(:point,     @day_i).includes(:point).all
     @statuses     = this_user.result(:status,    @day_i).includes(:status).all
     @arts         = this_user.result(:art,       @day_i).where(:forget => false).includes(:art).all

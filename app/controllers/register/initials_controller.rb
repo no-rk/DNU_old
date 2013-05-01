@@ -7,9 +7,9 @@ class Register::InitialsController < Register::ApplicationController
     "new"
   end
   def set_instance_variables
-    @jobs      ||= GameData::Job.all.inject({}){|h,r| h.tap{h[r.name]=r.id} }
+    @jobs      ||= GameData::Art.find_all_by_art_type_name("職業").all.inject({}){|h,r| h.tap{h[r.name]=r.id} }
     @guardians ||= GameData::Guardian.all.inject({}){|h,r| h.tap{h[r.name]=r.id} }
     @statuses  ||= GameData::Status.all.map{|t| {:id => t.id, :name => t.name} }
-    @arts      ||= GameData::Art.where(GameData::ArtType.arel_table[:name].eq("武器")).includes(:art_type).all.inject({}){|h,r| h.tap{h[r.name]=r.id} }
+    @arts      ||= GameData::Art.find_all_by_art_type_name("武器").all.inject({}){|h,r| h.tap{h[r.name]=r.id} }
   end
 end

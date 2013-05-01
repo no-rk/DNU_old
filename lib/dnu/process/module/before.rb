@@ -57,7 +57,7 @@ module DNU
           end
           user.create_result!(:passed_day, { :day => now_day, :passed_day => (now_day.day.to_i - user.creation_day.to_i) })
           # 前日の結果を初期値としてコピー
-          [:ability, :art, :inventory, :job, :place, :point, :product, :skill, :status, :event].each do |result_name|
+          [:ability, :art, :inventory, :place, :point, :product, :skill, :status, :event].each do |result_name|
             user.result(result_name, now_day.before_i).each do |result|
               result_c = DNU::DeepClone.register(result)
               result_c.passed_day = user.result(:passed_day, now_day.day).last

@@ -1,3 +1,0 @@
-= form_initial.simple_fields_for :init_job, :defaults => { :as => (:plain if @read_only), :user => current_user, :input_html => { :class => :'span3' } } do |form_init_job|
-  %br
-  = form_init_job.input :job_id, :collection => @jobs, :input_html => { :'data-url' => help_path(:jobs), :'data-remote' => true, :'data-params' => ("id=#{form_init_job.object.job_id}" if form_init_job.object.job_id), :'data-type' => :json, :'data-help-path' => help_path(:jobs) }

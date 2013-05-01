@@ -1,3 +1,8 @@
 = form_initial.simple_fields_for :init_arts, :defaults => { :as => (:plain if @read_only), :user => current_user, :input_html => { :class => :'span3' } } do |form_init_arts|
   %br
-  = form_init_arts.input :art_id, :wrapper_html => { :class => 'form-inline' }, :collection => @arts, :input_html => { :'data-url' => help_path(:arts), :'data-remote' => true, :'data-params' => ("id=#{form_init_arts.object.art_id}" if form_init_arts.object.art_id), :'data-type' => :json, :'data-help-path' => help_path(:arts) }
+  = form_init_arts.input :type, :as => :hidden
+  - case form_init_arts.object.type
+  - when "職業"
+    = form_init_arts.input :art_id, :label => "初期職業", :wrapper_html => { :class => 'form-inline' }, :collection => @jobs, :input_html => { :'data-url' => help_path(:arts), :'data-remote' => true, :'data-params' => ("id=#{form_init_arts.object.art_id}" if form_init_arts.object.art_id), :'data-type' => :json, :'data-help-path' => help_path(:arts) }
+  - when "武器"
+    = form_init_arts.input :art_id, :label => "初期技能", :wrapper_html => { :class => 'form-inline' }, :collection => @arts, :input_html => { :'data-url' => help_path(:arts), :'data-remote' => true, :'data-params' => ("id=#{form_init_arts.object.art_id}" if form_init_arts.object.art_id), :'data-type' => :json, :'data-help-path' => help_path(:arts) }

@@ -1,7 +1,6 @@
 = simple_form_for(register_initial) do |form_initial|
   = register_initial.updated_at
   = render :partial => 'register/error', :locals=>{:register_error=>register_initial}
-  = render :partial => 'form_init_job',      :locals=>{:register_initial=>register_initial,:form_initial=>form_initial}
   = render :partial => 'form_init_guardian', :locals=>{:register_initial=>register_initial,:form_initial=>form_initial}
   = render :partial => 'form_init_statuses', :locals=>{:register_initial=>register_initial,:form_initial=>form_initial}
   = render :partial => 'form_init_arts',     :locals=>{:register_initial=>register_initial,:form_initial=>form_initial}

@@ -21,7 +21,6 @@ class Result::PassedDay < ActiveRecord::Base
   
   has_many :result_battle_values, :dependent => :destroy, :class_name => "Result::BattleValue"
   has_many :result_points,        :dependent => :destroy, :class_name => "Result::Point"
-  has_many :result_jobs,          :dependent => :destroy, :class_name => "Result::Job"
   has_many :result_statuses,      :dependent => :destroy, :class_name => "Result::Status"
   has_many :result_arts,          :dependent => :destroy, :class_name => "Result::Art"
   has_many :result_products,      :dependent => :destroy, :class_name => "Result::Product"

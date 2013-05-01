@@ -42,7 +42,6 @@ class User < ActiveRecord::Base
   has_many :result_after_moves,   :through => :result_passed_days, :class_name => "Result::AfterMove"
   
   has_many :result_points,        :through => :result_passed_days, :class_name => "Result::Point"
-  has_many :result_jobs,          :through => :result_passed_days, :class_name => "Result::Job"
   has_many :result_statuses,      :through => :result_passed_days, :class_name => "Result::Status"
   has_many :result_arts,          :through => :result_passed_days, :class_name => "Result::Art"
   has_many :result_products,      :through => :result_passed_days, :class_name => "Result::Product"
@@ -123,7 +122,6 @@ class User < ActiveRecord::Base
   
   def result_state(day_i = Day.last_day_i)
     state = {}
-    state = result(:job,     day_i).where(:forget => false).includes(:job    ).inject(state){ |h,r| h.tap{ h[r.job.name]     = r.lv_cap.nil? ? r.lv : [r.lv, r.lv_cap].min } }
     state = result(:art,     day_i).where(:forget => false).includes(:art    ).inject(state){ |h,r| h.tap{ h[r.art.name]     = r.lv_cap.nil? ? r.lv : [r.lv, r.lv_cap].min } }
     state = result(:product, day_i).where(:forget => false).includes(:product).inject(state){ |h,r| h.tap{ h[r.product.name] = r.lv_cap.nil? ? r.lv : [r.lv, r.lv_cap].min } }
     state = result(:ability, day_i).where(:forget => false).includes(:ability).inject(state){ |h,r| h.tap{ h[r.ability.name] = r.lv_cap.nil? ? r.lv : [r.lv, r.lv_cap].min } }
@@ -134,7 +132,6 @@ class User < ActiveRecord::Base
     train_arel = GameData::Train.arel_table
     train = {}
     train = result(:status,  day_i).where(train_arel[:visible].eq(true)).includes(:status,  :train).inject(train){ |h,r| h.tap{ h[r.nickname] = r.train.id } }
-    train = result(:job,     day_i).where(:forget => false).where(train_arel[:visible].eq(true)).includes(:job,     :train).inject(train){ |h,r| h.tap{ h[r.nickname] = r.train.id } }
     train = result(:art,     day_i).where(:forget => false).where(train_arel[:visible].eq(true)).includes(:art,     :train).inject(train){ |h,r| h.tap{ h[r.nickname] = r.train.id } }
     train = result(:product, day_i).where(:forget => false).where(train_arel[:visible].eq(true)).includes(:product, :train).inject(train){ |h,r| h.tap{ h[r.nickname] = r.train.id } }
     train = result(:ability, day_i).where(:forget => false).where(train_arel[:visible].eq(true)).includes(:ability, :train).inject(train){ |h,r| h.tap{ h[r.nickname] = r.train.id } }
@@ -145,7 +142,6 @@ class User < ActiveRecord::Base
     train_arel = GameData::Train.arel_table
     train = {}
     train = result(:status,  day_i).where(train_arel[:visible].eq(true)).includes(:status,  :train).inject(train){ |h,r| h.tap{ h[r.nickname] = r.train.id } }
-    train = result(:job,     day_i).where(train_arel[:visible].eq(true)).includes(:job,     :train).inject(train){ |h,r| h.tap{ h[r.nickname] = r.train.id } }
     train = result(:art,     day_i).where(train_arel[:visible].eq(true)).includes(:art,     :train).inject(train){ |h,r| h.tap{ h[r.nickname] = r.train.id } }
     train = result(:product, day_i).where(train_arel[:visible].eq(true)).includes(:product, :train).inject(train){ |h,r| h.tap{ h[r.nickname] = r.train.id } }
     train = result(:ability, day_i).where(train_arel[:visible].eq(true)).includes(:ability, :train).inject(train){ |h,r| h.tap{ h[r.nickname] = r.train.id } }

@@ -1,16 +1,14 @@
 class Register::Initial < ActiveRecord::Base
   belongs_to :user
 
-  has_one  :init_job     , :dependent => :destroy
   has_one  :init_guardian, :dependent => :destroy
   has_many :init_statuses, :order => "status_id ASC", :dependent => :destroy
   has_many :init_arts    , :order => "art_id ASC"   , :dependent => :destroy
-  accepts_nested_attributes_for :init_job     , :allow_destroy => true
   accepts_nested_attributes_for :init_guardian, :allow_destroy => true
   accepts_nested_attributes_for :init_statuses, :allow_destroy => true
   accepts_nested_attributes_for :init_arts    , :allow_destroy => true
 
-  attr_accessible :init_job_attributes, :init_guardian_attributes, :init_statuses_attributes, :init_arts_attributes
+  attr_accessible :init_guardian_attributes, :init_statuses_attributes, :init_arts_attributes
 
   has_one :guardian, :through => :init_guardian, :class_name => "GameData::Guardian"
 
@@ -19,9 +17,14 @@ class Register::Initial < ActiveRecord::Base
   after_save :save_result
 
   def build_initial
-    self.build_init_job if self.init_job.nil?
     self.build_init_guardian if self.init_guardian.nil?
-    (1-self.init_arts.size).times{self.init_arts.build}
+    ["職業","武器"].each do |art_type|
+      unless self.init_arts.any?{|r| r.type == art_type }
+        self.init_arts.build do |init_art|
+          init_art.type = art_type
+        end
+      end
+    end
   end
 
   private
@@ -86,13 +89,6 @@ class Register::Initial < ActiveRecord::Base
         :forget  => false
       })
     end
-    # 初期職業を結果に反映
-    self.user.create_result!(:job, {
-      :job    => self.init_job.job,
-      :lv     => 1,
-      :lv_exp => 0,
-      :forget => false
-    })
     # 初期ポイントを結果に反映
     GameData::Point.find_each do |point|
       self.user.create_result!(:point, {

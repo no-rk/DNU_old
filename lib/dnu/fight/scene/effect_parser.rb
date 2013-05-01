@@ -281,10 +281,6 @@ class EffectParser < Parslet::Parser
     alternation_from_array(GameData::Art.pluck(:name))
   }
   
-  rule(:job_name) {
-    alternation_from_array(GameData::Job.pluck(:name))
-  }
-  
   rule(:product_name) {
     alternation_from_array(GameData::Product.pluck(:name))
   }
@@ -1584,7 +1580,7 @@ class EffectParser < Parslet::Parser
   # learning_conditions
   
   rule(:learning_condition) {
-    (job_name | art_name | product_name).as(:name) >> level >> natural_number.as(:lv)
+    (art_name | ability_name).as(:name) >> level >> natural_number.as(:lv)
   }
   
   rule(:learning_condition_wrap) {

@@ -26,7 +26,6 @@ ja:
       game_data/skill: 技
       game_data/item_skill: 戦物
       game_data/item_use: 使用
-      game_data/job: 職業
       game_data/guardian: 守護竜
       game_data/status: 能力
       game_data/art_type: 技能種別
@@ -101,7 +100,6 @@ ja:
       register/profile: プロフィール
       register/upload_icon: アップロードアイコン
       register/icon: アイコン
-      register/init_job: 初期職業
       register/init_status: 初期能力
       register/init_art: 初期技能
       register/init_guardian: 初期守護竜
@@ -350,9 +348,6 @@ ja:
         _destroy: 削除
       register/image/upload_icons: *upload_icon
 
-      register/init_job: &init_job
-        job_id: 初期職業
-        job: 初期職業
       register/init_guardian: &init_guardian
         guardian_id: 守護竜
         guardian: 守護竜
@@ -361,7 +356,6 @@ ja:
         art: 初期技能
       register/initial:
         status: 初期能力
-      register/initial/init_job: *init_job
       register/initial/init_guardian: *init_guardian
       register/initial/init_arts: *init_art
 

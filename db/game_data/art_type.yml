@@ -1,0 +1,36 @@
+---
+:data:
+- :name: "職業"
+  :caption: |-
+    ジョブ的なもの。
+    一度決めたら簡単には変えられない。
+  :blossom: false
+  :forget: false
+  :lv_cap: false
+  :train: false
+- :name: "武器"
+  :caption: |-
+    対応する装備品を上手く扱える技能。
+    熟練によりLV制限が課せられる。
+  :blossom: true
+  :forget: true
+  :lv_cap: true
+  :train: true
+- :name: "竜魂"
+  :caption: |-
+    「<b>竜魂</b>」は技能に分類されますが、装備品としての存在はありません。
+    竜魂は来島時にあなたが選択した竜に対応する属性、及び特性を持つ技能となり、最初から習得されています。
+    竜魂の特性は来島時に選択されたものから変更は出来ませんが、
+    属性はゲーム内で入手できるアイテムを使用することで何度でも変更出来ます。
+  :blossom: false
+  :forget: false
+  :lv_cap: false
+  :train: true
+- :name: "生産"
+  :caption: |-
+    何かを作れる感じの技能。
+    最初から何でもできる。
+  :blossom: false
+  :forget: false
+  :lv_cap: false
+  :train: true
