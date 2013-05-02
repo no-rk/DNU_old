@@ -1,6 +1,6 @@
 module ApplicationHelper
   def select_current
-    return controller.controller_name if  controller.action_name == "index"
+    return controller.controller_name if controller.action_name == "index"
   end
   def active_current(url)
     if current_page?(url)

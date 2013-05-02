@@ -1,0 +1,6 @@
+%h1= @register_art.art.name
+= render 'form', { :register_art => @register_art }
+
+= link_to 'Show', register_art_path
+|
+= link_to 'Back', register_arts_path

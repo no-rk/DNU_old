@@ -11,6 +11,7 @@ class User < ActiveRecord::Base
   has_many :register_competitions, :order => "updated_at DESC", :class_name => "Register::Competition"
   
   has_many :register_skills,       :order => "updated_at DESC", :class_name => "Register::Skill"
+  has_many :register_arts,         :order => "updated_at DESC", :class_name => "Register::Art", :include => [:art, :art_effect]
   
   has_many :register_messages,     :order => "updated_at DESC", :class_name => "Register::Message"
   has_many :register_communities,  :order => "updated_at DESC", :class_name => "Register::Community"
@@ -42,8 +43,7 @@ class User < ActiveRecord::Base
   
   has_many :result_points,        :through => :result_passed_days, :class_name => "Result::Point"
   has_many :result_statuses,      :through => :result_passed_days, :class_name => "Result::Status"
-  has_many :result_arts,          :through => :result_passed_days, :class_name => "Result::Art"
-  has_many :result_art_effects,   :through => :result_arts,        :class_name => "GameData::ArtEffect", :source => :art_effect
+  has_many :result_arts,          :through => :result_passed_days, :class_name => "Result::Art", :include => [:art]
   has_many :result_battle_values, :through => :result_passed_days, :class_name => "Result::BattleValue"
   has_many :result_skills,        :through => :result_passed_days, :class_name => "Result::Skill"
   has_many :result_inventories,   :through => :result_passed_days, :class_name => "Result::Inventory"
@@ -88,14 +88,18 @@ class User < ActiveRecord::Base
     self.register_events.where(:day_id => nil)
   end
   
-  def form_event_content_ids
-    new_register_events.uniq.pluck(:event_content_id)
+  def form_event_contents
+    new_register_events.uniq.pluck(:event_content_id).map{ |id| GameData::EventContent.find(id) }
+  end
+  
+  def form_arts
+    self.result(:art).where(:forget => false).map{ |r| r.art }
   end
   
   def register(type, day_i = Day.last_day_i)
     day_arel  = Day.arel_table
     case type.to_sym
-    when :event
+    when :event, :art
       self.send("register_#{type.to_s.pluralize}").except(:order).where(day_arel[:day].eq(day_i)).includes(:day)
     else
       self.send("register_#{type.to_s.pluralize}").except(:order).where(day_arel[:day].eq(day_i)).includes(:day).first
@@ -186,9 +190,6 @@ class User < ActiveRecord::Base
     when :battle
       day_arel  = Day.arel_table
       self.send("result_#{type.to_s.pluralize}").where(day_arel[:day].eq(day_i - 1)).includes(:day)
-    when :art_effect
-      day_arel  = Day.arel_table
-      self.send("result_#{type.to_s.pluralize}").where(day_arel[:day].eq(day_i)).includes(:days)
     else
       day_arel  = Day.arel_table
       self.send("result_#{type.to_s.pluralize}").where(day_arel[:day].eq(day_i)).includes(:day)

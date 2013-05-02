@@ -66,6 +66,8 @@ ja:
 
       register/skill: &skill
         技
+      register/art: &art
+        技能
 
       register/message: &message
         メッセージ
@@ -421,33 +423,6 @@ ja:
     initials:
       status:
         total: "合計が%{total}になるようにしてください。現在%{now}"
-
-    history:
-      options:
-        -
-          - *main
-          - mains
-        -
-          - *trade
-          - trades
-        -
-          - *product
-          - products
-        -
-          - *event
-          - events
-        -
-          - *battle
-          - battles
-        -
-          - *duel
-          - duels
-        -
-          - *competition
-          - competitions
-        -
-          - *skill
-          - skills
 
   ajax:
     message:

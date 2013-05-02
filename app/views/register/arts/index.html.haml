@@ -1,0 +1,8 @@
+%h1= @register_arts.first.class.model_name.human
+- @register_arts.each do |register_art|
+  .alert
+    - if register_art.day.present?
+      %span.badge.badge-important #{register_art.day.day}日
+    = render 'form', { :register_art => register_art }
+    = link_to 'Show', register_art
+= paginate @register_arts

@@ -42,12 +42,17 @@ DNU::Application.routes.draw do
   namespace :register do resources :trades   end
   namespace :register do resources :products end
 
-  namespace :register do resources :events, :except => [:new, :destroy] end
-  namespace :register do get 'events/:event_content_id/new' => 'events#event_content_id', :as => 'event_content_id' end
+  namespace :register do resources :events, :except => [:index, :new, :destroy] end
+  namespace :register do get ':event_content_id/events'     => 'events#index', :as => 'event_content_id_events'    end
+  namespace :register do get ':event_content_id/events/new' => 'events#new',   :as => 'new_event_content_id_event' end
 
   namespace :register do resources :battles      end
   namespace :register do resources :duels        end
   namespace :register do resources :competitions end
+
+  namespace :register do resources :arts, :except => [:index, :new, :destroy] end
+  namespace :register do get ':art_id/arts'     => 'arts#index', :as => 'art_id_arts'    end
+  namespace :register do get ':art_id/arts/new' => 'arts#new',   :as => 'new_art_id_art' end
 
   namespace :register do resources :messages,    :only => [ :show, :new, :create, :update ] end
   namespace :register do resources :communities, :only => [ :show, :new, :create, :update ] end

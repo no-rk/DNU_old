@@ -56,7 +56,7 @@ class Register::ApplicationController < ApplicationController
     self.instance_variable_set("@register_#{name}", register.new_record? ? register : wrap_clone_record(register))
 
     respond_to do |format|
-      format.html { render action: "new" }
+      format.html # new.html.erb
       format.json { render json: register }
     end
   end
@@ -188,7 +188,7 @@ class Register::ApplicationController < ApplicationController
   end
   
   def register_new_record
-    current_user.send("register_#{names}").first || "Register::#{names.classify}".constantize.new
+    current_user.send("register_#{names}").first_or_initialize
   end
   
   def register_edit_record
