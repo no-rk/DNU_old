@@ -9,7 +9,7 @@ module DNU
             user.register(:main).blossoms.includes(:train).each do |blossom|
               user.create_result!(:blossom, {
                 :blossomable => blossom.train.trainable,
-                :success     => user.blossom!(blossom.train.trainable)
+                :success     => user.blossom!(blossom.train.trainable).present?
               })
             end
           end

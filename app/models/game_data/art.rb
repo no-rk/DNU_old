@@ -29,6 +29,18 @@ class GameData::Art < ActiveRecord::Base
     @train_point ||= GameData::Point.find_by_use(:art_type_id, self.art_type.id)
   end
   
+  def require_point(n)
+    n.to_i
+  end
+  
+  def blossom_point(n = nil)
+    10
+  end
+  
+  def forget_point(n)
+    n.to_i*2
+  end
+  
   def type=(name)
     self.art_type = GameData::ArtType.find_by_name(name)
     @type = name

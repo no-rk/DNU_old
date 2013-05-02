@@ -44,6 +44,18 @@ class Result::Art < ActiveRecord::Base
     art.train_point
   end
   
+  def require_point(n = lv)
+    art.require_point(n)
+  end
+  
+  def blossom_point(n = lv)
+    art.blossom_point(n)
+  end
+  
+  def forget_point(n = lv)
+    art.forget_point(n)
+  end
+  
   def grow_using_point_name!(point_name = self.train_point.name)
     success = false
     point_arel = GameData::Point.arel_table
@@ -65,14 +77,6 @@ class Result::Art < ActiveRecord::Base
   
   def value(n = lv)
     "LV#{n.to_i}"
-  end
-  
-  def require_point(n = lv)
-    n.to_i
-  end
-  
-  def forget_point(n = lv)
-    n.to_i*2
   end
   
   def nickname

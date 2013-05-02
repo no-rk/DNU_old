@@ -4,6 +4,7 @@
   :caption: |-
     ジョブ的なもの。
     一度決めたら簡単には変えられない。
+  :max: 1
   :blossom: false
   :forget: false
   :lv_cap: false
@@ -12,6 +13,7 @@
   :caption: |-
     対応する装備品を上手く扱える技能。
     熟練によりLV制限が課せられる。
+  :max: 6
   :blossom: true
   :forget: true
   :lv_cap: true
@@ -22,6 +24,7 @@
     竜魂は来島時にあなたが選択した竜に対応する属性、及び特性を持つ技能となり、最初から習得されています。
     竜魂の特性は来島時に選択されたものから変更は出来ませんが、
     属性はゲーム内で入手できるアイテムを使用することで何度でも変更出来ます。
+  :max: 1
   :blossom: false
   :forget: false
   :lv_cap: false
@@ -30,12 +33,14 @@
   :caption: |-
     何かを作れる感じの技能。
     最初から何でもできる。
+  :max: 
   :blossom: false
   :forget: false
   :lv_cap: false
   :train: true
 - :name: "アビリティ"
   :caption: "上位技能的なの。"
+  :max: 8
   :blossom: false
   :forget: true
   :lv_cap: false

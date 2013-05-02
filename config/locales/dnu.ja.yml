@@ -166,6 +166,7 @@ ja:
       game_data/art_type:
         name: 技能種類名
         caption: 技能種類説明
+        max: 技能最大数
         blossom: 開花
         forget: 忘却
         lv_cap: 熟練

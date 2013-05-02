@@ -256,12 +256,27 @@ class User < ActiveRecord::Base
     success
   end
   
+  def add_art?(art, day_i = Day.last_day_i)
+    if self.result(:art, day_i).exists?(:art_id => art.id, :forget => false)
+      # 習得済み
+      false
+    elsif art.art_type.max.nil?
+      # 未修得で最大技能数存在しない
+      true
+    elsif self.result(:art, day_i).where(:forget => false).merge(GameData::Art.find_all_by_type(art.type)).count < art.art_type.max
+      # 未修得で最大習得数に達していない
+      true
+    else
+      false
+    end
+  end
+  
   def blossom!(art, day_i = Day.last_day_i)
     success = false
-    if !self.result(:art, day_i).exists?(:art_id => art.id, :forget => false) and self.result(:art, day_i).where(:forget => false).count < 6
+    if add_art?(art, day_i)
       point_arel = GameData::Point.arel_table
       result_point = self.result(:point, day_i).where(point_arel[:name].eq(art.train_point.name)).includes(:point).first
-      result_point.value -= 10
+      result_point.value -= art.blossom_point
       if result_point.save
         success = add_art!({ art.type => art.name }, 1, day_i)
       end
@@ -279,7 +294,7 @@ class User < ActiveRecord::Base
         result_point = result_art.result_points.where(point_arel[:name].eq(art.train_point.name)).includes(:point).first
         result_point.value += result_art.forget_point
         result_point.save!
-        success = true
+        success = result_art
       end
     end
     success

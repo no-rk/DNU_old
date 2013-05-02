@@ -56,6 +56,7 @@ ActiveRecord::Schema.define(:version => 20130501112308) do
   create_table "game_data_art_types", :force => true do |t|
     t.string   "name"
     t.text     "caption"
+    t.integer  "max"
     t.boolean  "blossom",    :default => false
     t.boolean  "forget",     :default => false
     t.boolean  "lv_cap",     :default => false
@@ -997,6 +998,7 @@ ActiveRecord::Schema.define(:version => 20130501112308) do
     t.integer  "passed_day_id"
     t.integer  "forgettable_id"
     t.string   "forgettable_type"
+    t.integer  "lv"
     t.boolean  "success"
     t.datetime "created_at",       :null => false
     t.datetime "updated_at",       :null => false

@@ -1,5 +1,9 @@
 %h3 開花
 
 - @blossoms.each do |blossom|
-  【#{blossom.blossomable.class.model_name.human}】#{blossom.blossomable.name}を開花#{blossom.success ? "した。" : "・・・できない。" }
+  【#{blossom.blossomable.class.model_name.human}】#{blossom.blossomable.name}を開花
+  - if blossom.success
+    した（-#{blossom.blossomable.blossom_point}#{blossom.blossomable.train_point.name}）。
+  - else
+    ・・・できない。
   %br
