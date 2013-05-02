@@ -88,18 +88,32 @@ class User < ActiveRecord::Base
     self.register_events.where(:day_id => nil)
   end
   
-  def form_event_contents
-    new_register_events.uniq.pluck(:event_content_id).map{ |id| GameData::EventContent.find(id) }
+  def form(type)
+    case type.to_sym
+    when :event
+      new_register_events.uniq.pluck(:event_content_id).map{ |id| GameData::EventContent.find(id) }
+    else
+      self.result(type).where(:forget => false).map{ |r| r.send(type) }
+    end
   end
   
-  def form_arts
-    self.result(:art).where(:forget => false).map{ |r| r.art }
+  def next_forms(type)
+    case type.to_sym
+    when :skill, :art
+      sub_query = self.send("register_#{type.to_s.pluralize}").as(type.to_s)
+      "Register::#{type.to_s.camelize}".constantize.select(Arel.star).from(sub_query).group(sub_query["#{type}_id"])
+    when :event
+      sub_query = self.send("register_#{type.to_s.pluralize}").as(type.to_s)
+      "Register::#{type.to_s.camelize}".constantize.select(Arel.star).from(sub_query).group(sub_query["#{type}_content_id"])
+    else
+      [self.send("register_#{type.to_s.pluralize}").first].compact
+    end
   end
   
   def register(type, day_i = Day.last_day_i)
     day_arel  = Day.arel_table
     case type.to_sym
-    when :event, :art
+    when :event, :skill, :art
       self.send("register_#{type.to_s.pluralize}").except(:order).where(day_arel[:day].eq(day_i)).includes(:day)
     else
       self.send("register_#{type.to_s.pluralize}").except(:order).where(day_arel[:day].eq(day_i)).includes(:day).first
@@ -132,7 +146,7 @@ class User < ActiveRecord::Base
     train_arel = GameData::Train.arel_table
     train = {}
     train = result(:status,  day_i).where(train_arel[:visible].eq(true)).includes(:status,  :train).inject(train){ |h,r| h.tap{ h[r.nickname] = r.train.id } }
-    train = result(:art,     day_i).where(train_arel[:visible].eq(true)).where(:forget => false).includes(:art,     :train).inject(train){ |h,r| h.tap{ h[r.nickname] = r.train.id } }
+    train = result(:art,     day_i).where(train_arel[:visible].eq(true)).where(:forget => false).includes(:art,     :train).inject(train){ |h,r| h.tap{ h[r.name] = r.train.id } }
     train
   end
   
@@ -140,7 +154,7 @@ class User < ActiveRecord::Base
     train_arel = GameData::Train.arel_table
     train = {}
     train = result(:status,  day_i).where(train_arel[:visible].eq(true)).includes(:status,  :train).inject(train){ |h,r| h.tap{ h[r.nickname] = r.train.id } }
-    train = result(:art,     day_i).where(train_arel[:visible].eq(true)).includes(:art,     :train).inject(train){ |h,r| h.tap{ h[r.nickname] = r.train.id } }
+    train = result(:art,     day_i).where(train_arel[:visible].eq(true)).includes(:art,     :train).inject(train){ |h,r| h.tap{ h[r.name] = r.train.id } }
     train
   end
   

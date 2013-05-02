@@ -1,0 +1,2 @@
+= form_art.simple_fields_for :art_pull_down, :defaults => { :as => (:plain if @read_only), :user => current_user } do |form_art_pull_down|
+  = form_art_pull_down.input :pull_down, :collection => register_art.pull_downs

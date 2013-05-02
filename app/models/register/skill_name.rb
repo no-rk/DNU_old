@@ -1,5 +1,5 @@
 class Register::SkillName < ActiveRecord::Base
-  belongs_to :skill_conf
+  belongs_to :skill
   attr_accessible :caption, :name
   
   validates :name,    :length => { :maximum => 20 }

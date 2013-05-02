@@ -1,8 +1,13 @@
 = simple_form_for(register_art) do |form_art|
   = form_art.input :art_id, :as => :hidden
+  != register_art.caption
+  %br
+  %br
   = register_art.updated_at.try(:to_s, :jp)
-  = render 'register/error', { :register_error => register_art }
-  = render 'form_art_name',  { :register_art => register_art, :form_art => form_art }
+  = render 'register/error',     { :register_error => register_art }
+  = render 'form_art_name',      { :register_art   => register_art, :form_art => form_art }
+  = render 'form_art_pull_down', { :register_art   => register_art, :form_art => form_art }
+  = render 'form_art_lv_effect', { :register_art   => register_art, :form_art => form_art }
   - unless @read_only
     .actions
       %button.btn.btn-large.btn-warning{"data-remote" => "true"} 確認する

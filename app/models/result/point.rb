@@ -26,7 +26,7 @@ class Result::Point < ActiveRecord::Base
     success
   end
   
-  def nickname
+  def name
     point.name
   end
   

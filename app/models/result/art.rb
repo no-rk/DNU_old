@@ -1,11 +1,13 @@
 class Result::Art < ActiveRecord::Base
   belongs_to :passed_day
-  belongs_to :art, :class_name => "GameData::Art"
-  attr_accessible :caption, :forget, :lv, :lv_cap, :lv_cap_exp, :lv_exp, :name
+  belongs_to :art,      :class_name => "GameData::Art"
+  belongs_to :art_conf, :class_name => "Register::Art"
+  attr_accessible :forget, :lv, :lv_cap, :lv_cap_exp, :lv_exp
   
   has_one :user, :through => :passed_day
   has_one :day,  :through => :passed_day
   
+  has_one  :art_name,      :through => :art_conf,   :class_name => "Register::ArtName"
   has_many :result_points, :through => :passed_day, :class_name => "Result::Point"
   
   has_one :art_type,   :through => :art, :class_name => "GameData::ArtType"
@@ -33,11 +35,11 @@ class Result::Art < ActiveRecord::Base
   end
   
   def lv_effects
-    @lv_effects ||= {}
+    @lv_effects ||= { :lv_effects => self.art_conf.try(:off_lvs) }
   end
   
   def pull_down
-    @pull_down ||= {}
+    @pull_down ||= { :pull_down => self.art_conf.try(:pull_down) }
   end
   
   def train_point
@@ -79,7 +81,7 @@ class Result::Art < ActiveRecord::Base
     "LV#{n.to_i}"
   end
   
-  def nickname
-    name || art.name
+  def name
+    art_name.try(:name) || art.name
   end
 end

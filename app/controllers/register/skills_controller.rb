@@ -1,27 +1,20 @@
 class Register::SkillsController < Register::ApplicationController
-  private
-  def set_instance_variables
-    @skills = Hash.new{ |hash,key| hash[key] = {} }
-    current_user.result(:skill).where(:forget => false).includes(:skill).includes(:skill_name).find_each do |skill|
-      skill_id = skill.skill.id
-      @skills[skill_id][:nickname] = skill.nickname
-    end
+  def index
+    @skill_id = params[:skill_id]
+    super
   end
-  def build_record(record)
-    kinds = [:battle]
-    
-    @skills.each do |skill_id, skill|
-      kinds.each do |kind|
-        first_or_build = { :kind => kind, :game_data_skill_id => skill_id }
-        if record.skill_confs.exists?(first_or_build)
-          skill_conf = record.skill_confs.where(first_or_build).first
-        else
-          skill_conf = record.skill_confs.build(first_or_build)
-        end
-        skill_conf.build_skill_name if skill_conf.skill_name.nil?
-        skill_conf.save if record.skill_confs.exists?(first_or_build)
-      end
-    end
-    record.skill_confs.sort_by!{ |r| r.game_data_skill_id.to_i }
+  
+  def new
+    @skill_id = params[:skill_id]
+    super
+  end
+  
+  private
+  def register_index_records
+    current_user.register_skills.where(:skill_id => @skill_id).page(params[:page]).per(Settings.register.history.per)
+  end
+  
+  def register_new_record
+    current_user.register_skills.where(:skill_id => @skill_id).first_or_initialize
   end
 end

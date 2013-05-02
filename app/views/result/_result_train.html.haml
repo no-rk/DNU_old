@@ -1,7 +1,7 @@
 %h3 訓練
 
 - @trains.each do |train|
-  【#{train.trainable.class.model_name.human}】#{train.trainable.nickname}#{train.trainable.value(train.from)}を訓練
+  【#{train.trainable.class.model_name.human}】#{train.trainable.name}#{train.trainable.value(train.from)}を訓練
   - if train.success
     し#{train.trainable.value(train.to)}に（-#{train.trainable.require_point(train.from)}#{train.trainable.train_point.name}）。
   -else 

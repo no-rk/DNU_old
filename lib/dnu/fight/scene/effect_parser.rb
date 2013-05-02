@@ -293,6 +293,10 @@ class EffectParser < Parslet::Parser
     alternation_from_array(GameData::Sup.pluck(:name))
   }
   
+  rule(:trap_name) {
+    alternation_from_array(GameData::Trap.pluck(:name))
+  }
+  
   rule(:point_name) {
     alternation_from_array(GameData::Point.pluck(:name))
   }
@@ -781,13 +785,13 @@ class EffectParser < Parslet::Parser
     (
       (
         bra >> str('付加') >> ket >>
-        ((level | excepts).absent? >> any).repeat(1).as(:name) >>
+        sup_name.as(:name) >>
         (level >> natural_number.as(:lv)).maybe >>
         (bra >> str('重複不可').as(:unique) >> ket).maybe
       ).as(:sup) |
       (
         bra >> str('罠') >> ket >>
-        (excepts.absent? >> any).repeat(1).as(:name) >>
+        trap_name.as(:name) >>
         (bra >> str('重複不可').as(:unique) >> ket).maybe
       ).as(:trap)
     ).as(:add_effects)

@@ -344,6 +344,15 @@ ja:
         caption: 技の説明
       register/skill/skill_confs/skill_name: *skill_name
       
+      register/art_name: &art_name
+        name: 技能名
+        caption: 技能の説明
+      register/art/art_name: *art_name
+      
+      register/art_pull_down: &art_pull_down
+        pull_down: プルダウン効果
+      register/art/art_pull_down: *art_pull_down
+      
       register/profile: &profile
         age: 年齢
         gender: 性別

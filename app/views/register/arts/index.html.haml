@@ -1,4 +1,4 @@
-%h1= @register_arts.first.class.model_name.human
+%h1= @register_arts.first.art.name
 - @register_arts.each do |register_art|
   .alert
     - if register_art.day.present?

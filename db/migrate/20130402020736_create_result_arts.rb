@@ -3,8 +3,7 @@ class CreateResultArts < ActiveRecord::Migration
     create_table :result_arts do |t|
       t.references :passed_day
       t.references :art
-      t.string :name
-      t.text :caption
+      t.references :art_conf
       t.integer :lv
       t.integer :lv_exp
       t.integer :lv_cap
@@ -15,5 +14,6 @@ class CreateResultArts < ActiveRecord::Migration
     end
     add_index :result_arts, :passed_day_id
     add_index :result_arts, :art_id
+    add_index :result_arts, :art_conf_id
   end
 end

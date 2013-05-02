@@ -1,4 +1,4 @@
-%h1= @register_skills.first.class.model_name.human.downcase
+%h1= @register_skills.first.skill.name
 - @register_skills.each do |register_skill|
   .alert
     - if register_skill.day.present?

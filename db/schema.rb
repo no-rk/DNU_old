@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130502043357) do
+ActiveRecord::Schema.define(:version => 20130502105818) do
 
   create_table "admins", :force => true do |t|
     t.string   "email",               :default => "", :null => false
@@ -423,6 +423,16 @@ ActiveRecord::Schema.define(:version => 20130502043357) do
 
   add_index "receipts", ["notification_id"], :name => "index_receipts_on_notification_id"
 
+  create_table "register_art_lv_effects", :force => true do |t|
+    t.integer  "art_id"
+    t.integer  "lv"
+    t.boolean  "setting",    :default => true
+    t.datetime "created_at",                   :null => false
+    t.datetime "updated_at",                   :null => false
+  end
+
+  add_index "register_art_lv_effects", ["art_id"], :name => "index_register_art_lv_effects_on_art_id"
+
   create_table "register_art_names", :force => true do |t|
     t.integer  "art_id"
     t.string   "name"
@@ -432,6 +442,15 @@ ActiveRecord::Schema.define(:version => 20130502043357) do
   end
 
   add_index "register_art_names", ["art_id"], :name => "index_register_art_names_on_art_id"
+
+  create_table "register_art_pull_downs", :force => true do |t|
+    t.integer  "art_id"
+    t.string   "pull_down"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "register_art_pull_downs", ["art_id"], :name => "index_register_art_pull_downs_on_art_id"
 
   create_table "register_arts", :force => true do |t|
     t.integer  "user_id"
@@ -806,35 +825,26 @@ ActiveRecord::Schema.define(:version => 20130502043357) do
 
   add_index "register_shouts", ["main_id"], :name => "index_register_shouts_on_main_id"
 
-  create_table "register_skill_confs", :force => true do |t|
-    t.integer  "skill_id"
-    t.integer  "game_data_skill_id"
-    t.string   "kind"
-    t.datetime "created_at",         :null => false
-    t.datetime "updated_at",         :null => false
-  end
-
-  add_index "register_skill_confs", ["game_data_skill_id"], :name => "index_register_skill_confs_on_game_data_skill_id"
-  add_index "register_skill_confs", ["skill_id"], :name => "index_register_skill_confs_on_skill_id"
-
   create_table "register_skill_names", :force => true do |t|
-    t.integer  "skill_conf_id"
+    t.integer  "skill_id"
     t.string   "name"
     t.text     "caption"
-    t.datetime "created_at",    :null => false
-    t.datetime "updated_at",    :null => false
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
-  add_index "register_skill_names", ["skill_conf_id"], :name => "index_register_skill_names_on_skill_conf_id"
+  add_index "register_skill_names", ["skill_id"], :name => "index_register_skill_names_on_skill_id"
 
   create_table "register_skills", :force => true do |t|
     t.integer  "user_id"
     t.integer  "day_id"
+    t.integer  "skill_id"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
 
   add_index "register_skills", ["day_id"], :name => "index_register_skills_on_day_id"
+  add_index "register_skills", ["skill_id"], :name => "index_register_skills_on_skill_id"
   add_index "register_skills", ["user_id"], :name => "index_register_skills_on_user_id"
 
   create_table "register_supplements", :force => true do |t|
@@ -895,8 +905,7 @@ ActiveRecord::Schema.define(:version => 20130502043357) do
   create_table "result_arts", :force => true do |t|
     t.integer  "passed_day_id"
     t.integer  "art_id"
-    t.string   "name"
-    t.text     "caption"
+    t.integer  "art_conf_id"
     t.integer  "lv"
     t.integer  "lv_exp"
     t.integer  "lv_cap"
@@ -906,6 +915,7 @@ ActiveRecord::Schema.define(:version => 20130502043357) do
     t.datetime "updated_at",    :null => false
   end
 
+  add_index "result_arts", ["art_conf_id"], :name => "index_result_arts_on_art_conf_id"
   add_index "result_arts", ["art_id"], :name => "index_result_arts_on_art_id"
   add_index "result_arts", ["passed_day_id"], :name => "index_result_arts_on_passed_day_id"
 

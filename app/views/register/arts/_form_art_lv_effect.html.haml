@@ -1,0 +1,6 @@
+= form_art.simple_fields_for :art_lv_effects, :wrapper => :simple, :defaults => { :as => (:plain if @read_only), :user => current_user } do |form_art_lv_effect|
+  = form_art_lv_effect.input :lv, :as => :hidden
+  LV#{form_art_lv_effect.object.lv}：#{register_art.lv_effects[form_art_lv_effect.object.lv]}
+  = form_art_lv_effect.input :setting, :collection => { "オン" => true, "オフ" => false }, :include_blank => false
+  %br
+  %br

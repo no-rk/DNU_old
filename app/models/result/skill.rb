@@ -1,7 +1,7 @@
 class Result::Skill < ActiveRecord::Base
   belongs_to :passed_day
-  belongs_to :skill, :class_name => "GameData::Skill"
-  belongs_to :skill_conf, :class_name => "Register::SkillConf"
+  belongs_to :skill,      :class_name => "GameData::Skill"
+  belongs_to :skill_conf, :class_name => "Register::Skill"
   attr_accessible :exp, :forget
   
   has_one :user, :through => :passed_day
@@ -17,8 +17,8 @@ class Result::Skill < ActiveRecord::Base
     !self.where(day_arel[:day].lteq(day_i.to_i-1)).includes(:day).exists?(:skill_id => skill_id)
   end
   
-  def nickname
-    skill_name.try(:name).blank? ? skill.name : skill_name.name
+  def name
+    skill_name.try(:name) || skill.name
   end
   
   def cost

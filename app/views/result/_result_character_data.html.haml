@@ -19,7 +19,7 @@ ENo.#{@id} #{@profile.name}
 ポイント
 %br
 - @points.each do |point|
-  #{point.nickname} #{point.value}
+  #{point.name} #{point.value}
   %br
 %br
 能力
@@ -31,13 +31,13 @@ ENo.#{@id} #{@profile.name}
 技能
 %br
 - @arts.each do |art|
-  #{art.nickname} LV#{art.lv}#{"(熟練#{art.lv_cap})" if art.lv_cap.present?}
+  #{art.name} LV#{art.lv}#{"(熟練#{art.lv_cap})" if art.lv_cap.present?}
   %br
 %br
 技
 %br
 - @skills.each do |skill|
-  #{skill.nickname} 消費#{skill.cost}
+  #{skill.name} 消費#{skill.cost}
   %br
 %br
 アイテム一覧

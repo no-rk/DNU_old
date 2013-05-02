@@ -1,7 +1,8 @@
 = simple_form_for(register_skill) do |form_skill|
+  = form_skill.input :skill_id, :as => :hidden
   = register_skill.updated_at.try(:to_s, :jp)
   = render 'register/error',  { :register_error => register_skill }
-  = render 'form_skill_conf', { :register_skill => register_skill, :form_skill => form_skill }
+  = render 'form_skill_name', { :register_skill => register_skill, :form_skill => form_skill }
   - unless @read_only
     .actions
       %button.btn.btn-large.btn-warning{"data-remote" => "true"} 確認する

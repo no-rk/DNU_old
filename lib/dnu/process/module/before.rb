@@ -20,30 +20,32 @@ module DNU
         # キャラ作成済みの各ユーザー
         User.already_make.find_each do |user|
           # 最新宣言に日数の情報を付与する
-          [:main, :trade, :product, :event, :battle, :duel, :competition, :skill, :character].each do |form_name|
-            user_form = user.send("register_#{form_name.to_s.pluralize}").first
-            if user_form and @new_day
-              # 新登録があるならそれを採用
-              if user_form.day.nil?
-                user_form.day = now_day
-                user_form.save!
-              # 新登録がなくても一部フォームは古登録を採用
-              elsif [:main, :battle, :duel, :competition, :character].any?{ |f| f==form_name }
-                case form_name
-                when  :main
-                  # 合言葉だけ引き継ぐ
-                  if user_form.party_slogan.present?
-                    new_form = Register::Main.new
-                    new_form.user = user
+          [:main, :trade, :product, :event, :battle, :duel, :competition, :skill, :art, :character].each do |form_name|
+            user_forms = user.next_forms(form_name)
+            if user_forms.present? and @new_day
+              user_forms.each do |user_form|
+                # 新登録があるならそれを採用
+                if user_form.day.nil?
+                  user_form.day = now_day
+                  user_form.save!
+                # 新登録がなくても一部フォームは古登録を採用
+                elsif [:main, :event, :battle, :duel, :competition, :skill, :art, :character].any?{ |f| f==form_name }
+                  case form_name
+                  when  :main
+                    # 合言葉だけ引き継ぐ
+                    if user_form.party_slogan.present?
+                      new_form = Register::Main.new
+                      new_form.user = user
+                      new_form.day  = now_day
+                      new_form.build_party_slogan
+                      new_form.party_slogan.slogan = user_form.party_slogan.slogan
+                      new_form.save!
+                    end
+                  else
+                    new_form = DNU::DeepClone.register(user_form)
                     new_form.day  = now_day
-                    new_form.build_party_slogan
-                    new_form.party_slogan.slogan = user_form.party_slogan.slogan
                     new_form.save!
                   end
-                else
-                  user_form = DNU::DeepClone.register(user_form)
-                  user_form.day  = now_day
-                  user_form.save!
                 end
               end
               # この時点で日数の情報が付いていない登録は削除
@@ -66,10 +68,10 @@ module DNU
           end
           
           # 設定を結果に反映
-          [:skill].each do |setting_name|
-            if user.register(setting_name).present?
-              user.register(setting_name).send("#{setting_name}_confs").each do |conf|
-                result = user.result(setting_name).where("#{setting_name}_id" => conf.send("game_data_#{setting_name}_id")).first
+          [:skill, :art].each do |setting_name|
+            if user.register(setting_name).exists?
+              user.register(setting_name).each do |conf|
+                result = user.result(setting_name).where("#{setting_name}_id" => conf.send("#{setting_name}_id")).first
                 if result.present?
                   result.send("#{setting_name}_conf=", conf)
                   result.save!

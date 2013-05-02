@@ -1,8 +1,3 @@
-- skill_id = form_skill_conf.object.game_data_skill_id
-= form_skill_conf.simple_fields_for :skill_name, :wrapper => :simple, :defaults => { :as => (:plain if @read_only), :user => current_user, :input_html => { :class => :'span2' } } do |form_skill_name|
-  - if @skill_id.present? and @skill_id != skill_id
-    = form_skill_name.input :name, :as => :hidden
-    = form_skill_name.input :caption, :as => :hidden
-  - else
-    = form_skill_name.input :name, :wrapper => :bootstrap, :input_html => { :class => :'span6' }
-    = form_skill_name.input :caption, :wrapper => :bootstrap, :input_html => { :class => :'document span9', :rows => 2 }, :wrapper_html => { :class => :clearfix }
+= form_skill.simple_fields_for :skill_name, :defaults => { :as => (:plain if @read_only), :user => current_user } do |form_skill_name|
+  = form_skill_name.input :name
+  = form_skill_name.input :caption, :input_html => { :class => :'document span9', :rows => 2 }
