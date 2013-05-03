@@ -24,30 +24,31 @@ class User < ActiveRecord::Base
   # 結果
   has_many :result_passed_days,   :class_name => "Result::PassedDay"
   
-  has_many :result_send_points,   :through => :result_passed_days, :class_name => "Result::SendPoint"
-  has_many :result_send_items,    :through => :result_passed_days, :class_name => "Result::SendItem"
-  has_many :result_purchases,     :through => :result_passed_days, :class_name => "Result::Purchase"
-  has_many :result_forges,        :through => :result_passed_days, :class_name => "Result::Forge"
-  has_many :result_supplements,   :through => :result_passed_days, :class_name => "Result::Supplement"
-  has_many :result_equips ,       :through => :result_passed_days, :class_name => "Result::Equip"
-  has_many :result_trains,        :through => :result_passed_days, :class_name => "Result::Train"
-  has_many :result_learns,        :through => :result_passed_days, :class_name => "Result::Learn"
-  has_many :result_forgets,       :through => :result_passed_days, :class_name => "Result::Forget"
-  has_many :result_blossoms,      :through => :result_passed_days, :class_name => "Result::Blossom"
-  has_many :result_disposes,      :through => :result_passed_days, :class_name => "Result::Dispose"
-  has_many :result_moves,         :through => :result_passed_days, :class_name => "Result::Move"
+  has_many :result_send_points,     :through => :result_passed_days, :class_name => "Result::SendPoint"
+  has_many :result_send_items,      :through => :result_passed_days, :class_name => "Result::SendItem"
+  has_many :result_purchases,       :through => :result_passed_days, :class_name => "Result::Purchase"
+  has_many :result_forges,          :through => :result_passed_days, :class_name => "Result::Forge"
+  has_many :result_supplements,     :through => :result_passed_days, :class_name => "Result::Supplement"
+  has_many :result_equips ,         :through => :result_passed_days, :class_name => "Result::Equip"
+  has_many :result_trains,          :through => :result_passed_days, :class_name => "Result::Train"
+  has_many :result_learns,          :through => :result_passed_days, :class_name => "Result::Learn"
+  has_many :result_forgets,         :through => :result_passed_days, :class_name => "Result::Forget"
+  has_many :result_blossoms,        :through => :result_passed_days, :class_name => "Result::Blossom"
+  has_many :result_disposes,        :through => :result_passed_days, :class_name => "Result::Dispose"
+  has_many :result_moves,           :through => :result_passed_days, :class_name => "Result::Move"
   
-  has_many :result_events,        :through => :result_passed_days, :class_name => "Result::Event"
-  has_many :result_event_states,  :through => :result_events,      :class_name => "Result::EventState", :source => :event_states
-  has_many :result_after_moves,   :through => :result_passed_days, :class_name => "Result::AfterMove"
+  has_many :result_events,          :through => :result_passed_days, :class_name => "Result::Event"
+  has_many :result_event_states,    :through => :result_events,      :class_name => "Result::EventState", :source => :event_states
+  has_many :result_after_moves,     :through => :result_passed_days, :class_name => "Result::AfterMove"
   
-  has_many :result_points,        :through => :result_passed_days, :class_name => "Result::Point"
-  has_many :result_statuses,      :through => :result_passed_days, :class_name => "Result::Status"
-  has_many :result_arts,          :through => :result_passed_days, :class_name => "Result::Art", :include => [:art]
-  has_many :result_battle_values, :through => :result_passed_days, :class_name => "Result::BattleValue"
-  has_many :result_skills,        :through => :result_passed_days, :class_name => "Result::Skill"
-  has_many :result_inventories,   :through => :result_passed_days, :class_name => "Result::Inventory"
-  has_many :result_places,        :through => :result_passed_days, :class_name => "Result::Place"
+  has_many :result_points,          :through => :result_passed_days, :class_name => "Result::Point"
+  has_many :result_statuses,        :through => :result_passed_days, :class_name => "Result::Status"
+  has_many :result_arts,            :through => :result_passed_days, :class_name => "Result::Art", :include => [:art]
+  has_many :result_battle_values,   :through => :result_passed_days, :class_name => "Result::BattleValue"
+  has_many :result_skills,          :through => :result_passed_days, :class_name => "Result::Skill"
+  has_many :result_inventories,     :through => :result_passed_days, :class_name => "Result::Inventory"
+  has_many :result_pet_inventories, :through => :result_passed_days, :class_name => "Result::PetInventory"
+  has_many :result_places,          :through => :result_passed_days, :class_name => "Result::Place"
   
   has_many :through_party_members, :as => :character, :class_name => "Result::PartyMember"
   
@@ -323,12 +324,27 @@ class User < ActiveRecord::Base
     15
   end
   
+  def max_pet_inventory(pet_kind, day_i = Day.last_day_i)
+    3
+  end
+  
   def blank_item_number(day_i = Day.last_day_i)
     ((1..max_inventory(day_i)).to_a - self.result(:inventory, day_i).map{ |r| r.number }).min
   end
   
+  def blank_pet_number(pet_kind, day_i = Day.last_day_i)
+    ((1..max_pet_inventory(pet_kind, day_i)).to_a - self.result(:pet_inventory, day_i).where(:kind => pet_kind).map{ |r| r.number }).min
+  end
+  
   def new_inventory(day_i = Day.last_day_i)
     new_result(:inventory, { :number => blank_item_number(day_i) }, day_i)
+  end
+  
+  def new_pet_inventory(pet_kind, day_i = Day.last_day_i)
+    new_result(:pet_inventory, {
+      :character_type => GameData::CharacterType.where(:name => pet_kind).first,
+      :number => blank_pet_number(pet_kind, day_i)
+    }, day_i)
   end
   
   def add_item!(item, way = nil, day_i = Day.last_day_i)
@@ -341,6 +357,23 @@ class User < ActiveRecord::Base
       result_item = Result::Item.new_item_by_type_and_name(item_type, item_name, self, way, day_i)
       if result_item.try(:save)
         result_inventory.item = result_item
+        result_inventory.save!
+        success = result_inventory
+      end
+    end
+    success
+  end
+  
+  def add_pet!(pet, way = nil, day_i = Day.last_day_i)
+    success = false
+    pet_kind = pet.keys.first
+    pet_name = pet.values.first
+    
+    result_inventory = new_pet_inventory(pet_kind, day_i)
+    if result_inventory.number.present?
+      result_pet = Result::Pet.new_pet_by_kind_and_name(pet_kind, pet_name, self, way, day_i)
+      if result_pet.try(:save)
+        result_inventory.pet = result_pet
         result_inventory.save!
         success = result_inventory
       end

@@ -21,47 +21,8 @@ module DNU
         
         attr_reader :effects, :effects_parent
         
-        def status_from_rank(rank)
-          rank.to_i*20+50
-        end
-        
-        def equip_from_rank(rank)
-          rank.to_i*10+50
-        end
-        
-        def set_strength_from_rank!(tree)
-          if tree[:rank].present?
-            rank = tree[:rank].to_i + tree[:correction].to_i
-            rank = 1 if rank < 1
-            
-            # 能力
-            GameData::Status.pluck(:name).each do |status_name|
-              unset = true
-              
-              tree[:settings].find_all{ |s| s[:status].try('[]', :name).to_s == status_name.to_s }.each do |setting|
-                setting[:status][:status_strength] ||= ((setting[:status][:status_rate] || 1).to_f*status_from_rank(rank)).to_i
-                unset = false
-              end
-              
-              if unset
-                tree[:settings] << {
-                  :status => {
-                    :name            => status_name,
-                    :status_strength => status_from_rank(rank)
-                  }
-                }
-              end
-            end
-            
-            # 装備
-            tree[:settings].find_all{ |s| s.keys.first == :equip }.each do |setting|
-              setting[:equip][:equip_strength] ||= ((setting[:equip][:equip_rate] || 1).to_f*equip_from_rank(rank)).to_i
-            end
-          end
-        end
-        
         def initialize(tree)
-          set_strength_from_rank!(tree)
+          GameData::Character.set_strength_from_rank!(tree)
           GameData::BattleValue.find_each do |battle_value|
             instance_variable_set("@#{battle_value.name}", DNU::Fight::State::BattleValue.new(battle_value))
             instance_variable_set("@能力#{battle_value.name}", instance_variable_get("@#{battle_value.name}").status)

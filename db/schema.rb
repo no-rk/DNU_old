@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130502105818) do
+ActiveRecord::Schema.define(:version => 20130503131039) do
 
   create_table "admins", :force => true do |t|
     t.string   "email",               :default => "", :null => false
@@ -1234,6 +1234,20 @@ ActiveRecord::Schema.define(:version => 20130502105818) do
   add_index "result_passed_days", ["day_id"], :name => "index_result_passed_days_on_day_id"
   add_index "result_passed_days", ["user_id"], :name => "index_result_passed_days_on_user_id"
 
+  create_table "result_pet_inventories", :force => true do |t|
+    t.integer  "passed_day_id"
+    t.integer  "character_type_id"
+    t.string   "kind"
+    t.integer  "number"
+    t.integer  "pet_id"
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
+  end
+
+  add_index "result_pet_inventories", ["character_type_id"], :name => "index_result_pet_inventories_on_character_type_id"
+  add_index "result_pet_inventories", ["passed_day_id"], :name => "index_result_pet_inventories_on_passed_day_id"
+  add_index "result_pet_inventories", ["pet_id"], :name => "index_result_pet_inventories_on_pet_id"
+
   create_table "result_pet_names", :force => true do |t|
     t.integer  "pet_id"
     t.integer  "user_id"
@@ -1252,6 +1266,68 @@ ActiveRecord::Schema.define(:version => 20130502105818) do
   add_index "result_pet_names", ["source_id"], :name => "index_result_pet_names_on_source_id"
   add_index "result_pet_names", ["user_id"], :name => "index_result_pet_names_on_user_id"
   add_index "result_pet_names", ["way_id"], :name => "index_result_pet_names_on_way_id"
+
+  create_table "result_pet_skills", :force => true do |t|
+    t.integer  "pet_id"
+    t.integer  "user_id"
+    t.integer  "day_id"
+    t.integer  "way_id"
+    t.string   "way_type"
+    t.integer  "number"
+    t.integer  "skill_id"
+    t.integer  "source_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "result_pet_skills", ["day_id"], :name => "index_result_pet_skills_on_day_id"
+  add_index "result_pet_skills", ["pet_id"], :name => "index_result_pet_skills_on_pet_id"
+  add_index "result_pet_skills", ["skill_id"], :name => "index_result_pet_skills_on_skill_id"
+  add_index "result_pet_skills", ["source_id"], :name => "index_result_pet_skills_on_source_id"
+  add_index "result_pet_skills", ["user_id"], :name => "index_result_pet_skills_on_user_id"
+  add_index "result_pet_skills", ["way_id"], :name => "index_result_pet_skills_on_way_id"
+
+  create_table "result_pet_statuses", :force => true do |t|
+    t.integer  "pet_id"
+    t.integer  "user_id"
+    t.integer  "day_id"
+    t.integer  "way_id"
+    t.string   "way_type"
+    t.integer  "status_id"
+    t.integer  "count"
+    t.integer  "bonus"
+    t.integer  "source_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "result_pet_statuses", ["day_id"], :name => "index_result_pet_statuses_on_day_id"
+  add_index "result_pet_statuses", ["pet_id"], :name => "index_result_pet_statuses_on_pet_id"
+  add_index "result_pet_statuses", ["source_id"], :name => "index_result_pet_statuses_on_source_id"
+  add_index "result_pet_statuses", ["status_id"], :name => "index_result_pet_statuses_on_status_id"
+  add_index "result_pet_statuses", ["user_id"], :name => "index_result_pet_statuses_on_user_id"
+  add_index "result_pet_statuses", ["way_id"], :name => "index_result_pet_statuses_on_way_id"
+
+  create_table "result_pet_sups", :force => true do |t|
+    t.integer  "pet_id"
+    t.integer  "user_id"
+    t.integer  "day_id"
+    t.integer  "way_id"
+    t.string   "way_type"
+    t.integer  "number"
+    t.integer  "sup_id"
+    t.integer  "lv"
+    t.integer  "source_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "result_pet_sups", ["day_id"], :name => "index_result_pet_sups_on_day_id"
+  add_index "result_pet_sups", ["pet_id"], :name => "index_result_pet_sups_on_pet_id"
+  add_index "result_pet_sups", ["source_id"], :name => "index_result_pet_sups_on_source_id"
+  add_index "result_pet_sups", ["sup_id"], :name => "index_result_pet_sups_on_sup_id"
+  add_index "result_pet_sups", ["user_id"], :name => "index_result_pet_sups_on_user_id"
+  add_index "result_pet_sups", ["way_id"], :name => "index_result_pet_sups_on_way_id"
 
   create_table "result_pets", :force => true do |t|
     t.integer  "user_id"
