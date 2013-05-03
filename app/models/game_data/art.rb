@@ -14,6 +14,11 @@ class GameData::Art < ActiveRecord::Base
     where(art_type_arel[:name].eq(art_type_name)).includes(:art_type)
   }
   
+  scope :forgeables, lambda{
+    art_effect_arel = GameData::ArtEffect.arel_table
+    where(art_effect_arel[:forgeable].eq(true)).includes(:art_effect)
+  }
+  
   scope :find_by_name, lambda{ |name|
     where(:name => name).includes(:art_type)
   }

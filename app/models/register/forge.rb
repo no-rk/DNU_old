@@ -1,12 +1,15 @@
 class Register::Forge < ActiveRecord::Base
   belongs_to :product
+  belongs_to :art_effect, :class_name => "GameData::ArtEffect"
   belongs_to :user
   belongs_to :item_type, :class_name => "GameData::ItemType"
-  attr_accessible :caption, :experiment, :message, :name, :number, :user_id, :item_type_id
+  attr_accessible :caption, :experiment, :message, :name, :number, :art_effect_id, :user_id, :item_type_index
   
-  has_one :smith, :through => :product, :class_name => "User", :source => :user
+  has_one :art,   :through => :art_effect, :class_name => "GameData::Art"
+  has_one :smith, :through => :product,    :class_name => "User", :source => :user
   has_one :day,   :through => :product
   
+  validates :art_effect, :presence => true
   validates :user_id,    :numericality => { :only_integer => true, :greater_than => 0 }
   validates :number,     :numericality => { :only_integer => true, :greater_than => 0 }
   validates :item_type,  :presence => true
@@ -15,7 +18,16 @@ class Register::Forge < ActiveRecord::Base
   validates :caption,    :length => { :maximum => 800, :tokenizer => DNU::Sanitize.counter }
   validates :message,    :length => { :maximum => 800, :tokenizer => DNU::Sanitize.counter }
   
-  def forge!(way = GameData::Art.find_by_name("鍛治").first, day_i = self.day.day)
+  def item_type_index=(i)
+    self.item_type = GameData::ItemType.find_by_name(self.art_effect.forgeable_item_types.invert[i.to_i])
+    @item_type_index = i
+  end
+  
+  def item_type_index
+    @item_type_index || self.art_effect.forgeable_item_types[self.item_type.try(:name)]
+  end
+  
+  def forge!(way = self.art, day_i = self.day.day)
     success = false
     inventory = self.user.result(:inventory, day_i).where(:number => self.number).first if self.user.present?
     if inventory.try(:material?)
@@ -37,7 +49,7 @@ class Register::Forge < ActiveRecord::Base
     end
     material_data ||= {}
     
-    product_forge = self.smith.result(:art, day_i).merge(GameData::Art.find_by_name("鍛治")).first
+    product_forge = self.smith.result(:art, day_i).merge(GameData::Art.find_by_name(self.art.name)).first
     forge_lv = product_forge.try(:effective_lv).to_i
     
     # 鍛治LVが付加発現LVより低い場合はクリア

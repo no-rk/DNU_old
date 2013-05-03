@@ -1,7 +1,7 @@
 class GameData::ArtEffect < ActiveRecord::Base
   belongs_to :art
   has_many :learning_conditions, :as => :learnable, :dependent => :destroy
-  attr_accessible :caption, :definition, :name, :tree, :kind
+  attr_accessible :caption, :definition, :name, :tree, :kind, :forgeable
   serialize :tree
   
   has_many :result_arts, :through => :art
@@ -11,10 +11,15 @@ class GameData::ArtEffect < ActiveRecord::Base
   validates :art_id,     :uniqueness => true
   validates :kind,       :presence => true
   validates :name,       :presence => true, :uniqueness => true
+  validates :forgeable,  :inclusion => { :in => [true, false] }
   validates :definition, :presence => true
   
   before_validation :set_game_data
   after_save        :sync_game_data
+  
+  def forgeable_item_types
+    (self.tree[:forgeable_item_types] || []).each.with_index.inject({}){|h,(v,i)| h.tap{ h[v] = i.to_i } }
+  end
   
   def used?
     self.result_arts.exists?
@@ -29,10 +34,11 @@ class GameData::ArtEffect < ActiveRecord::Base
     definition_tree = DNU::Data.parse_from_model(self, true)
     if definition_tree.present?
       if self.unused?
-        self.art  = GameData::Art.find_by_type_and_name(definition_tree[:kind], definition_tree[:name]).first
-        self.kind = definition_tree[:kind]
-        self.name = definition_tree[:name]
-        self.tree = definition_tree
+        self.art       = GameData::Art.find_by_type_and_name(definition_tree[:kind], definition_tree[:name]).first
+        self.kind      = definition_tree[:kind]
+        self.name      = definition_tree[:name]
+        self.forgeable = definition_tree[:forgeable_item_types].present?
+        self.tree      = definition_tree
         DNU::Data.set_learning_conditions(self, definition_tree[:learning_conditions])
       else
         errors[:base] << "使用中の#{self.class.model_name.human}のため編集できません。"

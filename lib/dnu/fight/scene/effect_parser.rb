@@ -1574,7 +1574,7 @@ class EffectParser < Parslet::Parser
   }
   
   rule(:sup_effects) {
-    sup_effect.repeat(1)
+    sup_effect.repeat(0)
   }
   
   # learning_conditions
@@ -1720,6 +1720,14 @@ class EffectParser < Parslet::Parser
     root_processes.as(:do).repeat(1).as(:effects)
   }
   
+  # forge
+  
+  rule(:forge) {
+    bra >> str('作製') >> ket >>
+    (item_type.as(:item_type) >> separator.maybe).repeat(1).as(:forgeable_item_types_wrap).as(:forgeable_item_types) >>
+    (natural_number >> str('枠')).maybe.as(:forgeable_number_wrap).as(:forgeable_number) >> newline.maybe
+  }
+  
   # art_effect_definition
   
   rule(:lv_effects) {
@@ -1735,7 +1743,8 @@ class EffectParser < Parslet::Parser
   rule(:art_effect_definition) {
     art_kind_and_name >> newline >>
     learning_conditions.maybe >>
-    sup_effects.as(:effects).maybe >>
+    forge.maybe >>
+    sup_effects.as(:effects) >>
     (
       lv_effects |
       pull_down_effects

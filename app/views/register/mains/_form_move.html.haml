@@ -1,4 +1,8 @@
 %br
+- i = 0
 = form_main.label :moves
 = form_main.simple_fields_for :moves, :wrapper => :simple, :defaults => { :as => (:plain if @read_only), :user => current_user, :input_html => { :class => :'span2' } } do |form_move|
   = form_move.input :direction, :collection => @direction_list, :selected => (form_move.object.direction || @selected_direction)
+  - if (i + 1)%5 == 0
+    %br
+  - i = i + 1

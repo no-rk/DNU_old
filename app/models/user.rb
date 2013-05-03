@@ -84,6 +84,10 @@ class User < ActiveRecord::Base
     end
   end
   
+  def forgeables(day_i = Day.last_day_i)
+    self.result(:art, day_i).merge(GameData::Art.forgeables)
+  end
+  
   def new_register_events
     self.register_events.where(:day_id => nil)
   end

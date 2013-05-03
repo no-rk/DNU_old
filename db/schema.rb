@@ -45,10 +45,11 @@ ActiveRecord::Schema.define(:version => 20130502105818) do
     t.integer  "art_id"
     t.string   "kind"
     t.string   "name"
+    t.boolean  "forgeable",  :default => false
     t.text     "definition"
     t.text     "tree"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",                    :null => false
+    t.datetime "updated_at",                    :null => false
   end
 
   add_index "game_data_art_effects", ["art_id"], :name => "index_game_data_art_effects_on_art_id"
@@ -240,9 +241,8 @@ ActiveRecord::Schema.define(:version => 20130502105818) do
   create_table "game_data_item_types", :force => true do |t|
     t.string   "name"
     t.text     "caption"
-    t.boolean  "forge",      :default => false
-    t.datetime "created_at",                    :null => false
-    t.datetime "updated_at",                    :null => false
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "game_data_item_uses", :force => true do |t|
@@ -590,6 +590,7 @@ ActiveRecord::Schema.define(:version => 20130502105818) do
 
   create_table "register_forges", :force => true do |t|
     t.integer  "product_id"
+    t.integer  "art_effect_id"
     t.integer  "user_id"
     t.integer  "number"
     t.integer  "item_type_id"
@@ -597,10 +598,11 @@ ActiveRecord::Schema.define(:version => 20130502105818) do
     t.string   "name"
     t.text     "caption"
     t.text     "message"
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
   end
 
+  add_index "register_forges", ["art_effect_id"], :name => "index_register_forges_on_art_effect_id"
   add_index "register_forges", ["item_type_id"], :name => "index_register_forges_on_item_type_id"
   add_index "register_forges", ["product_id"], :name => "index_register_forges_on_product_id"
   add_index "register_forges", ["user_id"], :name => "index_register_forges_on_user_id"

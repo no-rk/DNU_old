@@ -11,7 +11,7 @@ module DNU
         end
         
         def default_attack
-          @active.call.effects.type(:Weapon).sample.try(:default_attack) || default_default_attack
+          @active.call.effects.has_default_attack.sample.try(:default_attack) || default_default_attack
         end
         
         # @activeが所持している技を優先順位順にif elseで繋げる

@@ -32,10 +32,10 @@ class Register::Main < ActiveRecord::Base
     (1-self.shouts.size).times{self.shouts.build}
     (5-self.disposes.size).times{self.disposes.build}
     (1-self.item_uses.size).times{self.item_uses.build}
-    (5-self.moves.size).times{self.moves.build}
+    (10-self.moves.size).times{self.moves.build}
     (3-self.forgets.size).times{self.forgets.build}
     (3-self.blossoms.size).times{self.blossoms.build}
-    (8-self.trains.size).times{self.trains.build}
+    (12-self.trains.size).times{self.trains.build}
     self.build_party_slogan if self.party_slogan.nil?
   end
   

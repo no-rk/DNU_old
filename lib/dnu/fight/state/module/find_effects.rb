@@ -65,6 +65,9 @@ module DNU
           self.sort_by{rand}.min{ |a,b| a.priority <=> b.priority }
         end
         
+        def has_default_attack
+          self.find_all{ |child| child.respond_to?(:default_attack) and child.default_attack.present? }.extend FindEffects
+        end
       end
     end
   end

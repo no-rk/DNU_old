@@ -33,6 +33,14 @@ class EffectTransform < Parslet::Transform
     filter[position.to_sym]
   }
   
+  rule(:forgeable_item_types_wrap => subtree(:forgeable_item_types_wrap)) {
+    forgeable_item_types_wrap.map{|h| h.values.first }
+  }
+  
+  rule(:forgeable_number_wrap => subtree(:forgeable_number_wrap)) {
+    forgeable_number_wrap || 1
+  }
+  
   rule(:correction_wrap => subtree(:correction)) {
     correction[:minus].present? ? -(correction[:value].to_i) : correction[:value].to_i
   }
