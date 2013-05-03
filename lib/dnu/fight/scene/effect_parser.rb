@@ -306,7 +306,7 @@ class EffectParser < Parslet::Parser
   }
   
   rule(:art_kind_and_name) {
-    alternation_from_hash(GameData::Art.includes(:art_type).all.map{|r| { r.type => r.name } })
+    alternation_from_hash(GameData::Art.all.map{|r| { r.kind => r.name } })
   }
   
   rule(:character_kind_and_name) {
@@ -1756,7 +1756,7 @@ class EffectParser < Parslet::Parser
   rule(:definitions) {
     (
       comment |
-      art_effect_definition.as(:art_effect) |
+      art_effect_definition.as(:art) |
       sup_definition.as(:sup) |
       disease_definition.as(:disease) |
       skill_definition.as(:skill)
@@ -1861,9 +1861,9 @@ class EffectParser < Parslet::Parser
     sup_effects.as(:effects)
   }
   
-  # art_effect_setting
+  # art_setting
   
-  rule(:art_effect_setting) {
+  rule(:art_setting) {
     art_kind_and_name >>
     level >> natural_number.as(:lv) >> newline.maybe
   }
@@ -1873,7 +1873,7 @@ class EffectParser < Parslet::Parser
   rule(:settings) {
     (
       comment |
-      art_effect_setting.as(:art_effect) |
+      art_setting.as(:art) |
       status_setting.as(:status) |
       equip_setting.as(:equip) |
       sup_setting.as(:sup) |

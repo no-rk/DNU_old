@@ -68,6 +68,7 @@ ActiveRecord::Schema.define(:version => 20130502105818) do
 
   create_table "game_data_arts", :force => true do |t|
     t.integer  "art_type_id"
+    t.string   "kind"
     t.string   "name"
     t.text     "caption"
     t.datetime "created_at",  :null => false

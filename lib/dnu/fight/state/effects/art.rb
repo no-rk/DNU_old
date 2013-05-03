@@ -1,7 +1,7 @@
 module DNU
   module Fight
     module State
-      class ArtEffect < BaseEffects
+      class Art < BaseEffects
         
         def when_initialize(tree)
           # 技能のLVは戦闘中に変化しない

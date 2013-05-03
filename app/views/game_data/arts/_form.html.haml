@@ -3,4 +3,7 @@
   = form_art.association :art_type
   = form_art.input :name
   = form_art.input :caption
+  - @art.build_art_effect if @art.art_effect.nil?
+  //= form_art.simple_fields_for :art_effect do |form_art_effect|
+  //  = form_art_effect.input :definition, :input_html => { :class => :span9, :rows => 40 }
   = form_art.submit class: "btn btn-large btn-success"

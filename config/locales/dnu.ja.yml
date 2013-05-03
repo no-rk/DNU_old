@@ -176,6 +176,7 @@ ja:
       
       game_data/art:
         art_type: 技能種類
+        kind: 技能種類
         name: 技能名
         caption: 技能説明
       

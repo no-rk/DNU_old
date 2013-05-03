@@ -19,7 +19,7 @@ module DNU
         
         attr_accessor :id, :kind, :name, :user, :day_i, :team, :parent, :parent_effect, :double, :dead, :turn_end
         
-        attr_reader :effects
+        attr_reader :effects, :effects_parent
         
         def status_from_rank(rank)
           rank.to_i*20+50
@@ -81,6 +81,7 @@ module DNU
           @day_i           = tree[:day_i]
           @team            = tree[:team]
           @effects         = [].extend FindEffects
+          @effects_parent  = [].extend FindEffects
           @effects_removed = [].extend FindEffects
           @@nexts.each do |n|
             ['', '_ant'].each do |ant|
@@ -127,6 +128,7 @@ module DNU
           es.each do |e|
             @effects << e
           end
+          @effects_parent << es
         end
         
         def remove_effects(array)

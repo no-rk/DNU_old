@@ -1,13 +1,12 @@
 class GameData::Art < ActiveRecord::Base
   belongs_to :art_type
   has_one :train, :as => :trainable
-  attr_accessible :name, :caption, :type, :art_type_id
+  attr_accessible :name, :caption, :type, :art_type_id, :kind, :art_effect_attributes
   
   has_one  :art_effect
   has_many :result_arts, :class_name => "Result::Art"
   
-  validates :art_type, :presence => true
-  validates :name,     :presence => true, :uniqueness => true
+  accepts_nested_attributes_for :art_effect, :reject_if => :all_blank
   
   scope :find_all_by_type, lambda{ |art_type_name|
     art_type_arel = GameData::ArtType.arel_table
@@ -28,8 +27,16 @@ class GameData::Art < ActiveRecord::Base
     where(art_type_arel[:name].eq(art_type_name)).includes(:art_type).where(:name => name)
   }
   
+  validates :art_type, :presence => true
+  validates :kind,     :presence => true
+  validates :name,     :presence => true, :uniqueness => true
+  
   before_validation :set_game_data
   after_save        :sync_game_data
+  
+  def tree
+    @tree ||= self.art_effect.try(:tree)
+  end
   
   def train_point
     @train_point ||= GameData::Point.find_by_use(:art_type_id, self.art_type.id)
@@ -48,7 +55,7 @@ class GameData::Art < ActiveRecord::Base
   end
   
   def type=(name)
-    self.art_type = GameData::ArtType.find_by_name(name)
+    self.art_type = GameData::ArtType.where(:name => name).first
     @type = name
   end
   
@@ -57,11 +64,12 @@ class GameData::Art < ActiveRecord::Base
   end
   
   def to_sync_hash
-    { :type => self.type }.merge(self.attributes.except("id","art_type_id","created_at","updated_at"))
+    { :type => self.type }.merge(self.attributes.except("id","art_type_id","kind","created_at","updated_at"))
   end
   
   private
   def set_game_data
+    self.kind = self.art_type.try(:name)
     if GameData::Train.name_exists?(self)
       errors.add(:name, "はすでに訓練可能なものの中に存在します。")
     end

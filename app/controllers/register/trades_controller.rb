@@ -1,12 +1,6 @@
 class Register::TradesController < Register::ApplicationController
   private
-  def wrap_clone_record(record)
-    if record.respond_to?(:day) and record.day.present?
-      c_record = Register::Trade.new
-      c_record.build_trade
-    else
-      c_record = clone_record(record)
-    end
-    c_record
+  def register_new_record
+    current_user.send("register_#{names}").where(:day_id => nil).first_or_initialize
   end
 end

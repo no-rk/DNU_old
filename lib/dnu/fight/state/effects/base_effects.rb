@@ -38,6 +38,10 @@ module DNU
         def name
           @LV.nil? ? @name : "#{@name}LV#{@LV.to_i}"
         end
+        
+        def pretty_print(q)
+          q.pp "[#{type}]#{name}"
+        end
       end
     end
   end

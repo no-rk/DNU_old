@@ -21,6 +21,10 @@ class GameData::ArtEffect < ActiveRecord::Base
     (self.tree[:forgeable_item_types] || []).each.with_index.inject({}){|h,(v,i)| h.tap{ h[v] = i.to_i } }
   end
   
+  def battle?
+    tree[:effects].present? or tree[:definitions].present?
+  end
+  
   def used?
     self.result_arts.exists?
   end

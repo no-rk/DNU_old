@@ -2,6 +2,7 @@ class CreateGameDataArts < ActiveRecord::Migration
   def change
     create_table :game_data_arts do |t|
       t.references :art_type
+      t.string :kind
       t.string :name
       t.text :caption
 

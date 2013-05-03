@@ -23,10 +23,10 @@ class Result::Art < ActiveRecord::Base
   end
   
   def tree
-    if self.art_effect.present?
+    if self.art_effect.try(:battle?)
       @tree ||= {
-        :art_effect => {
-          :kind => art.type,
+        :art => {
+          :kind => art.kind,
           :name => art.name,
           :lv => lv
         }.merge(lv_effects).merge(pull_down)
