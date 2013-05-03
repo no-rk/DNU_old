@@ -1,31 +1,31 @@
 ---
 :data:
-- :art_name: "火魂"
+- :source_name: "火魂"
   :name: "ベリナムス"
   :caption: |-
     炎を司る竜です。
     爪や息で相手を殲滅するのが得意です。
-- :art_name: "水魂"
+- :source_name: "水魂"
   :name: "ヒュートス"
   :caption: |-
     水を司る竜です。
     攻撃を当てるのが得意です。
-- :art_name: "地魂"
+- :source_name: "地魂"
   :name: "ラドナス"
   :caption: |-
     大地を司る竜です。
     相手の攻撃を耐え忍ぶのが得意です。
-- :art_name: "風魂"
+- :source_name: "風魂"
   :name: "シルバリノス"
   :caption: |-
     風を司る竜です。
     素早い動きで相手を翻弄するのが得意です。
-- :art_name: "光魂"
+- :source_name: "光魂"
   :name: "アルミナス"
   :caption: |-
     光を司る竜です。
     仲間を守り抜くのが得意です。
-- :art_name: "闇魂"
+- :source_name: "闇魂"
   :name: "エクロノス"
   :caption: |-
     闇を司る竜です。

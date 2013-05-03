@@ -1,15 +1,9 @@
 class Register::SkillsController < Register::ApplicationController
-  def index
-    @skill_id = params[:skill_id]
-    super
-  end
-  
-  def new
-    @skill_id = params[:skill_id]
-    super
-  end
-  
   private
+  def set_instance_variables
+    @skill_id = params[:skill_id]
+  end
+  
   def register_index_records
     current_user.register_skills.where(:skill_id => @skill_id).page(params[:page]).per(Settings.register.history.per)
   end

@@ -64,7 +64,7 @@ class Register::Initial < ActiveRecord::Base
       self.user.add_event!(event.kind => event.name)
     end
     # 守護竜に対応した竜魂を結果に反映
-    self.user.add_art!({ self.init_guardian.art.type => self.init_guardian.art.name }, 5)
+    self.user.add_art!({ self.init_guardian.source.type => self.init_guardian.source.name }, 5)
     # 初期生産を結果に反映
     GameData::Art.find_all_by_type("生産").each do |product|
       self.user.add_art!(product.type => product.name)

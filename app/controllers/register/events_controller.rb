@@ -1,15 +1,9 @@
 class Register::EventsController < Register::ApplicationController
-  def index
-    @event_content_id = params[:event_content_id]
-    super
-  end
-  
-  def new
-    @event_content_id = params[:event_content_id]
-    super
-  end
-  
   private
+  def set_instance_variables
+    @event_content_id = params[:event_content_id]
+  end
+  
   def register_index_records
     current_user.register_events.where(:event_content_id => @event_content_id).page(params[:page]).per(Settings.register.history.per)
   end

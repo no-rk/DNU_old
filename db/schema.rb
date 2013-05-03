@@ -220,14 +220,14 @@ ActiveRecord::Schema.define(:version => 20130502105818) do
   end
 
   create_table "game_data_guardians", :force => true do |t|
-    t.integer  "art_id"
+    t.integer  "train_id"
     t.string   "name"
     t.text     "caption"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
 
-  add_index "game_data_guardians", ["art_id"], :name => "index_game_data_guardians_on_art_id"
+  add_index "game_data_guardians", ["train_id"], :name => "index_game_data_guardians_on_train_id"
 
   create_table "game_data_item_skills", :force => true do |t|
     t.string   "name"
@@ -356,6 +356,7 @@ ActiveRecord::Schema.define(:version => 20130502105818) do
   create_table "game_data_trains", :force => true do |t|
     t.integer  "trainable_id"
     t.string   "trainable_type"
+    t.string   "name"
     t.boolean  "visible"
     t.datetime "created_at",     :null => false
     t.datetime "updated_at",     :null => false

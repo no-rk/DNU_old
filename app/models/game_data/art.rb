@@ -9,8 +9,6 @@ class GameData::Art < ActiveRecord::Base
   validates :art_type, :presence => true
   validates :name,     :presence => true, :uniqueness => true
   
-  after_save :sync_game_data
-  
   scope :find_all_by_type, lambda{ |art_type_name|
     art_type_arel = GameData::ArtType.arel_table
     where(art_type_arel[:name].eq(art_type_name)).includes(:art_type)
@@ -24,6 +22,9 @@ class GameData::Art < ActiveRecord::Base
     art_type_arel = GameData::ArtType.arel_table
     where(art_type_arel[:name].eq(art_type_name)).includes(:art_type).where(:name => name)
   }
+  
+  before_validation :set_game_data
+  after_save        :sync_game_data
   
   def train_point
     @train_point ||= GameData::Point.find_by_use(:art_type_id, self.art_type.id)
@@ -55,6 +56,12 @@ class GameData::Art < ActiveRecord::Base
   end
   
   private
+  def set_game_data
+    if GameData::Train.name_exists?(self)
+      errors.add(:name, "はすでに訓練可能なものの中に存在します。")
+    end
+  end
+  
   def sync_game_data
     DNU::Data.sync(self)
     DNU::Data.trainable(self, self.art_type.train)

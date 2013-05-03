@@ -20,6 +20,9 @@ class GameData::Status < ActiveRecord::Base
       self.name    = definition_tree[:name].to_s
       self.caption = definition_tree[:caption].to_s
       self.tree    = definition_tree
+      if GameData::Train.name_exists?(self)
+        errors.add(:name, "はすでに訓練可能なものの中に存在します。")
+      end
     else
       errors.add(:definition, :invalid)
     end

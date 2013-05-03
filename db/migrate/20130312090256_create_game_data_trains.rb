@@ -2,6 +2,7 @@ class CreateGameDataTrains < ActiveRecord::Migration
   def change
     create_table :game_data_trains do |t|
       t.references :trainable, :polymorphic => true
+      t.string :name
       t.boolean :visible
 
       t.timestamps

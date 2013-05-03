@@ -100,7 +100,7 @@ ja:
       register/icon: アイコン
       register/init_status: 初期能力
       register/init_art: 初期技能
-      register/init_guardian: 初期守護竜
+      register/init_guardian: 初期守護
 
     attributes:
       game_data/battle_value:
@@ -187,7 +187,7 @@ ja:
         definition: 技能効果定義
       
       game_data/guardian:
-        art: 技能
+        train: 源
         name: 守護名
         caption: 守護説明
       
