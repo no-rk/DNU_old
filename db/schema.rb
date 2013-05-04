@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130504063034) do
+ActiveRecord::Schema.define(:version => 20130504091601) do
 
   create_table "admins", :force => true do |t|
     t.string   "email",               :default => "", :null => false
@@ -1281,6 +1281,27 @@ ActiveRecord::Schema.define(:version => 20130504063034) do
 
   add_index "result_passed_days", ["day_id"], :name => "index_result_passed_days_on_day_id"
   add_index "result_passed_days", ["user_id"], :name => "index_result_passed_days_on_user_id"
+
+  create_table "result_pet_arts", :force => true do |t|
+    t.integer  "pet_id"
+    t.integer  "user_id"
+    t.integer  "day_id"
+    t.integer  "way_id"
+    t.string   "way_type"
+    t.integer  "number"
+    t.integer  "art_id"
+    t.integer  "lv"
+    t.integer  "source_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "result_pet_arts", ["art_id"], :name => "index_result_pet_arts_on_art_id"
+  add_index "result_pet_arts", ["day_id"], :name => "index_result_pet_arts_on_day_id"
+  add_index "result_pet_arts", ["pet_id"], :name => "index_result_pet_arts_on_pet_id"
+  add_index "result_pet_arts", ["source_id"], :name => "index_result_pet_arts_on_source_id"
+  add_index "result_pet_arts", ["user_id"], :name => "index_result_pet_arts_on_user_id"
+  add_index "result_pet_arts", ["way_id"], :name => "index_result_pet_arts_on_way_id"
 
   create_table "result_pet_inventories", :force => true do |t|
     t.integer  "passed_day_id"

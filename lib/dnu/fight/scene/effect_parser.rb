@@ -173,8 +173,16 @@ class EffectParser < Parslet::Parser
     match['eEｅＥ'] >> match['nNｎＮ'] >> match['oOｏＯ'] >> dot
   }
   
+  rule(:pno_name) {
+    match['pPｐＰ'] >> match['nNｎＮ'] >> match['oOｏＯ'] >> dot
+  }
+  
   rule(:eno) {
     eno_name >> natural_number.as(:eno)
+  }
+  
+  rule(:pno) {
+    pno_name >> natural_number.as(:pno)
   }
   
   rule(:string) {
@@ -1885,6 +1893,14 @@ class EffectParser < Parslet::Parser
     ).repeat(0)
   }
   
+  # pets
+  
+  rule(:pets) {
+    (
+      character_setting >> newline.maybe
+    ).repeat(0)
+  }
+  
   # character_definitions
   
   rule(:rank) {
@@ -1897,8 +1913,8 @@ class EffectParser < Parslet::Parser
       character_list_temp.push(c.captures[:kind].to_s => c.captures[:name].to_s)
       any.present?
     } >> rank >> (newline | any.absent?) >>
-    definitions.as(:definitions).maybe >>
-    settings.as(:settings)
+    settings.as(:settings) >>
+    pets.as(:pets)
   }
   
   rule(:character_definitions) {
@@ -1915,25 +1931,30 @@ class EffectParser < Parslet::Parser
     ).as(:correction_wrap)
   }
   
-  rule(:character_setting) {
-    character_kind_and_name >>
-    correction.as(:correction).maybe
-  }
-  
-  # pt_settings
-  
   rule(:character_pc) {
     bra >> str('PC').as(:kind) >> ket >> eno >> (spaces? >> str('第') >> natural_number.as(:correction) >> str('回')).maybe
   }
+  
+  rule(:character_pet) {
+    bra >> str('Pet').as(:kind) >> ket >> pno >> (spaces? >> str('第') >> natural_number.as(:correction) >> str('回')).maybe
+  }
+  
+  rule(:character_setting) {
+    (
+      character_kind_and_name >>
+      correction.as(:correction).maybe
+    ) |
+    character_pc |
+    character_pet
+  }
+  
+  # pt_settings
   
   rule(:pt_definition) {
     bra >> str('PT') >> ket >> (newline.absent? >> any).repeat(1).as(:pt_name) >> newline >>
     string.as(:pt_caption).maybe >>
     (
-      (
-        character_setting |
-        character_pc
-      ) >>
+      character_setting >>
       (
         multiply >> calculable.as(:number)
       ).maybe >>

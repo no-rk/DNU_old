@@ -83,6 +83,8 @@ class ResultController < ApplicationController
     @skills       = this_user.result(:skill,     @day_i).where(:forget => false).includes(:skill).all
     @inventories  = this_user.result(:inventory, @day_i).includes(:type).includes(:result_equips).order(:number).all
     @events       = this_user.result(:event, @day_i).where(GameData::Event.arel_table[:kind].in(["共通", "通常"])).includes(:event).all
+    # ペットデータ
+    @pet_inventories = this_user.result(:pet_inventory, @day_i).order(:number).all
     
     render :layout => 'plain'
   end

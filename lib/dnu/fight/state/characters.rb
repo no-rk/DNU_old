@@ -26,11 +26,14 @@ module DNU
           if definition.blank?
             if setting[:eno].present?
               definition = User.find_by_id(setting[:eno].to_i).try(:tree, (setting[:correction] || Day.last_day_i).to_i)
+            elsif setting[:pno].present?
+              definition = Result::Pet.find_by_id(setting[:pno].to_i).try(:tree, (setting[:correction] || Day.last_day_i).to_i)
             else
               definition = GameData::Character.find_by_kind_and_name(kind, name).try(:tree)
             end
             definition ||= {}
           end
+          raise "[#{kind}]#{name}は定義されてない" if definition.blank?
           definition.merge!(setting).merge!({ :parent => parent, :parent_effect => parent_effect })
           character = DNU::Fight::State::Character.new(definition)
           character.turn_end = turn_end
@@ -39,6 +42,12 @@ module DNU
           # この時点での戦闘値を元に最大値と最小値を決定する
           character.start
           self << character
+          # ペット追加
+          if definition[:pets].present?
+            definition[:pets].each do |character_setting|
+              add_character(character_setting.merge(:team => setting[:team]), [], character)
+            end
+          end
         end
         
         def add_double(target, parent_effect=nil, turn_end=nil)

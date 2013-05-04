@@ -96,6 +96,7 @@ ja:
       register/forge: 鍛治
       register/supplement: 付加
       register/purchase: アイテム購入
+      register/catch_pet: 捕獲
       register/battle_setting: 戦闘設定
       register/profile: プロフィール
       register/upload_icon: アップロードアイコン
@@ -322,9 +323,14 @@ ja:
         item: アイテム
         price: 値段
         point: ポイント
+      register/catch_pet: &catch_pet
+        character: キャラクター
+        correction: 補正
       register/event:
         purchases: アイテム購入
+        catch_pets: 捕獲
       register/event/purchases: *purchase
+      register/event/catch_pets: *catch_pet
       
       register/equip: &equip
         number: アイテムNo.

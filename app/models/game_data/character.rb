@@ -56,6 +56,9 @@ class GameData::Character < ActiveRecord::Base
                   map{|h| h[:status]}.
                   group_by{|h|h[:name]}.
                   map{|(k,v)| [:pet_status, {:name => v.first[:name], :bonus => v.sum{|h| h[:status_strength]} }] }
+    art_data = character_tree[:settings].
+               find_all{|h| h[:art].present? }.
+               map.with_index(1){|h,i| [:pet_art, h.values.first.merge(:number => i)] }
     sup_data = character_tree[:settings].
                find_all{|h| h[:sup].present? }.
                map.with_index(1){|h,i| [:pet_sup, h.values.first.merge(:number => i)] }
@@ -66,7 +69,7 @@ class GameData::Character < ActiveRecord::Base
     { 
       :kind => character_tree[:kind],
       :name => character_tree[:name],
-      :settings => status_data + sup_data + skill_data
+      :settings => status_data + art_data + sup_data + skill_data
     }
   end
   

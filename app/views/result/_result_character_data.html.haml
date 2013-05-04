@@ -69,3 +69,22 @@ ENo.#{@id} #{@profile.name}
         #{event_variable.name} ⇒ #{event_variable.value}
         %br
   %br
+%br
+ペット一覧
+%br
+- @pet_inventories.each do |pet_inventory|
+  [#{pet_inventory.kind}][#{pet_inventory.number}]#{pet_inventory.pet.nickname(@day_i)}
+  %br
+  - pet_inventory.pet.statuses(@day_i).each do |status|
+    #{status.status.name} #{status.value}+#{status.bonus}
+    %br
+  - pet_inventory.pet.arts(@day_i).each do |art|
+    [#{art.number}]#{art.art.name}LV#{art.lv}
+    %br
+  - pet_inventory.pet.sups(@day_i).each do |sup|
+    [#{sup.number}]#{sup.sup.name}LV#{sup.lv}
+    %br
+  - pet_inventory.pet.skills(@day_i).each do |skill|
+    [#{skill.number}]#{skill.skill.name}
+    %br
+  %br

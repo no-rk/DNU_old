@@ -49,7 +49,7 @@ class Register::Event < ActiveRecord::Base
   def set_character_and_correction
     self.catch_pets.each do |catch_pet|
       catch_pet.character  = GameData::Character.find_by_kind_and_name(event_content.content[catch_pet.index.to_i][:kind], event_content.content[catch_pet.index.to_i][:name])
-      catch_pet.correction = event_content.content[catch_pet.index.to_i][:correction]
+      catch_pet.correction = event_content.content[catch_pet.index.to_i][:correction].to_i
     end
   end
 end

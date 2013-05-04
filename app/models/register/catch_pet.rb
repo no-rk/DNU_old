@@ -12,7 +12,7 @@ class Register::CatchPet < ActiveRecord::Base
   validates :character, :presence => true
   
   def index
-    @index || ((event_content.present? and character.present?) ? (event_content.content.find_index{|h| h[:kind]==character.kind and h[:name]==character.name and h[:correction].to_i==correction }) : nil)
+    @index || ((event_content.present? and character.present?) ? (event_content.content.find_index{|h| h[:kind]==character.kind and h[:name]==character.name and h[:correction].to_i==correction.to_i }) : nil)
   end
   
   def catch_pet!(way = self.game_data_event, day_i = self.day.day)

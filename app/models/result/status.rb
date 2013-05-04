@@ -12,6 +12,8 @@ class Result::Status < ActiveRecord::Base
   
   validates :passed_day, :presence => true
   validates :status,     :presence => true
+  validates :count,      :numericality => { :only_integer => true, :greater_than_or_euql_to => 0 }
+  validates :bonus,      :numericality => { :only_integer => true, :greater_than_or_euql_to => 0 }
   
   def train_point
     self.status.train_point
