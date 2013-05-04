@@ -2,7 +2,7 @@ class Register::Purchase < ActiveRecord::Base
   belongs_to :event
   belongs_to :item,  :class_name => "GameData::Item"
   belongs_to :point, :class_name => "GameData::Point"
-  attr_accessible :item_id, :index
+  attr_accessible :index
   attr_writer :index
   
   has_one :user,            :through => :event
@@ -19,7 +19,7 @@ class Register::Purchase < ActiveRecord::Base
   end
   
   def purchase!(way = self.game_data_event, day_i = self.day.day)
-    success = false
+    success = nil
     if user.blank_item_number(day_i).present?
       point_arel = GameData::Point.arel_table
       result_point = user.result(:point).where(point_arel[:name].eq(self.point.name)).includes(:point).first

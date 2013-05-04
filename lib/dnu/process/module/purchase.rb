@@ -12,8 +12,8 @@ module DNU
                 
                 user.create_result!(:purchase, {
                   :purchase => purchase,
-                  :number   => result_inventory.number,
-                  :item     => result_inventory.item,
+                  :number   => result_inventory.try(:number),
+                  :item     => result_inventory.try(:item),
                   :success  => result_inventory.present?
                 })
               end

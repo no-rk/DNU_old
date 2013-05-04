@@ -1,0 +1,10 @@
+%h3 ペット捕獲
+
+- @catch_pets.each do |catch_pet|
+  [#{catch_pet.character.kind}]#{catch_pet.character.name}
+  - if catch_pet.success
+    を捕獲し
+    [#{catch_pet.number}] へ。
+  - else
+    を捕獲・・・しようと思ったがダメだった。
+  %br

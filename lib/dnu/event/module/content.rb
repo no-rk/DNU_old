@@ -68,6 +68,18 @@ module DNU
         user.add_event_form!(event_content)
       end
       
+      def add_pet(tree)
+        kind       = tree[:kind].to_s
+        name       = tree[:name].to_s
+        correction = tree[:correction].to_i
+        
+        user.add_pet!({ kind => name }, correction, game_data_event, day.day)
+      end
+      
+      def catch_pet(tree)
+        user.add_event_form!(event_content)
+      end
+      
       def end_step(dummy)
         self.state = "終了"
         self.save!

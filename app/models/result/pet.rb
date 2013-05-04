@@ -61,11 +61,11 @@ class Result::Pet < ActiveRecord::Base
     result_pet
   end
   
-  def self.new_pet_by_kind_and_name(pet_kind, pet_name, user, way = nil, day_i = Day.last_day_i)
+  def self.new_pet_by_kind_and_name_and_correction(pet_kind, pet_name, correction, user, way = nil, day_i = Day.last_day_i)
     pet_plan = GameData::Character.where(:kind => pet_kind, :name => pet_name).first
     
     if pet_plan.present?
-      pet_data = pet_plan.pet_data
+      pet_data = pet_plan.pet_data(correction)
       
       result_pet = self.new_pet_by_data(pet_data, user, way, day_i)
       result_pet.user            = user

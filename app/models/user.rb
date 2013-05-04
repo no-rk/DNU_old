@@ -28,6 +28,7 @@ class User < ActiveRecord::Base
   has_many :result_send_points,     :through => :result_passed_days, :class_name => "Result::SendPoint"
   has_many :result_send_items,      :through => :result_passed_days, :class_name => "Result::SendItem"
   has_many :result_purchases,       :through => :result_passed_days, :class_name => "Result::Purchase"
+  has_many :result_catch_pets,      :through => :result_passed_days, :class_name => "Result::CatchPet"
   has_many :result_forges,          :through => :result_passed_days, :class_name => "Result::Forge"
   has_many :result_supplements,     :through => :result_passed_days, :class_name => "Result::Supplement"
   has_many :result_equips ,         :through => :result_passed_days, :class_name => "Result::Equip"
@@ -360,7 +361,7 @@ class User < ActiveRecord::Base
   end
   
   def add_item!(item, way = nil, day_i = Day.last_day_i)
-    success = false
+    success = nil
     item_type = item.keys.first
     item_name = item.values.first
     
@@ -376,14 +377,14 @@ class User < ActiveRecord::Base
     success
   end
   
-  def add_pet!(pet, way = nil, day_i = Day.last_day_i)
-    success = false
+  def add_pet!(pet, correction = 0, way = nil, day_i = Day.last_day_i)
+    success = nil
     pet_kind = pet.keys.first
     pet_name = pet.values.first
     
     result_inventory = new_pet_inventory(pet_kind, day_i)
     if result_inventory.number.present?
-      result_pet = Result::Pet.new_pet_by_kind_and_name(pet_kind, pet_name, self, way, day_i)
+      result_pet = Result::Pet.new_pet_by_kind_and_name_and_correction(pet_kind, pet_name, correction, self, way, day_i)
       if result_pet.try(:save)
         result_inventory.pet = result_pet
         result_inventory.save!

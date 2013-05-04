@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130504021550) do
+ActiveRecord::Schema.define(:version => 20130504063034) do
 
   create_table "admins", :force => true do |t|
     t.string   "email",               :default => "", :null => false
@@ -508,6 +508,17 @@ ActiveRecord::Schema.define(:version => 20130504021550) do
   add_index "register_blossoms", ["main_id"], :name => "index_register_blossoms_on_main_id"
   add_index "register_blossoms", ["train_id"], :name => "index_register_blossoms_on_train_id"
 
+  create_table "register_catch_pets", :force => true do |t|
+    t.integer  "event_id"
+    t.integer  "character_id"
+    t.integer  "correction"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
+  end
+
+  add_index "register_catch_pets", ["character_id"], :name => "index_register_catch_pets_on_character_id"
+  add_index "register_catch_pets", ["event_id"], :name => "index_register_catch_pets_on_event_id"
+
   create_table "register_characters", :force => true do |t|
     t.integer  "user_id"
     t.integer  "day_id"
@@ -968,6 +979,20 @@ ActiveRecord::Schema.define(:version => 20130504021550) do
 
   add_index "result_blossoms", ["blossomable_id"], :name => "index_result_blossoms_on_blossomable_id"
   add_index "result_blossoms", ["passed_day_id"], :name => "index_result_blossoms_on_passed_day_id"
+
+  create_table "result_catch_pets", :force => true do |t|
+    t.integer  "passed_day_id"
+    t.integer  "catch_pet_id"
+    t.integer  "number"
+    t.integer  "pet_id"
+    t.boolean  "success"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
+  end
+
+  add_index "result_catch_pets", ["catch_pet_id"], :name => "index_result_catch_pets_on_catch_pet_id"
+  add_index "result_catch_pets", ["passed_day_id"], :name => "index_result_catch_pets_on_passed_day_id"
+  add_index "result_catch_pets", ["pet_id"], :name => "index_result_catch_pets_on_pet_id"
 
   create_table "result_disposes", :force => true do |t|
     t.integer  "passed_day_id"

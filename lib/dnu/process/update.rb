@@ -6,6 +6,7 @@ module DNU
       extend SendPoint
       extend SendItem
       extend Purchase
+      extend CatchPet
       extend ItemUse
       extend Forge
       extend Supplement
@@ -44,7 +45,10 @@ module DNU
           # アイテム購入
           purchase
           
-          # アイテム購入
+          # ペット捕獲
+          catch_pet
+          
+          # アイテム使用
           item_use
           
           # 鍛治

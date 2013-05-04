@@ -44,6 +44,8 @@ class ResultController < ApplicationController
     @receive_items = Result::SendItem.receives(@id, @day_i).all
     # 購入アイテム
     @purchases    = this_user.result(:purchase, @day_i).all
+    # ペット捕獲
+    @catch_pets   = this_user.result(:catch_pet, @day_i).all
     # 鍛治
     @forges       = this_user.result(:forge, @day_i).all
     # 付加

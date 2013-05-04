@@ -28,7 +28,7 @@ module DNU
                   user_form.day = now_day
                   user_form.save!
                 # 新登録がなくても一部フォームは古登録を採用
-                elsif [:main, :event, :battle, :duel, :competition, :pet, :skill, :art, :character].any?{ |f| f==form_name }
+                elsif [:main, :battle, :duel, :competition, :pet, :skill, :art, :character].any?{ |f| f==form_name }
                   case form_name
                   when  :main
                     # 合言葉だけ引き継ぐ

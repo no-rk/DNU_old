@@ -1,0 +1,8 @@
+%br
+- i = 0
+= form_event.label :catch_pets
+= form_event.simple_fields_for :catch_pets, :wrapper => :simple, :defaults => { :as => (:plain if @read_only), :user => current_user, :input_html => { :class => :'span6' } } do |form_catch_pet|
+  = form_catch_pet.input :index, :collection => register_event.event_content.collection
+  - if (i + 1)%2 == 0
+    %br
+  - i = i + 1

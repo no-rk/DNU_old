@@ -1791,7 +1791,7 @@ class EffectParser < Parslet::Parser
   # point_setting
   
   rule(:point_setting) {
-    bra >> str('ポイント') >> ket >> point_name >> spaces? >> correction.as(:correction) >> newline.maybe
+    bra >> str('ポイント') >> ket >> point_name >> correction.as(:correction) >> newline.maybe
   }
   
   # status_setting
@@ -1909,15 +1909,15 @@ class EffectParser < Parslet::Parser
   
   rule(:correction) {
     (
-      (plus | minus.as(:minus)) >> natural_number.as(:value)
+      spaces? >>
+      (plus | minus.as(:minus)) >>
+      natural_number.as(:value)
     ).as(:correction_wrap)
   }
   
   rule(:character_setting) {
     character_kind_and_name >>
-    (
-      spaces? >> correction.as(:correction)
-    ).maybe
+    correction.as(:correction).maybe
   }
   
   # pt_settings
@@ -2045,6 +2045,24 @@ class EffectParser < Parslet::Parser
     ).repeat(1).as(:purchase)
   }
   
+  rule(:add_pet) {
+    (
+      character_kind_and_name >>
+      correction.as(:correction).maybe >>
+      spaces? >>
+      str('を').maybe >> str('追加')
+    ).as(:add_pet)
+  }
+  
+  rule(:catch_pet) {
+    bra >> str('捕獲') >> ket >> newline.maybe >>
+    (
+      character_kind_and_name >>
+      correction.as(:correction).maybe >>
+      (separator | newline).maybe
+    ).repeat(1).as(:catch_pet)
+  }
+  
   rule(:add_notice) {
     pt_definition.as(:add_notice)
   }
@@ -2056,6 +2074,8 @@ class EffectParser < Parslet::Parser
     add_event |
     add_item |
     purchase |
+    add_pet |
+    catch_pet |
     add_notice |
     change_place |
     end_step |
@@ -2216,9 +2236,7 @@ class EffectParser < Parslet::Parser
   rule(:enemy_list_setting) {
     bra >> str('敵リスト') >> ket >>
     enemy_list_name.as(:name) >>
-    (
-      spaces? >> correction.as(:correction)
-    ).maybe
+    correction.as(:correction).maybe
   }
   
   # enemy_territory_definition

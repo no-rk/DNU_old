@@ -33,6 +33,10 @@
   .row-fluid
     #purchase.span12.well
       = render 'result_purchase'
+- if @catch_pets.present?
+  .row-fluid
+    #catch_pet.span12.well
+      = render 'result_catch_pet'
 - if @forges.present?
   .row-fluid
     #forge.span12.well

@@ -9,6 +9,6 @@ class Register::EventsController < Register::ApplicationController
   end
   
   def register_new_record
-    current_user.register_events.where(:event_content_id => @event_content_id).first_or_initialize
+    current_user.register_events.where(:event_content_id => @event_content_id).where(:day_id => nil).first_or_initialize
   end
 end
