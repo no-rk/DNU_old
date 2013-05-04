@@ -37,6 +37,10 @@ class EffectTransform < Parslet::Transform
     forgeable_item_types_wrap.map{|h| h.values.first }
   }
   
+  rule(:requires_wrap => subtree(:requires_wrap)) {
+    requires_wrap.map{|h| h.values.first }
+  }
+  
   rule(:forgeable_number_wrap => subtree(:forgeable_number_wrap)) {
     forgeable_number_wrap || 1
   }

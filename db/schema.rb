@@ -104,9 +104,12 @@ ActiveRecord::Schema.define(:version => 20130504091601) do
     t.string   "name"
     t.text     "caption"
     t.boolean  "player"
+    t.integer  "equip_id"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
+
+  add_index "game_data_character_types", ["equip_id"], :name => "index_game_data_character_types_on_equip_id"
 
   create_table "game_data_characters", :force => true do |t|
     t.string   "kind"

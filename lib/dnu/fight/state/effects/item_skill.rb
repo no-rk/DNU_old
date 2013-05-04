@@ -3,13 +3,14 @@ module DNU
     module State
       class ItemSkill < BaseEffects
         
-        attr_reader :hostility, :pre_phasable, :definitions, :item
+        attr_reader :hostility, :require, :pre_phasable, :definitions, :item
         
         def when_initialize(tree)
           set_hostility(tree[:effects])
           @pre_phasable = true
           @definitions  = tree[:definitions]
           @item         = tree[:item]
+          @require      = nil
           tree[:effects].each do |effect|
             effect[:timing]    = tree[:timing]
             effect[:priority]  = tree[:priority]

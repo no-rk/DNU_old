@@ -16,6 +16,7 @@ class Result::Equip < ActiveRecord::Base
   def tree
     @tree ||= {
       :equip => {
+        :kind => item.equip_type,
         :name => inventory.type_name,
         :equip_strength => inventory.strength,
         :settings => [

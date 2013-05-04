@@ -3,18 +3,24 @@
 - :name: PC
   :caption: "プレイヤーキャラクター"
   :player: true
+  :equip_name: "素手"
 - :name: NPC
   :caption: "ノンプレイヤーキャラクター"
   :player: 
+  :equip_name: 
 - :name: "モンスター"
   :caption: "モンスター"
   :player: 
+  :equip_name: 
 - :name: "召喚"
   :caption: "戦闘中に特殊効果によって呼ばれる"
   :player: 
+  :equip_name: 
 - :name: "人形"
   :caption: "一人が数体もてる"
   :player: 
+  :equip_name: 
 - :name: "竜"
   :caption: "一人に一匹だけ"
   :player: 
+  :equip_name: 

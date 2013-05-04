@@ -1642,10 +1642,24 @@ class EffectParser < Parslet::Parser
   
   # equip_definition
   
+  rule(:requires) {
+    bra >> str('必須') >> ket >> newline.maybe >>
+    (
+      (
+        (
+          separator |
+          newline
+        ).absent? >> any
+      ).repeat(1).as(:name) >>
+      separator.maybe
+    ).repeat(1).as(:requires_wrap).as(:requires) >> newline.maybe
+  }
+  
   rule(:equip_definition) {
     bra >> equip_type.as(:kind) >> ket >>
     (newline.absent? >> any).repeat(1).as(:name) >> newline >>
     string.as(:caption).maybe >>
+    requires.maybe >>
     sup_effects.as(:effects) >>
     (default_attack_definition.as(:default_attack)).maybe
   }
@@ -1932,11 +1946,11 @@ class EffectParser < Parslet::Parser
   }
   
   rule(:character_pc) {
-    bra >> str('PC').as(:kind) >> ket >> eno >> (spaces? >> str('第') >> natural_number.as(:correction) >> str('回')).maybe
+    bra >> str('PC').as(:kind) >> ket >> eno >> (spaces? >> str('第') >> non_negative_integer.as(:correction) >> str('回')).maybe
   }
   
   rule(:character_pet) {
-    bra >> str('Pet').as(:kind) >> ket >> pno >> (spaces? >> str('第') >> natural_number.as(:correction) >> str('回')).maybe
+    bra >> str('Pet').as(:kind) >> ket >> pno >> (spaces? >> str('第') >> non_negative_integer.as(:correction) >> str('回')).maybe
   }
   
   rule(:character_setting) {

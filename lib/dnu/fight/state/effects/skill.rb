@@ -9,7 +9,7 @@ module DNU
         def when_initialize(tree)
           @cost         = DNU::Fight::State::BaseValue.new(nil, tree[:cost])
           @cost.start(0, 10**10)
-          @require      = tree[:require]
+          @require      = tree[:require].try(:to_sym)
           set_hostility(tree[:effects])
           @pre_phasable = tree[:pre_phasable]
           @targetable   = tree[:targetable]

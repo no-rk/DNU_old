@@ -53,7 +53,25 @@ module DNU
           tree[:settings].try(:each) do |setting|
             add_effects(setting, self, tree[:definitions])
           end
-          # 武器なかったら素手にする処理をここに入れる if effects.type(:Weapon).blank?
+          # 標準必須装備
+          equip =  GameData::CharacterType.where(:name => @kind).first.equip
+          @require = []
+          if equip.present?
+            if @effects_parent.type(:Equip).find_all{|r| r.kind.to_sym==equip.kind.to_sym}.blank?
+              setting = {
+                :equip  =>  {
+                  :kind => equip.kind,
+                  :name => equip.name,
+                  :equip_strength => 10,
+                  :settings=>[]
+                }
+              }
+              add_effects(setting, self)
+            end
+          else
+            @require += GameData::Equip.pluck(:name).map{|e|e.to_sym}
+          end
+          @require.uniq!
           add_disease
         end
         
@@ -65,6 +83,14 @@ module DNU
         
         def live
           !@dead
+        end
+        
+        def require
+          @require || []
+        end
+        
+        def requires
+          (@effects_parent.type(:Equip).map{|e| e.requires }.flatten + require).uniq
         end
         
         def add_effects(setting, parent_obj=nil, def_plus = [])

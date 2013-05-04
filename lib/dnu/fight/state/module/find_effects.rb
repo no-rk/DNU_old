@@ -29,6 +29,10 @@ module DNU
           self.find_all{ |child| !child.done }.extend FindEffects
         end
         
+        def required(character)
+          self.find_all{ |child| child.require.nil? ? true : character.requires.include?(child.require) }.extend FindEffects
+        end
+        
         def find_by_name(name)
           name.nil? ? self : (self.find_all{ |child| child.name.to_sym == name.to_sym }.extend FindEffects)
         end

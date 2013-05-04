@@ -142,6 +142,7 @@ ja:
         name: キャラクター種類名
         caption: キャラクター種類説明
         player: プレイヤー
+        equip: 標準必須装備
       
       game_data/landform:
         name: 地形名
