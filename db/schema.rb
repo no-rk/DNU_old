@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130503131039) do
+ActiveRecord::Schema.define(:version => 20130504014640) do
 
   create_table "admins", :force => true do |t|
     t.string   "email",               :default => "", :null => false
@@ -981,6 +981,16 @@ ActiveRecord::Schema.define(:version => 20130503131039) do
   add_index "result_equips", ["equip_id"], :name => "index_result_equips_on_equip_id"
   add_index "result_equips", ["inventory_id"], :name => "index_result_equips_on_inventory_id"
   add_index "result_equips", ["passed_day_id"], :name => "index_result_equips_on_passed_day_id"
+
+  create_table "result_event_forms", :force => true do |t|
+    t.integer  "passed_day_id"
+    t.integer  "event_content_id"
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
+  end
+
+  add_index "result_event_forms", ["event_content_id"], :name => "index_result_event_forms_on_event_content_id"
+  add_index "result_event_forms", ["passed_day_id"], :name => "index_result_event_forms_on_passed_day_id"
 
   create_table "result_event_states", :force => true do |t|
     t.integer  "event_id"

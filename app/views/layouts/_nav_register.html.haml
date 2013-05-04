@@ -11,28 +11,31 @@
       %li.nav-header 行動設定
       - koudous.each do |action|
         %li{:class => active_current(send("new_register_#{action}_path"))}
-          %a{:href => send("new_register_#{action}_path")}= "Register::#{action.to_s.camelize}".constantize.model_name.human
+          %a{:href => send("new_register_#{action}_path")}= current_user.register_mark(action) + "Register::#{action.to_s.camelize}".constantize.model_name.human 
       - if current_user.form(:event).present?
         %li.nav-header イベント
         - current_user.form(:event).each do |event_content|
           %li{:class => active_current(register_new_event_content_id_event_path(event_content.id))}
-            %a{:href => register_new_event_content_id_event_path(event_content.id)}= event_content.nickname
+            %a{:href => register_new_event_content_id_event_path(event_content.id)}= current_user.register_mark(:event, {:event_content_id => event_content.id}) + event_content.nickname
       %li.nav-header 戦闘設定
       - sentous.each do |battle|
         %li{:class => active_current(send("new_register_#{battle}_path"))}
-          %a{:href => send("new_register_#{battle}_path")}= "Register::#{battle.to_s.camelize}".constantize.model_name.human
+          %a{:href => send("new_register_#{battle}_path")}= current_user.register_mark(battle) + "Register::#{battle.to_s.camelize}".constantize.model_name.human
       - if current_user.form(:skill).present?
         %li.nav-header 技設定
         - current_user.form(:skill).each do |skill|
           %li{:class => active_current(register_new_skill_id_skill_path(skill.id))}
-            %a{:href => register_new_skill_id_skill_path(skill.id)}= skill.name
+            %a{:href => register_new_skill_id_skill_path(skill.id)}= current_user.register_mark(:skill, {:skill_id => skill.id}) + skill.name
       - if current_user.form(:art).present?
         %li.nav-header 技能設定
         - current_user.form(:art).each do |art|
           %li{:class => active_current(register_new_art_id_art_path(art.id))}
-            %a{:href => register_new_art_id_art_path(art.id)}= art.name
+            %a{:href => register_new_art_id_art_path(art.id)}= current_user.register_mark(:art, {:art_id => art.id}) + art.name
       %li.nav-header 交流
-      - [:message, :community, :character, :image].each do |exchange|
+      - [:message, :community, :character].each do |exchange|
+        %li{:class => active_current(send("new_register_#{exchange}_path"))}
+          %a{:href => send("new_register_#{exchange}_path")}= current_user.register_mark(exchange) + "Register::#{exchange.to_s.camelize}".constantize.model_name.human
+      - [:image].each do |exchange|
         %li{:class => active_current(send("new_register_#{exchange}_path"))}
           %a{:href => send("new_register_#{exchange}_path")}= "Register::#{exchange.to_s.camelize}".constantize.model_name.human
       - if current_user.creation_day.nil? or current_user.creation_day == Day.last_day_i

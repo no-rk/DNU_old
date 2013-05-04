@@ -39,6 +39,7 @@ class User < ActiveRecord::Base
   
   has_many :result_events,          :through => :result_passed_days, :class_name => "Result::Event"
   has_many :result_event_states,    :through => :result_events,      :class_name => "Result::EventState", :source => :event_states
+  has_many :result_event_forms,     :through => :result_passed_days, :class_name => "Result::EventForm"
   has_many :result_after_moves,     :through => :result_passed_days, :class_name => "Result::AfterMove"
   
   has_many :result_points,          :through => :result_passed_days, :class_name => "Result::Point"
@@ -85,18 +86,26 @@ class User < ActiveRecord::Base
     end
   end
   
-  def forgeables(day_i = Day.last_day_i)
-    self.result(:art, day_i).merge(GameData::Art.forgeables)
+  def registered?(type, condition = nil)
+    if condition.present?
+      self.send("register_#{type.to_s.pluralize}").where(:day_id => nil).where(condition).exists?
+    else
+      self.send("register_#{type.to_s.pluralize}").where(:day_id => nil).exists?
+    end
   end
   
-  def new_register_events
-    self.register_events.where(:day_id => nil)
+  def register_mark(type, condition = nil)
+    registered?(type, condition) ? "●" : "○"
+  end
+  
+  def forgeables(day_i = Day.last_day_i)
+    self.result(:art, day_i).merge(GameData::Art.forgeables)
   end
   
   def form(type)
     case type.to_sym
     when :event
-      new_register_events.uniq.pluck(:event_content_id).map{ |id| GameData::EventContent.find(id) }
+      self.result(:event_form).map{|r| r.event_content}
     else
       self.result(type).where(:forget => false).map{ |r| r.send(type) }
     end
@@ -381,11 +390,10 @@ class User < ActiveRecord::Base
     success
   end
   
-  def add_event_form!(event_content)
-    self.register_events.build do |register_event|
-      register_event.event_content = event_content
-    end
-    self.save
+  def add_event_form!(event_content, day_i = Day.last_day_i)
+    self.create_result!(:event_form, {
+      :event_content => event_content
+    }, day_i)
   end
   
   def add_event!(event, day_i = Day.last_day_i)
