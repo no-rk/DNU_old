@@ -1,0 +1,8 @@
+%h1= @register_pets.first.plan.name
+- @register_pets.each do |register_pet|
+  .alert
+    - if register_pet.day.present?
+      %span.badge.badge-important #{register_pet.day.day}日
+    = render 'form', { :register_pet => register_pet }
+    = link_to 'Show', register_pet
+= paginate @register_pets

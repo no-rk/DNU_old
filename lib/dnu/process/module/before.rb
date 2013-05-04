@@ -9,9 +9,8 @@ module DNU
         
         now_day = Day.where(:day => now_day).first_or_create!
         
-        # 再更新の場合はイベント宣言, 叫び, PT結果, マップクリア
+        # 再更新の場合は叫び, PT結果, マップクリア
         unless @new_day
-          Register::Event.where(:day_id => nil).destroy_all
           day_arel = Day.arel_table
           Result::Shout.where(day_arel[:day].eq(now_day.day)).includes(:day).destroy_all
           Result::Party.where(day_arel[:day].eq(now_day.day)).includes(:day).destroy_all
@@ -20,7 +19,7 @@ module DNU
         # キャラ作成済みの各ユーザー
         User.already_make.find_each do |user|
           # 最新宣言に日数の情報を付与する
-          [:main, :trade, :product, :event, :battle, :duel, :competition, :skill, :art, :character].each do |form_name|
+          [:main, :trade, :product, :event, :battle, :duel, :competition, :pet, :skill, :art, :character].each do |form_name|
             user_forms = user.next_forms(form_name)
             if user_forms.present? and @new_day
               user_forms.each do |user_form|
@@ -29,7 +28,7 @@ module DNU
                   user_form.day = now_day
                   user_form.save!
                 # 新登録がなくても一部フォームは古登録を採用
-                elsif [:main, :event, :battle, :duel, :competition, :skill, :art, :character].any?{ |f| f==form_name }
+                elsif [:main, :event, :battle, :duel, :competition, :pet, :skill, :art, :character].any?{ |f| f==form_name }
                   case form_name
                   when  :main
                     # 合言葉だけ引き継ぐ
@@ -59,7 +58,7 @@ module DNU
           end
           user.create_result!(:passed_day, { :day => now_day, :passed_day => (now_day.day.to_i - user.creation_day.to_i) })
           # 前日の結果を初期値としてコピー
-          [:art, :inventory, :place, :point, :skill, :status, :event].each do |result_name|
+          [:art, :inventory, :place, :point, :skill, :status, :event, :pet_inventory].each do |result_name|
             user.result(result_name, now_day.before_i).each do |result|
               result_c = DNU::DeepClone.register(result)
               result_c.passed_day = user.result(:passed_day, now_day.day).last

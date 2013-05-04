@@ -64,6 +64,8 @@ ja:
       register/competition: &competition
         闘技大会
 
+      register/pet: &pet
+        ペット
       register/skill: &skill
         技
       register/art: &art
@@ -340,10 +342,20 @@ ja:
       register/battle/equips: *equip
       register/battle/battle_settings: *battle_setting
       
+      register/profile: &profile
+        age: 年齢
+        gender: 性別
+        introduction: 紹介
+        name: 名前
+        nickname: 愛称
+        race: 種族
+      register/pet/profile: *profile
+      register/pet/battle_settings: *battle_setting
+      
       register/skill_name: &skill_name
         name: 技名
         caption: 技の説明
-      register/skill/skill_confs/skill_name: *skill_name
+      register/skill/skill_name: *skill_name
       
       register/art_name: &art_name
         name: 技能名
@@ -354,13 +366,6 @@ ja:
         pull_down: プルダウン効果
       register/art/art_pull_down: *art_pull_down
       
-      register/profile: &profile
-        age: 年齢
-        gender: 性別
-        introduction: 紹介
-        name: 名前
-        nickname: 愛称
-        race: 種族
       register/icon: &icon
         upload_icon_id: アップロードアイコン
         url: アイコンURL

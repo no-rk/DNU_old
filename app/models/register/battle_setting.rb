@@ -26,6 +26,26 @@ class Register::BattleSetting < ActiveRecord::Base
     }
   end
   
+  def use_conditions
+    @use_conditions ||= GameData::BattleSetting.select([:id,:name]).find_all_by_kind('使用条件').inject({}){ |h,r| h.tap{ h[r.name] = r.id } }
+  end
+  
+  def frequencies
+    @frequencies ||= GameData::BattleSetting.select([:id,:name]).find_all_by_kind('使用頻度').inject({}){ |h,r| h.tap{ h[r.name] = r.id } }
+  end
+  
+  def targets
+    @targets ||= GameData::BattleSetting.select([:id,:name]).find_all_by_kind('対象指定').inject({}){ |h,r| h.tap{ h[r.name] = r.id } }
+  end
+  
+  def selected_frequency
+    @selected_frequency ||= GameData::BattleSetting.select(:id).find_by_name('頻度5').id
+  end
+  
+  def selected_use_condition
+    @selected_use_condition ||= GameData::BattleSetting.select(:id).find_by_name('通常時').id
+  end
+  
   private
   def set_condition
     skill_condition = DNU::Data.parse(:skill_condition, "#{self.use_condition.name} #{self.frequency.name}")

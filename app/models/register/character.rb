@@ -2,10 +2,10 @@ class Register::Character < ActiveRecord::Base
   belongs_to :user
   belongs_to :day
 
-  has_one  :profile, :dependent => :destroy
+  has_one  :profile, :dependent => :destroy, :as => :character
   has_many :icons  , :order => "number ASC", :dependent => :destroy
-  accepts_nested_attributes_for :profile, :allow_destroy => true
-  accepts_nested_attributes_for :icons, :allow_destroy => true, :reject_if => proc { |attributes| attributes.all? {|k,v| k.to_sym==:number ? true : v.blank?} }
+  accepts_nested_attributes_for :profile
+  accepts_nested_attributes_for :icons, :reject_if => proc { |attributes| attributes.all? {|k,v| k.to_sym==:number ? true : v.blank?} }
 
   attr_accessible :profile_attributes, :icons_attributes
 

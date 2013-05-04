@@ -10,6 +10,7 @@ class User < ActiveRecord::Base
   has_many :register_duels,        :order => "updated_at DESC", :class_name => "Register::Duel"
   has_many :register_competitions, :order => "updated_at DESC", :class_name => "Register::Competition"
   
+  has_many :register_pets,         :order => "updated_at DESC", :class_name => "Register::Pet", :include => [:pet]
   has_many :register_skills,       :order => "updated_at DESC", :class_name => "Register::Skill"
   has_many :register_arts,         :order => "updated_at DESC", :class_name => "Register::Art", :include => [:art, :art_effect]
   
@@ -104,6 +105,8 @@ class User < ActiveRecord::Base
   
   def form(type)
     case type.to_sym
+    when :pet
+      self.result(:pet_inventory).map{|r| r.pet}
     when :event
       self.result(:event_form).map{|r| r.event_content}
     else

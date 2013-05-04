@@ -7,10 +7,11 @@ class Result::Pet < ActiveRecord::Base
   belongs_to :source, :class_name => "Result::Pet"
   attr_accessible :dispose_protect, :send_protect
   
-  has_many :pet_names,    :dependent => :destroy
   has_many :pet_statuses, :dependent => :destroy
   has_many :pet_sups,     :dependent => :destroy
   has_many :pet_skills,   :dependent => :destroy
+  
+  has_many :pet_inventories
   
   validates :user,            :presence => true
   validates :day,             :presence => true
@@ -18,20 +19,10 @@ class Result::Pet < ActiveRecord::Base
   validates :dispose_protect, :inclusion => { :in => [true, false] }
   validates :send_protect,    :inclusion => { :in => [true, false] }
   
-  validate :has_name?
-  
   def self.new_pet_by_data(pet_data, user, way = nil, day_i = Day.last_day_i)
     day = Day.find_by_day(day_i)
     result_pet = self.new
     result_pet.kind = GameData::CharacterType.where(:name => pet_data[:kind]).first
-    result_pet.pet_names.build do |pet_name|
-      pet_name.user    = user
-      pet_name.day     = day
-      pet_name.way     = way
-      pet_name.name    = pet_data[:name].to_s
-      pet_name.caption = pet_data[:caption].to_s if pet_data[:caption].present?
-      pet_name.source  = pet_data[:source] if pet_data[:source].present?
-    end
     
     pet_data[:settings].each do |(k,v)|
       case k
@@ -87,12 +78,14 @@ class Result::Pet < ActiveRecord::Base
     result_pet
   end
   
-  def pet_name(day_i = Day.last_day_i)
+  def name
+    "[#{self.plan.kind}][#{self.pet_inventory.number}]#{self.plan.name}"
+  end
+  
+  def pet_inventory(day_i = Day.last_day_i)
     day_arel = Day.arel_table
-    pet_name_arel = Result::PetName.arel_table
     
-    pet_names.where(day_arel[:day].lteq(day_i)).
-              order(day_arel[:day].desc, pet_name_arel[:id].desc).includes(:day).limit(1).includes(:user).first
+    pet_inventories.where(day_arel[:day].eq(day_i)).includes(:day).first
   end
   
   def pet_status(status_id, day_i = Day.last_day_i)
@@ -117,12 +110,5 @@ class Result::Pet < ActiveRecord::Base
     
     pet_skills.where(:number => n).where(day_arel[:day].lteq(day_i)).
              order(day_arel[:day].desc, pet_skill_arel[:id].desc).includes(:day).limit(1).includes(:user).includes(:skill).first
-  end
-  
-  private
-  def has_name?
-    if self.pet_names.blank?
-      errors.add(:pet_names, :invalid)
-    end
   end
 end

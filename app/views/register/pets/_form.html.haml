@@ -1,0 +1,15 @@
+= simple_form_for(register_pet) do |form_pet|
+  = form_pet.input :pet_id, :as => :hidden
+  %br
+  %br
+  = register_pet.updated_at.try(:to_s, :jp)
+  = render 'register/error',                       { :register_error     => register_pet }
+  = render 'register/characters/form_profile',     { :register_character => register_pet, :form_character => form_pet }
+  = render 'register/battles/form_battle_setting', { :register_battle    => register_pet, :form_battle    => form_pet }
+  - unless @read_only
+    .actions
+      %button.btn.btn-large.btn-warning{"data-remote" => "true"} 確認する
+      = form_pet.submit :class => "btn btn-large btn-success"
+  - if @update_time
+    .actions
+      = form_pet.submit :class => "btn btn-large btn-warning"

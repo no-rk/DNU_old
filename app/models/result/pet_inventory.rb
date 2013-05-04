@@ -8,7 +8,6 @@ class Result::PetInventory < ActiveRecord::Base
   has_one :day,  :through => :passed_day
   
   has_one  :plan,         :through => :pet
-  has_many :pet_names,    :through => :pet
   has_many :pet_statuses, :through => :pet
   has_many :pet_sups,     :through => :pet
   has_many :pet_skills,   :through => :pet
@@ -24,10 +23,6 @@ class Result::PetInventory < ActiveRecord::Base
   validates :number,         :numericality => { :only_integer => true, :greater_than => 0 }
   
   before_validation :set_kind
-  
-  def pet_name
-    pet.pet_name(self.day.day)
-  end
   
   def pet_status(n)
     pet.pet_status(n, self.day.day)

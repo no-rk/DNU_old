@@ -1,7 +1,7 @@
 class CreateRegisterProfiles < ActiveRecord::Migration
   def change
     create_table :register_profiles do |t|
-      t.references :character
+      t.references :character, :polymorphic => true
 
       t.string :name
       t.string :nickname

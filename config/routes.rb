@@ -50,12 +50,15 @@ DNU::Application.routes.draw do
   namespace :register do resources :duels        end
   namespace :register do resources :competitions end
 
-  namespace :register do resources :skills, :except => [:index, :new, :destroy] end
+  namespace :register do resources :pets, :except   => [:index, :new, :destroy]                    end
+  namespace :register do get ':pet_id/pets'         => 'pets#index', :as => 'pet_id_pets'          end
+  namespace :register do get ':pet_id/pets/new'     => 'pets#new',   :as => 'new_pet_id_pet'       end
+  namespace :register do resources :skills, :except => [:index, :new, :destroy]                    end
   namespace :register do get ':skill_id/skills'     => 'skills#index', :as => 'skill_id_skills'    end
   namespace :register do get ':skill_id/skills/new' => 'skills#new',   :as => 'new_skill_id_skill' end
-  namespace :register do resources :arts, :except => [:index, :new, :destroy] end
-  namespace :register do get ':art_id/arts'     => 'arts#index', :as => 'art_id_arts'    end
-  namespace :register do get ':art_id/arts/new' => 'arts#new',   :as => 'new_art_id_art' end
+  namespace :register do resources :arts, :except   => [:index, :new, :destroy]                    end
+  namespace :register do get ':art_id/arts'         => 'arts#index', :as => 'art_id_arts'          end
+  namespace :register do get ':art_id/arts/new'     => 'arts#new',   :as => 'new_art_id_art'       end
 
   namespace :register do resources :messages,    :only => [ :show, :new, :create, :update ] end
   namespace :register do resources :communities, :only => [ :show, :new, :create, :update ] end

@@ -1,5 +1,6 @@
 - koudous = [:main, :trade, :product]
 - sentous = [:battle, :duel, :competition]
+- setteis = [:pet, :skill, :art]
 
 .sidebar-nav
   %ul.nav.nav-list
@@ -21,16 +22,12 @@
       - sentous.each do |battle|
         %li{:class => active_current(send("new_register_#{battle}_path"))}
           %a{:href => send("new_register_#{battle}_path")}= current_user.register_mark(battle) + "Register::#{battle.to_s.camelize}".constantize.model_name.human
-      - if current_user.form(:skill).present?
-        %li.nav-header 技設定
-        - current_user.form(:skill).each do |skill|
-          %li{:class => active_current(register_new_skill_id_skill_path(skill.id))}
-            %a{:href => register_new_skill_id_skill_path(skill.id)}= current_user.register_mark(:skill, {:skill_id => skill.id}) + skill.name
-      - if current_user.form(:art).present?
-        %li.nav-header 技能設定
-        - current_user.form(:art).each do |art|
-          %li{:class => active_current(register_new_art_id_art_path(art.id))}
-            %a{:href => register_new_art_id_art_path(art.id)}= current_user.register_mark(:art, {:art_id => art.id}) + art.name
+      - setteis.each do |data_name|
+        - if current_user.form(data_name).present?
+          %li.nav-header #{"Register::#{data_name.to_s.camelize}".constantize.model_name.human}設定
+          - current_user.form(data_name).each do |data|
+            %li{:class => active_current(send("register_new_#{data_name}_id_#{data_name}_path", data.id))}
+              %a{:href => send("register_new_#{data_name}_id_#{data_name}_path", data.id)}= current_user.register_mark(data_name, {:"#{data_name}_id" => data.id}) + data.name
       %li.nav-header 交流
       - [:message, :community, :character].each do |exchange|
         %li{:class => active_current(send("new_register_#{exchange}_path"))}
@@ -44,17 +41,19 @@
           %a{:href => new_register_initial_path}= Register::Initial.model_name.human
     %li.nav-header 履歴一覧
     %li
+      行動設定
       = form_tag(register_history_path, :class => "no_diff select_submit") do
         = select_tag 'history[url]', options_for_select(koudous.map{|r| ["Register::#{r.to_s.camelize}".constantize.model_name.human, send("register_#{r.to_s.pluralize}_path")]}, :selected => request.path_info), :include_blank => true, :class => "span12"
-      = form_tag(register_history_path, :class => "no_diff select_submit") do
-        = select_tag 'history[url]', options_for_select(sentous.map{|r| ["Register::#{r.to_s.camelize}".constantize.model_name.human, send("register_#{r.to_s.pluralize}_path")]}, :selected => request.path_info), :include_blank => true, :class => "span12"
       - if current_user.form(:event).present?
+        イベント
         = form_tag(register_history_path, :class => "no_diff select_submit") do
           = select_tag 'history[url]', options_for_select(current_user.form(:event).map{|r| [r.nickname, register_event_content_id_events_path(r.id)]}, :selected => request.path_info), :include_blank => true, :class => "span12"
-      - if current_user.form(:skill).present?
-        = form_tag(register_history_path, :class => "no_diff select_submit") do
-          = select_tag 'history[url]', options_for_select(current_user.form(:skill).map{|r| [r.name, register_skill_id_skills_path(r.id)]}, :selected => request.path_info), :include_blank => true, :class => "span12"
-      - if current_user.form(:art).present?
-        = form_tag(register_history_path, :class => "no_diff select_submit") do
-          = select_tag 'history[url]', options_for_select(current_user.form(:art).map{|r| [r.name, register_art_id_arts_path(r.id)]}, :selected => request.path_info), :include_blank => true, :class => "span12"
+      戦闘設定
+      = form_tag(register_history_path, :class => "no_diff select_submit") do
+        = select_tag 'history[url]', options_for_select(sentous.map{|r| ["Register::#{r.to_s.camelize}".constantize.model_name.human, send("register_#{r.to_s.pluralize}_path")]}, :selected => request.path_info), :include_blank => true, :class => "span12"
+      - setteis.each do |data_name|
+        - if current_user.form(data_name).present?
+          #{"Register::#{data_name.to_s.camelize}".constantize.model_name.human}設定
+          = form_tag(register_history_path, :class => "no_diff select_submit") do
+            = select_tag 'history[url]', options_for_select(current_user.form(data_name).map{|r| [r.name, send("register_#{data_name}_id_#{data_name.to_s.pluralize}_path", r.id)]}, :selected => request.path_info), :include_blank => true, :class => "span12"
 / /.well

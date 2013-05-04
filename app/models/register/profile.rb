@@ -1,5 +1,5 @@
 class Register::Profile < ActiveRecord::Base
-  belongs_to :character
+  belongs_to :character, :polymorphic => true
 
   validates :name        , :length => { :maximum => Settings.profile.name.maximum         }, :presence => true
   validates :nickname    , :length => { :maximum => Settings.profile.nickname.maximum     }, :presence => true

@@ -1,0 +1,4 @@
+%h1= @register_pet.plan.name
+= render 'form', { :register_pet => @register_pet }
+
+= link_to 'Edit', edit_register_pet_path
