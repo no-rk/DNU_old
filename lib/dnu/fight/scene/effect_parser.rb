@@ -1761,6 +1761,14 @@ class EffectParser < Parslet::Parser
     (natural_number >> str('枠')).maybe.as(:productable_number_wrap).as(:supplementable_number) >> newline.maybe
   }
   
+  # hunt
+  
+  rule(:hunt) {
+    bra >> str('狩猟') >> ket >>
+    (character_type.as(:character_type) >> separator.maybe).repeat(1).as(:names_wrap).as(:huntable_character_types) >>
+    (natural_number >> str('枠')).maybe.as(:productable_number_wrap).as(:huntable_number) >> newline.maybe
+  }
+  
   # art_effect_definition
   
   rule(:lv_effects) {
@@ -1778,6 +1786,7 @@ class EffectParser < Parslet::Parser
     learning_conditions.maybe >>
     forge.maybe >>
     supplement.maybe >>
+    hunt.maybe >>
     sup_effects.as(:effects) >>
     (
       lv_effects |
@@ -1819,7 +1828,13 @@ class EffectParser < Parslet::Parser
   # drop_setting
   
   rule(:drop_setting) {
-    item_kind_and_name >> spaces? >> natural_number >> percent >> newline.maybe
+    item_kind_and_name >> spaces? >> natural_number.as(:percent) >> percent >> newline.maybe
+  }
+  
+  # hunt_setting
+  
+  rule(:hunt_setting) {
+    item_kind_and_name >> spaces? >> level >> non_negative_integer.as(:lv) >> newline.maybe
   }
   
   # point_setting
@@ -1915,6 +1930,7 @@ class EffectParser < Parslet::Parser
       item_skill_setting.as(:item_skill) |
       serif_setting.as(:serif) |
       drop_setting.as(:drop) |
+      hunt_setting.as(:hunt) |
       point_setting.as(:point)
     ).repeat(0)
   }

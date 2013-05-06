@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130505060544) do
+ActiveRecord::Schema.define(:version => 20130506082721) do
 
   create_table "admins", :force => true do |t|
     t.string   "email",               :default => "", :null => false
@@ -47,6 +47,7 @@ ActiveRecord::Schema.define(:version => 20130505060544) do
     t.string   "name"
     t.boolean  "forgeable",      :default => false
     t.boolean  "supplementable", :default => false
+    t.boolean  "huntable",       :default => false
     t.text     "definition"
     t.text     "tree"
     t.datetime "created_at",                        :null => false
@@ -626,6 +627,20 @@ ActiveRecord::Schema.define(:version => 20130505060544) do
 
   add_index "register_forgets", ["main_id"], :name => "index_register_forgets_on_main_id"
   add_index "register_forgets", ["train_id"], :name => "index_register_forgets_on_train_id"
+
+  create_table "register_hunts", :force => true do |t|
+    t.integer  "productable_id"
+    t.string   "productable_type"
+    t.integer  "art_effect_id"
+    t.integer  "party_member_id"
+    t.text     "message"
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
+  end
+
+  add_index "register_hunts", ["art_effect_id"], :name => "index_register_hunts_on_art_effect_id"
+  add_index "register_hunts", ["party_member_id"], :name => "index_register_hunts_on_party_member_id"
+  add_index "register_hunts", ["productable_id"], :name => "index_register_hunts_on_productable_id"
 
   create_table "register_icons", :force => true do |t|
     t.integer  "character_id"

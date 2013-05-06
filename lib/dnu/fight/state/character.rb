@@ -98,7 +98,7 @@ module DNU
           kind = setting.values.first[:kind].to_s
           name = setting.values.first[:name].to_s
           setting = setting.values.first
-          return if type == :drop or type == :point
+          return if [:drop, :hunt, :point].include?(type)
           
           effects = def_plus.try(:find){|d| d.keys.first==type and d[type][:name] == name }.try('[]', type)
           effects = setting if type == :serif

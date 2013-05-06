@@ -6,6 +6,7 @@ class CreateGameDataArtEffects < ActiveRecord::Migration
       t.string :name
       t.boolean :forgeable, :default => false
       t.boolean :supplementable, :default => false
+      t.boolean :huntable, :default => false
       t.text :definition
       t.text :tree
 

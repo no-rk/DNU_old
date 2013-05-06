@@ -21,12 +21,12 @@ class Register::Supplement < ActiveRecord::Base
     self.productable.day
   end
   
-  def supplement!(way = GameData::Art.find_by_name("付加").first, day_i = self.day.day)
+  def supplement!(way = self.art, day_i = self.day.day)
     success = false
     inventory = self.user.result(:inventory, day_i).where(:number => self.material_number).first if self.user.present?
     if inventory.try(:material?)
       result_item = self.user.result(:inventory, day_i).where(:number => self.item_number).first.try(:item)
-      if result_item.present?
+      if art_effect.tree[:supplementable_equip_types].include?(result_item.try(:equip_type))
         item_data = item_data_from_material(inventory.item, result_item, day_i)
         sup = result_item.update_item_by_data(item_data, self.smith, way, day_i)
         if sup.present?
@@ -50,7 +50,7 @@ class Register::Supplement < ActiveRecord::Base
     end
     material_data ||= {}
     
-    product_sup = self.smith.result(:art, day_i).merge(GameData::Art.find_by_name("付加")).first
+    product_sup = self.smith.result(:art, day_i).merge(GameData::Art.find_by_name(self.art.name)).first
     sup_lv = product_sup.try(:effective_lv).to_i
     
     # 鍛治LVが付加発現LVより低い場合はクリア

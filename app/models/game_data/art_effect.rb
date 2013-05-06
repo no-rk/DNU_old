@@ -1,7 +1,7 @@
 class GameData::ArtEffect < ActiveRecord::Base
   belongs_to :art
   has_many :learning_conditions, :as => :learnable, :dependent => :destroy
-  attr_accessible :caption, :definition, :name, :tree, :kind, :forgeable, :supplementable
+  attr_accessible :caption, :definition, :name, :tree, :kind, :forgeable, :supplementable, :huntable
   serialize :tree
   
   has_many :result_arts, :through => :art
@@ -13,6 +13,7 @@ class GameData::ArtEffect < ActiveRecord::Base
   validates :name,           :presence => true, :uniqueness => true
   validates :forgeable,      :inclusion => { :in => [true, false] }
   validates :supplementable, :inclusion => { :in => [true, false] }
+  validates :huntable,       :inclusion => { :in => [true, false] }
   validates :definition,     :presence => true
   
   before_validation :set_game_data
@@ -44,6 +45,7 @@ class GameData::ArtEffect < ActiveRecord::Base
         self.name           = definition_tree[:name]
         self.forgeable      = definition_tree[:forgeable_item_types].present?
         self.supplementable = definition_tree[:supplementable_equip_types].present?
+        self.huntable       = definition_tree[:huntable_character_types].present?
         self.tree           = definition_tree
         DNU::Data.set_learning_conditions(self, definition_tree[:learning_conditions])
       else

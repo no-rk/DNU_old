@@ -225,7 +225,7 @@ class TestsController < ApplicationController
   def parse_from_text(type, name = :definition)
     if @text.present?
       begin
-        tree = DNU::Data.parse!("#{type}_#{name}", @text)
+        tree = DNU::Data.parse!("#{type}_#{name}", @text, true)
         @result = send("history_html_#{@type}", tree) + "<pre>#{tree.pretty_inspect}</pre>"
       rescue => msg
         @error = msg

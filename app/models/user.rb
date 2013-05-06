@@ -57,6 +57,8 @@ class User < ActiveRecord::Base
   has_many :result_party_members, :through => :result_parties,        :class_name => "Result::PartyMember", :source => :party_members
   has_many :result_notices,       :through => :result_parties,        :class_name => "Result::Notice",      :source => :notices, :include => [:battle_type]
   has_many :result_battles,       :through => :result_notices,        :class_name => "Result::Battle",      :source => :battle
+  has_many :result_enemies,       :through => :result_notices,        :class_name => "Result::Party",       :source => :enemy
+  has_many :result_enemy_members, :through => :result_enemies,        :class_name => "Result::PartyMember", :source => :party_members
   
   scope :new_commer,   lambda{ where(arel_table[:creation_day].eq(Day.last_day_i)) }
   scope :already_make, lambda{ where(arel_table[:creation_day].lt(Day.last_day_i)) }
@@ -98,12 +100,12 @@ class User < ActiveRecord::Base
     registered?(type, condition) ? "●" : "○"
   end
   
-  def forgeables(day_i = Day.last_day_i)
-    self.result(:art, day_i).merge(GameData::Art.forgeables)
+  def productables(type, day_i = Day.last_day_i)
+    self.result(:art, day_i).merge(GameData::Art.productables(type))
   end
   
-  def supplementables(day_i = Day.last_day_i)
-    self.result(:art, day_i).merge(GameData::Art.supplementables)
+  def hunt_list(kinds, day_i = Day.last_day_i)
+    self.result(:enemy_member, day_i).find_all{|r| kinds.include?(r.character.kind)}.inject({}){|h,r| h.tap{ h["#{r.character.name}#{p_correction(r.correction)}"] = r.id } }
   end
   
   def form(type)
@@ -504,5 +506,11 @@ class User < ActiveRecord::Base
   
   def battle_type_arel
     @battle_type_arel ||= GameData::BattleType.arel_table
+  end
+  
+  def p_correction(correction)
+    unless correction.to_i==0
+      %Q| #{sprintf("%+d", correction.to_i)}|
+    end
   end
 end

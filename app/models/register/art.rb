@@ -2,7 +2,7 @@ class Register::Art < ActiveRecord::Base
   belongs_to :user
   belongs_to :day
   belongs_to :art, :class_name => "GameData::Art"
-  attr_accessible :art_id, :art_name_attributes, :art_pull_down_attributes, :art_lv_effects_attributes, :forges_attributes, :supplements_attributes
+  attr_accessible :art_id, :art_name_attributes, :art_pull_down_attributes, :art_lv_effects_attributes, :forges_attributes, :supplements_attributes, :hunts_attributes
   
   has_one :art_effect, :through => :art, :class_name => "GameData::ArtEffect"
   
@@ -11,12 +11,14 @@ class Register::Art < ActiveRecord::Base
   has_many :art_lv_effects, :dependent => :destroy
   has_many :forges,         :order => "id ASC", :dependent => :destroy, :as => :productable
   has_many :supplements,    :order => "id ASC", :dependent => :destroy, :as => :productable
+  has_many :hunts,          :order => "id ASC", :dependent => :destroy, :as => :productable
   
   accepts_nested_attributes_for :art_name, :reject_if => :all_blank
   accepts_nested_attributes_for :art_pull_down
   accepts_nested_attributes_for :art_lv_effects
   accepts_nested_attributes_for :forges,      :reject_if => proc { |attributes| attributes.all?{|k,v| [:art_effect_id, :item_type_index, :experiment].include?(k.to_sym) ? true : v.blank?} }
   accepts_nested_attributes_for :supplements, :reject_if => proc { |attributes| attributes.all?{|k,v| [:art_effect_id, :experiment].include?(k.to_sym) ? true : v.blank?} }
+  accepts_nested_attributes_for :hunts,       :reject_if => proc { |attributes| attributes.all?{|k,v| [:art_effect_id].include?(k.to_sym) ? true : v.blank?} }
   
   def build_art
     self.build_art_name if self.art_name.nil?
@@ -28,28 +30,23 @@ class Register::Art < ActiveRecord::Base
         self.art_lv_effects.build(:lv => lv)
       end
     end
-    forge_count.times do
-      self.forges.build(:art_effect_id => self.art_effect.id)
-    end
-    supplement_count.times do
-      self.supplements.build(:art_effect_id => self.art_effect.id)
+    [:forge, :supplement, :hunt].each do |type|
+      product_count(type).times do
+        self.send(type.to_s.pluralize).build(:art_effect_id => self.art_effect.id)
+      end
     end
   end
   
-  def forge_count
+  def product_count(type)
     if self.art_effect.present?
-      self.art_effect.tree[:forgeable_number].to_i-self.forges.where(:art_effect_id => self.art_effect.id).count
+      self.art_effect.tree[:"#{type}able_number"].to_i-self.send(type.to_s.pluralize).where(:art_effect_id => self.art_effect.id).count
     else
       0
     end
   end
   
-  def supplement_count
-    if self.art_effect.present?
-      self.art_effect.tree[:supplementable_number].to_i-self.supplements.where(:art_effect_id => self.art_effect.id).count
-    else
-      0
-    end
+  def hunt_list(kinds)
+    user.hunt_list(kinds, day.nil? ? Day.last_day_i : day.day-1)
   end
   
   def pull_down

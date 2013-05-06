@@ -22,8 +22,8 @@ end
   end
 end
 
-# マップ, 能力, 状態異常, 装備, 付加, 罠, 技, 戦物, 使用, 技能効果, アイテム
-[:map, :status, :disease, :equip, :sup, :trap, :skill, :item_skill, :item_use, :art_effect, :item].each do |table|
+# マップ, 能力, 状態異常, 装備, 付加, 罠, 技, 戦物, 使用
+[:map, :status, :disease, :equip, :sup, :trap, :skill, :item_skill, :item_use].each do |table|
   ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_#{table.to_s.tableize}")
   list = YAML.load(ERB.new(File.read("#{Rails.root}/db/game_data/#{table}.yml")).result)
   list[:data].each do |data|
@@ -43,8 +43,8 @@ end
   end
 end
 
-# キャラクター, 敵リスト, 敵出現地, イベント
-[:character, :enemy_list, :enemy_territory, :event].each do |table|
+# 技能効果, アイテム, キャラクター, 敵リスト, 敵出現地, イベント
+[:art_effect, :item, :character, :enemy_list, :enemy_territory, :event].each do |table|
   ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_#{table.to_s.tableize}")
   list = YAML.load(ERB.new(File.read("#{Rails.root}/db/game_data/#{table}.yml")).result)
   list[:data].each do |data|

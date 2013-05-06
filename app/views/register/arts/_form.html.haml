@@ -10,6 +10,7 @@
   = render 'form_art_lv_effect', { :register_art   => register_art, :form_art => form_art }
   = render 'register/products/form_forge',      { :register_product => register_art, :form_product => form_art }
   = render 'register/products/form_supplement', { :register_product => register_art, :form_product => form_art }
+  = render 'register/products/form_hunt',       { :register_product => register_art, :form_product => form_art }
   - unless @read_only
     .actions
       %button.btn.btn-large.btn-warning{"data-remote" => "true"} 確認する
