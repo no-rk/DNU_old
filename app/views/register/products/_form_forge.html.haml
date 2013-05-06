@@ -1,13 +1,16 @@
 %br
 = form_product.simple_fields_for :forges, :wrapper => :simple, :defaults => { :as => (:plain if @read_only), :user => current_user, :input_html => { :class => :'span2' } } do |form_forge|
-  = form_forge.label form_forge.object.art_effect.name
   = form_forge.input :art_effect_id, :as => :hidden
   ENo.
   = form_forge.input :user_id
   の
   = form_forge.input :number
   を使って
-  = form_forge.input :item_type_index, :collection => form_forge.object.art_effect.forgeable_item_types
+  - if form_forge.object.art_effect.forgeable_item_types.count == 1
+    = form_forge.object.art_effect.forgeable_item_types.keys.first
+    = form_forge.input :item_type_index, :as => :hidden, :input_html => { :value => form_forge.object.art_effect.forgeable_item_types.values.first }
+  - else
+    = form_forge.input :item_type_index, :collection => form_forge.object.art_effect.forgeable_item_types
   を
   = form_forge.input :experiment, :collection => { "作製" => false,  "作製実験" => true }, :include_blank => false
   = form_forge.input :name, :wrapper => :bootstrap, :input_html => { :class => :'span6' }

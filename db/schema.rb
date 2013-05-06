@@ -89,7 +89,6 @@ ActiveRecord::Schema.define(:version => 20130505060544) do
     t.string   "name"
     t.text     "caption"
     t.boolean  "normal"
-    t.boolean  "event"
     t.boolean  "result",     :default => false
     t.boolean  "rob",        :default => false
     t.boolean  "escape",     :default => false
@@ -598,7 +597,8 @@ ActiveRecord::Schema.define(:version => 20130505060544) do
   add_index "register_events", ["user_id"], :name => "index_register_events_on_user_id"
 
   create_table "register_forges", :force => true do |t|
-    t.integer  "product_id"
+    t.integer  "productable_id"
+    t.string   "productable_type"
     t.integer  "art_effect_id"
     t.integer  "user_id"
     t.integer  "number"
@@ -607,13 +607,13 @@ ActiveRecord::Schema.define(:version => 20130505060544) do
     t.string   "name"
     t.text     "caption"
     t.text     "message"
-    t.datetime "created_at",    :null => false
-    t.datetime "updated_at",    :null => false
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
   end
 
   add_index "register_forges", ["art_effect_id"], :name => "index_register_forges_on_art_effect_id"
   add_index "register_forges", ["item_type_id"], :name => "index_register_forges_on_item_type_id"
-  add_index "register_forges", ["product_id"], :name => "index_register_forges_on_product_id"
+  add_index "register_forges", ["productable_id"], :name => "index_register_forges_on_productable_id"
   add_index "register_forges", ["user_id"], :name => "index_register_forges_on_user_id"
 
   create_table "register_forgets", :force => true do |t|
@@ -873,17 +873,20 @@ ActiveRecord::Schema.define(:version => 20130505060544) do
   add_index "register_skills", ["user_id"], :name => "index_register_skills_on_user_id"
 
   create_table "register_supplements", :force => true do |t|
-    t.integer  "product_id"
+    t.integer  "productable_id"
+    t.string   "productable_type"
+    t.integer  "art_effect_id"
     t.integer  "user_id"
     t.integer  "material_number"
     t.integer  "item_number"
     t.boolean  "experiment"
     t.text     "message"
-    t.datetime "created_at",      :null => false
-    t.datetime "updated_at",      :null => false
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
   end
 
-  add_index "register_supplements", ["product_id"], :name => "index_register_supplements_on_product_id"
+  add_index "register_supplements", ["art_effect_id"], :name => "index_register_supplements_on_art_effect_id"
+  add_index "register_supplements", ["productable_id"], :name => "index_register_supplements_on_productable_id"
   add_index "register_supplements", ["user_id"], :name => "index_register_supplements_on_user_id"
 
   create_table "register_trades", :force => true do |t|

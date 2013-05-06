@@ -169,7 +169,6 @@ ja:
         name: 戦闘種類名
         caption: 戦闘種類説明
         normal: 通常戦
-        event: イベント戦
         result: 結果に影響を与える
         rob: 奪取可能
         escape: 逃走可能

@@ -2102,7 +2102,10 @@ class EffectParser < Parslet::Parser
   }
   
   rule(:add_notice) {
-    pt_definition.as(:add_notice)
+    (
+      bra >> battle_type.as(:battle_type) >> ket >> newline.maybe >>
+      pt_definition
+    ).as(:add_notice)
   }
   
   rule(:event_content) {

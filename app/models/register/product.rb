@@ -2,10 +2,10 @@ class Register::Product < ActiveRecord::Base
   belongs_to :user
   belongs_to :day
 
-  has_many :forges,      :order => "id ASC", :dependent => :destroy
-  has_many :supplements, :order => "id ASC", :dependent => :destroy
+  has_many :forges,      :order => "id ASC", :dependent => :destroy, :as => :productable
+  has_many :supplements, :order => "id ASC", :dependent => :destroy, :as => :productable
 
-  accepts_nested_attributes_for :forges,      :reject_if => proc { |attributes| attributes.all?{|k,v| [:art_effect_id, :experiment].include?(k.to_sym) ? true : v.blank?} }
+  accepts_nested_attributes_for :forges,      :reject_if => proc { |attributes| attributes.all?{|k,v| [:art_effect_id, :item_type_index, :experiment].include?(k.to_sym) ? true : v.blank?} }
   accepts_nested_attributes_for :supplements, :reject_if => proc { |attributes| attributes.all?{|k,v| [:experiment].include?(k.to_sym) ? true : v.blank?} }
 
   attr_accessible  :forges_attributes, :supplements_attributes

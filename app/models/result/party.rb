@@ -1,7 +1,7 @@
 class Result::Party < ActiveRecord::Base
   belongs_to :day
   has_many :party_members, :dependent => :destroy
-  has_many :notices, :dependent => :destroy
+  has_many :notices, :dependent => :destroy, :include => [:battle_type]
   attr_accessible :caption, :kind, :name
   
   validates :day,  :presence => true
@@ -55,10 +55,10 @@ class Result::Party < ActiveRecord::Base
     }
   end
   
-  def add_notice!(party_tree, battle_type = GameData::BattleType.event.name)
-    unless self.notices.exists?
+  def add_notice!(party_tree)
+    unless self.notices.where(battle_type_arel[:name].eq(party_tree[:battle_type])).exists?
       self.notices.build do |notice|
-        notice.battle_type = GameData::BattleType.where(:name => battle_type).first
+        notice.battle_type = GameData::BattleType.where(:name => party_tree[:battle_type]).first
         notice.enemy       = self.class.new_from_definition_tree(party_tree)
       end
       self.save!

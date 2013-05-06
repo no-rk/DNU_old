@@ -4,7 +4,6 @@ class CreateGameDataBattleTypes < ActiveRecord::Migration
       t.string :name
       t.text :caption
       t.boolean :normal
-      t.boolean :event
       t.boolean :result, :default => false
       t.boolean :rob, :default => false
       t.boolean :escape, :default => false

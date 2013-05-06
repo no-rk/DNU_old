@@ -1,16 +1,24 @@
 class Register::Supplement < ActiveRecord::Base
-  belongs_to :product
+  belongs_to :productable, :polymorphic => true
+  belongs_to :art_effect, :class_name => "GameData::ArtEffect"
   belongs_to :user
   attr_accessible :experiment, :item_number, :material_number, :message, :user_id
   
-  has_one :smith, :through => :product, :class_name => "User", :source => :user
-  has_one :day,   :through => :product
+  has_one :art, :through => :art_effect, :class_name => "GameData::Art"
   
   validates :user_id,         :numericality => { :only_integer => true, :greater_than => 0 }
   validates :material_number, :numericality => { :only_integer => true, :greater_than => 0 }
   validates :item_number,     :numericality => { :only_integer => true, :greater_than => 0 }
   validates :experiment,      :inclusion => { :in => [true, false] }
   validates :message,         :length => { :maximum => 800, :tokenizer => DNU::Sanitize.counter }
+  
+  def smith
+    self.productable.user
+  end
+  
+  def day
+    self.productable.day
+  end
   
   def supplement!(way = GameData::Art.find_by_name("付加").first, day_i = self.day.day)
     success = false

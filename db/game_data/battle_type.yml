@@ -13,7 +13,6 @@
     通常戦に敗北すると<b>体調が悪化</b>します。
     <b>相手との能力差によってはさらに体調が悪化します</b>
   :normal: true
-  :event: 
   :result: true
   :rob: false
   :escape: false
@@ -26,7 +25,6 @@
     一人でも逃走を選択してない場合、そのまま戦闘が開始されます。
     なお、一部のイベント戦は逃走が選択出来ません。
   :normal: 
-  :event: true
   :result: true
   :rob: false
   :escape: true
@@ -35,7 +33,6 @@
     練習試合的なもの。
     結果に影響を与えない。
   :normal: 
-  :event: 
   :result: false
   :rob: false
   :escape: false
@@ -44,7 +41,6 @@
     PK的なもの。
     アイテムやポイントを奪取したりされたり。
   :normal: 
-  :event: 
   :result: true
   :rob: true
   :escape: false
@@ -53,7 +49,6 @@
     大会的なもの。
     結果に影響を与えない。
   :normal: 
-  :event: 
   :result: false
   :rob: false
   :escape: false
