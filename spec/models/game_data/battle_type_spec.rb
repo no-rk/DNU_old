@@ -1,5 +1,5 @@
 require 'spec_helper'
 
-describe Register::Duel do
+describe GameData::BattleType do
   pending "add some examples to (or delete) #{__FILE__}"
 end

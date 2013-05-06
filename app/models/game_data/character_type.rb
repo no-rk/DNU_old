@@ -1,11 +1,12 @@
 class GameData::CharacterType < ActiveRecord::Base
   belongs_to :equip
-  attr_accessible :caption, :name, :player, :equip_name
+  attr_accessible :caption, :name, :player, :equip_id, :equip_name
   
   validates :name,   :presence => true, :uniqueness => true
-  validates :player, :allow_nil => true, :inclusion => { :in => [true, false] }, :uniqueness => true
+  validates :player, :allow_nil => true, :inclusion => { :in => [true] }, :uniqueness => true
   
-  after_save :sync_game_data
+  before_validation :set_game_data
+  after_save        :sync_game_data
   
   def equip_name=(name)
     self.equip = GameData::Equip.where(:name => name).first
@@ -21,6 +22,10 @@ class GameData::CharacterType < ActiveRecord::Base
   end
   
   private
+  def set_game_data
+    self.player ||= nil
+  end
+  
   def sync_game_data
     DNU::Data.sync(self)
   end

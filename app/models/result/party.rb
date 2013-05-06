@@ -31,35 +31,35 @@ class Result::Party < ActiveRecord::Base
     party_members.where(:character_type => :User)
   end
   
-  def set_item_skill!(day_i = Day.last_day_i)
+  def set_item_skill!(day_i = Day.last_day_i, battle_type = GameData::BattleType.normal.name)
     party_users.find_each do |party_user|
-      party_user.character.register(:battle, day_i).try(:item_skill_settings).try(:each) do |item_skill_setting|
+      party_user.character.register(:battle, day_i).where(battle_type_arel[:name].eq(battle_type)).first.try(:item_skill_settings).try(:each) do |item_skill_setting|
         item_skill_setting.set_item!
       end
     end
   end
   
-  def characters(day_i = Day.last_day_i)
-    @characters ||= DNU::Fight::State::Characters.new(pt_settings_tree(day_i))
+  def characters(day_i = Day.last_day_i, battle_type = GameData::BattleType.normal.name)
+    @characters ||= DNU::Fight::State::Characters.new(pt_settings_tree(day_i, battle_type))
   end
   
-  def pt_settings_tree(day_i = Day.last_day_i)
-    @pt_settings ||= { :settings => [definition_tree(day_i)] }
+  def pt_settings_tree(day_i = Day.last_day_i, battle_type = GameData::BattleType.normal.name)
+    @pt_settings ||= { :settings => [definition_tree(day_i, battle_type)] }
   end
   
-  def definition_tree(day_i = Day.last_day_i)
+  def definition_tree(day_i = Day.last_day_i, battle_type = GameData::BattleType.normal.name)
     @definition_tree ||= {
       :pt_name    => nickname,
       :pt_caption => caption,
-      :members    => party_members.map{|r| r.setting_tree(day_i) }
+      :members    => party_members.map{|r| r.setting_tree(day_i, battle_type) }
     }
   end
   
-  def add_notice!(party_tree, battle_kind = :battle)
+  def add_notice!(party_tree, battle_type = GameData::BattleType.event.name)
     unless self.notices.exists?
       self.notices.build do |notice|
-        notice.kind  = battle_kind.to_s
-        notice.enemy = self.class.new_from_definition_tree(party_tree)
+        notice.battle_type = GameData::BattleType.where(:name => battle_type).first
+        notice.enemy       = self.class.new_from_definition_tree(party_tree)
       end
       self.save!
     end
@@ -111,5 +111,14 @@ class Result::Party < ActiveRecord::Base
       end
     end
     result_party
+  end
+  
+  private
+  def day_arel
+    @day_arel ||= Day.arel_table
+  end
+  
+  def battle_type_arel
+    @battle_type_arel ||= GameData::BattleType.arel_table
   end
 end

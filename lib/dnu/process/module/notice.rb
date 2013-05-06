@@ -18,8 +18,8 @@ module DNU
             }
             
             party.notices.build do |notice|
-              notice.kind = "battle"
-              notice.enemy = Result::Party.new_from_tree(tree)
+              notice.battle_type = GameData::BattleType.normal
+              notice.enemy       = Result::Party.new_from_tree(tree)
             end
             party.save!
           end

@@ -1,6 +1,8 @@
 class Register::Battle < ActiveRecord::Base
   belongs_to :user
   belongs_to :day
+  belongs_to :battle_type, :class_name => "GameData::BattleType"
+  attr_accessible :battle_type_id, :equips_attributes, :battle_settings_attributes, :item_skill_settings_attributes
   
   has_many :equips,              :dependent => :destroy, :as => :battlable
   has_many :battle_settings,     :order => "priority ASC", :dependent => :destroy, :as => :battlable
@@ -10,7 +12,7 @@ class Register::Battle < ActiveRecord::Base
   accepts_nested_attributes_for :battle_settings,     :reject_if => :no_change_from_default
   accepts_nested_attributes_for :item_skill_settings, :reject_if => :no_change_from_default
   
-  attr_accessible :equips_attributes, :battle_settings_attributes, :item_skill_settings_attributes
+  validates :battle_type, :presence => true
   
   def learned_skills
     @learned_skills ||= user.result(:skill, (day.try(:day) || Day.last_day_i)).inject({}){ |h,r| h.tap{ h["#{r.name} 消費#{r.cost}"] = r.skill.id } }

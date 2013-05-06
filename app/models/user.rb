@@ -6,9 +6,7 @@ class User < ActiveRecord::Base
   
   has_many :register_events,       :order => "updated_at DESC", :class_name => "Register::Event", :include => [:event, :event_step, :event_content]
   
-  has_many :register_battles,      :order => "updated_at DESC", :class_name => "Register::Battle"
-  has_many :register_duels,        :order => "updated_at DESC", :class_name => "Register::Duel"
-  has_many :register_competitions, :order => "updated_at DESC", :class_name => "Register::Competition"
+  has_many :register_battles,      :order => "updated_at DESC", :class_name => "Register::Battle", :include => [:battle_type]
   
   has_many :register_pets,         :order => "updated_at DESC", :class_name => "Register::Pet", :include => [:pet]
   has_many :register_skills,       :order => "updated_at DESC", :class_name => "Register::Skill"
@@ -31,7 +29,7 @@ class User < ActiveRecord::Base
   has_many :result_catch_pets,      :through => :result_passed_days, :class_name => "Result::CatchPet"
   has_many :result_forges,          :through => :result_passed_days, :class_name => "Result::Forge"
   has_many :result_supplements,     :through => :result_passed_days, :class_name => "Result::Supplement"
-  has_many :result_equips ,         :through => :result_passed_days, :class_name => "Result::Equip"
+  has_many :result_equips ,         :through => :result_passed_days, :class_name => "Result::Equip", :include => [:battle_type]
   has_many :result_trains,          :through => :result_passed_days, :class_name => "Result::Train"
   has_many :result_learns,          :through => :result_passed_days, :class_name => "Result::Learn"
   has_many :result_forgets,         :through => :result_passed_days, :class_name => "Result::Forget"
@@ -57,7 +55,7 @@ class User < ActiveRecord::Base
   
   has_many :result_parties,       :through => :through_party_members, :class_name => "Result::Party",       :source => :party
   has_many :result_party_members, :through => :result_parties,        :class_name => "Result::PartyMember", :source => :party_members
-  has_many :result_notices,       :through => :result_parties,        :class_name => "Result::Notice",      :source => :notices
+  has_many :result_notices,       :through => :result_parties,        :class_name => "Result::Notice",      :source => :notices, :include => [:battle_type]
   has_many :result_battles,       :through => :result_notices,        :class_name => "Result::Battle",      :source => :battle
   
   scope :new_commer,   lambda{ where(arel_table[:creation_day].eq(Day.last_day_i)) }
@@ -106,6 +104,8 @@ class User < ActiveRecord::Base
   
   def form(type)
     case type.to_sym
+    when :battle
+      self.result(:notice).group(:battle_type_id).map{|r| r.battle_type}
     when :pet
       self.result(:pet_inventory).map{|r| r.pet}
     when :event
@@ -117,21 +117,23 @@ class User < ActiveRecord::Base
   
   def next_forms(type)
     case type.to_sym
-    when :skill, :art
-      sub_query = self.send("register_#{type.to_s.pluralize}").as(type.to_s)
-      "Register::#{type.to_s.camelize}".constantize.select(Arel.star).from(sub_query).group(sub_query["#{type}_id"])
     when :event
       sub_query = self.send("register_#{type.to_s.pluralize}").as(type.to_s)
       "Register::#{type.to_s.camelize}".constantize.select(Arel.star).from(sub_query).group(sub_query["#{type}_content_id"])
+    when :battle
+      sub_query = self.send("register_#{type.to_s.pluralize}").as(type.to_s)
+      "Register::#{type.to_s.camelize}".constantize.select(Arel.star).from(sub_query).group(sub_query["#{type}_type_id"])
+    when :skill, :art
+      sub_query = self.send("register_#{type.to_s.pluralize}").as(type.to_s)
+      "Register::#{type.to_s.camelize}".constantize.select(Arel.star).from(sub_query).group(sub_query["#{type}_id"])
     else
       [self.send("register_#{type.to_s.pluralize}").first].compact
     end
   end
   
   def register(type, day_i = Day.last_day_i)
-    day_arel  = Day.arel_table
     case type.to_sym
-    when :event, :skill, :art
+    when :event, :battle, :skill, :art
       self.send("register_#{type.to_s.pluralize}").except(:order).where(day_arel[:day].eq(day_i)).includes(:day)
     else
       self.send("register_#{type.to_s.pluralize}").except(:order).where(day_arel[:day].eq(day_i)).includes(:day).first
@@ -143,8 +145,6 @@ class User < ActiveRecord::Base
       register_characters.first
     else
       day_i += 1 if self.creation_day == day_i
-      
-      day_arel  = Day.arel_table
       
       self.register_characters.except(:order).where(day_arel[:day].eq(day_i)).includes(:day).includes(:profile).first
     end
@@ -210,20 +210,16 @@ class User < ActiveRecord::Base
     when :trainable_all
       result_trainable_all(day_i)
     when :place
-      day_arel  = Day.arel_table
       self.send("result_#{type.to_s.pluralize}").where(:arrival => true).where(day_arel[:day].eq(day_i)).includes(:day)
     when :party
-      day_arel  = Day.arel_table
       if self.send("result_#{type.to_s.pluralize}").where(day_arel[:day].eq(day_i)).includes(:day).exists?
         self.send("result_#{type.to_s.pluralize}").where(day_arel[:day].eq(day_i)).includes(:day)
       else
         self.send("result_#{type.to_s.pluralize}").where(day_arel[:day].eq(day_i - 1)).includes(:day)
       end
     when :battle
-      day_arel  = Day.arel_table
       self.send("result_#{type.to_s.pluralize}").where(day_arel[:day].eq(day_i - 1)).includes(:day)
     else
-      day_arel  = Day.arel_table
       self.send("result_#{type.to_s.pluralize}").where(day_arel[:day].eq(day_i)).includes(:day)
     end
   end
@@ -441,19 +437,43 @@ class User < ActiveRecord::Base
     @@kind ||= GameData::CharacterType.select(:name).where(:player => true).first.name
   end
   
-  def tree(day_i = Day.last_day_i)
+  def status_settings(day_i = Day.last_day_i)
+    result(:status, day_i).map{|r| r.tree }
+  end
+  
+  def art_settings(day_i = Day.last_day_i, battle_type = GameData::BattleType.normal.name)
+    result(:art, day_i).map{|r| r.tree }.compact
+  end
+  
+  def equip_settings(day_i = Day.last_day_i, battle_type = GameData::BattleType.normal.name)
+    result(:equip, day_i).where(:success => true).where(battle_type_arel[:name].eq(battle_type)).map{|r| r.tree }
+  end
+  
+  def skill_settings(day_i = Day.last_day_i, battle_type = GameData::BattleType.normal.name)
+    register(:battle, day_i).where(battle_type_arel[:name].eq(battle_type)).map{|r| r.battle_settings}.flatten.map{|r| r.tree }
+  end
+  
+  def item_skill_settings(day_i = Day.last_day_i, battle_type = GameData::BattleType.normal.name)
+    register(:battle, day_i).where(battle_type_arel[:name].eq(battle_type)).map{|r| r.item_skill_settings}.flatten.map{|r| r.tree }.compact
+  end
+  
+  def pet_settings(day_i = Day.last_day_i, battle_type = GameData::BattleType.normal.name)
+    result(:pet_inventory).map{|r| {:pno => r.pet_id, :battle_type => battle_type}}
+  end
+  
+  def tree(day_i = Day.last_day_i, battle_type = GameData::BattleType.normal.name)
     @tree ||= {}
     @tree[day_i] ||= {
       :kind  => kind,
       :name  => nickname(day_i),
       :user  => self,
       :day_i => day_i,
-      :settings => result(:status,  day_i).map{|r| r.tree } +
-                   result(:art, day_i).map{|r| r.tree }.compact +
-                   result(:equip,   day_i).where(:success => true).map{|r| r.tree } +
-                   (register(:battle, day_i).try(:battle_settings).try(:map){|r| r.tree } || []) +
-                   (register(:battle, day_i).try(:item_skill_settings).try(:map){|r| r.tree }.try(:compact) || []),
-      :pets => result(:pet_inventory).map{|r| {:pno => r.pet_id}}
+      :settings => status_settings(day_i) +
+                   art_settings(day_i, battle_type) +
+                   equip_settings(day_i, battle_type) +
+                   skill_settings(day_i, battle_type) +
+                   item_skill_settings(day_i, battle_type),
+      :pets => pet_settings(day_i, battle_type)
     }
   end
   
@@ -471,5 +491,14 @@ class User < ActiveRecord::Base
   
   def nickname(day_i = Day.last_day_i)
     self.result(:character, day_i).profile.nickname
+  end
+  
+  private
+  def day_arel
+    @day_arel ||= Day.arel_table
+  end
+  
+  def battle_type_arel
+    @battle_type_arel ||= GameData::BattleType.arel_table
   end
 end

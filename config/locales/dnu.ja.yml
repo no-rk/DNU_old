@@ -35,6 +35,7 @@ ja:
       game_data/disease: 状態異常
       game_data/battle_value: 戦闘値
       game_data/element: 属性
+      game_data/battle_type: 戦闘種類
       game_data/battle_setting: 戦闘設定
 
       result/status: 能力
@@ -163,6 +164,15 @@ ja:
         status: 能力
         art_type: 技能種類
         art_type_id: 技能種類
+      
+      game_data/battle_type:
+        name: 戦闘種類名
+        caption: 戦闘種類説明
+        normal: 通常戦
+        event: イベント戦
+        result: 結果に影響を与える
+        rob: 奪取可能
+        escape: 逃走可能
       
       game_data/battle_setting:
         kind: 戦闘設定種類

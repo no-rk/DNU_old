@@ -25,9 +25,9 @@ module DNU
           # 定義されていない場合はデータベースから読み込みを試みる
           if definition.blank?
             if setting[:eno].present?
-              definition = User.find_by_id(setting[:eno].to_i).try(:tree, (setting[:correction] || Day.last_day_i).to_i)
+              definition =        User.where(:id => setting[:eno].to_i).first.try(:tree, (setting[:correction] || Day.last_day_i).to_i, (setting[:battle_type] || GameData::BattleType.normal.name))
             elsif setting[:pno].present?
-              definition = Result::Pet.find_by_id(setting[:pno].to_i).try(:tree, (setting[:correction] || Day.last_day_i).to_i)
+              definition = Result::Pet.where(:id => setting[:pno].to_i).first.try(:tree, (setting[:correction] || Day.last_day_i).to_i, (setting[:battle_type] || GameData::BattleType.normal.name))
             else
               definition = GameData::Character.find_by_kind_and_name(kind, name).try(:tree)
             end

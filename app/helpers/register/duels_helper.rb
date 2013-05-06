@@ -1,2 +1,0 @@
-module Register::DuelsHelper
-end

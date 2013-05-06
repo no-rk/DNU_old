@@ -5,11 +5,9 @@ module DNU
       def battle
         # キャラ作成済みの各パーティー
         Result::Party.already_make.find_each do |party|
-          if party.notices.exists?
+          party.notices.each do |notice|
             # 戦物設定
-            party.set_item_skill!
-            
-            notice = party.notices.first
+            notice.set_item_skill!
             
             notice.battle.try(:destroy)
             battle_tree = DNU::Fight::Scene::Battle.new(notice.characters).play

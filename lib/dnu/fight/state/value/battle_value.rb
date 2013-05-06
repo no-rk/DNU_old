@@ -9,8 +9,8 @@ module DNU
           @status = BaseValue.new(self)
           @equip  = BaseValue.new(self) if object.has_equip_value
           if object.has_max
-            status.start(object.min, object.max)
-            equip.start(object.min, object.max) if equip.present?
+            status.start(object.min, status)
+            equip.start(object.min, equip) if equip.present?
           end
           sync_value
         end

@@ -4,7 +4,7 @@ class GameData::PointUse < ActiveRecord::Base
   attr_accessible :status, :name, :type, :point_id, :art_type_id
   
   validates :point,       :presence => true
-  validates :status,      :allow_nil => true, :inclusion => { :in => [true, false] }, :uniqueness => true
+  validates :status,      :allow_nil => true, :inclusion => { :in => [true] }, :uniqueness => true
   validates :art_type_id, :allow_nil => true, :uniqueness => true
   
   before_validation :set_game_data

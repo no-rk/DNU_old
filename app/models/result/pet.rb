@@ -204,7 +204,7 @@ class Result::Pet < ActiveRecord::Base
     end
   end
   
-  def tree(day_i = Day.last_day_i)
+  def tree(day_i = Day.last_day_i, battle_type = GameData::BattleType.normal.name)
     @tree ||= {}
     @tree[day_i] ||= {
       :kind  => kind.name,

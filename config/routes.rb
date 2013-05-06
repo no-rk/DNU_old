@@ -16,6 +16,7 @@ DNU::Application.routes.draw do
   namespace :game_data do resources :landforms,         :except => [:show, :destroy] end
   namespace :game_data do resources :points,            :except => [:show, :destroy] end
   namespace :game_data do resources :point_uses,        :except => [:show, :destroy] end
+  namespace :game_data do resources :battle_types,      :except => [:show, :destroy] end
   namespace :game_data do resources :battle_settings,   :except => [:show, :destroy] end
   namespace :game_data do resources :art_types,         :except => [:show, :destroy] end
   namespace :game_data do resources :arts,              :except => [:show, :destroy] end
@@ -46,9 +47,9 @@ DNU::Application.routes.draw do
   namespace :register do get ':event_content_id/events'     => 'events#index', :as => 'event_content_id_events'    end
   namespace :register do get ':event_content_id/events/new' => 'events#new',   :as => 'new_event_content_id_event' end
 
-  namespace :register do resources :battles      end
-  namespace :register do resources :duels        end
-  namespace :register do resources :competitions end
+  namespace :register do resources :battles, :except => [:index, :new, :destroy] end
+  namespace :register do get ':battle_type_id/battles'     => 'battles#index', :as => 'battle_type_id_battles'    end
+  namespace :register do get ':battle_type_id/battles/new' => 'battles#new',   :as => 'new_battle_type_id_battle' end
 
   namespace :register do resources :pets, :except   => [:index, :new, :destroy]                    end
   namespace :register do get ':pet_id/pets'         => 'pets#index', :as => 'pet_id_pets'          end

@@ -1,5 +1,6 @@
 class Result::Equip < ActiveRecord::Base
   belongs_to :passed_day
+  belongs_to :battle_type, :class_name => "GameData::BattleType"
   belongs_to :equip, :class_name => "Register::Equip"
   belongs_to :inventory
   attr_accessible :success
@@ -9,9 +10,10 @@ class Result::Equip < ActiveRecord::Base
   
   has_one :item, :through => :inventory
   
-  validates :passed_day, :presence => true
-  validates :equip,      :presence => true
-  validates :success,    :inclusion => { :in => [true, false] }
+  validates :passed_day,  :presence => true
+  validates :battle_type, :presence => true
+  validates :equip,       :presence => true
+  validates :success,     :inclusion => { :in => [true, false] }
   
   def tree
     @tree ||= {

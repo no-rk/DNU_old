@@ -1,2 +1,0 @@
-module Register::CompetitionsHelper
-end

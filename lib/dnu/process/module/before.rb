@@ -19,7 +19,7 @@ module DNU
         # キャラ作成済みの各ユーザー
         User.already_make.find_each do |user|
           # 最新宣言に日数の情報を付与する
-          [:main, :trade, :product, :event, :battle, :duel, :competition, :pet, :skill, :art, :character].each do |form_name|
+          [:main, :trade, :product, :event, :battle, :pet, :skill, :art, :character].each do |form_name|
             user_forms = user.next_forms(form_name)
             if user_forms.present? and @new_day
               user_forms.each do |user_form|
@@ -28,7 +28,7 @@ module DNU
                   user_form.day = now_day
                   user_form.save!
                 # 新登録がなくても一部フォームは古登録を採用
-                elsif [:main, :battle, :duel, :competition, :pet, :skill, :art, :character].any?{ |f| f==form_name }
+                elsif [:main, :battle, :pet, :skill, :art, :character].any?{ |f| f==form_name }
                   case form_name
                   when  :main
                     # 合言葉だけ引き継ぐ

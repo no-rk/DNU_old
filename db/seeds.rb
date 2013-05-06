@@ -12,8 +12,8 @@ if Day.last.nil?
   Day.create!(:day => 0, :state => 2)
 end
 
-# 戦闘値, 属性, アイテム種類, 装備種, 地形, 戦闘設定, 技能種類, 技能, 守護, ポイント, ポイント使用
-[:battle_value, :element, :item_type, :equip_type, :landform, :battle_setting, :art_type, :art, :guardian, :point, :point_use].each do |table|
+# 戦闘値, 属性, アイテム種類, 装備種, 地形, 戦闘種類, 戦闘設定, 技能種類, 技能, 守護, ポイント, ポイント使用
+[:battle_value, :element, :item_type, :equip_type, :landform, :battle_type, :battle_setting, :art_type, :art, :guardian, :point, :point_use].each do |table|
   ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_#{table.to_s.tableize}")
   list = YAML.load(ERB.new(File.read("#{Rails.root}/db/game_data/#{table}.yml")).result)
   list[:data].each do |data|

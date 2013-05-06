@@ -1,4 +1,5 @@
 = simple_form_for(register_battle) do |form_battle|
+  = form_battle.input :battle_type_id, :as => :hidden
   = register_battle.updated_at.try(:to_s, :jp)
   = render 'register/error',          { :register_error  => register_battle }
   = render 'form_equip',              { :register_battle => register_battle, :form_battle => form_battle }

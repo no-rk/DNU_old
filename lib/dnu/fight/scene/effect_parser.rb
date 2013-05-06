@@ -273,6 +273,10 @@ class EffectParser < Parslet::Parser
     alternation_from_array(GameData::CharacterType.pluck(:name))
   }
   
+  rule(:battle_type) {
+    alternation_from_array(GameData::BattleType.pluck(:name))
+  }
+  
   rule(:landform_name) {
     alternation_from_array(GameData::Landform.pluck(:name))
   }
@@ -807,8 +811,7 @@ class EffectParser < Parslet::Parser
   
   rule(:add_character) {
     (
-      bra >> character_type.as(:kind) >> ket >>
-      (excepts.absent? >> any).repeat(1).as(:name) >>
+      character_kind_and_name >>
       (bra >> str('重複不可').as(:unique) >> ket).maybe
     ).as(:add_character)
   }
@@ -1946,11 +1949,11 @@ class EffectParser < Parslet::Parser
   }
   
   rule(:character_pc) {
-    bra >> str('PC').as(:kind) >> ket >> eno >> (spaces? >> str('第') >> non_negative_integer.as(:correction) >> str('回')).maybe
+    bra >> str('PC').as(:kind)  >> ket >> eno >> (spaces? >> str('第') >> non_negative_integer.as(:correction) >> str('回')).maybe >> (spaces? >> battle_type.as(:battle_type)).maybe
   }
   
   rule(:character_pet) {
-    bra >> str('Pet').as(:kind) >> ket >> pno >> (spaces? >> str('第') >> non_negative_integer.as(:correction) >> str('回')).maybe
+    bra >> str('Pet').as(:kind) >> ket >> pno >> (spaces? >> str('第') >> non_negative_integer.as(:correction) >> str('回')).maybe >> (spaces? >> battle_type.as(:battle_type)).maybe
   }
   
   rule(:character_setting) {

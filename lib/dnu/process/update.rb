@@ -29,7 +29,7 @@ module DNU
         @new_day = new_day
         
         # (最新結果が確定済かつ新更新)または(最新結果が未確定かつ再更新)のときだけ更新処理する
-        if (Day.settled? and @new_day) or (Day.pending? and @new_day.nil?)
+        if (Day.settled? and @new_day) or ((Day.pending? or Day.updating?) and @new_day.nil?)
           # 更新前処理
           before
           

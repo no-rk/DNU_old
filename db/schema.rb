@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130504091601) do
+ActiveRecord::Schema.define(:version => 20130505060544) do
 
   create_table "admins", :force => true do |t|
     t.string   "email",               :default => "", :null => false
@@ -83,6 +83,18 @@ ActiveRecord::Schema.define(:version => 20130504091601) do
     t.text     "caption"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+  end
+
+  create_table "game_data_battle_types", :force => true do |t|
+    t.string   "name"
+    t.text     "caption"
+    t.boolean  "normal"
+    t.boolean  "event"
+    t.boolean  "result",     :default => false
+    t.boolean  "rob",        :default => false
+    t.boolean  "escape",     :default => false
+    t.datetime "created_at",                    :null => false
+    t.datetime "updated_at",                    :null => false
   end
 
   create_table "game_data_battle_values", :force => true do |t|
@@ -494,10 +506,12 @@ ActiveRecord::Schema.define(:version => 20130504091601) do
   create_table "register_battles", :force => true do |t|
     t.integer  "user_id"
     t.integer  "day_id"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.integer  "battle_type_id"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
   end
 
+  add_index "register_battles", ["battle_type_id"], :name => "index_register_battles_on_battle_type_id"
   add_index "register_battles", ["day_id"], :name => "index_register_battles_on_day_id"
   add_index "register_battles", ["user_id"], :name => "index_register_battles_on_user_id"
 
@@ -542,16 +556,6 @@ ActiveRecord::Schema.define(:version => 20130504091601) do
   add_index "register_communities", ["day_id"], :name => "index_register_communities_on_day_id"
   add_index "register_communities", ["user_id"], :name => "index_register_communities_on_user_id"
 
-  create_table "register_competitions", :force => true do |t|
-    t.integer  "user_id"
-    t.integer  "day_id"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
-  end
-
-  add_index "register_competitions", ["day_id"], :name => "index_register_competitions_on_day_id"
-  add_index "register_competitions", ["user_id"], :name => "index_register_competitions_on_user_id"
-
   create_table "register_diaries", :force => true do |t|
     t.integer  "main_id"
     t.text     "diary"
@@ -569,16 +573,6 @@ ActiveRecord::Schema.define(:version => 20130504091601) do
   end
 
   add_index "register_disposes", ["main_id"], :name => "index_register_disposes_on_main_id"
-
-  create_table "register_duels", :force => true do |t|
-    t.integer  "user_id"
-    t.integer  "day_id"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
-  end
-
-  add_index "register_duels", ["day_id"], :name => "index_register_duels_on_day_id"
-  add_index "register_duels", ["user_id"], :name => "index_register_duels_on_user_id"
 
   create_table "register_equips", :force => true do |t|
     t.integer  "battlable_id"
@@ -1012,13 +1006,15 @@ ActiveRecord::Schema.define(:version => 20130504091601) do
 
   create_table "result_equips", :force => true do |t|
     t.integer  "passed_day_id"
+    t.integer  "battle_type_id"
     t.integer  "equip_id"
     t.integer  "inventory_id"
     t.boolean  "success"
-    t.datetime "created_at",    :null => false
-    t.datetime "updated_at",    :null => false
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
   end
 
+  add_index "result_equips", ["battle_type_id"], :name => "index_result_equips_on_battle_type_id"
   add_index "result_equips", ["equip_id"], :name => "index_result_equips_on_equip_id"
   add_index "result_equips", ["inventory_id"], :name => "index_result_equips_on_inventory_id"
   add_index "result_equips", ["passed_day_id"], :name => "index_result_equips_on_passed_day_id"
@@ -1241,13 +1237,14 @@ ActiveRecord::Schema.define(:version => 20130504091601) do
   add_index "result_moves", ["to_id"], :name => "index_result_moves_on_to_id"
 
   create_table "result_notices", :force => true do |t|
+    t.integer  "battle_type_id"
     t.integer  "party_id"
-    t.string   "kind"
     t.integer  "enemy_id"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
   end
 
+  add_index "result_notices", ["battle_type_id"], :name => "index_result_notices_on_battle_type_id"
   add_index "result_notices", ["enemy_id"], :name => "index_result_notices_on_enemy_id"
   add_index "result_notices", ["party_id"], :name => "index_result_notices_on_party_id"
 
