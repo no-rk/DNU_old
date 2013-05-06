@@ -45,11 +45,12 @@ ActiveRecord::Schema.define(:version => 20130505060544) do
     t.integer  "art_id"
     t.string   "kind"
     t.string   "name"
-    t.boolean  "forgeable",  :default => false
+    t.boolean  "forgeable",      :default => false
+    t.boolean  "supplementable", :default => false
     t.text     "definition"
     t.text     "tree"
-    t.datetime "created_at",                    :null => false
-    t.datetime "updated_at",                    :null => false
+    t.datetime "created_at",                        :null => false
+    t.datetime "updated_at",                        :null => false
   end
 
   add_index "game_data_art_effects", ["art_id"], :name => "index_game_data_art_effects_on_art_id"

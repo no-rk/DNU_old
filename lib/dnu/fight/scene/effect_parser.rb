@@ -1655,7 +1655,7 @@ class EffectParser < Parslet::Parser
         ).absent? >> any
       ).repeat(1).as(:name) >>
       separator.maybe
-    ).repeat(1).as(:requires_wrap).as(:requires) >> newline.maybe
+    ).repeat(1).as(:names_wrap).as(:requires) >> newline.maybe
   }
   
   rule(:equip_definition) {
@@ -1749,8 +1749,16 @@ class EffectParser < Parslet::Parser
   
   rule(:forge) {
     bra >> str('作製') >> ket >>
-    (item_type.as(:item_type) >> separator.maybe).repeat(1).as(:forgeable_item_types_wrap).as(:forgeable_item_types) >>
-    (natural_number >> str('枠')).maybe.as(:forgeable_number_wrap).as(:forgeable_number) >> newline.maybe
+    (item_type.as(:item_type) >> separator.maybe).repeat(1).as(:names_wrap).as(:forgeable_item_types) >>
+    (natural_number >> str('枠')).maybe.as(:productable_number_wrap).as(:forgeable_number) >> newline.maybe
+  }
+  
+  # supplement
+  
+  rule(:supplement) {
+    bra >> str('付加') >> ket >>
+    (equip_type.as(:equip_type) >> separator.maybe).repeat(1).as(:names_wrap).as(:supplementable_equip_types) >>
+    (natural_number >> str('枠')).maybe.as(:productable_number_wrap).as(:supplementable_number) >> newline.maybe
   }
   
   # art_effect_definition
@@ -1769,6 +1777,7 @@ class EffectParser < Parslet::Parser
     art_kind_and_name >> newline >>
     learning_conditions.maybe >>
     forge.maybe >>
+    supplement.maybe >>
     sup_effects.as(:effects) >>
     (
       lv_effects |

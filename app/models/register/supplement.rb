@@ -2,10 +2,11 @@ class Register::Supplement < ActiveRecord::Base
   belongs_to :productable, :polymorphic => true
   belongs_to :art_effect, :class_name => "GameData::ArtEffect"
   belongs_to :user
-  attr_accessible :experiment, :item_number, :material_number, :message, :user_id
+  attr_accessible :experiment, :item_number, :material_number, :message, :art_effect_id, :user_id
   
   has_one :art, :through => :art_effect, :class_name => "GameData::Art"
   
+  validates :art_effect, :presence => true
   validates :user_id,         :numericality => { :only_integer => true, :greater_than => 0 }
   validates :material_number, :numericality => { :only_integer => true, :greater_than => 0 }
   validates :item_number,     :numericality => { :only_integer => true, :greater_than => 0 }

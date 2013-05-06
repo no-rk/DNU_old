@@ -1,6 +1,6 @@
 %br
-= form_product.label :supplement
 = form_product.simple_fields_for :supplements, :wrapper => :simple, :defaults => { :as => (:plain if @read_only), :user => current_user, :input_html => { :class => :'span2' } } do |form_supplement|
+  = form_supplement.input :art_effect_id, :as => :hidden
   ENo.
   = form_supplement.input :user_id
   の

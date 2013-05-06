@@ -33,16 +33,12 @@ class EffectTransform < Parslet::Transform
     filter[position.to_sym]
   }
   
-  rule(:forgeable_item_types_wrap => subtree(:forgeable_item_types_wrap)) {
-    forgeable_item_types_wrap.map{|h| h.values.first }
+  rule(:names_wrap => subtree(:names_wrap)) {
+    names_wrap.map{|h| h.values.first }
   }
   
-  rule(:requires_wrap => subtree(:requires_wrap)) {
-    requires_wrap.map{|h| h.values.first }
-  }
-  
-  rule(:forgeable_number_wrap => subtree(:forgeable_number_wrap)) {
-    forgeable_number_wrap || 1
+  rule(:productable_number_wrap => subtree(:productable_number_wrap)) {
+    productable_number_wrap || 1
   }
   
   rule(:correction_wrap => subtree(:correction)) {

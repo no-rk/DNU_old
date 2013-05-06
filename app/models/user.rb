@@ -102,6 +102,10 @@ class User < ActiveRecord::Base
     self.result(:art, day_i).merge(GameData::Art.forgeables)
   end
   
+  def supplementables(day_i = Day.last_day_i)
+    self.result(:art, day_i).merge(GameData::Art.supplementables)
+  end
+  
   def form(type)
     case type.to_sym
     when :battle
