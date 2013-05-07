@@ -33,8 +33,8 @@ end
   end
 end
 
-# キャラクター種類
-[:character_type].each do |table|
+# キャラクター種類, 技能効果
+[:character_type, :art_effect].each do |table|
   ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_#{table.to_s.tableize}")
   list = YAML.load(ERB.new(File.read("#{Rails.root}/db/game_data/#{table}.yml")).result)
   list[:data].each do |data|
@@ -43,8 +43,8 @@ end
   end
 end
 
-# 技能効果, アイテム, キャラクター, 敵リスト, 敵出現地, イベント
-[:art_effect, :item, :character, :enemy_list, :enemy_territory, :event].each do |table|
+# アイテム, キャラクター, 敵リスト, 敵出現地, イベント
+[:item, :character, :enemy_list, :enemy_territory, :event].each do |table|
   ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_#{table.to_s.tableize}")
   list = YAML.load(ERB.new(File.read("#{Rails.root}/db/game_data/#{table}.yml")).result)
   list[:data].each do |data|

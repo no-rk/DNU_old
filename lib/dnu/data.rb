@@ -53,18 +53,18 @@ module DNU
       id   = model.id
       if id.present?
         db = YAML::Store.new("#{Rails.root}/db/game_data/#{kind}.yml")
-        if model.respond_to?(:definition)
-          definition = self.clean_tree(model.definition)
-          db.transaction do
-            if db[:data][id-1] != definition
-              db[:data][id-1] = definition
-            end
-          end
-        else
+        if model.respond_to?(:to_sync_hash)
           attributes = self.clean_tree(model.to_sync_hash)
           db.transaction do
             if db[:data][id-1] != attributes
               db[:data][id-1] = attributes
+            end
+          end
+        else
+          definition = self.clean_tree(model.definition)
+          db.transaction do
+            if db[:data][id-1] != definition
+              db[:data][id-1] = definition
             end
           end
         end

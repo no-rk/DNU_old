@@ -1782,7 +1782,6 @@ class EffectParser < Parslet::Parser
   }
   
   rule(:art_effect_definition) {
-    art_kind_and_name >> newline >>
     learning_conditions.maybe >>
     forge.maybe >>
     supplement.maybe >>

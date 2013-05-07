@@ -105,7 +105,7 @@ class User < ActiveRecord::Base
   end
   
   def hunt_list(kinds, day_i = Day.last_day_i)
-    self.result(:enemy_member, day_i).find_all{|r| kinds.include?(r.character.kind)}.inject({}){|h,r| h.tap{ h["#{r.character.name}#{p_correction(r.correction)}"] = r.id } }
+    self.result(:enemy_member, day_i).find_all{|r| kinds.include?(r.character.kind)}.each.with_index(1).inject({}){|h,(r,i)| h.tap{ h["[#{i}] #{r.character.name}#{p_correction(r.correction)}"] = r.id } }
   end
   
   def form(type)

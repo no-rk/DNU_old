@@ -1,7 +1,7 @@
 class GameData::ArtEffect < ActiveRecord::Base
   belongs_to :art
   has_many :learning_conditions, :as => :learnable, :dependent => :destroy
-  attr_accessible :caption, :definition, :name, :tree, :kind, :forgeable, :supplementable, :huntable
+  attr_accessible :definition, :art_id, :art_name
   serialize :tree
   
   has_many :result_arts, :through => :art
@@ -35,14 +35,26 @@ class GameData::ArtEffect < ActiveRecord::Base
     !used?
   end
   
+  def art_name=(name)
+    self.art = GameData::Art.where(:name => name).first
+    @art_name = name
+  end
+  
+  def art_name
+    @art_name || self.art.try(:name)
+  end
+  
+  def to_sync_hash
+    { :art_name => self.art_name, :definition => self.attributes["definition"] }
+  end
+  
   private
   def set_game_data
     definition_tree = DNU::Data.parse_from_model(self, true)
     if definition_tree.present?
       if self.unused?
-        self.art            = GameData::Art.find_by_type_and_name(definition_tree[:kind], definition_tree[:name]).first
-        self.kind           = definition_tree[:kind]
-        self.name           = definition_tree[:name]
+        self.kind           = self.art.try(:type)
+        self.name           = self.art.try(:name)
         self.forgeable      = definition_tree[:forgeable_item_types].present?
         self.supplementable = definition_tree[:supplementable_equip_types].present?
         self.huntable       = definition_tree[:huntable_character_types].present?
