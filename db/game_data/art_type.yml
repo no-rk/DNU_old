@@ -9,6 +9,8 @@
   :forget: false
   :lv_cap: false
   :train: false
+  :form: true
+  :rename: true
 - :name: "武器"
   :caption: |-
     対応する装備品を上手く扱える技能。
@@ -18,6 +20,8 @@
   :forget: true
   :lv_cap: true
   :train: true
+  :form: false
+  :rename: false
 - :name: "竜魂"
   :caption: |-
     「<b>竜魂</b>」は技能に分類されますが、装備品としての存在はありません。
@@ -29,6 +33,8 @@
   :forget: false
   :lv_cap: false
   :train: true
+  :form: false
+  :rename: false
 - :name: "生産"
   :caption: |-
     何かを作れる感じの技能。
@@ -38,6 +44,8 @@
   :forget: false
   :lv_cap: false
   :train: true
+  :form: true
+  :rename: false
 - :name: "アビリティ"
   :caption: "上位技能的なの。"
   :max: 8
@@ -45,3 +53,5 @@
   :forget: true
   :lv_cap: false
   :train: true
+  :form: true
+  :rename: false

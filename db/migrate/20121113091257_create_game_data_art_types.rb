@@ -8,6 +8,8 @@ class CreateGameDataArtTypes < ActiveRecord::Migration
       t.boolean :forget, :default => false
       t.boolean :lv_cap, :default => false
       t.boolean :train, :default => true
+      t.boolean :form, :default => false
+      t.boolean :rename, :default => false
 
       t.timestamps
     end

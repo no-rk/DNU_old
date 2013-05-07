@@ -11,6 +11,8 @@ class GameData::ArtEffect < ActiveRecord::Base
   validates :art_id,         :uniqueness => true
   validates :kind,           :presence => true
   validates :name,           :presence => true, :uniqueness => true
+  validates :lv_effect,      :inclusion => { :in => [true, false] }
+  validates :pull_down,      :inclusion => { :in => [true, false] }
   validates :forgeable,      :inclusion => { :in => [true, false] }
   validates :supplementable, :inclusion => { :in => [true, false] }
   validates :huntable,       :inclusion => { :in => [true, false] }
@@ -55,6 +57,8 @@ class GameData::ArtEffect < ActiveRecord::Base
       if self.unused?
         self.kind           = self.art.try(:type)
         self.name           = self.art.try(:name)
+        self.lv_effect      = definition_tree[:definitions].any?{|h| h[:pull_down].blank?}
+        self.pull_down      = definition_tree[:definitions].any?{|h| h[:pull_down].present?}
         self.forgeable      = definition_tree[:forgeable_item_types].present?
         self.supplementable = definition_tree[:supplementable_equip_types].present?
         self.huntable       = definition_tree[:huntable_character_types].present?

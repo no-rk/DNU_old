@@ -186,6 +186,8 @@ ja:
         forget: 忘却
         lv_cap: 熟練
         train: 訓練
+        form: フォーム表示
+        rename: 名前変更
       
       game_data/art:
         art_type: 技能種類

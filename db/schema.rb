@@ -45,6 +45,8 @@ ActiveRecord::Schema.define(:version => 20130506082721) do
     t.integer  "art_id"
     t.string   "kind"
     t.string   "name"
+    t.boolean  "lv_effect",      :default => false
+    t.boolean  "pull_down",      :default => false
     t.boolean  "forgeable",      :default => false
     t.boolean  "supplementable", :default => false
     t.boolean  "huntable",       :default => false
@@ -64,6 +66,8 @@ ActiveRecord::Schema.define(:version => 20130506082721) do
     t.boolean  "forget",     :default => false
     t.boolean  "lv_cap",     :default => false
     t.boolean  "train",      :default => true
+    t.boolean  "form",       :default => false
+    t.boolean  "rename",     :default => false
     t.datetime "created_at",                    :null => false
     t.datetime "updated_at",                    :null => false
   end

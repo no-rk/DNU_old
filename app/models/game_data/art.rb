@@ -9,7 +9,6 @@ class GameData::Art < ActiveRecord::Base
   accepts_nested_attributes_for :art_effect, :reject_if => :all_blank
   
   scope :find_all_by_type, lambda{ |art_type_name|
-    art_type_arel = GameData::ArtType.arel_table
     where(art_type_arel[:name].eq(art_type_name)).includes(:art_type)
   }
   
@@ -23,8 +22,11 @@ class GameData::Art < ActiveRecord::Base
   }
   
   scope :find_by_type_and_name, lambda{ |art_type_name,name|
-    art_type_arel = GameData::ArtType.arel_table
     where(art_type_arel[:name].eq(art_type_name)).includes(:art_type).where(:name => name)
+  }
+  
+  scope :form, lambda{
+    where(art_type_arel[:form].eq(true)).includes(:art_type)
   }
   
   validates :art_type, :presence => true
@@ -78,5 +80,9 @@ class GameData::Art < ActiveRecord::Base
   def sync_game_data
     DNU::Data.sync(self)
     DNU::Data.trainable(self, self.art_type.train)
+  end
+  
+  def self.art_type_arel
+    @@art_type_arel ||= GameData::ArtType.arel_table
   end
 end

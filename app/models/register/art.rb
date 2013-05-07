@@ -4,6 +4,7 @@ class Register::Art < ActiveRecord::Base
   belongs_to :art, :class_name => "GameData::Art"
   attr_accessible :art_id, :art_name_attributes, :art_pull_down_attributes, :art_lv_effects_attributes, :forges_attributes, :supplements_attributes, :hunts_attributes
   
+  has_one :art_type,   :through => :art, :class_name => "GameData::ArtType"
   has_one :art_effect, :through => :art, :class_name => "GameData::ArtEffect"
   
   has_one  :art_name,       :dependent => :destroy
@@ -21,7 +22,7 @@ class Register::Art < ActiveRecord::Base
   accepts_nested_attributes_for :hunts,       :reject_if => proc { |attributes| attributes.all?{|k,v| [:art_effect_id].include?(k.to_sym) ? true : v.blank?} }
   
   def build_art
-    self.build_art_name if self.art_name.nil?
+    self.build_art_name if self.art_name.nil? and self.art_type.try(:rename)
     if has_pull_down?
       self.build_art_pull_down if self.art_pull_down.nil?
     end

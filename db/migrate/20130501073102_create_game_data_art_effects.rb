@@ -4,6 +4,8 @@ class CreateGameDataArtEffects < ActiveRecord::Migration
       t.references :art
       t.string :kind
       t.string :name
+      t.boolean :lv_effect, :default => false
+      t.boolean :pull_down, :default => false
       t.boolean :forgeable, :default => false
       t.boolean :supplementable, :default => false
       t.boolean :huntable, :default => false

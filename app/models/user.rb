@@ -116,6 +116,8 @@ class User < ActiveRecord::Base
       self.result(:pet_inventory).map{|r| r.pet}
     when :event
       self.result(:event_form).map{|r| r.event_content}
+    when :art
+      self.result(:art).merge(GameData::Art.form).where(:forget => false).map{ |r| r.send(type) }
     else
       self.result(type).where(:forget => false).map{ |r| r.send(type) }
     end
