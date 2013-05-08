@@ -161,7 +161,7 @@ div.serif {
   }
 }
 div{
-  &.multicols_2 {
+  &.column_2 {
     width:100%;
     overflow: hidden;
     div:nth-child(1) {
@@ -173,7 +173,7 @@ div{
       float:right;
     }
   }
-  &.multicols_3 {
+  &.column_3 {
     width:100%;
     overflow: hidden;
     div:nth-child(1) {

@@ -6,7 +6,7 @@ class TestsController < ApplicationController
   def message
   end
   
-  def text
+  def document
     @example = <<-"EXAMPLE"
 <複3>
 <右寄>むかしむかし、<右寄>人間も生まれていない、<右寄>大むかしのある年の暮れの事です。
