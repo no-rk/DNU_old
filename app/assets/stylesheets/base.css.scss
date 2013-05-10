@@ -17,7 +17,9 @@ body {
   @include box-shadow(5px 5px 10px rgba($shadow-color, 0.3));
 }
 div.preview{
-  @include shaded_box;
+  @include shaded_box(white, black);
+  background-color: white;
+  margin-left: 0 !important;
 }
 div.rule{
   @include shaded_box;
@@ -87,15 +89,17 @@ div.serif {
     max-width:120px;
   }
   div.balloon {
-    max-width:500px;
-    position: relative;
-    color: $black;
-    background: $white;
-    border: 4px solid $black;
-    margin: 0px 20px 20px 20px;
-    padding: 10px;
-    @include border-radius(5px);
-    @include box-shadow(0px 5px 10px rgba($black, 0.6));
+    &.normal {
+      max-width:500px;
+      position: relative;
+      color: $black;
+      background: $white;
+      border: 4px solid $black;
+      margin: 0px 20px 20px 20px;
+      padding: 10px;
+      @include border-radius(5px);
+      @include box-shadow(0px 5px 10px rgba($black, 0.6));
+    }
   }
   &.left {
     div.icon {

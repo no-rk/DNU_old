@@ -4,7 +4,7 @@ class Communication::Message < ActiveForm
 
   validates :recipients, :presence => true
   validates :subject   , :length => { :maximum => 20 }
-  validates :body      , :presence => true, :length => { :maximum => 800, :tokenizer => DNU::Sanitize.counter }
+  validates :body      , :presence => true, :length => { :maximum => 800, :tokenizer => DNU::Text.counter(:message) }
 
   attr_accessor :recipients, :subject, :body, :user, :flash_alert
 
@@ -43,7 +43,4 @@ class Communication::Message < ActiveForm
     user.mark_as_read(user.mailbox.notifications(:unread => true).find_by_notified_object_id(user.id))
     receipts
   end
-
-  clean_before_validation :subject
-  sanitize_before_validation :body
 end

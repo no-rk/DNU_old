@@ -8,31 +8,35 @@
       inner: []
       data: data
     }
-    count = 0
+    count = []
     for inner in inners
       if typeof($html.inner[$html.inner.length-1])=='string' and typeof(inner.html)=='string'
         $html.inner[$html.inner.length-1] += inner.html
       else
         $html.inner.push(inner.html)
-      count += inner.count
+      count = count.concat(inner.count)
     {
       html: $html
       count: count
     }
-  @default_icon = {
+  @default_serif = {
     position: 'left'
-    number: 0
+    icon: 1
     balloon: 'normal'
   }
   @default_color = '黒'
+  @empty = { html: '', count: [] }
 }
 
 root = document
 
-bra = [<＜]
-ket = [>＞]
+// names
+bra       = [<＜]
+ket       = [>＞]
 separator = [|｜]
-plus = [+＋]
+plus      = [+＋]
+
+// number
 n1_9 = number:[1-9１-９] {
   @format_number(number)
 }
@@ -41,65 +45,82 @@ n0_9 = number:[0-9０-９] {
 }
 non_negative_integer = n1:(n1_9 (n2:n0_9+ { n2.join('') })) { n1.join('') } / n0_9
 
+// any
 any = any:. {
-  { html: any.replace(/</, '&lt;').replace(/>/, '&gt;'), count: 1 }
+  { html: any.replace(/</, '&lt;').replace(/>/, '&gt;'), count: [any] }
 }
 
-// message_tag_names
+// string_tag_names
 bold    = bra '太' ket { 'b' }
 big     = bra '大' ket { 'big' }
 small   = bra '小' ket { 'small' }
 italic  = bra '斜' ket { 'i' }
 delete  = bra '消' ket { 'del' }
 under   = bra '下' ket { 'u' }
-newline = "\r\n" / "\n\r" / [\n\r] / (bra '改行' ket)
 thin    = bra '細' ket
 middle  = bra '中' ket
 normal  = bra '元' ket
+color   = bra color:('黒' {"#000000"} / '赤' {"FF0000"} / '橙' {"#FFA500"} / '黄' {"#FFFF00"} / '緑' {"#00FF00"} / '青' {"#0000FF"} / '藍' {"#000080"} / '紫' {"#800080"}) ket {
+  {
+    color: color
+  }
+}
 
-// message_tags
-tag_bold   = tag:bold   inner:(!(document_tags / thin   / normal / ket) (message_tags / any))*         &(thin   / normal / ket)? {
-  @return_html tag, inner.map (h,i) ->
-    h[1]
-}
-tag_big    = tag:big    inner:(!(document_tags / middle / normal / ket) (message_tags / any))*         &(middle / normal / ket)? {
-  @return_html tag, inner.map (h,i) ->
-    h[1]
-}
-tag_small  = tag:small  inner:(!(document_tags / middle / normal / ket) (message_tags / any))*         &(middle / normal / ket)? {
-  @return_html tag, inner.map (h,i) ->
-    h[1]
-}
-tag_italic = tag:italic inner:(!(document_tags / italic / normal / ket) (message_tags / any))* italic? &(         normal / ket)? {
-  @return_html tag, inner.map (h,i) ->
-    h[1]
-}
-tag_delete = tag:delete inner:(!(document_tags / delete / normal / ket) (message_tags / any))* delete? &(         normal / ket)? {
-  @return_html tag, inner.map (h,i) ->
-    h[1]
-}
-tag_under  = tag:under  inner:(!(document_tags / under  / normal / ket) (message_tags / any))* under?  &(         normal / ket)? {
-  @return_html tag, inner.map (h,i) ->
-    h[1]
-}
-tag_ruby = bra rb:(!(document_tags / tag_ruby / ket) (message_tags / any))* ket ('^' / '＾') bra rt:(!(document_tags / tag_ruby / ket) (message_tags / any))* ket {
+// string_tags
+tag_ruby = bra rb:(!(document_tags / message_tags / tag_ruby / ket) (string_tags / any))* ket ('^' / '＾') bra rt:(!(document_tags / message_tags / tag_ruby / ket) (string_tags / any))* ket {
   $rb = @return_html 'rb', rb.map (h,i) ->
     h[1]
   $rt = @return_html 'rt', rt.map (h,i) ->
     h[1]
   @return_html 'ruby', [$rb, $rt]
 }
-color = bra color:('黒' {"#000000"} / '赤' {"FF0000"} / '橙' {"#FFA500"} / '黄' {"#FFFF00"} / '緑' {"#00FF00"} / '青' {"#0000FF"} / '藍' {"#000080"} / '紫' {"#800080"}) ket {
-  {
-    color: color
-  }
+tag_bold   = tag:bold   inner:(!(document_tags / message_tags / thin   / normal / separator / plus / ket) (bold { @empty } / string_tags / any))*         {
+  @return_html tag, inner.map (h,i) ->
+    h[1]
 }
-tag_color = color:color inner:(!(document_tags / color / normal / ket) (message_tags / any))* &(normal / ket)? {
+tag_big    = tag:big    inner:(!(document_tags / message_tags / middle / normal / separator / plus / ket) (                  string_tags / any))*         {
+  @return_html tag, inner.map (h,i) ->
+    h[1]
+}
+tag_small  = tag:small  inner:(!(document_tags / message_tags / middle / normal / separator / plus / ket) (                  string_tags / any))*         {
+  @return_html tag, inner.map (h,i) ->
+    h[1]
+}
+tag_italic = tag:italic inner:(!(document_tags / message_tags / italic / normal / separator / plus / ket) (                  string_tags / any))* italic? {
+  @return_html tag, inner.map (h,i) ->
+    h[1]
+}
+tag_delete = tag:delete inner:(!(document_tags / message_tags / delete / normal / separator / plus / ket) (                  string_tags / any))* delete? {
+  @return_html tag, inner.map (h,i) ->
+    h[1]
+}
+tag_under  = tag:under  inner:(!(document_tags / message_tags / under  / normal / separator / plus / ket) (                  string_tags / any))*  under? {
+  @return_html tag, inner.map (h,i) ->
+    h[1]
+}
+tag_color = color:color inner:(!(document_tags / message_tags / color  / normal / separator / plus / ket) (                  string_tags / any))*         {
   @return_html 'color', inner.map((h,i) ->
     h[1]
   ), color
 }
-tag_random = bra left:(!(document_tags / tag_random / separator / ket) (message_tags / any))* right:(separator (!(document_tags / tag_random / separator / ket) (message_tags / any))*)+ ket {
+tag_thin = thin {
+  @empty
+}
+tag_middle = middle {
+  @empty
+}
+tag_normal = normal {
+  @empty
+}
+string_tags = tag_ruby / tag_bold / tag_big / tag_small / tag_italic / tag_delete / tag_under / tag_color / tag_thin / tag_middle / tag_normal
+
+// string
+string = inner:(string_tags / any)* {
+  @return_html 'string', inner
+}
+
+// message_tags
+tag_random   = bra left:(!(document_tags / separator / ket) (message_tags / string_tags / any))* right:(separator (!(document_tags / separator / ket) (message_tags / string_tags / any))*)+ ket {
   $left = @return_html 'element', left.map (h,i) ->
     h[1]
   $rights = right.map (h1,i) =>
@@ -108,7 +129,7 @@ tag_random = bra left:(!(document_tags / tag_random / separator / ket) (message_
   $rights.unshift($left)
   @return_html 'random', $rights
 }
-tag_sequence = bra left:(!(document_tags / tag_sequence / plus / ket) (message_tags / any))* right:(plus (!(document_tags / tag_sequence / plus / ket) (message_tags / any))*)+ ket {
+tag_sequence = bra left:(!(document_tags /      plus / ket) (message_tags / string_tags / any))* right:(     plus (!(document_tags /      plus / ket) (message_tags / string_tags / any))*)+ ket {
   $left = @return_html 'element', left.map (h,i) ->
     h[1]
   $rights = right.map (h1,i) =>
@@ -118,74 +139,66 @@ tag_sequence = bra left:(!(document_tags / tag_sequence / plus / ket) (message_t
   @return_html 'sequence', $rights
 }
 tag_dice = bra count:non_negative_integer [dDｄＤ] number:non_negative_integer ket {
-  @return_html 'dice', [{ html: '', count: (count*number) }], { 
+  @return_html 'dice', [@empty], { 
     count: count
     number: number
   }
 }
+newline = "\r\n" / "\n\r" / [\n\r] / (bra '改行' ket)
 tag_newline = newline {
-  @return_html 'br', [{ html: '', count: 1 }]
+  @return_html 'br', [@empty]
 }
-tag_thin = thin {
-  { html: '', count: 0 }
-}
-tag_middle = middle {
-  { html: '', count: 0 }
-}
-tag_normal = normal {
-  { html: '', count: 0 }
-}
-message_tags = tag_bold / tag_big / tag_small / tag_italic / tag_delete / tag_under / tag_color / tag_ruby / tag_random / tag_sequence / tag_dice / tag_newline / tag_thin / tag_middle / tag_normal
+message_tags = tag_random / tag_sequence / tag_dice / tag_newline
 
-// message
-position = ('左' &non_negative_integer) { 'left' } / ('右'&non_negative_integer) { 'right' } / ('無' !non_negative_integer) { 'none' } / ('' &non_negative_integer) { @default_icon.position }
-balloon = '無' { 'none' } / '考' { 'think' } / '' { @default_icon.balloon }
-icon = bra position:position number:non_negative_integer? balloon:balloon ket {
+// tag_serif
+position = '左' { 'left' } / '右'{ 'right' } / ('' !ket) { @default_serif.position }
+icon = '無' { false } / non_negative_integer/ '' { @default_serif.icon }
+balloon = '通' { 'none' } / '考' { 'think' } / '吹' { 'normal' } / '' { @default_serif.balloon }
+serif = bra position:position icon:icon  balloon:balloon ket {
   {
     position: position
-    number: number
+    icon: icon
     balloon: balloon
   }
 }
-tag_icon = icon:(icon / '' { @default_icon }) inner:(!document_tags (message_tags / any))* {
-  @return_html 'icon', inner.map((h,i) ->
+serif_inner = !(document_tags / separator / plus) (message_tags / string_tags / any)
+tag_serif = serif:(serif / ('' &serif_inner) { @default_serif }) inner:serif_inner* {
+  @return_html 'serif', inner.map((h,i) ->
     h[1]
-  ), icon
+  ), serif
 }
 
-message = left:tag_icon? right:(&icon tag_icon)* {
-  results = right.map (h,i) ->
-    h[1]
-  results.unshift(if left then left else { html: '', count: 0 })
-  @return_html 'message', results
+// wrap_tags
+tag_random_wrap = separator newline? inner:(tag_serif+ separator newline?)+ {
+  $inners = inner.map (h,i) =>
+    @return_html 'element', h[0]
+  @return_html 'random', $inners
+}
+tag_sequence_wrap = plus newline? inner:(tag_serif+ plus newline?)+ {
+  $inners = inner.map (h,i) =>
+    @return_html 'element', h[0]
+  @return_html 'sequence', $inners
+}
+wrap_tags = tag_random_wrap / tag_sequence_wrap
+
+// message
+message = inner:(wrap_tags / tag_serif / any)* {
+  @return_html 'message', inner
 }
 
 // document_tag_names
-column_2 = bra [2２] '段組' ket { 'column_2' }
-column_3 = bra [3３] '段組' ket { 'column_3' }
 align_left    = bra '左寄' ket { 'align_left' }
 align_right   = bra '右寄' ket { 'align_right' }
 align_center  = bra '中寄' ket { 'align_center' }
 align_justify = bra '均等' ket { 'align_justify' }
+column_2 = bra [2２] '段組' ket { 'column_2' }
+column_3 = bra [3３] '段組' ket { 'column_3' }
 
 // document_tags
-tag_left    = tag:align_left    newline? inner:(!document_tags (message_tags / any))* {
+align_tags = tag:(align_left / align_right / align_center / align_justify) newline? inner:(!document_tags (message_tags / string_tags / any))* {
   @return_html tag, inner.map (h,i) ->
     h[1]
 }
-tag_right   = tag:align_right   newline? inner:(!document_tags (message_tags / any))* {
-  @return_html tag, inner.map (h,i) ->
-    h[1]
-}
-tag_center  = tag:align_center  newline? inner:(!document_tags (message_tags / any))* {
-  @return_html tag, inner.map (h,i) ->
-    h[1]
-}
-tag_justify = tag:align_justify newline? inner:(!document_tags (message_tags / any))* {
-  @return_html tag, inner.map (h,i) ->
-    h[1]
-}
-align_tags = tag_left / tag_right / tag_center / tag_justify
 tag_column_2 = tag:column_2 newline? inner:(align_tags align_tags) {
   @return_html tag, inner
 }
@@ -200,12 +213,14 @@ image = bra '絵' number:non_negative_integer ket {
 tag_image = image:image {
   @return_html 'image', [], image
 }
-tag_message = &icon message:message {
-  message
+tag_message = inner:(&serif tag_serif)+ {
+  @return_html 'message', inner.map (h,i) ->
+    h[1]
 }
-document_tags = tag_column_3 / tag_column_2 / tag_left / tag_right / tag_center / tag_justify / tag_image / tag_message
+
+document_tags = align_tags / tag_column_2 / tag_column_3 / tag_image/ wrap_tags / tag_message
 
 // document
-document = inner:(document_tags / message_tags / any)* {
+document = inner:(document_tags / message_tags / string_tags / any)* {
   @return_html 'document', inner
 }
