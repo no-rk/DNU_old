@@ -13,6 +13,9 @@
 #= require jquery
 #= require jquery_ujs
 #= require bootstrap
+#= require ./plugins/textCounter
+#= require ./plugins/textTransformer
+#= require ./plugins/textEditor
 #= require_tree ./plugins
 #= require_self
 #= require_tree .

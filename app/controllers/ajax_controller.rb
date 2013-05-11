@@ -20,39 +20,24 @@ class AjaxController < ApplicationController
         "caption" => I18n.t("caption", :scope => "ajax.message")
       }
     end
-
+    
     respond_to do |format|
       format.html { redirect_to root_path } # search.html.erb
       format.json { render json: @ajax }
     end
   end
-
-  # POST /ajax_html_to
-  # POST /ajax_html_to.json
-  def html_to
-    html = params[:html]
-
-    @ajax = Hash.new
-    @ajax[:code] = DNU::Sanitize.html_to_code(html)
-
+  # GET /ajax_user(/:id)
+  # GET /ajax_user(/:id).json
+  def user
+    user_name = User.where(:id => params[:id]).first.try(:name)
+    
+    user_data = {
+      name: user_name
+    }
+    
     respond_to do |format|
       format.html { redirect_to root_path } # search.html.erb
-      format.json { render json: @ajax }
-    end
-  end
-
-  # POST /ajax_to_html
-  # POST /ajax_to_html.json
-  def to_html
-    code = params[:code]
-
-    @ajax = Hash.new
-    san = DNU::Sanitize.new(current_user)
-    @ajax[:html] = san.code_to_html(code)
-
-    respond_to do |format|
-      format.html { redirect_to root_path } # search.html.erb
-      format.json { render json: @ajax }
+      format.json { render json: user_data }
     end
   end
 end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130506082721) do
+ActiveRecord::Schema.define(:version => 20130510124208) do
 
   create_table "admins", :force => true do |t|
     t.string   "email",               :default => "", :null => false
@@ -755,6 +755,19 @@ ActiveRecord::Schema.define(:version => 20130506082721) do
 
   add_index "register_makes", ["user_id"], :name => "index_register_makes_on_user_id"
 
+  create_table "register_message_users", :force => true do |t|
+    t.integer  "message_id"
+    t.integer  "parent_id"
+    t.integer  "user_id"
+    t.text     "body"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "register_message_users", ["message_id"], :name => "index_register_message_users_on_message_id"
+  add_index "register_message_users", ["parent_id"], :name => "index_register_message_users_on_parent_id"
+  add_index "register_message_users", ["user_id"], :name => "index_register_message_users_on_user_id"
+
   create_table "register_messages", :force => true do |t|
     t.integer  "user_id"
     t.integer  "day_id"
@@ -1244,6 +1257,19 @@ ActiveRecord::Schema.define(:version => 20130506082721) do
 
   add_index "result_maps", ["day_id"], :name => "index_result_maps_on_day_id"
   add_index "result_maps", ["map_id"], :name => "index_result_maps_on_map_id"
+
+  create_table "result_messages", :force => true do |t|
+    t.integer  "passed_day_id"
+    t.integer  "message_id"
+    t.text     "html"
+    t.string   "ancestry"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
+  end
+
+  add_index "result_messages", ["ancestry"], :name => "index_result_messages_on_ancestry"
+  add_index "result_messages", ["message_id"], :name => "index_result_messages_on_message_id"
+  add_index "result_messages", ["passed_day_id"], :name => "index_result_messages_on_passed_day_id"
 
   create_table "result_moves", :force => true do |t|
     t.integer  "passed_day_id"

@@ -6,8 +6,8 @@ class Register::UploadIcon < ActiveRecord::Base
   belongs_to :image
 
   validates :icon   , :presence => true
-  validates :name   , :length => { :maximum => 20  }, :presence => true
-  validates :caption, :length => { :maximum => 400, :tokenizer => DNU::Sanitize.counter }
+  validates :name   , :presence => true, :length => { :maximum => Settings.maximum.name  }
+  validates :caption, :length => { :maximum => Settings.maximum.caption, :tokenizer => DNU::Text.counter(:document) }
 
   attr_accessor :user_tag
   attr_accessible :icon, :name, :caption, :icon_cache, :remote_icon_url, :user_tag

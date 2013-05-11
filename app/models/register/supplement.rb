@@ -11,7 +11,7 @@ class Register::Supplement < ActiveRecord::Base
   validates :material_number, :numericality => { :only_integer => true, :greater_than => 0 }
   validates :item_number,     :numericality => { :only_integer => true, :greater_than => 0 }
   validates :experiment,      :inclusion => { :in => [true, false] }
-  validates :message,         :length => { :maximum => 800, :tokenizer => DNU::Sanitize.counter }
+  validates :message,         :length => { :maximum => Settings.maximum.message, :tokenizer => DNU::Text.counter(:message) }
   
   def smith
     self.productable.user

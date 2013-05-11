@@ -85,9 +85,8 @@ DNU::Application.routes.draw do
   get  "gallery/:model/:id"          => 'gallery#show'  , :as => 'gallery'
   post "gallery/:model/:id"          => 'gallery#update'
 
-  get  'ajax_img/:model(/:id)'  => 'ajax#img'    , :as => 'ajax_img'
-  post 'ajax_html_to'           => 'ajax#html_to', :as => 'ajax_html_to'
-  post 'ajax_to_html'           => 'ajax#to_html', :as => 'ajax_to_html'
+  get 'ajax_img/:model(/:id)' => 'ajax#img',  :as => 'ajax_img'
+  get 'ajax_user(/:id)'       => 'ajax#user', :as => 'ajax_user'
 
   get "helps(/:name)"     => 'help#index', :as => 'helps'
   get "help/:model(/:id)" => 'help#show' , :as => 'help'

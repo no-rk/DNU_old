@@ -44,6 +44,27 @@ $ ->
     ,500
   )
 
+  # ENo.
+  $('body.register').delegate 'input[data-remote]', 'ajax:before', (event) ->
+    #親要素のajax:beforeイベントが実行されないように伝播を止める
+    event.stopPropagation()
+    if $(this).val()
+      #Ajaxに渡すパラメータを選択された値に応じて設定する
+      $(this).data("params","id=" + $(this).val())
+      console.log $(this).data("params")
+      console.log('input[data-remote] ajax:before')
+    else
+      #値がないのでAjaxキャンセル
+      console.log('input[data-remote] ajax:before cancel')
+      false
+  $('body.register').delegate 'input[data-remote]', 'ajax:success', (event, data, status, xhr) ->
+    #親要素のajax:successイベントが実行されないように伝播を止める
+    event.stopPropagation()
+    #Ajaxにパラメーターを渡し終わったので消しておく
+    $(this).removeData("params")
+    user_name = data.name || ""
+    $(this).next("span").html("ENo.#{$(this).val()} #{user_name}")
+
   #ヘルプリンク追加
   $('*[data-help-path]').helpLink()
   #リンクヘルプ

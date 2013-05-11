@@ -6,5 +6,5 @@ class Register::Shout < ActiveRecord::Base
   has_one :day,  :through => :main
   
   validates :volume,  :numericality => { :only_integer => true, :greater_than => 0 }
-  validates :message, :length => { :maximum => Settings.profile.introduction.maximum, :tokenizer => DNU::Sanitize.counter }
+  validates :message, :length => { :maximum => Settings.maximum.message, :tokenizer => DNU::Text.counter(:message) }
 end

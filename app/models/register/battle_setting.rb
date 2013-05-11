@@ -13,7 +13,7 @@ class Register::BattleSetting < ActiveRecord::Base
   validates :use_condition, :presence => true
   validates :frequency,     :presence => true
   validates :condition,     :presence => true
-  validates :message,       :length => { :maximum => Settings.profile.introduction.maximum, :tokenizer => DNU::Sanitize.counter }
+  validates :message,       :length => { :maximum => Settings.maximum.message, :tokenizer => DNU::Text.counter(:message) }
   
   before_validation :set_condition
   

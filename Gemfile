@@ -59,6 +59,7 @@ gem 'devise', "~> 2.2.3"
 gem "rails_admin", "~> 0.4.4"
 gem 'mailboxer', "~> 0.9.0"
 gem "acts-as-taggable-on", "~> 2.3.3"
+gem 'ancestry'
 gem "rmagick", "~> 2.13.1"
 gem 'carrierwave', "~> 0.8.0"
 gem "kaminari", "~> 0.14.1"

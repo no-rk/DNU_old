@@ -19,7 +19,7 @@ $ ->
       counterElement = $(this).closest('.controls').prev().find(options.counterElement)
       
       calculate = =>
-        count = $(this).data("textCounter") || 0
+        count = $(this).data("textCounter") || $(this).val().length
         available = maxChars - count
         
         if available <= warningChars and available > 0
@@ -32,5 +32,8 @@ $ ->
           counterElement.removeClass(options.cssExceeded)
         counterElement.html(options.counterText + available + "文字")
       
+      calculate()
       $(this).bind "textCounter", ->
         calculate()
+      $(this).keyup ->
+        $(this).trigger("textCounter")

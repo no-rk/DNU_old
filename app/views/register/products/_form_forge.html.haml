@@ -2,7 +2,7 @@
 = form_product.simple_fields_for :forges, :wrapper => :simple, :defaults => { :as => (:plain if @read_only), :user => current_user, :input_html => { :class => :'span2' } } do |form_forge|
   = form_forge.input :art_effect_id, :as => :hidden
   ENo.
-  = form_forge.input :user_id
+  = form_forge.input :user_id, :as => :id
   の
   = form_forge.input :number
   を使って

@@ -6,7 +6,7 @@ $ ->
   $(':text[data-maxlength]').textCounter()
   $('textarea[data-maxlength]').textCounter()
   # エディタ
-  $(':text[data-maxlength]').textEditor({type: "string"})
+  #$(':text[data-maxlength].string').textEditor({type: "string"})
   $('textarea[data-maxlength].message').textEditor({type: "message"})
   $('textarea[data-maxlength].document').textEditor({type: "document"})
   #セレクトでサブミット

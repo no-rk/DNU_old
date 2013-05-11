@@ -193,8 +193,10 @@ $ ->
       $(this).before($editor)
       $(this).after($button).before($preview)
       # 特殊タグパーサ
+      $(this).unbind "keyup"
       $(this).keyup (event) ->
+        event.preventDefault()
         tree = parser.parse($(this).val(), options.type)
-        $preview.html($.textTransformer(tree.html))
+        $preview.html(textTransformer(tree.html))
         $(this).data('textCounter', tree.count.length).trigger("textCounter")
       $(this).keyup()

@@ -3,8 +3,8 @@ class Register::Icon < ActiveRecord::Base
   belongs_to :upload_icon
 
   validates :number        , :numericality => { :only_integer => true }, :presence => true
-  validates :name          , :length => { :maximum => 20  }
-  validates :caption       , :length => { :maximum => 400, :tokenizer => DNU::Sanitize.counter }
+  validates :name          , :length => { :maximum => Settings.maximum.name  }
+  validates :caption       , :length => { :maximum => Settings.maximum.caption, :tokenizer => DNU::Text.counter(:document) }
 
   attr_accessible :number, :upload_icon_id, :url, :name, :caption
 

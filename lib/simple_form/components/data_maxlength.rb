@@ -2,7 +2,7 @@ module SimpleForm
   module Components
     module DataMaxlength
       def data_maxlength
-        input_html_options[:'data-maxlength'] ||= data_maximum_length_from_validation || limit
+        input_html_options[:'data-maxlength'] ||= (data_maximum_length_from_validation || limit)
         nil
       end
 

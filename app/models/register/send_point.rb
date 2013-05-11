@@ -7,5 +7,5 @@ class Register::SendPoint < ActiveRecord::Base
   validates :point_id, :numericality => { :only_integer => true, :greater_than => 0 }
   validates :user_id,  :numericality => { :only_integer => true, :greater_than => 0 }
   validates :value,    :numericality => { :only_integer => true, :greater_than => 0 }
-  validates :message, :length => { :maximum => 800, :tokenizer => DNU::Sanitize.counter }
+  validates :message, :length => { :maximum => Settings.maximum.message, :tokenizer => DNU::Text.counter(:message) }
 end

@@ -4,7 +4,7 @@
   - default_point_id = 1
   = form_send_point.input :point_id, :as => :hidden, input_html: { :value => (form_send_point.object.point_id || default_point_id) }
   ENo.
-  = form_send_point.input :user_id
+  = form_send_point.input :user_id, :as => :id
   に
   = form_send_point.input :value
   G 送付

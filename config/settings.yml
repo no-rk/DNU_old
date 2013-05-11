@@ -24,3 +24,10 @@ init_status:
 register:
   history:
     per: 3
+
+maximum:
+  subject: 20
+  name: 20
+  caption: 800
+  message: 800
+  document: 1600

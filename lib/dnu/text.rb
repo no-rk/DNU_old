@@ -3,6 +3,9 @@ module DNU
     @@text_parser = ExecJS.compile(
       File.read("#{Rails.root}/app/assets/javascripts/plugins/text_parser.js")
     )
+    @@text_transform = ExecJS.compile(
+      CoffeeScript.compile(File.read("#{Rails.root}/app/assets/javascripts/plugins/textTransformer.js.coffee"))
+    )
     
     def self.string(text)
       tree = self.parse(:string, text)["html"]
@@ -23,9 +26,12 @@ module DNU
       lambda{ |text| self.parse(type, text)["count"] }
     end
     
-    private
     def self.parse(type, text)
       @@text_parser.call('parser.parse', text, type)
+    end
+    
+    def self.preview(text)
+      @@text_transform.call('textTransformer', text)
     end
     
     def self.map(array)
