@@ -40,4 +40,14 @@ class AjaxController < ApplicationController
       format.json { render json: user_data }
     end
   end
+  # GET /ajax_icon(/:id)
+  # GET /ajax_icon(/:id).json
+  def icon
+    icon_data = User.where(:id => params[:id]).first.try(:icons)
+    
+    respond_to do |format|
+      format.html { redirect_to root_path } # search.html.erb
+      format.json { render json: icon_data }
+    end
+  end
 end

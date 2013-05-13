@@ -486,11 +486,10 @@ class User < ActiveRecord::Base
   end
   
   def icons
-    begin
-      self.character.icons.select([:number,:url,:upload_icon_id]).includes(:upload_icon).inject({}){|h,v| h[v.number]=v.url.blank? ? v.upload_icon.icon_url(:icon) : v.url;h}
-    rescue
-      nil
+    if @icons.nil?
+      @icons = self.register_characters.first.icons.select([:number,:url,:upload_icon_id]).includes(:upload_icon).inject({}){|h,r| h.tap{ h[r.number]= (r.url.blank? ? r.upload_icon.icon_url(:icon) : r.url)} }
     end
+    @icons
   end
   
   def name(day_i = Day.last_day_i)

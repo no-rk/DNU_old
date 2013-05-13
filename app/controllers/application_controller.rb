@@ -23,7 +23,7 @@ class ApplicationController < ActionController::Base
   def nickname_by_id(id)
     begin
       @nickname_by_id ||= Hash.new
-      @nickname_by_id[id] ||= User.find(id).register_character.profile.nickname
+      @nickname_by_id[id] ||= User.find(id).nickname
     rescue
       "no id"
     end
@@ -31,12 +31,18 @@ class ApplicationController < ActionController::Base
   def name_by_id(id)
     begin
       @name_by_id ||= Hash.new
-      @name_by_id[id] ||= User.find(id).register_character.profile.name
+      @name_by_id[id] ||= User.find(id).name
     rescue
       "no id"
     end
   end
   def icons
-    @icons ||= current_user.icons
+    begin
+      @icons = current_user.icons
+    rescue
+      @icons = {}
+    end
+    @icons[1] ||= view_context.image_path("unknown.png")
+    @icons
   end
 end

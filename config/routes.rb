@@ -87,6 +87,7 @@ DNU::Application.routes.draw do
 
   get 'ajax_img/:model(/:id)' => 'ajax#img',  :as => 'ajax_img'
   get 'ajax_user(/:id)'       => 'ajax#user', :as => 'ajax_user'
+  get 'ajax_icon(/:id)'       => 'ajax#icon', :as => 'ajax_icon'
 
   get "helps(/:name)"     => 'help#index', :as => 'helps'
   get "help/:model(/:id)" => 'help#show' , :as => 'help'

@@ -52,6 +52,7 @@ gem "haml"
 gem "haml-rails"
 gem 'i18n_generators'
 gem 'execjs'
+gem 'coffee-script'
 gem 'chronic', :git => 'git@github.com:mojombo/chronic.git'
 gem 'whenever', :require => false
 gem 'simple_form', "~> 2.0.4"

@@ -1,16 +1,14 @@
 class Register::UploadIcon < ActiveRecord::Base
-  acts_as_taggable
-
-  mount_uploader :icon, IconUploader
-
   belongs_to :image
-
+  attr_accessible :icon, :name, :caption, :icon_cache, :remote_icon_url, :user_tag
+  attr_accessor :user_tag
+  
+  acts_as_taggable
+  mount_uploader :icon, IconUploader
+  
   validates :icon   , :presence => true
   validates :name   , :presence => true, :length => { :maximum => Settings.maximum.name  }
   validates :caption, :length => { :maximum => Settings.maximum.caption, :tokenizer => DNU::Text.counter(:document) }
-
-  attr_accessor :user_tag
-  attr_accessible :icon, :name, :caption, :icon_cache, :remote_icon_url, :user_tag
   
   scope :where_public, lambda{
     taggings = ActsAsTaggableOn::Tagging.arel_table
@@ -20,7 +18,4 @@ class Register::UploadIcon < ActiveRecord::Base
   def user_tag
     @user_tag ||= (self.owner_tag_list_on(self.image.user, :tags) if self.image.respond_to?(:user))
   end
-  
-  clean_before_validation :name
-  sanitize_before_validation :caption
 end

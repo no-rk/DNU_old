@@ -1,4 +1,4 @@
-transform = (tree) ->
+transform = (tree, icons = registerIcons) ->
   map_inners = (inners) ->
     inners.map (inner,index) ->
       transform(inner)
@@ -11,7 +11,7 @@ transform = (tree) ->
       "<div class='#{tree.tag}'>#{map_inners(tree.inner).join('')}</div>"
     when 'serif'
       if tree.data.icon
-        "<div class='serif #{tree.data.position}'><div class='icon'><div class='icon_test'>#{tree.data.icon}</div></div><div class='balloon #{tree.data.balloon}'>#{map_inners(tree.inner).join('')}</div></div>"
+        "<div class='serif #{tree.data.position}'><img class='icon' src='#{icons[tree.data.icon] || icons[1]}'><div class='balloon #{tree.data.balloon}'>#{map_inners(tree.inner).join('')}</div></div>"
       else
         "<div class='serif #{tree.data.position}'><div class='balloon #{tree.data.balloon}'>#{map_inners(tree.inner).join('')}</div></div>"
     when 'color'

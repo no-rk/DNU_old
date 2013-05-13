@@ -16,10 +16,18 @@ body {
   margin: 5px;
   @include box-shadow(5px 5px 10px rgba($shadow-color, 0.3));
 }
-div.preview{
-  @include shaded_box(white, black);
-  background-color: white;
+div.editor{
+  float: none !important;
   margin-left: 0 !important;
+}
+div.preview{
+  background-color: white;
+  color: black;
+  padding: 10px;
+  float: none !important;
+  margin-left: 0 !important;
+  margin-top: -10px;
+  @include box-shadow(5px 5px 10px rgba(black, 0.3));
 }
 div.rule{
   @include shaded_box;
@@ -73,11 +81,6 @@ div.Result{
 div.result {
   min-width:650px;
 }
-div.icon_test {
-  background: #666666;
-  width:  60px;
-  height: 60px;
-}
 div.imag_test {
   background: #666666;
   width:  100%;
@@ -85,8 +88,9 @@ div.imag_test {
 }
 div.serif {
   overflow: hidden;
-  div.icon {
-    max-width:120px;
+  img.icon {
+    width: 60px;
+    height: 60px;
   }
   div.balloon {
     &.normal {
@@ -95,14 +99,14 @@ div.serif {
       color: $black;
       background: $white;
       border: 4px solid $black;
-      margin: 0px 20px 20px 20px;
+      margin: 0px 20px 0px 20px;
       padding: 10px;
       @include border-radius(5px);
       @include box-shadow(0px 5px 10px rgba($black, 0.6));
     }
   }
   &.left {
-    div.icon {
+    img.icon {
       float:left;
     }
     div.balloon {
@@ -159,7 +163,7 @@ div.serif {
         margin-top: -16px;
       }
     }
-    div.icon {
+    img.icon {
       float:right;
     }
   }

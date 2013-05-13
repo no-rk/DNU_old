@@ -26,7 +26,5 @@
         .span9.well
           = yield
     %div{"data-errors" => "true"}
+    = javascript_tag "registerIcons = #{icons.to_json.html_safe};"
     = javascript_include_tag "application"
-    - unless icons.blank?
-      :javascript
-        DNU.ICONS = #{icons.to_json};
