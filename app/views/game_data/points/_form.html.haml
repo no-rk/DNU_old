@@ -1,7 +1,7 @@
 = render 'game_data/error', { game_data_error: @point }
 = simple_form_for(@point) do |form_point|
   = form_point.input :name
-  = form_point.input :caption
+  = form_point.input :caption, :input_html => { :class => :'document-editor span9', :rows => 5 }
   = form_point.input :non_negative
   = form_point.input :protect
   = form_point.submit class: "btn btn-large btn-success"

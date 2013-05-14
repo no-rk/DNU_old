@@ -1,7 +1,7 @@
 = render 'game_data/error', { game_data_error: @battle_type }
 = simple_form_for(@battle_type) do |form_battle_type|
   = form_battle_type.input :name
-  = form_battle_type.input :caption
+  = form_battle_type.input :caption, :input_html => { :class => :'document-editor span9', :rows => 5 }
   = form_battle_type.input :normal
   = form_battle_type.input :result
   = form_battle_type.input :rob

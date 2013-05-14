@@ -32,6 +32,7 @@ class AjaxController < ApplicationController
     user_name = User.where(:id => params[:id]).first.try(:name)
     
     user_data = {
+      id: params[:id],
       name: user_name
     }
     

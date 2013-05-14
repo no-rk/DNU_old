@@ -1,7 +1,7 @@
 = render 'game_data/error', { game_data_error: @battle_value }
 = simple_form_for(@battle_value) do |form_battle_value|
   = form_battle_value.input :name
-  = form_battle_value.input :caption
+  = form_battle_value.input :caption, :input_html => { :class => :'document-editor span9', :rows => 5 }
   = form_battle_value.input :min
   = form_battle_value.input :max
   = form_battle_value.input :has_max

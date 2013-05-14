@@ -1,6 +1,7 @@
 = link_to("新規#{@traps.first.class.model_name.human}作成", new_game_data_trap_path)
 %br
 - @traps.each do |trap|
-  = link_to("[#{@traps.first.class.model_name.human}]#{trap.name} 編集", edit_game_data_trap_path(trap.id))
+  [#{@traps.first.class.model_name.human}]#{trap.name}
+  = link_to("編集", edit_game_data_trap_path(trap.id))
   %br
 = paginate @traps

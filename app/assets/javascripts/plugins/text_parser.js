@@ -43,6 +43,8 @@ parser = (function(){
         "plus": parse_plus,
         "n1_9": parse_n1_9,
         "n0_9": parse_n0_9,
+        "a_f": parse_a_f,
+        "RGB": parse_RGB,
         "non_negative_integer": parse_non_negative_integer,
         "any": parse_any,
         "bold": parse_bold,
@@ -54,6 +56,7 @@ parser = (function(){
         "thin": parse_thin,
         "middle": parse_middle,
         "normal": parse_normal,
+        "default_color": parse_default_color,
         "color": parse_color,
         "tag_ruby": parse_tag_ruby,
         "tag_bold": parse_tag_bold,
@@ -66,6 +69,7 @@ parser = (function(){
         "tag_thin": parse_tag_thin,
         "tag_middle": parse_tag_middle,
         "tag_normal": parse_tag_normal,
+        "tag_default_color": parse_tag_default_color,
         "string_tags": parse_string_tags,
         "string": parse_string,
         "tag_random": parse_tag_random,
@@ -260,6 +264,116 @@ parser = (function(){
           return this.format_number(number);
         }).apply(__initializer);
         })(pos0, result0);
+        }
+        if (result0 === null) {
+          pos = pos0;
+        }
+        return result0;
+      }
+      
+      function parse_a_f() {
+        var result0;
+        
+        if (/^[a-fA-F]/.test(input.charAt(pos))) {
+          result0 = input.charAt(pos);
+          pos++;
+        } else {
+          result0 = null;
+          if (reportFailures === 0) {
+            matchFailed("[a-fA-F]");
+          }
+        }
+        return result0;
+      }
+      
+      function parse_RGB() {
+        var result0, result1, result2, result3, result4, result5, result6;
+        var pos0, pos1, pos2;
+        
+        pos0 = pos;
+        pos1 = pos;
+        if (input.charCodeAt(pos) === 35) {
+          result0 = "#";
+          pos++;
+        } else {
+          result0 = null;
+          if (reportFailures === 0) {
+            matchFailed("\"#\"");
+          }
+        }
+        if (result0 !== null) {
+          pos2 = pos;
+          result1 = parse_n0_9();
+          if (result1 === null) {
+            result1 = parse_a_f();
+          }
+          if (result1 !== null) {
+            result2 = parse_n0_9();
+            if (result2 === null) {
+              result2 = parse_a_f();
+            }
+            if (result2 !== null) {
+              result3 = parse_n0_9();
+              if (result3 === null) {
+                result3 = parse_a_f();
+              }
+              if (result3 !== null) {
+                result4 = parse_n0_9();
+                if (result4 === null) {
+                  result4 = parse_a_f();
+                }
+                if (result4 !== null) {
+                  result5 = parse_n0_9();
+                  if (result5 === null) {
+                    result5 = parse_a_f();
+                  }
+                  if (result5 !== null) {
+                    result6 = parse_n0_9();
+                    if (result6 === null) {
+                      result6 = parse_a_f();
+                    }
+                    if (result6 !== null) {
+                      result1 = [result1, result2, result3, result4, result5, result6];
+                    } else {
+                      result1 = null;
+                      pos = pos2;
+                    }
+                  } else {
+                    result1 = null;
+                    pos = pos2;
+                  }
+                } else {
+                  result1 = null;
+                  pos = pos2;
+                }
+              } else {
+                result1 = null;
+                pos = pos2;
+              }
+            } else {
+              result1 = null;
+              pos = pos2;
+            }
+          } else {
+            result1 = null;
+            pos = pos2;
+          }
+          if (result1 !== null) {
+            result0 = [result0, result1];
+          } else {
+            result0 = null;
+            pos = pos1;
+          }
+        } else {
+          result0 = null;
+          pos = pos1;
+        }
+        if (result0 !== null) {
+          result0 = (function(offset, RGB) {
+        return (function() {
+          return "#" + (RGB.join(''));
+        }).apply(__initializer);
+        })(pos0, result0[1]);
         }
         if (result0 === null) {
           pos = pos0;
@@ -733,6 +847,41 @@ parser = (function(){
         return result0;
       }
       
+      function parse_default_color() {
+        var result0, result1, result2;
+        var pos0;
+        
+        pos0 = pos;
+        result0 = parse_bra();
+        if (result0 !== null) {
+          if (input.charCodeAt(pos) === 35) {
+            result1 = "#";
+            pos++;
+          } else {
+            result1 = null;
+            if (reportFailures === 0) {
+              matchFailed("\"#\"");
+            }
+          }
+          if (result1 !== null) {
+            result2 = parse_ket();
+            if (result2 !== null) {
+              result0 = [result0, result1, result2];
+            } else {
+              result0 = null;
+              pos = pos0;
+            }
+          } else {
+            result0 = null;
+            pos = pos0;
+          }
+        } else {
+          result0 = null;
+          pos = pos0;
+        }
+        return result0;
+      }
+      
       function parse_color() {
         var result0, result1, result2;
         var pos0, pos1, pos2;
@@ -907,6 +1056,9 @@ parser = (function(){
                         }
                         if (result1 === null) {
                           pos = pos2;
+                        }
+                        if (result1 === null) {
+                          result1 = parse_RGB();
                         }
                       }
                     }
@@ -1997,13 +2149,16 @@ parser = (function(){
             if (result2 === null) {
               result2 = parse_color();
               if (result2 === null) {
-                result2 = parse_normal();
+                result2 = parse_default_color();
                 if (result2 === null) {
-                  result2 = parse_separator();
+                  result2 = parse_normal();
                   if (result2 === null) {
-                    result2 = parse_plus();
+                    result2 = parse_separator();
                     if (result2 === null) {
-                      result2 = parse_ket();
+                      result2 = parse_plus();
+                      if (result2 === null) {
+                        result2 = parse_ket();
+                      }
                     }
                   }
                 }
@@ -2043,13 +2198,16 @@ parser = (function(){
               if (result2 === null) {
                 result2 = parse_color();
                 if (result2 === null) {
-                  result2 = parse_normal();
+                  result2 = parse_default_color();
                   if (result2 === null) {
-                    result2 = parse_separator();
+                    result2 = parse_normal();
                     if (result2 === null) {
-                      result2 = parse_plus();
+                      result2 = parse_separator();
                       if (result2 === null) {
-                        result2 = parse_ket();
+                        result2 = parse_plus();
+                        if (result2 === null) {
+                          result2 = parse_ket();
+                        }
                       }
                     }
                   }
@@ -2161,6 +2319,25 @@ parser = (function(){
         return result0;
       }
       
+      function parse_tag_default_color() {
+        var result0;
+        var pos0;
+        
+        pos0 = pos;
+        result0 = parse_default_color();
+        if (result0 !== null) {
+          result0 = (function(offset) {
+        return (function() {
+          return this.empty;
+        }).apply(__initializer);
+        })(pos0);
+        }
+        if (result0 === null) {
+          pos = pos0;
+        }
+        return result0;
+      }
+      
       function parse_string_tags() {
         var result0;
         
@@ -2184,7 +2361,10 @@ parser = (function(){
                         if (result0 === null) {
                           result0 = parse_tag_middle();
                           if (result0 === null) {
-                            result0 = parse_tag_normal();
+                            result0 = parse_tag_default_color();
+                            if (result0 === null) {
+                              result0 = parse_tag_normal();
+                            }
                           }
                         }
                       }
@@ -4490,7 +4670,6 @@ parser = (function(){
           icon: 1,
           balloon: 'normal'
         };
-        this.default_color = '黒';
         this.empty = {
           html: '',
           count: []

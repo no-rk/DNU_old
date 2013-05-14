@@ -2,4 +2,5 @@
 = simple_form_for(@battle_setting) do |form_battle_setting|
   = form_battle_setting.input :kind, :collection => @kinds
   = form_battle_setting.input :name
+  = form_battle_setting.input :caption, :input_html => { :class => :'document-editor span9', :rows => 5 }
   = form_battle_setting.submit class: "btn btn-large btn-success"

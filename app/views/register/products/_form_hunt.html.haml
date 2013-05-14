@@ -4,5 +4,5 @@
     = form_hunt.input :art_effect_id, :as => :hidden
     = form_hunt.input :party_member_id, :collection => register_product.hunt_list(form_hunt.object.art_effect.tree[:huntable_character_types])
     を狩猟
-    = form_hunt.input :message, :wrapper => :bootstrap, :input_html => { :class => :'message span9', :rows => 2 }, :wrapper_html => { :class => :clearfix }
+    = form_hunt.input :message, :wrapper => :bootstrap, :input_html => { :class => :'message-editor span9', :rows => 2 }, :wrapper_html => { :class => :clearfix }
     %br

@@ -1,7 +1,7 @@
 = render 'game_data/error', { game_data_error: @landform }
 = simple_form_for(@landform) do |form_landform|
   = form_landform.input :name
-  = form_landform.input :caption
+  = form_landform.input :caption, :input_html => { :class => :'document-editor span9', :rows => 5 }
   = form_landform.input :image
   = form_landform.input :color
   = form_landform.input :collision

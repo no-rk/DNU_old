@@ -1,7 +1,7 @@
 = render 'game_data/error', { game_data_error: @element }
 = simple_form_for(@element) do |form_element|
   = form_element.input :name
-  = form_element.input :caption
+  = form_element.input :caption, :input_html => { :class => :'document-editor span9', :rows => 5 }
   = form_element.input :color
   = form_element.input :anti
   = form_element.submit class: "btn btn-large btn-success"

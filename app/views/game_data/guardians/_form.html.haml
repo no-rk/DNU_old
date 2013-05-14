@@ -2,5 +2,5 @@
 = simple_form_for(@guardian) do |form_guardian|
   = form_guardian.association :train
   = form_guardian.input :name
-  = form_guardian.input :caption
+  = form_guardian.input :caption, :input_html => { :class => :'document-editor span9', :rows => 5 }
   = form_guardian.submit class: "btn btn-large btn-success"

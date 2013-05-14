@@ -30,6 +30,6 @@ $ ->
   $('body').delegate 'a[href=#]', 'click', (event) ->
     event.preventDefault()
   $('body').delegate 'a.close', 'click', (event) ->
-    $('a[rel*=popover]').popover('hide')
-  $('a[rel*=tooltip]').tooltip()
-  $('a[rel*=popover]').popover()
+    $('[rel*=popover]').popover('hide')
+  $('[rel*=tooltip]').tooltip()
+  $('[rel*=popover]').popover()

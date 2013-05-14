@@ -3,7 +3,7 @@ class Communication::Message < ActiveForm
   define_model_callbacks :validation
 
   validates :recipients, :presence => true
-  validates :subject   , :length => { :maximum => Settings.maximum.subject }
+  validates :subject   , :length => { :maximum => Settings.maximum.subject, :tokenizer => DNU::Text.counter(:string) }
   validates :body      , :presence => true, :length => { :maximum => Settings.maximum.message, :tokenizer => DNU::Text.counter(:message) }
 
   attr_accessor :recipients, :subject, :body, :user, :flash_alert

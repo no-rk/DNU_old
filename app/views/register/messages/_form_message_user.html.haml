@@ -1,4 +1,4 @@
 %br
 = form_message.simple_fields_for :message_users, :defaults => { :as => (:plain if @read_only), :user => current_user } do |form_message_user|
   = form_message_user.input :user_id, :as => :id
-  = form_message_user.input :body, :input_html => { :class => :'message span9', :rows => 2 }, :wrapper_html => { :class => :clearfix }
+  = form_message_user.input :body, :input_html => { :class => :'message-editor span9', :rows => 2 }, :wrapper_html => { :class => :clearfix }

@@ -1,3 +1,3 @@
 = form_skill.simple_fields_for :skill_name, :defaults => { :as => (:plain if @read_only), :user => current_user } do |form_skill_name|
-  = form_skill_name.input :name
-  = form_skill_name.input :caption, :input_html => { :class => :'document span9', :rows => 2 }
+  = form_skill_name.input :name, :input_html => { :class => :'string-editor span6' }
+  = form_skill_name.input :caption, :input_html => { :class => :'document-editor span9', :rows => 2 }

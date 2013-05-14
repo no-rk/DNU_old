@@ -6,9 +6,9 @@ $ ->
   $(':text[data-maxlength]').textCounter()
   $('textarea[data-maxlength]').textCounter()
   # エディタ
-  $(':text[data-maxlength].string').textEditor({type: "string"})
-  $('textarea[data-maxlength].message').textEditor({type: "message"})
-  $('textarea[data-maxlength].document').textEditor({type: "document"})
+  $('.string-editor').textEditor({type: "string"})
+  $('.message-editor').textEditor({type: "message"})
+  $('.document-editor').textEditor({type: "document"})
   #セレクトでサブミット
   $('body.register').delegate 'form.select_submit select', 'change.rails', (event) ->
     #親要素のフォームを取得

@@ -24,7 +24,6 @@
     icon: 1
     balloon: 'normal'
   }
-  @default_color = '黒'
   @empty = { html: '', count: [] }
 }
 
@@ -43,6 +42,15 @@ n1_9 = number:[1-9１-９] {
 n0_9 = number:[0-9０-９] {
   @format_number(number)
 }
+
+// a to f
+a_f = [a-fA-F]
+
+// RGB
+RGB = '#' RGB:((n0_9 / a_f) (n0_9 / a_f) (n0_9 / a_f) (n0_9 / a_f) (n0_9 / a_f) (n0_9 / a_f)) {
+  "##{RGB.join('')}"
+}
+
 non_negative_integer = n1:(n1_9 (n2:n0_9+ { n2.join('') })) { n1.join('') } / n0_9
 
 // any
@@ -60,7 +68,8 @@ under   = bra '下' ket { 'u' }
 thin    = bra '細' ket
 middle  = bra '中' ket
 normal  = bra '元' ket
-color   = bra color:('黒' {"#000000"} / '赤' {"FF0000"} / '橙' {"#FFA500"} / '黄' {"#FFFF00"} / '緑' {"#00FF00"} / '青' {"#0000FF"} / '藍' {"#000080"} / '紫' {"#800080"}) ket {
+default_color = bra '#' ket
+color   = bra color:('黒' {"#000000"} / '赤' {"FF0000"} / '橙' {"#FFA500"} / '黄' {"#FFFF00"} / '緑' {"#00FF00"} / '青' {"#0000FF"} / '藍' {"#000080"} / '紫' {"#800080"} / RGB) ket {
   {
     color: color
   }
@@ -74,31 +83,31 @@ tag_ruby = bra rb:(!(document_tags / message_tags / tag_ruby / ket) (string_tags
     h[1]
   @return_html 'ruby', [$rb, $rt]
 }
-tag_bold   = tag:bold   inner:(!(document_tags / message_tags / thin   / normal / separator / plus / ket) (bold { @empty } / string_tags / any))*         {
+tag_bold   = tag:bold   inner:(!(document_tags / message_tags / thin   /                 normal / separator / plus / ket) (bold { @empty } / string_tags / any))*         {
   @return_html tag, inner.map (h,i) ->
     h[1]
 }
-tag_big    = tag:big    inner:(!(document_tags / message_tags / middle / normal / separator / plus / ket) (                  string_tags / any))*         {
+tag_big    = tag:big    inner:(!(document_tags / message_tags / middle /                 normal / separator / plus / ket) (                  string_tags / any))*         {
   @return_html tag, inner.map (h,i) ->
     h[1]
 }
-tag_small  = tag:small  inner:(!(document_tags / message_tags / middle / normal / separator / plus / ket) (                  string_tags / any))*         {
+tag_small  = tag:small  inner:(!(document_tags / message_tags / middle /                 normal / separator / plus / ket) (                  string_tags / any))*         {
   @return_html tag, inner.map (h,i) ->
     h[1]
 }
-tag_italic = tag:italic inner:(!(document_tags / message_tags / italic / normal / separator / plus / ket) (                  string_tags / any))* italic? {
+tag_italic = tag:italic inner:(!(document_tags / message_tags / italic /                 normal / separator / plus / ket) (                  string_tags / any))* italic? {
   @return_html tag, inner.map (h,i) ->
     h[1]
 }
-tag_delete = tag:delete inner:(!(document_tags / message_tags / delete / normal / separator / plus / ket) (                  string_tags / any))* delete? {
+tag_delete = tag:delete inner:(!(document_tags / message_tags / delete /                 normal / separator / plus / ket) (                  string_tags / any))* delete? {
   @return_html tag, inner.map (h,i) ->
     h[1]
 }
-tag_under  = tag:under  inner:(!(document_tags / message_tags / under  / normal / separator / plus / ket) (                  string_tags / any))*  under? {
+tag_under  = tag:under  inner:(!(document_tags / message_tags / under  /                 normal / separator / plus / ket) (                  string_tags / any))*  under? {
   @return_html tag, inner.map (h,i) ->
     h[1]
 }
-tag_color = color:color inner:(!(document_tags / message_tags / color  / normal / separator / plus / ket) (                  string_tags / any))*         {
+tag_color = color:color inner:(!(document_tags / message_tags / color  / default_color / normal / separator / plus / ket) (                  string_tags / any))*         {
   @return_html 'color', inner.map((h,i) ->
     h[1]
   ), color
@@ -112,7 +121,10 @@ tag_middle = middle {
 tag_normal = normal {
   @empty
 }
-string_tags = tag_ruby / tag_bold / tag_big / tag_small / tag_italic / tag_delete / tag_under / tag_color / tag_thin / tag_middle / tag_normal
+tag_default_color = default_color {
+  @empty
+}
+string_tags = tag_ruby / tag_bold / tag_big / tag_small / tag_italic / tag_delete / tag_under / tag_color / tag_thin / tag_middle / tag_default_color / tag_normal
 
 // string
 string = inner:(string_tags / any)* {
