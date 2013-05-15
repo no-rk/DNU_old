@@ -14,5 +14,6 @@
   を
   = form_forge.input :experiment, :collection => { "作製" => false,  "作製実験" => true }, :include_blank => false
   = form_forge.input :name, :wrapper => :bootstrap, :input_html => { :class => :'string-editor span6' }
-  = form_forge.input :message, :wrapper => :bootstrap, :input_html => { :class => :'message-editor span9', :rows => 2 }, :wrapper_html => { :class => :clearfix }
+  = form_forge.input :caption, :wrapper => :bootstrap, :input_html => { :class => :'document-editor span9', :rows => 2 }
+  = form_forge.input :message, :wrapper => :bootstrap, :input_html => { :class => :'message-editor span9', :rows => 2 }
   %br

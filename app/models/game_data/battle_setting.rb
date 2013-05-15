@@ -4,6 +4,7 @@ class GameData::BattleSetting < ActiveRecord::Base
   validates :kind, :inclusion => { :in => ["使用条件", "使用頻度", "対象指定"] }
   validates :name, :presence => true, :uniqueness => true
   
+  dnu_document_html :caption
   before_validation :set_game_data
   after_save        :sync_game_data
   

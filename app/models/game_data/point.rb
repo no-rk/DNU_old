@@ -7,7 +7,8 @@ class GameData::Point < ActiveRecord::Base
   validates :non_negative, :inclusion => { :in => [true, false] }
   validates :protect,      :inclusion => { :in => [true, false] }
   
-  after_save :sync_game_data
+  dnu_document_html :caption
+  after_save        :sync_game_data
   
   def self.find_by_use(type, val)
     use_arel = GameData::PointUse.arel_table

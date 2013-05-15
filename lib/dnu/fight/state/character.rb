@@ -17,7 +17,7 @@ module DNU
           attr_reader *GameData::BattleValue.where(:has_max => true).pluck(:name).map{|name| "最大#{name}"}
         end
         
-        attr_accessor :id, :kind, :name, :user, :pet, :day_i, :team, :parent, :parent_effect, :double, :dead, :turn_end
+        attr_accessor :id, :kind, :name, :object, :pet, :day_i, :team, :parent, :parent_effect, :double, :dead, :turn_end
         
         attr_reader :effects, :effects_parent
         
@@ -38,7 +38,7 @@ module DNU
           @parent_effect   = tree[:parent_effect]
           @kind            = tree[:kind].to_s
           @name            = tree[:name].to_s
-          @user            = tree[:user]
+          @object          = tree[:object]
           @pet             = tree[:pet]
           @day_i           = tree[:day_i]
           @team            = tree[:team]

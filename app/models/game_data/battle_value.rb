@@ -6,7 +6,8 @@ class GameData::BattleValue < ActiveRecord::Base
   validates :has_max,         :inclusion => { :in => [true, false] }
   validates :has_equip_value, :inclusion => { :in => [true, false] }
   
-  after_save :sync_game_data
+  dnu_document_html :caption
+  after_save        :sync_game_data
   
   def self.has_max_and_equip_value(b_max, b_equip)
     self.where(:has_max =>b_max, :has_equip_value => b_equip).pluck(:name) - GameData::Disease.pluck(:name)

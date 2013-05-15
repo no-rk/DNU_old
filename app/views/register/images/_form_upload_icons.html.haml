@@ -6,6 +6,6 @@
     = image_tag form_upload_icons.object.icon_url(:icon).to_s, :class => "icon"
     = (form_upload_icons.input :_destroy, :as => :boolean) unless @read_only
     = (form_upload_icons.input :icon_cache, :as => :hidden, :input_html => { :value => form_upload_icons.object.icon_cache }) if form_upload_icons.object.icon_cache
-  = form_upload_icons.input :name
+  = form_upload_icons.input :name, :input_html => { :class => :'string-editor span6' }
   = form_upload_icons.input :user_tag
-  = form_upload_icons.input :caption, :input_html => { :class => :'document span9', :rows => 2 }
+  = form_upload_icons.input :caption, :input_html => { :class => :'document-editor span9', :rows => 2 }

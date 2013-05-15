@@ -11,7 +11,8 @@ class GameData::ArtType < ActiveRecord::Base
   validates :form,    :inclusion => { :in => [true, false] }
   validates :rename,  :inclusion => { :in => [true, false] }
   
-  after_save :sync_game_data
+  dnu_document_html :caption
+  after_save        :sync_game_data
   
   def to_sync_hash
     self.attributes.except("id","created_at","updated_at")

@@ -5,6 +5,7 @@ class GameData::CharacterType < ActiveRecord::Base
   validates :name,   :presence => true, :uniqueness => true
   validates :player, :allow_nil => true, :inclusion => { :in => [true] }, :uniqueness => true
   
+  dnu_document_html :caption
   before_validation :set_game_data
   after_save        :sync_game_data
   

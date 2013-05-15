@@ -3,7 +3,8 @@ class GameData::EventDescription < ActiveRecord::Base
   
   validates :name, :presence => true, :uniqueness => true
   
-  after_save :sync_game_data
+  dnu_document_html :caption
+  after_save        :sync_game_data
   
   def to_sync_hash
     self.attributes.except("id","created_at","updated_at")

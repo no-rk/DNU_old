@@ -33,6 +33,7 @@ class GameData::Art < ActiveRecord::Base
   validates :kind,     :presence => true
   validates :name,     :presence => true, :uniqueness => true
   
+  dnu_document_html :caption
   before_validation :set_game_data
   after_save        :sync_game_data
   

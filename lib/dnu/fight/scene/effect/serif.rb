@@ -3,7 +3,7 @@ module DNU
     module Scene
       class Serif < BaseEffect
         def play_children
-          history[:children] = DNU::Text.message(@tree.to_s)
+          history[:children] = DNU::Text.new(自分.object, 対象.object).message(@tree.to_s)
         end
         
         def play_(b_or_a)

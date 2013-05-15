@@ -7,6 +7,7 @@ class GameData::BattleType < ActiveRecord::Base
   validates :rob,    :inclusion => { :in => [true, false] }
   validates :escape, :inclusion => { :in => [true, false] }
   
+  dnu_document_html :caption
   before_validation :set_game_data
   after_save        :sync_game_data
   

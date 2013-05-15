@@ -1,14 +1,14 @@
-transform = (tree, icons = registerIcons) ->
+transform = (tree, icons = {}) ->
   map_inners = (inners) ->
     inners.map (inner,index) ->
-      transform(inner)
+      transform(inner, icons)
   list_inners = (inners) ->
     list = "<li><span>"
     for inner in inners
       if inner.tag == "br"
         list += "</span></li><li><span>"
       else
-        list += transform(inner)
+        list += transform(inner, icons)
     list += "</span></li>"
     list
   switch tree.tag

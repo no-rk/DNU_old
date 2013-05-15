@@ -7,6 +7,7 @@ class GameData::Element < ActiveRecord::Base
   validates :color, :length => { :is => 6 }
   validates :anti,  :presence => true
   
+  dnu_document_html :caption
   before_validation :set_game_data
   after_save        :sync_game_data
   

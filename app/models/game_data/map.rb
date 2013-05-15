@@ -13,8 +13,9 @@ class GameData::Map < ActiveRecord::Base
   validates :name, :presence => true, :uniqueness => true
   validates :base, :inclusion => { :in => ["field", "dangeon"] }
   
+  dnu_document_html :caption
   before_validation :set_game_data
-  after_save :sync_game_data
+  after_save        :sync_game_data
   
   scope :already_make, lambda{ joins(:result_maps).uniq }
   scope :has_anyone,   lambda{ joins(:places).uniq }

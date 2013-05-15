@@ -12,9 +12,13 @@ class Register::Forge < ActiveRecord::Base
   validates :number,     :numericality => { :only_integer => true, :greater_than => 0 }
   validates :item_type,  :presence => true
   validates :experiment, :inclusion => { :in => [true, false] }
-  validates :name,       :presence => true, :length => { :maximum => Settings.maximum.name }
+  validates :name,       :presence => true, :length => { :maximum => Settings.maximum.name, :tokenizer => DNU::Text.counter(:string) }
   validates :caption,    :length => { :maximum => Settings.maximum.caption, :tokenizer => DNU::Text.counter(:document) }
   validates :message,    :length => { :maximum => Settings.maximum.message, :tokenizer => DNU::Text.counter(:message) }
+  
+  dnu_string_html   :name
+  dnu_document_html :caption
+  dnu_message_html  :message
   
   def smith
     self.productable.user

@@ -5,7 +5,8 @@ class GameData::Guardian < ActiveRecord::Base
   validates :train, :presence => true
   validates :name,  :presence => true, :uniqueness => true
   
-  after_save :sync_game_data
+  dnu_document_html :caption
+  after_save        :sync_game_data
   
   def source
     self.train.trainable

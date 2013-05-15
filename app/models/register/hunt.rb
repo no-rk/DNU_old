@@ -9,4 +9,6 @@ class Register::Hunt < ActiveRecord::Base
   validates :art_effect,   :presence => true
   validates :party_member, :presence => true
   validates :message,      :length => { :maximum => Settings.maximum.message, :tokenizer => DNU::Text.counter(:message) }
+  
+  dnu_message_html  :message
 end

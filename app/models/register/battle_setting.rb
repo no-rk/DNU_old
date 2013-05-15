@@ -15,6 +15,7 @@ class Register::BattleSetting < ActiveRecord::Base
   validates :condition,     :presence => true
   validates :message,       :length => { :maximum => Settings.maximum.message, :tokenizer => DNU::Text.counter(:message) }
   
+  dnu_message_html  :message
   before_validation :set_condition
   
   def tree

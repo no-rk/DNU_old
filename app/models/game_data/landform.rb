@@ -9,6 +9,7 @@ class GameData::Landform < ActiveRecord::Base
   validates :collision, :inclusion => { :in => [true, false] }
   validates :opacity,   :numericality => { :only_integer => true, :greater_than_or_equal_to => 0 }
   
+  dnu_document_html :caption
   before_validation :set_game_data
   after_save        :sync_game_data
   

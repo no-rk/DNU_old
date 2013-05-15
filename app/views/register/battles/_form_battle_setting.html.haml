@@ -38,5 +38,5 @@
       = form_battle_setting.input :target_id, :collection => form_battle_setting.object.targets, :input_html => { :'data-url' => help_path(:battle_settings), :'data-remote' => true, :'data-params' => ("id=#{register_battle.battle_settings[i][:target]}" if register_battle.battle_settings.try(:[], i).try(:[], :target).present?), :'data-type' => :json, :'data-help-path' => help_path(:battle_settings), :class => :'span4' }
       %span.label.span1 (B)
       = form_battle_setting.input :target_variable, :input_html => { :class => :'span2' }
-    = form_battle_setting.input :message, :wrapper => :bootstrap, :input_html => { :class => :'message span9', :rows => 2 }, :wrapper_html => { :class => :clearfix }
+    = form_battle_setting.input :message, :wrapper => :bootstrap, :input_html => { :class => :'message-editor span9', :rows => 2 }, :wrapper_html => { :class => :clearfix }
     - i += 1

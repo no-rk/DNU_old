@@ -13,6 +13,8 @@ class Register::Supplement < ActiveRecord::Base
   validates :experiment,      :inclusion => { :in => [true, false] }
   validates :message,         :length => { :maximum => Settings.maximum.message, :tokenizer => DNU::Text.counter(:message) }
   
+  dnu_message_html  :message
+  
   def smith
     self.productable.user
   end

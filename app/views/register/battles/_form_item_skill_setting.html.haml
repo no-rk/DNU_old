@@ -29,5 +29,5 @@
       = form_item_skill_setting.input :use_condition_id, :collection => form_item_skill_setting.object.use_conditions, :selected => (form_item_skill_setting.object.use_condition_id || form_item_skill_setting.object.selected_use_condition), :input_html => { :'data-url' => help_path(:item_skill_settings), :'data-remote' => true, :'data-params' => "id=#{register_battle.item_skill_settings.try(:[], i).try(:[], :use_condition).nil? ? form_item_skill_setting.object.selected_use_condition : form_item_skill_setting.object.use_condition}", :'data-type' => :json, :'data-help-path' => help_path(:item_skill_settings), :class => :'span4' }
       %span.label.span1 (A)
       = form_item_skill_setting.input :use_condition_variable, :input_html => { :class => :'span2' }
-    = form_item_skill_setting.input :message, :wrapper => :bootstrap, :input_html => { :class => :'message span9', :rows => 2 }, :wrapper_html => { :class => :clearfix }
+    = form_item_skill_setting.input :message, :wrapper => :bootstrap, :input_html => { :class => :'message-editor span9', :rows => 2 }, :wrapper_html => { :class => :clearfix }
     - i += 1

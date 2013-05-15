@@ -3,4 +3,6 @@ class Register::Diary < ActiveRecord::Base
   attr_accessible :diary
   
   validates :diary, :length => { :maximum => Settings.maximum.document, :tokenizer => DNU::Text.counter(:document) }
+  
+  dnu_document_html :diary
 end

@@ -6,9 +6,12 @@ class Register::UploadIcon < ActiveRecord::Base
   acts_as_taggable
   mount_uploader :icon, IconUploader
   
-  validates :icon   , :presence => true
-  validates :name   , :presence => true, :length => { :maximum => Settings.maximum.name  }
+  validates :icon,    :presence => true
+  validates :name,    :presence => true, :length => { :maximum => Settings.maximum.name, :tokenizer => DNU::Text.counter(:string)  }
   validates :caption, :length => { :maximum => Settings.maximum.caption, :tokenizer => DNU::Text.counter(:document) }
+  
+  dnu_string_html   :name
+  dnu_document_html :caption
   
   scope :where_public, lambda{
     taggings = ActsAsTaggableOn::Tagging.arel_table

@@ -33,3 +33,7 @@ module DNU
     
   end
 end
+
+if defined?(Tx::Map)
+  Tx::Map.send :include, DNU::MapGsub
+end

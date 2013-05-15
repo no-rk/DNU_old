@@ -5,6 +5,8 @@ class GameData::EventContent < ActiveRecord::Base
   
   has_one :event, :through => :event_step
   
+  dnu_document_html :content
+  
   def nickname
     event_step.nickname
   end

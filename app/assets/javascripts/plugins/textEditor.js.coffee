@@ -87,6 +87,6 @@ $ ->
       $(this).keyup (event) ->
         event.preventDefault()
         tree = parser.parse($(this).val(), options.type)
-        $preview.html(textTransformer(tree.html))
+        $preview.html(textTransformer(tree.html, registerIcons))
         $(this).data('textCounter', tree.count.length).trigger("textCounter")
       $(this).keyup()

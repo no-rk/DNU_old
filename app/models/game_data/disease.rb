@@ -8,6 +8,7 @@ class GameData::Disease < ActiveRecord::Base
   validates :color,      :presence => true
   validates :definition, :presence => true
   
+  dnu_document_html :caption
   before_validation :set_game_data
   after_save        :sync_game_data
   
