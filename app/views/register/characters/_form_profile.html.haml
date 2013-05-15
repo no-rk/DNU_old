@@ -1,9 +1,9 @@
 %br
 = form_character.simple_fields_for :profile, :defaults => { :as => (:plain if @read_only), :user => current_user, :input_html => { :class => :'span6' } } do |form_profile|
   = form_profile.input :name
-  = form_profile.input :nickname
+  = form_profile.input :nickname, :input_html => { :class => :'string-editor span6' }
   - unless defined? only_required
     = form_profile.input :race
     = form_profile.input :gender
     = form_profile.input :age
-    = form_profile.input :introduction, :input_html => { :class => :'document span9', :rows => 4 }
+    = form_profile.input :introduction, :input_html => { :class => :'document-editor span9', :rows => 5 }

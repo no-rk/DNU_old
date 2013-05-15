@@ -6,35 +6,38 @@ DNU::Application.routes.draw do
   mount RailsAdmin::Engine => '/admin', :as => 'rails_admin'
 
   get 'game_data' => 'game_data#index' , :as => 'game_data_index'
-  namespace :game_data do resources :battle_values,     :except => [:show, :destroy] end
-  namespace :game_data do resources :elements,          :except => [:show, :destroy] end
-  namespace :game_data do resources :diseases,          :except => [:show, :destroy] end
-  namespace :game_data do resources :statuses,          :except => [:show, :destroy] end
-  namespace :game_data do resources :item_types,        :except => [:show, :destroy] end
-  namespace :game_data do resources :equip_types,       :except => [:show, :destroy] end
-  namespace :game_data do resources :character_types,   :except => [:show, :destroy] end
-  namespace :game_data do resources :landforms,         :except => [:show, :destroy] end
-  namespace :game_data do resources :points,            :except => [:show, :destroy] end
-  namespace :game_data do resources :point_uses,        :except => [:show, :destroy] end
-  namespace :game_data do resources :battle_types,      :except => [:show, :destroy] end
-  namespace :game_data do resources :battle_settings,   :except => [:show, :destroy] end
-  namespace :game_data do resources :art_types,         :except => [:show, :destroy] end
-  namespace :game_data do resources :arts,              :except => [:show, :destroy] end
-  namespace :game_data do resources :art_effects,       :except => [:show, :destroy] end
-  namespace :game_data do resources :guardians,         :except => [:show, :destroy] end
+  namespace :game_data do resources :words,               :except => [:show, :destroy] end
+  namespace :game_data do resources :effect_descriptions, :except => [:show, :destroy] end
+  namespace :game_data do resources :event_descriptions,  :except => [:show, :destroy] end
+  namespace :game_data do resources :battle_values,       :except => [:show, :destroy] end
+  namespace :game_data do resources :elements,            :except => [:show, :destroy] end
+  namespace :game_data do resources :diseases,            :except => [:show, :destroy] end
+  namespace :game_data do resources :statuses,            :except => [:show, :destroy] end
+  namespace :game_data do resources :item_types,          :except => [:show, :destroy] end
+  namespace :game_data do resources :equip_types,         :except => [:show, :destroy] end
+  namespace :game_data do resources :character_types,     :except => [:show, :destroy] end
+  namespace :game_data do resources :landforms,           :except => [:show, :destroy] end
+  namespace :game_data do resources :points,              :except => [:show, :destroy] end
+  namespace :game_data do resources :point_uses,          :except => [:show, :destroy] end
+  namespace :game_data do resources :battle_types,        :except => [:show, :destroy] end
+  namespace :game_data do resources :battle_settings,     :except => [:show, :destroy] end
+  namespace :game_data do resources :art_types,           :except => [:show, :destroy] end
+  namespace :game_data do resources :arts,                :except => [:show, :destroy] end
+  namespace :game_data do resources :art_effects,         :except => [:show, :destroy] end
+  namespace :game_data do resources :guardians,           :except => [:show, :destroy] end
 
-  namespace :game_data do resources :maps,              :except => [:show, :destroy] end
-  namespace :game_data do resources :equips,            :except => [:show, :destroy] end
-  namespace :game_data do resources :sups,              :except => [:show, :destroy] end
-  namespace :game_data do resources :traps,             :except => [:show, :destroy] end
-  namespace :game_data do resources :skills,            :except => [:show, :destroy] end
-  namespace :game_data do resources :item_skills,       :except => [:show, :destroy] end
-  namespace :game_data do resources :item_uses,         :except => [:show, :destroy] end
-  namespace :game_data do resources :items,             :except => [:show, :destroy] end
-  namespace :game_data do resources :characters,        :except => [:show, :destroy] end
-  namespace :game_data do resources :enemy_lists,       :except => [:show, :destroy] end
-  namespace :game_data do resources :enemy_territories, :except => [:show, :destroy] end
-  namespace :game_data do resources :events,            :except => [:show, :destroy] end
+  namespace :game_data do resources :maps,                :except => [:show, :destroy] end
+  namespace :game_data do resources :equips,              :except => [:show, :destroy] end
+  namespace :game_data do resources :sups,                :except => [:show, :destroy] end
+  namespace :game_data do resources :traps,               :except => [:show, :destroy] end
+  namespace :game_data do resources :skills,              :except => [:show, :destroy] end
+  namespace :game_data do resources :item_skills,         :except => [:show, :destroy] end
+  namespace :game_data do resources :item_uses,           :except => [:show, :destroy] end
+  namespace :game_data do resources :items,               :except => [:show, :destroy] end
+  namespace :game_data do resources :characters,          :except => [:show, :destroy] end
+  namespace :game_data do resources :enemy_lists,         :except => [:show, :destroy] end
+  namespace :game_data do resources :enemy_territories,   :except => [:show, :destroy] end
+  namespace :game_data do resources :events,              :except => [:show, :destroy] end
 
   namespace :communication do resources :messages, :only => [ :index, :new, :create, :update ] end
   namespace :communication do resources :conversations end

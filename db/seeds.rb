@@ -16,7 +16,7 @@ end
 [:battle_value, :element, :item_type, :equip_type, :landform, :battle_type, :battle_setting, :art_type, :art, :guardian, :point, :point_use].each do |table|
   ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_#{table.to_s.tableize}")
   list = YAML.load(ERB.new(File.read("#{Rails.root}/db/game_data/#{table}.yml")).result)
-  list[:data].each do |data|
+  list[:data].try(:each) do |data|
     model = "GameData::#{table.to_s.camelize}".constantize.new(data)
     model.save!
   end
@@ -26,18 +26,18 @@ end
 [:map, :status, :disease, :equip, :sup, :trap, :skill, :item_skill, :item_use].each do |table|
   ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_#{table.to_s.tableize}")
   list = YAML.load(ERB.new(File.read("#{Rails.root}/db/game_data/#{table}.yml")).result)
-  list[:data].each do |data|
+  list[:data].try(:each) do |data|
     model = "GameData::#{table.to_s.camelize}".constantize.new
     model.definition = data
     model.save!
   end
 end
 
-# キャラクター種類, 技能効果
-[:character_type, :art_effect].each do |table|
+# キャラクター種類, 技能効果, 特殊効果記述法, イベント記述法, 言葉
+[:character_type, :art_effect, :effect_description, :event_description, :word].each do |table|
   ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_#{table.to_s.tableize}")
   list = YAML.load(ERB.new(File.read("#{Rails.root}/db/game_data/#{table}.yml")).result)
-  list[:data].each do |data|
+  list[:data].try(:each) do |data|
     model = "GameData::#{table.to_s.camelize}".constantize.new(data)
     model.save!
   end
@@ -47,28 +47,17 @@ end
 [:item, :character, :enemy_list, :enemy_territory, :event].each do |table|
   ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_#{table.to_s.tableize}")
   list = YAML.load(ERB.new(File.read("#{Rails.root}/db/game_data/#{table}.yml")).result)
-  list[:data].each do |data|
+  list[:data].try(:each) do |data|
     model = "GameData::#{table.to_s.camelize}".constantize.new
     model.definition = data
     model.save!
   end
 end
 
-# 言葉
-[:word].each do |table|
-  ActiveRecord::Base.connection.execute("TRUNCATE TABLE game_data_#{table.to_s.tableize}")
-  list = YAML.load(ERB.new(File.read("#{Rails.root}/db/game_data/#{table}.yml")).result)
-  list.each do |data|
-    #p data
-    model = "GameData::#{table.to_s.camelize}".constantize.new(data)
-    model.save!
-  end
-end
-
 # 単語自動リンク用のインデックス保存
 tx_map = []
-[:Guardian, :Status, :ArtType, :Art, :Word, :Disease, :BattleValue, :Element, :Point].each do |class_name|
-  tx_map += "GameData::#{class_name}".constantize.all.map{ |r| [r.name, "#{class_name.to_s.tableize}/#{r.id}/#{r.color if r.respond_to?(:color)}"] }.flatten
+[:art_type, :art, :battle_type, :battle_value, :battle_setting, :character_type, :disease, :element, :equip_type, :equip, :guardian, :item_type, :landform, :map, :point,  :status, :effect_description, :event_description, :word].each do |table|
+  tx_map += "GameData::#{table.to_s.camelize}".constantize.all.map{ |r| [r.name, "#{table.to_s.tableize}/#{r.id}/#{r.color if r.respond_to?(:color)}"] }.flatten
 end
 builder = Tx::MapBuilder.new
 builder.add_all(tx_map.flatten)

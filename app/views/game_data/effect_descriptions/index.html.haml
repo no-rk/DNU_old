@@ -1,0 +1,7 @@
+= link_to("新規#{@effect_descriptions.first.class.model_name.human}作成", new_game_data_effect_description_path)
+%br
+- @effect_descriptions.each do |effect_description|
+  [#{@effect_descriptions.first.class.model_name.human}]#{effect_description.name}
+  = link_to("編集", edit_game_data_effect_description_path(effect_description.id))
+  %br
+= paginate @effect_descriptions

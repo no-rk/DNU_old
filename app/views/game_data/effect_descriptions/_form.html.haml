@@ -1,0 +1,5 @@
+= render 'game_data/error', { :game_data_error => @effect_description }
+= simple_form_for(@effect_description) do |form_effect_description|
+  = form_effect_description.input :name
+  = form_effect_description.input :caption, :input_html => { :class => :'document-editor span9', :rows => 15 }
+  = form_effect_description.submit :class => "btn btn-large btn-success"

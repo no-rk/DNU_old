@@ -1,0 +1,7 @@
+= link_to("新規#{@words.first.class.model_name.human}作成", new_game_data_word_path)
+%br
+- @words.each do |word|
+  [#{@words.first.class.model_name.human}]#{word.name}
+  = link_to("編集", edit_game_data_word_path(word.id))
+  %br
+= paginate @words

@@ -1,4 +1,4 @@
-class GameData::Word < ActiveRecord::Base
+class GameData::EventDescription < ActiveRecord::Base
   attr_accessible :caption, :name
   
   validates :name, :presence => true, :uniqueness => true

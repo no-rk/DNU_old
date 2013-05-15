@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130510124208) do
+ActiveRecord::Schema.define(:version => 20130515083935) do
 
   create_table "admins", :force => true do |t|
     t.string   "email",               :default => "", :null => false
@@ -147,6 +147,13 @@ ActiveRecord::Schema.define(:version => 20130510124208) do
     t.datetime "updated_at", :null => false
   end
 
+  create_table "game_data_effect_descriptions", :force => true do |t|
+    t.string   "name"
+    t.text     "caption"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
   create_table "game_data_elements", :force => true do |t|
     t.string   "name"
     t.text     "caption"
@@ -220,6 +227,13 @@ ActiveRecord::Schema.define(:version => 20130510124208) do
   end
 
   add_index "game_data_event_contents", ["event_step_id"], :name => "index_game_data_event_contents_on_event_step_id"
+
+  create_table "game_data_event_descriptions", :force => true do |t|
+    t.string   "name"
+    t.text     "caption"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
 
   create_table "game_data_event_steps", :force => true do |t|
     t.integer  "event_id"

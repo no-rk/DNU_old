@@ -4,6 +4,8 @@ ja:
       admin: 糞管理者
       day: 日数
 
+      game_data/effect_description: 特殊効果記述法
+      game_data/event_description: イベント記述法
       game_data/event: イベント
       game_data/map: マップ
       game_data/map_tip: マップデータ
@@ -265,6 +267,18 @@ ja:
         enemy_list: 敵リスト
         correction: 敵リスト補正
         definition: 敵出現地定義
+      
+      game_data/word:
+        name: 言葉
+        caption: 言葉説明
+      
+      game_data/effect_description:
+        name: 特殊効果記述法名
+        caption: 特殊効果記述法説明
+      
+      game_data/event_description:
+        name: イベント記述法名
+        caption: イベント記述法説明
       
       game_data/event:
         kind: イベント種類

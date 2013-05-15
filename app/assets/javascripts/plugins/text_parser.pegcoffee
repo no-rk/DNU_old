@@ -69,7 +69,7 @@ thin    = bra '細' ket
 middle  = bra '中' ket
 normal  = bra '元' ket
 default_color = bra '#' ket
-color   = bra color:('黒' {"#000000"} / '赤' {"FF0000"} / '橙' {"#FFA500"} / '黄' {"#FFFF00"} / '緑' {"#00FF00"} / '青' {"#0000FF"} / '藍' {"#000080"} / '紫' {"#800080"} / RGB) ket {
+color   = color:('黒' {"#000000"} / '白' {"#FFFFFF"} / '赤' {"#FF0000"} / '橙' {"#FFA500"} / '黄' {"#FFFF00"} / '緑' {"#00FF00"} / '青' {"#0000FF"} / '藍' {"#000080"} / '紫' {"#800080"} / RGB) {
   {
     color: color
   }
@@ -107,7 +107,7 @@ tag_under  = tag:under  inner:(!(document_tags / message_tags / under  /        
   @return_html tag, inner.map (h,i) ->
     h[1]
 }
-tag_color = color:color inner:(!(document_tags / message_tags / color  / default_color / normal / separator / plus / ket) (                  string_tags / any))*         {
+tag_color = bra color:color ket inner:(!(document_tags / message_tags / (bra color ket)  / default_color / normal / separator / plus / ket) (                  string_tags / any))*         {
   @return_html 'color', inner.map((h,i) ->
     h[1]
   ), color
@@ -181,14 +181,14 @@ tag_serif = serif:(serif / ('' &serif_inner) { @default_serif }) inner:serif_inn
 }
 
 // wrap_tags
-tag_random_wrap = separator newline? inner:(tag_serif+ separator newline?)+ {
+tag_random_wrap = newline? separator newline? inner:(newline? tag_serif+ newline? separator)+ {
   $inners = inner.map (h,i) =>
-    @return_html 'element', h[0]
+    @return_html 'element', h[1]
   @return_html 'random', $inners
 }
-tag_sequence_wrap = plus newline? inner:(tag_serif+ plus newline?)+ {
+tag_sequence_wrap = newline? plus newline? inner:(newline? tag_serif+ newline? plus)+ {
   $inners = inner.map (h,i) =>
-    @return_html 'element', h[0]
+    @return_html 'element', h[1]
   @return_html 'sequence', $inners
 }
 wrap_tags = tag_random_wrap / tag_sequence_wrap
@@ -199,17 +199,19 @@ message = inner:(wrap_tags / tag_serif / any)* {
 }
 
 // document_tag_names
-align_left    = bra '左寄' ket { 'align_left' }
-align_right   = bra '右寄' ket { 'align_right' }
-align_center  = bra '中寄' ket { 'align_center' }
-align_justify = bra '均等' ket { 'align_justify' }
+align_left    = '左寄' { 'align_left' }
+align_right   = '右寄' { 'align_right' }
+align_center  = '中寄' { 'align_center' }
+align_justify = '均等' { 'align_justify' }
 column_2 = bra [2２] '段組' ket { 'column_2' }
 column_3 = bra [3３] '段組' ket { 'column_3' }
+list = bra '並' ket { 'list' }
 
 // document_tags
-align_tags = tag:(align_left / align_right / align_center / align_justify) newline? inner:(!document_tags (message_tags / string_tags / any))* {
-  @return_html tag, inner.map (h,i) ->
+align_tags = bra tag:(align_left / align_right / align_center / align_justify) color:color? ket newline? inner:(!document_tags (message_tags / string_tags / any))+ {
+  @return_html tag, inner.map((h,i) ->
     h[1]
+  ), color
 }
 tag_column_2 = tag:column_2 newline? inner:(align_tags align_tags) {
   @return_html tag, inner
@@ -229,8 +231,12 @@ tag_message = inner:(&serif tag_serif)+ {
   @return_html 'message', inner.map (h,i) ->
     h[1]
 }
+tag_list = tag:list newline? inner:(!document_tags (message_tags / string_tags / any))+ {
+  @return_html tag, inner.map (h,i) ->
+    h[1]
+}
 
-document_tags = align_tags / tag_column_2 / tag_column_3 / tag_image/ wrap_tags / tag_message
+document_tags = align_tags / tag_column_2 / tag_column_3 / tag_image/ wrap_tags / tag_message/ tag_list
 
 // document
 document = inner:(document_tags / message_tags / string_tags / any)* {

@@ -1,6 +1,7 @@
 = link_to("新規マップ作成", new_game_data_map_path)
 %br
 - @maps.each do |map|
-  = link_to("[マップ]#{map.name} 編集", edit_game_data_map_path(map.id))
+  [マップ]#{map.name}
+  = link_to("編集", edit_game_data_map_path(map.id))
   %br
 = paginate @maps

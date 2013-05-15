@@ -6,6 +6,9 @@ class GameData::ApplicationController < ApplicationController
   def index
     records = "GameData::#{controller_name.classify}".constantize.page(params[:page]).per(50)
     instance_variable_set("@#{controller_name}", records)
+    if records.blank?
+      redirect_to send("new_game_data_#{controller_name.singularize}_path"), alert: "新規作成してください。"
+    end
   end
 
 

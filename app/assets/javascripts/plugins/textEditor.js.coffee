@@ -50,6 +50,7 @@ $ ->
       $align_right   = $(this).textEditorButton($('<button>').html("右寄").addClass('btn btn-danger'), "右寄せにする。", "右寄")
       $align_center  = $(this).textEditorButton($('<button>').html("中寄").addClass('btn btn-danger'), "中央寄せにする。", "中寄")
       $align_justify = $(this).textEditorButton($('<button>').html("両寄").addClass('btn btn-danger'), "均等に配置する。", "均等")
+      $list          = $(this).textEditorButton($('<button>').html("並").addClass('btn btn-danger'), "リスト化する。", "並")
       
       $dropdown = $("<div>").addClass("dropdown-menu").css({"max-width": "180px"})
       for k,v of registerIcons
@@ -73,7 +74,7 @@ $ ->
       switch options.type
         when 'document'
           $editor
-            .append($colmun_2).append($colmun_3).append($align_left).append($align_right).append($align_center).append($align_justify)
+            .append($colmun_2).append($colmun_3).append($align_left).append($align_right).append($align_center).append($align_justify).append($list)
       $preview = $('<div>').addClass("#{span}preview").hide()
       $button = $('<button>').html('エディタ').addClass('btn btn-small btn-inverse').css("vertical-align", "top").click (event) =>
         event.preventDefault()

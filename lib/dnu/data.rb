@@ -56,6 +56,7 @@ module DNU
         if model.respond_to?(:to_sync_hash)
           attributes = self.clean_tree(model.to_sync_hash)
           db.transaction do
+            db[:data] ||= []
             if db[:data][id-1] != attributes
               db[:data][id-1] = attributes
             end
@@ -63,6 +64,7 @@ module DNU
         else
           definition = self.clean_tree(model.definition)
           db.transaction do
+            db[:data] ||= []
             if db[:data][id-1] != definition
               db[:data][id-1] = definition
             end

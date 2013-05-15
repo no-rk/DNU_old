@@ -1,0 +1,2 @@
+module GameData::EffectDescriptionsHelper
+end

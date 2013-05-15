@@ -1,0 +1,5 @@
+= render 'game_data/error', { :game_data_error => @word }
+= simple_form_for(@word) do |form_word|
+  = form_word.input :name
+  = form_word.input :caption, :input_html => { :class => :'document-editor span9', :rows => 15 }
+  = form_word.submit :class => "btn btn-large btn-success"
