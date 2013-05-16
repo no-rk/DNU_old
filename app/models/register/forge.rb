@@ -21,11 +21,11 @@ class Register::Forge < ActiveRecord::Base
   dnu_message_html  :message
   
   def smith
-    self.productable.user
+    self.productable.try:user
   end
   
   def day
-    self.productable.day
+    self.productable.try:day
   end
   
   def item_type_index=(i)

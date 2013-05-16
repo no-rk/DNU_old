@@ -1,6 +1,6 @@
 = form_battle.label :equips
-= form_battle.simple_fields_for :equips, :defaults => { :as => (:plain if @read_only), :user => current_user, :input_html => { :class => :'span2' } } do |form_equip|
+= form_battle.simple_fields_for :equips, :wrapper => :simple, :defaults => { :as => (:plain if @read_only), :user => current_user, :input_html => { :class => :'span2' } } do |form_equip|
   = form_equip.input :kind, :as => :hidden
   = form_equip.object.kind
-  = form_equip.input :number
+  = form_equip.input :number, :as => :item_number, :eno => current_user.id, :read_only => @read_only
 %br

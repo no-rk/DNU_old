@@ -2,5 +2,5 @@
 %br
 = form_main.label :item_uses
 = form_main.simple_fields_for :item_uses, :wrapper => :simple, :defaults => { :as => (:plain if @read_only), :user => current_user, :input_html => { :class => :'span2' } } do |form_item_use|
-  = form_item_use.input :number
+  = form_item_use.input :number, :as => :item_number, :eno => current_user.id, :read_only => @read_only
   = form_item_use.input :message, :wrapper => :bootstrap, :input_html => { :class => :'message-editor span9', :rows => 2 }, :wrapper_html => { :class => :clearfix }

@@ -1,12 +1,11 @@
 %br
 = form_product.simple_fields_for :supplements, :wrapper => :simple, :defaults => { :as => (:plain if @read_only), :user => current_user, :input_html => { :class => :'span2' } } do |form_supplement|
   = form_supplement.input :art_effect_id, :as => :hidden
-  ENo.
-  = form_supplement.input :user_id, :as => :id
+  = form_supplement.input :user_id, :as => :eno, :read_only => @read_only
   の
-  = form_supplement.input :material_number
+  = form_supplement.input :material_number, :as => :item_number, :eno => form_supplement.object.user_id, :read_only => @read_only
   を使って
-  = form_supplement.input :item_number
+  = form_supplement.input :item_number, :as => :item_number, :eno => form_supplement.object.user_id, :read_only => @read_only
   に
   = form_supplement.input :experiment, :collection => { "付加" => false,  "付加実験" => true }, :include_blank => false
   %br

@@ -1,10 +1,9 @@
 %br
 = form_trade.label :send_items
 = form_trade.simple_fields_for :send_items, :wrapper => :simple, :defaults => { :as => (:plain if @read_only), :user => current_user, :input_html => { :class => :'span2' } } do |form_send_item|
-  ENo.
-  = form_send_item.input :user_id, :as => :id
+  = form_send_item.input :user_id, :as => :eno, :read_only => @read_only
   に
-  = form_send_item.input :number
+  = form_send_item.input :number, :as => :item_number, :eno => form_send_item.object.user_id, :read_only => @read_only
   送付
   %br
   = form_send_item.input :message, :wrapper => :bootstrap, :input_html => { :class => :'message-editor span9', :rows => 2 }, :wrapper_html => { :class => :clearfix }

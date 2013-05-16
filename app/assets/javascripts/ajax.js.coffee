@@ -45,7 +45,7 @@ $ ->
   )
 
   # ENo.
-  $('body.register').delegate 'input[data-remote].id', 'ajax:before', (event) ->
+  $('body.register').delegate 'input[data-remote].eno', 'ajax:before', (event) ->
     #親要素のajax:beforeイベントが実行されないように伝播を止める
     event.stopPropagation()
     if $(this).val()
@@ -57,7 +57,7 @@ $ ->
       #値がないのでAjaxキャンセル
       console.log('input[data-remote] ajax:before cancel')
       false
-  $('body.register').delegate 'input[data-remote].id', 'ajax:success', (event, data, status, xhr) ->
+  $('body.register').delegate 'input[data-remote].eno', 'ajax:success', (event, data, status, xhr) ->
     #親要素のajax:successイベントが実行されないように伝播を止める
     event.stopPropagation()
     #Ajaxにパラメーターを渡し終わったので消しておく

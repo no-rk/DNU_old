@@ -1,4 +1,4 @@
 %br
 = form_main.label :disposes
 = form_main.simple_fields_for :disposes, :wrapper => :simple, :defaults => { :as => (:plain if @read_only), :user => current_user, :input_html => { :class => :'span2' } } do |form_dispose|
-  = form_dispose.input :number
+  = form_dispose.input :number, :as => :item_number, :eno => current_user.id, :read_only => @read_only

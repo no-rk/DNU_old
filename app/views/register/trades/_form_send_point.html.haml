@@ -3,8 +3,7 @@
 = form_trade.simple_fields_for :send_points, :wrapper => :simple, :defaults => { :as => (:plain if @read_only), :user => current_user, :input_html => { :class => :'span2' } } do |form_send_point|
   - default_point_id = 1
   = form_send_point.input :point_id, :as => :hidden, input_html: { :value => (form_send_point.object.point_id || default_point_id) }
-  ENo.
-  = form_send_point.input :user_id, :as => :id
+  = form_send_point.input :user_id, :as => :eno, :read_only => @read_only
   に
   = form_send_point.input :value
   G 送付

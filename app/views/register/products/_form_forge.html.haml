@@ -1,10 +1,9 @@
 %br
 = form_product.simple_fields_for :forges, :wrapper => :simple, :defaults => { :as => (:plain if @read_only), :user => current_user, :input_html => { :class => :'span2' } } do |form_forge|
   = form_forge.input :art_effect_id, :as => :hidden
-  ENo.
-  = form_forge.input :user_id, :as => :id
+  = form_forge.input :user_id, :as => :eno, :read_only => @read_only
   の
-  = form_forge.input :number
+  = form_forge.input :number, :as => :item_number, :eno => form_forge.object.user_id, :read_only => @read_only
   を使って
   - if form_forge.object.art_effect.forgeable_item_types.count == 1
     = form_forge.object.art_effect.forgeable_item_types.keys.first

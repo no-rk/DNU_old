@@ -1,17 +1,21 @@
 class Communication::Message < ActiveForm
   extend ActiveModel::Callbacks
   define_model_callbacks :validation
-
+  
   validates :recipients, :presence => true
   validates :subject   , :length => { :maximum => Settings.maximum.subject, :tokenizer => DNU::Text.counter(:string) }
   validates :body      , :presence => true, :length => { :maximum => Settings.maximum.message, :tokenizer => DNU::Text.counter(:message) }
-
+  
   attr_accessor :recipients, :subject, :body, :user, :flash_alert
-
+  
   def column_for_attribute(attribute_name)
     Notification.new.column_for_attribute(attribute_name)
   end
-
+  
+  def day
+    nil
+  end
+  
   def save
     _run_validation_callbacks do
       return false unless self.valid?
@@ -30,7 +34,7 @@ class Communication::Message < ActiveForm
     end
     true
   end
-
+  
   private
   def send_communications(recipients, subject, body, user)
     recipients = recipients.all if recipients.respond_to?(:all)

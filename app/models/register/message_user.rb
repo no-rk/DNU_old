@@ -4,6 +4,9 @@ class Register::MessageUser < ActiveRecord::Base
   belongs_to :user
   attr_accessible :body, :user_id
   
+  has_one :day,    :through => :message
+  has_one :sender, :through => :message, :source => :user
+  
   validates :body, :length => { :maximum => Settings.maximum.message, :tokenizer => DNU::Text.counter(:message) }
   
   dnu_message_html  :body

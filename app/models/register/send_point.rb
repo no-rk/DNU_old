@@ -4,6 +4,9 @@ class Register::SendPoint < ActiveRecord::Base
   belongs_to :user
   attr_accessible :point_id, :user_id, :message, :value
   
+  has_one :day,    :through => :trade
+  has_one :sender, :through => :trade, :source => :user
+  
   validates :point_id, :numericality => { :only_integer => true, :greater_than => 0 }
   validates :user_id,  :numericality => { :only_integer => true, :greater_than => 0 }
   validates :value,    :numericality => { :only_integer => true, :greater_than => 0 }

@@ -55,7 +55,7 @@ gem 'execjs'
 gem 'coffee-script'
 gem 'chronic', :git => 'git@github.com:mojombo/chronic.git'
 gem 'whenever', :require => false
-gem 'simple_form', "~> 2.0.4"
+gem 'simple_form'
 gem 'devise', "~> 2.2.3"
 gem "rails_admin", "~> 0.4.4"
 gem 'mailboxer', "~> 0.9.0"
