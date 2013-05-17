@@ -9,4 +9,12 @@ class Register::Shout < ActiveRecord::Base
   validates :message, :length => { :maximum => Settings.maximum.message, :tokenizer => DNU::Text.counter(:message) }
   
   dnu_message_html  :message
+  
+  def character_active
+    user
+  end
+  
+  def character_passive
+    user
+  end
 end

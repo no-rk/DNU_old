@@ -1,22 +1,22 @@
 ---
 :data:
 - :name: G
-  :caption: "使用されるお金の単位です。増殖しません。"
+  :caption: 使用されるお金の単位です。増殖しません。
   :non_negative: false
   :protect: false
 - :name: NP
-  :caption: "能力を鍛錬する際に使用するポイントです。"
+  :caption: 能力を鍛錬する際に使用するポイントです。
   :non_negative: true
   :protect: true
 - :name: GP
-  :caption: "技能を鍛錬する際に使用するポイントです。"
+  :caption: 技能を鍛錬する際に使用するポイントです。
   :non_negative: true
   :protect: true
 - :name: SP
-  :caption: "生産を鍛錬する際に使用するポイントです。"
+  :caption: 生産を鍛錬する際に使用するポイントです。
   :non_negative: true
   :protect: true
 - :name: AP
-  :caption: "アビリティを鍛錬する際に使用するポイントです。"
+  :caption: アビリティを鍛錬する際に使用するポイントです。
   :non_negative: true
   :protect: true

@@ -1,79 +1,79 @@
 ---
 :data:
-- :name: "平原"
-  :caption: "説明。"
+- :name: 平原
+  :caption: 説明。
   :image: plain
   :color: '006666'
   :collision: false
   :opacity: 0
-- :name: "砂地"
-  :caption: "説明。"
+- :name: 砂地
+  :caption: 説明。
   :image: desert
   :color: ffffee
   :collision: false
   :opacity: 0
-- :name: "森林"
-  :caption: "説明。"
+- :name: 森林
+  :caption: 説明。
   :image: forest
   :color: 99cc99
   :collision: false
   :opacity: 1
-- :name: "山岳"
-  :caption: "説明。"
+- :name: 山岳
+  :caption: 説明。
   :image: mountain
   :color: ffcc99
   :collision: false
   :opacity: 2
-- :name: "街"
-  :caption: "説明。"
+- :name: 街
+  :caption: 説明。
   :image: town
   :color: ffffff
   :collision: false
   :opacity: 0
-- :name: "床"
-  :caption: "説明。"
+- :name: 床
+  :caption: 説明。
   :image: floor
   :color: '999999'
   :collision: false
   :opacity: 0
-- :name: "壁"
-  :caption: "説明。"
+- :name: 壁
+  :caption: 説明。
   :image: wall
   :color: '666666'
   :collision: true
   :opacity: 10
-- :name: "壁2"
-  :caption: "説明。"
+- :name: 壁2
+  :caption: 説明。
   :image: wall2
   :color: '666666'
   :collision: true
   :opacity: 10
-- :name: "水辺"
-  :caption: "説明。"
+- :name: 水辺
+  :caption: 説明。
   :image: water
   :color: 9999ff
   :collision: true
   :opacity: 0
-- :name: "上り階段"
-  :caption: "説明。"
+- :name: 上り階段
+  :caption: 説明。
   :image: upstairs
   :color: '999999'
   :collision: false
   :opacity: 0
-- :name: "下り階段"
-  :caption: "説明。"
+- :name: 下り階段
+  :caption: 説明。
   :image: downstairs
   :color: '999999'
   :collision: false
   :opacity: 0
-- :name: "魔方陣"
-  :caption: "説明。"
+- :name: 魔方陣
+  :caption: 説明。
   :image: magic_circle
   :color: '999999'
   :collision: false
   :opacity: 0
-- :name: "洞窟"
-  :caption: "説明。"
+- :name: 洞窟
+  :caption: 説明。
   :image: cave
   :color: ffcc99
   :collision: false

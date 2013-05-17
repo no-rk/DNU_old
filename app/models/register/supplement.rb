@@ -23,6 +23,14 @@ class Register::Supplement < ActiveRecord::Base
     self.productable.try:day
   end
   
+  def character_active
+    smith
+  end
+  
+  def character_passive
+    user
+  end
+  
   def supplement!(way = self.art, day_i = self.day.day)
     success = false
     inventory = self.user.result(:inventory, day_i).where(:number => self.material_number).first if self.user.present?

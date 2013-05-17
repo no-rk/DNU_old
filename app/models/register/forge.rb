@@ -28,6 +28,14 @@ class Register::Forge < ActiveRecord::Base
     self.productable.try:day
   end
   
+  def character_active
+    smith
+  end
+  
+  def character_passive
+    user
+  end
+  
   def item_type_index=(i)
     self.item_type = GameData::ItemType.find_by_name(self.art_effect.forgeable_item_types.invert[i.to_i])
     @item_type_index = i

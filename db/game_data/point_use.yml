@@ -5,13 +5,13 @@
   :type: 
 - :name: GP
   :status: 
-  :type: "武器"
+  :type: 武器
 - :name: GP
   :status: 
-  :type: "竜魂"
+  :type: 竜魂
 - :name: SP
   :status: 
-  :type: "生産"
+  :type: 生産
 - :name: AP
   :status: 
-  :type: "アビリティ"
+  :type: アビリティ

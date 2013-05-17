@@ -15,6 +15,7 @@
     [技]#{form_battle.object.learned_skills.invert[form_battle_setting.object.skill_id]}
     %br
     優先度#{form_battle_setting.object.priority}：#{form_battle_setting.object.use_condition.name}のとき#{form_battle_setting.object.frequency.name}
+    = form_battle_setting.object.message_preview
     - i += 1
 - else
   %a{:href => helps_path('戦闘設定'), :target=>"_blank"} 戦闘設定

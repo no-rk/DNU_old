@@ -4,10 +4,10 @@ module DNU
       cols.to_a.flatten.compact.map(&:to_sym).each do |col|
         class_eval %Q{
           def #{col}_html
-            @#{col}_html ||= DNU::Text.new.string(#{col}).html_safe
+            @#{col}_html ||= DNU::Text.new(character_active, character_passive).string(#{col}).html_safe
           end
           def #{col}_preview
-            @#{col}_preview ||= DNU::Text.new.string(#{col}, true).html_safe
+            @#{col}_preview ||= DNU::Text.new(character_active, character_passive).string(#{col}, true).html_safe
           end
         }
       end
@@ -17,10 +17,10 @@ module DNU
       cols.to_a.flatten.compact.map(&:to_sym).each do |col|
         class_eval %Q{
           def #{col}_html
-            @#{col}_html ||= DNU::Text.new.message(#{col}).html_safe
+            @#{col}_html ||= DNU::Text.new(character_active, character_passive).message(#{col}).html_safe
           end
           def #{col}_preview
-            @#{col}_preview ||= DNU::Text.new.message(#{col}, true).html_safe
+            @#{col}_preview ||= DNU::Text.new(character_active, character_passive).message(#{col}, true).html_safe
           end
         }
       end
@@ -30,10 +30,10 @@ module DNU
       cols.to_a.flatten.compact.map(&:to_sym).each do |col|
         class_eval %Q{
           def #{col}_html
-            @#{col}_html ||= DNU::Text.new.document(#{col}).html_safe
+            @#{col}_html ||= DNU::Text.new(character_active, character_passive).document(#{col}).html_safe
           end
           def #{col}_preview
-            @#{col}_preview ||= DNU::Text.new.document(#{col}, true).html_safe
+            @#{col}_preview ||= DNU::Text.new(character_active, character_passive).document(#{col}, true).html_safe
           end
         }
       end

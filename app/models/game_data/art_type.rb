@@ -14,6 +14,12 @@ class GameData::ArtType < ActiveRecord::Base
   dnu_document_html :caption
   after_save        :sync_game_data
   
+  def character_active
+  end
+  
+  def character_passive
+  end
+  
   def to_sync_hash
     self.attributes.except("id","created_at","updated_at")
   end

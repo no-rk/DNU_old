@@ -11,4 +11,19 @@ class Register::Hunt < ActiveRecord::Base
   validates :message,      :length => { :maximum => Settings.maximum.message, :tokenizer => DNU::Text.counter(:message) }
   
   dnu_message_html  :message
+  
+  def user
+    productable.try:user
+  end
+  
+  def day
+    productable.try:day
+  end
+  
+  def character_active
+    user
+  end
+  
+  def character_passive
+  end
 end

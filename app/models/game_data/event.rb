@@ -14,6 +14,12 @@ class GameData::Event < ActiveRecord::Base
   before_validation :set_game_data
   after_save        :sync_game_data
   
+  def character_active
+  end
+  
+  def character_passive
+  end
+  
   def used?
     self.events.exists?
   end

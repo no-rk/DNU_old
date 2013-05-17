@@ -18,6 +18,21 @@ class Register::BattleSetting < ActiveRecord::Base
   dnu_message_html  :message
   before_validation :set_condition
   
+  def user
+    battlable.try(:user)
+  end
+  
+  def day
+    battlable.try(:day)
+  end
+  
+  def character_active
+    user
+  end
+  
+  def character_passive
+  end
+  
   def tree
     @tree ||= {
       :skill => {

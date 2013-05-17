@@ -11,6 +11,12 @@ class GameData::BattleType < ActiveRecord::Base
   before_validation :set_game_data
   after_save        :sync_game_data
   
+  def character_active
+  end
+  
+  def character_passive
+  end
+  
   def self.normal
     where(:normal => true).first
   end

@@ -105,26 +105,26 @@
   :max: 
   :has_max: false
   :has_equip_value: true
-- :name: "隊列"
-  :caption: "説明"
+- :name: 隊列
+  :caption: 説明
   :min: 1
   :max: 5
   :has_max: false
   :has_equip_value: false
-- :name: "行動数"
-  :caption: "説明"
+- :name: 行動数
+  :caption: 説明
   :min: 0
   :max: 100
   :has_max: false
   :has_equip_value: false
-- :name: "ターン優先度"
-  :caption: "説明"
+- :name: ターン優先度
+  :caption: 説明
   :min: 
   :max: 
   :has_max: false
   :has_equip_value: false
-- :name: "射程"
-  :caption: "説明"
+- :name: 射程
+  :caption: 説明
   :min: 1
   :max: 5
   :has_max: false

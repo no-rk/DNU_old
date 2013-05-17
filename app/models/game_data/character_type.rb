@@ -9,6 +9,12 @@ class GameData::CharacterType < ActiveRecord::Base
   before_validation :set_game_data
   after_save        :sync_game_data
   
+  def character_active
+  end
+  
+  def character_passive
+  end
+  
   def equip_name=(name)
     self.equip = GameData::Equip.where(:name => name).first
     @equip_name = name

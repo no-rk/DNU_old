@@ -9,6 +9,12 @@ class GameData::BattleValue < ActiveRecord::Base
   dnu_document_html :caption
   after_save        :sync_game_data
   
+  def character_active
+  end
+  
+  def character_passive
+  end
+  
   def self.has_max_and_equip_value(b_max, b_equip)
     self.where(:has_max =>b_max, :has_equip_value => b_equip).pluck(:name) - GameData::Disease.pluck(:name)
   end

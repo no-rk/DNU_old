@@ -19,6 +19,21 @@ class Register::ItemSkillSetting < ActiveRecord::Base
   dnu_message_html  :message
   before_validation :set_condition
   
+  def user
+    battlable.try:user
+  end
+  
+  def day
+    battlable.try:day
+  end
+  
+  def character_active
+    user
+  end
+  
+  def character_passive
+  end
+  
   def tree
     if self.plan.present?
       if self.plan.item_skill?
@@ -50,7 +65,7 @@ class Register::ItemSkillSetting < ActiveRecord::Base
   end
   
   def set_item!
-    self.item = battlable.user.result(:inventory, battlable.day.day).where(:number => self.number).first.try(:item)
+    self.item = user.result(:inventory, day.day).where(:number => self.number).first.try(:item)
     self.save!
   end
   

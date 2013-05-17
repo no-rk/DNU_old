@@ -1,6 +1,6 @@
 ---
 :data:
-- :name: "通常戦"
+- :name: 通常戦
   :caption: |-
     マップ内を移動することで敵と遭遇します。
     通常戦に勝利すると<太>各種ポイントが得られ、戦闘に勝利したターン数に応じてHP/MPが回復します<細>。
@@ -16,7 +16,7 @@
   :result: true
   :rob: false
   :escape: false
-- :name: "イベント戦"
+- :name: イベント戦
   :caption: |-
     主にイベントによって発生する戦闘です。イベント戦が発生する場合、通常戦は発生しません。
     通常戦とは異なり、<太>イベント戦では「逃走」を選択(登録)できます<細>。
@@ -28,7 +28,7 @@
   :result: true
   :rob: false
   :escape: true
-- :name: "手合わせ"
+- :name: 手合わせ
   :caption: |-
     練習試合的なもの。
     結果に影響を与えない。
@@ -36,7 +36,7 @@
   :result: false
   :rob: false
   :escape: false
-- :name: "デュエル"
+- :name: デュエル
   :caption: |-
     PK的なもの。
     アイテムやポイントを奪取したりされたり。
@@ -44,7 +44,7 @@
   :result: true
   :rob: true
   :escape: false
-- :name: "闘技大会"
+- :name: 闘技大会
   :caption: |-
     大会的なもの。
     結果に影響を与えない。

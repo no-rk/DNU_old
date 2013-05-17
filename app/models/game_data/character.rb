@@ -9,6 +9,17 @@ class GameData::Character < ActiveRecord::Base
   before_validation :set_game_data
   after_save        :sync_game_data
   
+  def character_active
+    self
+  end
+  
+  def character_passive
+  end
+  
+  def icons
+    {}
+  end
+  
   def self.status_from_rank(rank)
     rank.to_i*20+50
   end

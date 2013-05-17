@@ -15,4 +15,20 @@ class Register::Profile < ActiveRecord::Base
   dnu_string_html   :gender
   dnu_string_html   :age
   dnu_document_html :introduction
+  
+  def user
+    character.try:user
+  end
+  
+  def day
+    character.try:day
+  end
+  
+  def character_active
+    user
+  end
+  
+  def character_passive
+    user
+  end
 end

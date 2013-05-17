@@ -9,4 +9,12 @@ class Register::ArtName < ActiveRecord::Base
   
   dnu_string_html   :name
   dnu_document_html :caption
+  
+  def character_active
+    user
+  end
+  
+  def character_passive
+    user
+  end
 end

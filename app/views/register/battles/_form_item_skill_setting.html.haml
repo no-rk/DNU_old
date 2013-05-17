@@ -12,6 +12,7 @@
     ItemNo.#{form_item_skill_setting.object.number}
     %br
     優先度#{form_item_skill_setting.object.priority}：#{form_item_skill_setting.object.use_condition.name}のとき#{form_item_skill_setting.object.frequency.name}
+    = form_item_skill_setting.object.message_preview
     - i += 1
 - else
   戦物設定※今は使用しても消費しない

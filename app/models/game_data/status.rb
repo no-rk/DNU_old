@@ -10,6 +10,12 @@ class GameData::Status < ActiveRecord::Base
   before_validation :set_game_data
   after_save        :sync_game_data
   
+  def character_active
+  end
+  
+  def character_passive
+  end
+  
   def train_point
     @train_point ||= GameData::Point.find_by_use(:status, true)
   end

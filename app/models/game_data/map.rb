@@ -20,6 +20,12 @@ class GameData::Map < ActiveRecord::Base
   scope :already_make, lambda{ joins(:result_maps).uniq }
   scope :has_anyone,   lambda{ joins(:places).uniq }
   
+  def character_active
+  end
+  
+  def character_passive
+  end
+  
   def map_size
     @map_size || map_tips.maximum(:x)
   end

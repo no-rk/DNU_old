@@ -11,9 +11,9 @@ module DNU
       lambda{ |text| self.new.parse(type, text)["count"] }
     end
     
-    def initialize(user_from = nil, to_user = nil)
-      @user_from = user_from
-      @to_user   = to_user
+    def initialize(character_active = nil, character_passive = nil)
+      @character_active  = character_active
+      @character_passive = character_passive
     end
     
     def parse(type, text)
@@ -21,7 +21,7 @@ module DNU
     end
     
     def preview(tree)
-      @@text_transform.call("textTransformer", tree, (@user_from.try(:icons) || {}))
+      @@text_transform.call("textTransformer", tree, (@character_active.try:icons || {}))
     end
     
     def string(text, pre = false)
@@ -69,7 +69,7 @@ module DNU
           end
         when "serif"
           if tree["data"]["icon"]
-            icons = @user_from.try(:icons) || {}
+            icons = @character_active.try:icons || {}
             %Q|<div class="serif #{tree["data"]["position"]}"><img class="icon" src=#{icons[tree["data"]["icon"].to_i] || icons[1]}><div class="balloon #{tree["data"]["balloon"]}">#{self.map(tree["inner"]).join("")}</div></div>|
           else
             %Q|<div class="serif #{tree["data"]["position"]}"><div class="balloon #{tree["data"]["balloon"]}">#{self.map(tree["inner"]).join("")}</div></div>|

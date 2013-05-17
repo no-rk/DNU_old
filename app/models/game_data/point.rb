@@ -10,6 +10,12 @@ class GameData::Point < ActiveRecord::Base
   dnu_document_html :caption
   after_save        :sync_game_data
   
+  def character_active
+  end
+  
+  def character_passive
+  end
+  
   def self.find_by_use(type, val)
     use_arel = GameData::PointUse.arel_table
     self.where(use_arel[type].eq(val)).includes(:point_uses).first

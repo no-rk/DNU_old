@@ -1,7 +1,7 @@
 ---
 :data:
 - :name: MAP1
-  :caption: "六命のマップを再現してみた。"
+  :caption: 六命のマップを再現してみた。
   :base: field
   :attributes:
   - :x: 1
@@ -3384,7 +3384,7 @@
     :landform: wall
     :collision: true
     :opacity: 10
-- :name: "洞窟"
+- :name: 洞窟
   :caption: ''
   :base: dangeon
   :attributes:
@@ -3888,8 +3888,8 @@
     :landform: wall2
     :collision: true
     :opacity: 10
-- :name: "迷路"
-  :caption: "これはひどい"
+- :name: 迷路
+  :caption: これはひどい
   :base: dangeon
   :attributes:
   - :x: 1
@@ -4737,8 +4737,8 @@
     :landform: plain
     :collision: false
     :opacity: 0
-- :name: "牢屋"
-  :caption: "いみはないです"
+- :name: 牢屋
+  :caption: いみはないです
   :base: dangeon
   :attributes:
   - :x: 1

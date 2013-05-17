@@ -1,6 +1,6 @@
 ---
 :data:
-- :name: "職業"
+- :name: 職業
   :caption: |-
     ジョブ的なもの。
     一度決めたら簡単には変えられない。
@@ -11,7 +11,7 @@
   :train: false
   :form: true
   :rename: true
-- :name: "武器"
+- :name: 武器
   :caption: |-
     対応する装備品を上手く扱える技能。
     熟練によりLV制限が課せられる。
@@ -22,7 +22,7 @@
   :train: true
   :form: false
   :rename: false
-- :name: "竜魂"
+- :name: 竜魂
   :caption: |-
     「<b>竜魂</b>」は技能に分類されますが、装備品としての存在はありません。
     竜魂は来島時にあなたが選択した竜に対応する属性、及び特性を持つ技能となり、最初から習得されています。
@@ -35,7 +35,7 @@
   :train: true
   :form: false
   :rename: false
-- :name: "生産"
+- :name: 生産
   :caption: |-
     何かを作れる感じの技能。
     最初から何でもできる。
@@ -46,8 +46,8 @@
   :train: true
   :form: true
   :rename: false
-- :name: "アビリティ"
-  :caption: "上位技能的なの。"
+- :name: アビリティ
+  :caption: 上位技能的なの。
   :max: 8
   :blossom: false
   :forget: true

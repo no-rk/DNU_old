@@ -493,11 +493,11 @@ class User < ActiveRecord::Base
   end
   
   def name(day_i = Day.last_day_i)
-    self.result(:character, day_i).profile.name
+    self.result(:character, day_i).profile.name_html
   end
   
   def nickname(day_i = Day.last_day_i)
-    self.result(:character, day_i).profile.nickname
+    self.result(:character, day_i).profile.nickname_html
   end
   
   private

@@ -7,6 +7,12 @@ class GameData::EventContent < ActiveRecord::Base
   
   dnu_document_html :content
   
+  def character_active
+  end
+  
+  def character_passive
+  end
+  
   def nickname
     event_step.nickname
   end

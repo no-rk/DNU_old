@@ -8,6 +8,17 @@ class GameData::Guardian < ActiveRecord::Base
   dnu_document_html :caption
   after_save        :sync_game_data
   
+  def character_active
+    self
+  end
+  
+  def character_passive
+  end
+  
+  def icons
+    {}
+  end
+  
   def source
     self.train.trainable
   end

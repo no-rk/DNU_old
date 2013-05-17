@@ -10,4 +10,12 @@ class Register::MessageUser < ActiveRecord::Base
   validates :body, :length => { :maximum => Settings.maximum.message, :tokenizer => DNU::Text.counter(:message) }
   
   dnu_message_html  :body
+  
+  def character_active
+    sender
+  end
+  
+  def character_passive
+    user
+  end
 end
