@@ -13,6 +13,7 @@
 #= require jquery
 #= require jquery_ujs
 #= require bootstrap
+#= require socket.io
 #= require ./plugins/textCounter
 #= require ./plugins/textTransformer
 #= require ./plugins/textEditor

@@ -19,7 +19,7 @@ $ ->
       counterElement = $(this).closest('.controls').prev().find(options.counterElement)
       
       calculate = =>
-        count = $(this).data("textCounter") || $(this).val().length
+        count = $(this).data("textCounter") ? $(this).val().length
         available = maxChars - count
         
         if available <= warningChars and available > 0

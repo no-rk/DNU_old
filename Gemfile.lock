@@ -231,6 +231,8 @@ GEM
       actionpack (~> 3.0)
       activemodel (~> 3.0)
     slop (3.4.5)
+    socket.io-rails (0.9.11)
+      railties (~> 3.1)
     sprockets (2.2.2)
       hike (~> 1.2)
       multi_json (~> 1.0)
@@ -297,6 +299,7 @@ DEPENDENCIES
   sass-rails (~> 3.2.3)
   sextant
   simple_form
+  socket.io-rails (~> 0.9.11)
   thin
   tx (~> 0.0.5)
   uglifier (>= 1.0.3)

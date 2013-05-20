@@ -132,7 +132,7 @@ string = inner:(string_tags / any)* {
 }
 
 // message_tags
-tag_random   = bra left:(!(document_tags / separator / ket) (message_tags / string_tags / any))* right:(separator (!(document_tags / separator / ket) (message_tags / string_tags / any))*)+ ket {
+tag_random   = bra left:(!(document_tags / tag_random / tag_sequence / separator / ket) (message_tags / string_tags / any))* right:(separator (!(document_tags / tag_random / tag_sequence / separator / ket) (message_tags / string_tags / any))*)+ ket {
   $left = @return_html 'element', left.map (h,i) ->
     h[1]
   $rights = right.map (h1,i) =>
@@ -141,7 +141,7 @@ tag_random   = bra left:(!(document_tags / separator / ket) (message_tags / stri
   $rights.unshift($left)
   @return_html 'random', $rights
 }
-tag_sequence = bra left:(!(document_tags /      plus / ket) (message_tags / string_tags / any))* right:(     plus (!(document_tags /      plus / ket) (message_tags / string_tags / any))*)+ ket {
+tag_sequence = bra left:(!(document_tags / tag_random / tag_sequence /      plus / ket) (message_tags / string_tags / any))* right:(     plus (!(document_tags / tag_random / tag_sequence /      plus / ket) (message_tags / string_tags / any))*)+ ket {
   $left = @return_html 'element', left.map (h,i) ->
     h[1]
   $rights = right.map (h1,i) =>
@@ -149,6 +149,12 @@ tag_sequence = bra left:(!(document_tags /      plus / ket) (message_tags / stri
       h2[1]
   $rights.unshift($left)
   @return_html 'sequence', $rights
+}
+tag_self = bra '自' '分'? ket {
+  @return_html 'self', [@empty]
+}
+tag_target = bra '対' '象'? ket {
+  @return_html 'target', [@empty]
 }
 tag_dice = bra count:non_negative_integer [dDｄＤ] number:non_negative_integer ket {
   @return_html 'dice', [@empty], { 
@@ -160,7 +166,7 @@ newline = "\r\n" / "\n\r" / [\n\r] / (bra '改行' ket)
 tag_newline = newline {
   @return_html 'br', [@empty]
 }
-message_tags = tag_random / tag_sequence / tag_dice / tag_newline
+message_tags = tag_random / tag_sequence / tag_self / tag_target / tag_dice / tag_newline
 
 // tag_serif
 position = '左' { 'left' } / '右'{ 'right' } / ('' !ket) { @default_serif.position }
@@ -181,14 +187,18 @@ tag_serif = serif:(serif / ('' &serif_inner) { @default_serif }) inner:serif_inn
 }
 
 // wrap_tags
-tag_random_wrap = newline? separator newline? inner:(newline? tag_serif+ newline? separator)+ {
+tag_random_wrap   = newline? separator newline? left:(newline? tag_serif+ newline? separator) inner:(newline? tag_serif+ newline? separator)+ {
+  $left = @return_html 'element', left[1]
   $inners = inner.map (h,i) =>
     @return_html 'element', h[1]
+  $inners.unshift($left)
   @return_html 'random', $inners
 }
-tag_sequence_wrap = newline? plus newline? inner:(newline? tag_serif+ newline? plus)+ {
+tag_sequence_wrap = newline?      plus newline? left:(newline? tag_serif+ newline?      plus) inner:(newline? tag_serif+ newline?      plus)+ {
+  $left = @return_html 'element', left[1]
   $inners = inner.map (h,i) =>
     @return_html 'element', h[1]
+  $inners.unshift($left)
   @return_html 'sequence', $inners
 }
 wrap_tags = tag_random_wrap / tag_sequence_wrap

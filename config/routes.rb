@@ -99,6 +99,7 @@ DNU::Application.routes.draw do
   post "tests/parse/:type(/:text)" => 'tests#parse', :as => 'tests_parse'
   get  "tests/document"
   get  "tests/message"
+  get  "tests/chat"
   get  "tests/battle"
   post "tests/battle"
   get  "tests/character"

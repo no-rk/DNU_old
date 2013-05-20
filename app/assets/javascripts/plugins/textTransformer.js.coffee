@@ -22,7 +22,7 @@ transform = (tree, icons = {}) ->
       else
         "<div class='#{tree.tag}'>#{map_inners(tree.inner).join('')}</div>"
     when 'serif'
-      if tree.data.icon?
+      if tree.data.icon
         "<div class='serif #{tree.data.position}'><img class='icon' src='#{icons[tree.data.icon] || icons[1]}'><div class='balloon #{tree.data.balloon}'>#{map_inners(tree.inner).join('')}</div></div>"
       else
         "<div class='serif #{tree.data.position}'><div class='balloon #{tree.data.balloon}'>#{map_inners(tree.inner).join('')}</div></div>"
@@ -34,6 +34,10 @@ transform = (tree, icons = {}) ->
       "【#{map_inners(tree.inner).join('】または【')}】"
     when 'sequence'
       "【#{map_inners(tree.inner).join('】⇒【')}】"
+    when 'self'
+      "【自分の愛称】"
+    when 'target'
+      "【対象の愛称】"
     when 'dice'
       "【#{tree.data.number}面ダイスを#{tree.data.count}個振った合計値】"
     when 'br'
