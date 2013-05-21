@@ -6,5 +6,5 @@
   = form_initial.simple_fields_for :init_statuses, :defaults => { :as => (:plain if @read_only), :user => current_user, :input_html => { :class => "span12" } } do |form_init_statuses|
     = form_init_statuses.input :status_id, :as => :hidden, :input_html => { :value => @statuses[i][:id] }
     .span3
-      = form_init_statuses.input :count, :wrapper_html => { :class => 'form-inline' }, :label => @statuses[i][:name], :label_html => {:'data-help-path'=>help_path(:statuses), :'data-params'=>"id=#{@statuses[i][:id]}"}, :collection => (0..Settings.init_status.counter.each_value).inject({}){|h,a|h.tap{h[a]=a}}, :include_blank => false
+      = form_init_statuses.input :count, :wrapper_html => { :class => 'form-inline' }, :label => @statuses[i][:name], :label_html => {:'data-help-path'=>help_model_path(:status), :'data-params'=>"id=#{@statuses[i][:id]}"}, :collection => (0..Settings.init_status.counter.each_value).inject({}){|h,a|h.tap{h[a]=a}}, :include_blank => false
     - i += 1

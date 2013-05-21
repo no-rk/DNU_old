@@ -44,9 +44,12 @@ module DNU
     end
     
     def list(array)
-      array.inject("<li><span>"){ |s,h|
+      array.each.with_index.inject("<li><span>"){ |s,(h,i)|
         if h["tag"]=="br"
-          s << "</span></li><li><span>"
+          if array[i+1].present?
+            s << "</span></li><li><span>"
+          end
+          s
         else
           s << transform(h)
         end

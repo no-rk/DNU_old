@@ -1,4 +1,8 @@
 .hero-unit
-  %h1= @word
+  %h1= @name
 .rule
-  != @caption
+  - @captions.each do |caption|
+    %span.label= caption[:model_name]
+    %br
+    = caption[:caption]
+    %br

@@ -6,6 +6,7 @@
 .controls
   = text_area_tag :message, "", :rows => 5, :class => "span9 message-editor", :'data-maxlength' => 800
 %button#send.btn.btn-danger 発言
+Shift+Enterで発言
 %input#websocketConnect{ type: "hidden", value: "chat" }
 %input#eno{ type: "hidden", value: current_user.try(:id) || "???" }
 %input#nickname{ type: "hidden", value: current_user.try(:nickname) || "名無し" }

@@ -55,10 +55,18 @@ end
 end
 
 # 単語自動リンク用のインデックス保存
-tx_map = []
+tx_map = {}
 [:art_type, :art, :battle_type, :battle_value, :battle_setting, :character_type, :disease, :element, :equip_type, :equip, :guardian, :item_type, :landform, :map, :point,  :status, :effect_description, :event_description, :word].each do |table|
-  tx_map += "GameData::#{table.to_s.camelize}".constantize.all.map{ |r| [r.name, "#{table.to_s.tableize}/#{r.id}/#{r.color if r.respond_to?(:color)}"] }.flatten
+  "GameData::#{table.to_s.camelize}".constantize.find_each do |r|
+    tx_map[r.name] ||= []
+    h = {
+      model: "GameData::#{table.to_s.camelize}",
+      id: r.id
+    }
+    h.merge!(color: r.color) if r.respond_to?:color
+    tx_map[r.name].push(h)
+  end
 end
 builder = Tx::MapBuilder.new
-builder.add_all(tx_map.flatten)
+builder.add_all(tx_map.map{|(k,v)| [k, v.to_json] }.flatten)
 builder.build("#{Rails.root}/db/game_data/dnu")

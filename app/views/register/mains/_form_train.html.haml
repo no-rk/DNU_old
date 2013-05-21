@@ -2,7 +2,7 @@
 - i = 0
 = form_main.label :trains
 = form_main.simple_fields_for :trains, :wrapper => :simple, :defaults => { :as => (:plain if @read_only), :user => current_user, :input_html => { :class => :'span2' } } do |form_train|
-  = form_train.input :train_id, :wrapper_html => { :class => 'form-inline' }, :collection => @train_list, :input_html => { :'data-url' => help_path(:trains), :'data-remote' => true, :'data-params' => ("id=#{register_main.trains[i][:train_id]}" if register_main.trains[i][:train_id]), :'data-type' => :json, :'data-help-path' => help_path(:trains) }
+  = form_train.input :train_id, :wrapper_html => { :class => 'form-inline' }, :collection => @train_list, :input_html => { :'data-url' => help_model_path(:train), :'data-remote' => true, :'data-params' => ("id=#{register_main.trains[i][:train_id]}" if register_main.trains[i][:train_id]), :'data-type' => :json, :'data-help-path' => help_model_path(:train) }
   - if (i + 1)%4 == 0
     %br
   - i = i + 1

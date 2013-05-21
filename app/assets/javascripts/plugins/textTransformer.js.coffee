@@ -4,9 +4,10 @@ transform = (tree, icons = {}) ->
       transform(inner, icons)
   list_inners = (inners) ->
     list = "<li><span>"
-    for inner in inners
+    for inner,i in inners
       if inner.tag == "br"
-        list += "</span></li><li><span>"
+        if inners[i+1]?
+          list += "</span></li><li><span>"
       else
         list += transform(inner, icons)
     list += "</span></li>"

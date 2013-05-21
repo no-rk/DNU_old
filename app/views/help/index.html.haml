@@ -7,7 +7,7 @@
     - if data
       .rule
         %p ●#{word}
-        != tx_map.add_link(data.caption, word, :remote)
+        = tx_map.add_link(data.caption, word, :remote)
 - else
   .hero-unit
     %h1 ルール

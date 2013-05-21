@@ -26,37 +26,44 @@ class HelpController < ApplicationController
     @name  = params[:name]
     @words = keywords[params[:name]]
   end
-
-  def show
+  
+  def model
     model = params[:model]
     id    = params[:id]
+    
     begin
-      @data    = "GameData::#{model.classify}".constantize.find(id)
-      @word    = @data.name
-      @caption = @data.caption
+      model   = "GameData::#{model.camelize}".constantize.find(id)
+      @name   = model.name
+      caption = model.caption
     rescue
       respond_to do |format|
         format.html{ redirect_to root_path }
         format.json do
           json = {
-            "model"   => I18n.t("model"  , :scope => "ajax.message"),
-            "name"    => I18n.t("name"   , :scope => "ajax.message"),
-            "caption" => I18n.t("caption", :scope => "ajax.message")
+            name: I18n.t("name", :scope => "ajax.message"),
+            captions: [{
+              model_name: I18n.t("model",   :scope => "ajax.message"),
+              caption:    I18n.t("caption", :scope => "ajax.message")
+            }]
           }
           render json: json
         end
       end
     else
       tx_map = Tx::Map.open("#{Rails.root}/db/game_data/dnu")
+      data   = JSON.parse(tx_map[@name])
+      
+      @captions = [{
+        model_name:  model.class.model_name.human,
+        caption:     tx_map.add_link(caption, @name, :remote)
+      }]
+      
       respond_to do |format|
-        format.html do
-          @caption = tx_map.add_link(@caption, @word, :remote)
-        end
+        format.html{ render action: "show" }
         format.json do
           json = {
-            "model"   => @data.class.model_name.human,
-            "name"    => @word,
-            "caption" => tx_map.add_link(@caption, @word, :remote)
+            name:     @name,
+            captions: @captions
           }
           render json: json
         end
@@ -64,4 +71,43 @@ class HelpController < ApplicationController
     end
   end
   
+  def show
+    @name = params[:name]
+    
+    tx_map = Tx::Map.open("#{Rails.root}/db/game_data/dnu")
+    data   = JSON.parse(tx_map[@name])
+    
+    if data.present?
+      @captions = []
+      
+      data.each do |h|
+        @captions.push({
+          model_name:  h["model"].constantize.model_name.human,
+          caption:     tx_map.add_link(h["model"].constantize.find(h["id"]).caption, @name, :remote)
+        })
+      end
+      
+      respond_to do |format|
+        format.html
+        format.json do
+          json = {
+            name:     @name,
+            captions: @captions
+          }
+          render json: json
+        end
+      end
+    else
+      respond_to do |format|
+        format.html{ redirect_to root_path }
+        format.json do
+          json = {
+            name:     I18n.t("name"   , :scope => "ajax.message"),
+            captions: I18n.t("caption", :scope => "ajax.message")
+          }
+          render json: json
+        end
+      end
+    end
+  end
 end

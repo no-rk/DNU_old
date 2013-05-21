@@ -92,8 +92,9 @@ DNU::Application.routes.draw do
   get 'ajax_user(/:id)'       => 'ajax#user', :as => 'ajax_user'
   get 'ajax_icon(/:id)'       => 'ajax#icon', :as => 'ajax_icon'
 
-  get "helps(/:name)"     => 'help#index', :as => 'helps'
-  get "help/:model(/:id)" => 'help#show' , :as => 'help'
+  get "helps(/:name)"           => 'help#index', :as => 'helps'
+  get "help/:name"              => 'help#show' , :as => 'help'
+  get "help/:model(/:id)/model" => 'help#model', :as => 'help_model'
 
   get  "tests/parse/:type(/:text)" => 'tests#parse', :as => 'tests_parse'
   post "tests/parse/:type(/:text)" => 'tests#parse', :as => 'tests_parse'

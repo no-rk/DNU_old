@@ -72,13 +72,16 @@ $ ->
     event.stopPropagation()
     #ポップオーバーで表示されるデータ書き換える
     img = if data.img_path? then '<img src="' + data.img_path + '" class="icon">' else ""
-    $html = $('<div>').html(img + data.caption)
+    $html = $('<div>').append(img)
+    for caption in data.captions
+      $html.append($("<span>").addClass("label").html(caption.model_name))
+      $html.append("<br>#{caption.caption}<br>")
     $(this).attr({
-      "data-original-title": data.model + "::" + data.name
+      "data-original-title": data.name
       "data-content": $html.html()
     })
     $(this).data({
-      "original-title": data.model + "::" + data.name
+      "original-title": data.name
       "content": $html.html()
     })
     #もうAjaxしないようにする
@@ -115,13 +118,16 @@ $ ->
     next.show()
     #ポップオーバーで表示されるデータ書き換える
     img = if data.img_path? then '<img src="' + data.img_path + '" class="icon">' else ""
-    $html = $('<div>').html(img + data.caption)
+    $html = $('<div>').append(img)
+    for caption in data.captions
+      $html.append($("<span>").addClass("label").html(caption.model_name))
+      $html.append("<br>#{caption.caption}<br>")
     next.attr({
-      "data-original-title": data.model + "::" + data.name
+      "data-original-title": data.name
       "data-content": $html.html()
     })
     next.data({
-      "original-title": data.model + "::" + data.name
+      "original-title": data.name
       "content": $html.html()
     })
     #もうAjaxしないようにする
