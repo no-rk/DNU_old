@@ -72,6 +72,8 @@ DNU::Application.routes.draw do
 
   namespace :register do resources :makes, :only => [ :new, :create ] end
 
+  scope ':room' do resources :chats, :only => [ :index, :create ] end
+
   get 'register' => 'register#index'  , :as => 'register_index'
   post 'history' => 'register#history', :as => 'register_history'
 
@@ -100,7 +102,6 @@ DNU::Application.routes.draw do
   post "tests/parse/:type(/:text)" => 'tests#parse', :as => 'tests_parse'
   get  "tests/document"
   get  "tests/message"
-  get  "tests/chat"
   get  "tests/battle"
   post "tests/battle"
   get  "tests/character"

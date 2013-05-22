@@ -3,9 +3,6 @@ require 'pp'
 class TestsController < ApplicationController
   layout "no_side"
   
-  def chat
-  end
-  
   def message
   end
   

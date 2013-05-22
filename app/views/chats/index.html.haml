@@ -1,0 +1,20 @@
+%span.badge.badge-warning 部屋：#{@room}
+%br
+%br
+%label 今居る人
+#list.span12
+%br
+#chat.preview.span12{ :style => "height: 500px;overflow: auto;" }
+  - @comments.reverse.each do |comment|
+    .chat-comment
+      %input{ type: "hidden", value: comment.data.merge(:updated_at => comment.updated_at.to_s(:jp)).to_json }
+= simple_form_for @chat, remote: true, :html => { :class => :"chat-form", :"data-type" => :json } do |form_chat|
+  = form_chat.input :namespace, :as => :hidden, :input_html => { :id => :"websocket-namespace", :value => @namespace }
+  = form_chat.input :room, :as => :hidden, :input_html => { :id => :"websocket-room", :value => @room }
+  = form_chat.input :eno, :as => :hidden, :input_html => { :id => :eno, :value => current_user.try(:id) || "???" }
+  = form_chat.input :nickname, :as => :hidden, :input_html => { :id => :nickname, :value => current_user.try(:nickname) || "名無し" }
+  = form_chat.input :text, :as => :text, :input_html => { :id => :message, :class => :'message-editor span9', :rows => 5 }
+  = form_chat.input :icons, :as => :hidden, :input_html => { :value => icons.to_json }
+  = form_chat.submit "発言", :id => :send, :class => "btn btn-danger"
+  Shift+Enterで発言
+= paginate @comments
