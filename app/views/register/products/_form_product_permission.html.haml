@@ -1,0 +1,6 @@
+%br
+= form_product.label :product_permission
+= form_product.simple_fields_for :product_permissions, :wrapper => :simple, :defaults => { :user => current_user, :input_html => { :class => :'span2' } } do |form_product_permission|
+  = form_product_permission.input :user_id, :as => :eno, :read_only => @read_only
+%br
+%br

@@ -97,8 +97,10 @@ ja:
       register/party_slogan: 合言葉
       register/send_point: 送金
       register/send_item: 送品
+      register/product_permission: 生産許可
       register/forge: 鍛治
       register/supplement: 付加
+      register/hunt: 狩猟
       register/purchase: アイテム購入
       register/catch_pet: 捕獲
       register/item_skill_setting: 戦物設定
@@ -337,22 +339,31 @@ ja:
       register/trade/send_points: *send_point
       register/trade/send_items: *send_item
       
+      register/product_permission: &product_permission
+        user_id: ENo.
       register/forge: &forge
         user_id: ENo.
         number: アイテムNo.
         item_type: アイテム種
         name: 装備名
+        caption: 装備説明
         message: メッセージ
       register/supplement: &supplement
         user_id: ENo.
         material_number: 材料No.
         item_number: アイテムNo.
         message: メッセージ
+      register/hunt: &hunt
+        party_member: 狩猟対象
+        message: メッセージ
       register/product:
+        product_permission: 生産許可
         forge: 鍛治
         supplement: 付加
+      register/product/product_permissions: *product_permission
       register/product/forges: *forge
       register/product/supplements: *supplement
+      register/product/hunts: *hunt
       
       register/purchase: &purchase
         item: アイテム

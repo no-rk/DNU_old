@@ -1,9 +1,10 @@
 = simple_form_for(register_product) do |form_product|
   = register_product.updated_at.try(:to_s, :jp)
   = render 'register/error',  { :register_error   => register_product }
-  = render 'form_forge',      { :register_product => register_product, :form_product => form_product }
-  = render 'form_supplement', { :register_product => register_product, :form_product => form_product }
-  = render 'form_hunt',       { :register_product => register_product, :form_product => form_product }
+  = render 'form_product_permission', { :register_product => register_product, :form_product => form_product }
+  = render 'form_forge',              { :register_product => register_product, :form_product => form_product }
+  = render 'form_supplement',         { :register_product => register_product, :form_product => form_product }
+  = render 'form_hunt',               { :register_product => register_product, :form_product => form_product }
   - unless @read_only
     .actions
       %button.btn.btn-large.btn-warning{"data-remote" => "true"} 確認する

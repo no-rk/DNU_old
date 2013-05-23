@@ -15,26 +15,28 @@ $ ->
             
             $this.waypoint 'destroy'
             
-            $.get $("a[rel=next]").last().attr('href'), (data) ->
-              $data = $(data)
-              $more = $("a[rel=next]").last()
-              $newMore = $data.find("a[rel=next]").last()
-              
-              scrollHeight = $("#chat").prop("scrollHeight")
-              
-              $items = $data.find(".chat-comment").each ->
-                $input = $(this).find("input")
-                data = JSON.parse($input.val())
-                $input.after html_from_data(data)
-              $(".chat-comment").first().before($items)
-              
-              newScrollHeight = $("#chat").prop("scrollHeight")
-              
-              $("#chat").scrollTop(newScrollHeight-scrollHeight)
-              
-              if $newMore.length
-                $more.replaceWith $newMore
-                $("#chat").find(".chat-comment").first().addWaypoint()
+            url = $("a[rel=next]").last().attr('href')
+            if url?
+              $.get url, (data) ->
+                $data = $(data)
+                $more = $("a[rel=next]").last()
+                $newMore = $data.find("a[rel=next]").last()
+                
+                scrollHeight = $("#chat").prop("scrollHeight")
+                
+                $items = $data.find(".chat-comment").each ->
+                  $input = $(this).find("input")
+                  data = JSON.parse($input.val())
+                  $input.after html_from_data(data)
+                $(".chat-comment").first().before($items)
+                
+                newScrollHeight = $("#chat").prop("scrollHeight")
+                
+                $("#chat").scrollTop(newScrollHeight-scrollHeight)
+                
+                if $newMore.length
+                  $more.replaceWith $newMore
+                  $("#chat").find(".chat-comment").first().addWaypoint()
     
     alert_from_text = (text) ->
       $button = $("<button>").addClass("close").attr("data-dismiss", "alert").html("（・ｘ・）")

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130523101507) do
+ActiveRecord::Schema.define(:version => 20130523111331) do
 
   create_table "admins", :force => true do |t|
     t.string   "email",               :default => "", :null => false
@@ -839,6 +839,16 @@ ActiveRecord::Schema.define(:version => 20130523101507) do
   add_index "register_pets", ["day_id"], :name => "index_register_pets_on_day_id"
   add_index "register_pets", ["pet_id"], :name => "index_register_pets_on_pet_id"
   add_index "register_pets", ["user_id"], :name => "index_register_pets_on_user_id"
+
+  create_table "register_product_permissions", :force => true do |t|
+    t.integer  "product_id"
+    t.integer  "user_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "register_product_permissions", ["product_id"], :name => "index_register_product_permissions_on_product_id"
+  add_index "register_product_permissions", ["user_id"], :name => "index_register_product_permissions_on_user_id"
 
   create_table "register_products", :force => true do |t|
     t.integer  "user_id"
