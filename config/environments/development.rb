@@ -40,4 +40,7 @@ DNU::Application.configure do
   Rails.application.routes.default_url_options[:host] = 'dnu.dip.jp:3000'
   
   RequireReloader.watch :dnu, :path => 'lib'
+  
+  # gem better_errors の設定
+  BetterErrors::Middleware.allow_ip! ENV['TRUSTED_IP'] if ENV['TRUSTED_IP']
 end

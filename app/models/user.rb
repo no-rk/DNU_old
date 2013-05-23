@@ -488,6 +488,7 @@ class User < ActiveRecord::Base
   def icons
     if @icons.nil?
       @icons = self.register_characters.first.icons.select([:number,:url,:upload_icon_id]).includes(:upload_icon).inject({}){|h,r| h.tap{ h[r.number]= (r.url.blank? ? r.upload_icon.icon_url(:icon) : r.url)} }
+      @icons[1] ||= "/assets/unknown.png"
     end
     @icons
   end

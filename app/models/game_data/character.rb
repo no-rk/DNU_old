@@ -17,7 +17,11 @@ class GameData::Character < ActiveRecord::Base
   end
   
   def icons
-    {}
+    if @icons.nil?
+      @icons = {}
+      @icons[1] ||= "/assets/unknown.png"
+    end
+    @icons
   end
   
   def self.status_from_rank(rank)

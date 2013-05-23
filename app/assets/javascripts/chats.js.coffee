@@ -54,10 +54,11 @@ $ ->
     
     socket = io.connect("http://dnu.dip.jp:5000/#{namespace}")
     
-    socket.emit "enter",
-      room: room
-      eno: $("#eno").val()
-      nickname: $("#nickname").val()
+    socket.on "connect", ->
+      socket.emit "enter",
+        room: room
+        eno: $("#eno").val()
+        nickname: $("#nickname").val()
     
     socket.on "list", (data)->
       $list = $("<div>")

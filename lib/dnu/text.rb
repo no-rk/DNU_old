@@ -72,8 +72,8 @@ module DNU
           end
         when "serif"
           if tree["data"]["icon"]
-            icons = @character_active.try:icons || {}
-            %Q|<div class="serif #{tree["data"]["position"]}"><img class="icon" src=#{icons[tree["data"]["icon"].to_i] || icons[1]}><div class="balloon #{tree["data"]["balloon"]}">#{self.map(tree["inner"]).join("")}</div></div>|
+            icons = @character_active.try(:icons) || {}
+            %Q*<div class="serif #{tree["data"]["position"]}"><img class="icon" src=#{icons[tree["data"]["icon"].to_i] || icons[1]}><div class="balloon #{tree["data"]["balloon"]}">#{self.map(tree["inner"]).join("")}</div></div>*
           else
             %Q|<div class="serif #{tree["data"]["position"]}"><div class="balloon #{tree["data"]["balloon"]}">#{self.map(tree["inner"]).join("")}</div></div>|
           end

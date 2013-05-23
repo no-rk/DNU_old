@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130521063803) do
+ActiveRecord::Schema.define(:version => 20130523101507) do
 
   create_table "admins", :force => true do |t|
     t.string   "email",               :default => "", :null => false
@@ -369,6 +369,15 @@ ActiveRecord::Schema.define(:version => 20130521063803) do
     t.boolean  "protect"
     t.datetime "created_at",   :null => false
     t.datetime "updated_at",   :null => false
+  end
+
+  create_table "game_data_serif_settings", :force => true do |t|
+    t.string   "kind"
+    t.string   "name"
+    t.text     "caption"
+    t.text     "condition"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "game_data_skills", :force => true do |t|
@@ -894,6 +903,18 @@ ActiveRecord::Schema.define(:version => 20130521063803) do
   add_index "register_send_points", ["point_id"], :name => "index_register_send_points_on_point_id"
   add_index "register_send_points", ["trade_id"], :name => "index_register_send_points_on_trade_id"
   add_index "register_send_points", ["user_id"], :name => "index_register_send_points_on_user_id"
+
+  create_table "register_serif_settings", :force => true do |t|
+    t.integer  "battlable_id"
+    t.string   "battlable_type"
+    t.integer  "serif_setting_id"
+    t.text     "message"
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
+  end
+
+  add_index "register_serif_settings", ["battlable_id"], :name => "index_register_serif_settings_on_battlable_id"
+  add_index "register_serif_settings", ["serif_setting_id"], :name => "index_register_serif_settings_on_serif_setting_id"
 
   create_table "register_shouts", :force => true do |t|
     t.integer  "main_id"

@@ -20,9 +20,9 @@ module DNU
         def distance(val)
           lambda do
             if 対象.team == 自分.team
-              (対象.Position - 自分.Position).abs.to_f
+              (対象.隊列 - 自分.隊列).abs.to_f
             else
-              (対象.Position + 自分.Position - 1).abs.to_f
+              (対象.隊列 + 自分.隊列 - 1).abs.to_f
             end
           end
         end

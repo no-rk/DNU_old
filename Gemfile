@@ -46,6 +46,8 @@ group :development, :test do
   gem 'sextant'
   gem "rails-erd"
   gem 'pry-rails'
+  gem "better_errors"
+  gem "binding_of_caller"
 end
 
 gem "haml"
@@ -72,3 +74,4 @@ gem "parslet", "~> 1.5.0"
 gem "tx", "~> 0.0.5"
 gem 'require_reloader', "~> 0.1.5"
 gem "socket.io-rails", "~> 0.9.11"
+gem "redis"

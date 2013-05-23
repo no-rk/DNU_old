@@ -1,0 +1,8 @@
+= link_to("新規#{@serif_settings.first.class.model_name.human}作成", new_game_data_serif_setting_path)
+%br
+- @serif_settings.each do |serif_setting|
+  [#{serif_setting.kind}]
+  #{serif_setting.name}
+  = link_to("編集", edit_game_data_serif_setting_path(serif_setting.id))
+  %br
+= paginate @serif_settings

@@ -29,7 +29,8 @@ module DNU
             elsif setting[:pno].present?
               definition = Result::Pet.where(:id => setting[:pno].to_i).first.try(:tree, (setting[:correction] || Day.last_day_i).to_i, (setting[:battle_type] || GameData::BattleType.normal.name))
             else
-              definition = GameData::Character.find_by_kind_and_name(kind, name).try(:tree)
+              object= GameData::Character.find_by_kind_and_name(kind, name)
+              definition = object.try(:tree).try(:merge, {:object => object})
             end
             definition ||= {}
           end

@@ -520,7 +520,7 @@ class EffectParser < Parslet::Parser
   }
   
   rule(:distance) {
-    str('対象') >> str('との距離')
+    str('対象との') >> str('距離')
   }
   
   rule(:calculable) {
@@ -1903,6 +1903,18 @@ class EffectParser < Parslet::Parser
   }
   
   # serif_setting
+  
+  rule(:serif_condition) {
+    bra >> timing >> ket >>
+    (
+      conditions |
+      condition |
+      (
+        any.present? |
+        any.absent?
+      ).as(:condition_default)
+    ).as(:condition)
+  }
   
   rule(:serif_setting) {
     bra >> str('セリフ') >> ket >> newline >>

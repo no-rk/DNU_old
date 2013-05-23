@@ -1,0 +1,7 @@
+= render 'game_data/error', { game_data_error: @serif_setting }
+= simple_form_for(@serif_setting) do |form_serif_setting|
+  = form_serif_setting.input :kind, :collection => @kinds
+  = form_serif_setting.input :name
+  = form_serif_setting.input :caption, :input_html => { :class => :'document-editor span9', :rows => 5 }
+  = form_serif_setting.input :condition, :input_html => { :class => :span9, :rows => 5 }
+  = form_serif_setting.submit class: "btn btn-large btn-success"

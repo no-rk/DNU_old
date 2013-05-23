@@ -39,6 +39,7 @@ ja:
       game_data/element: 属性
       game_data/battle_type: 戦闘種類
       game_data/battle_setting: 戦闘設定
+      game_data/serif_setting: セリフ設定
 
       result/status: 能力
       result/art: 技能
@@ -100,7 +101,9 @@ ja:
       register/supplement: 付加
       register/purchase: アイテム購入
       register/catch_pet: 捕獲
+      register/item_skill_setting: 戦物設定
       register/battle_setting: 戦闘設定
+      register/serif_setting: セリフ設定
       register/profile: プロフィール
       register/upload_icon: アップロードアイコン
       register/icon: アイコン
@@ -179,6 +182,12 @@ ja:
         kind: 戦闘設定種類
         name: 戦闘設定名
         caption: 戦闘設定説明
+      
+      game_data/serif_setting:
+        kind: セリフ設定種類
+        name: セリフ設定名
+        caption: セリフ設定説明
+        condition: セリフ設定条件
       
       game_data/art_type:
         name: 技能種類名
@@ -360,6 +369,13 @@ ja:
       
       register/equip: &equip
         number: アイテムNo.
+      register/item_skill_setting: &item_skill_setting
+        number: アイテムNo.
+        priority: 優先度
+        use_condition: 使用条件
+        use_condition_variable: (A)
+        frequency: 使用頻度
+        message: 戦物発動時セリフ
       register/battle_setting: &battle_setting
         skill: 技
         priority: 優先度
@@ -369,10 +385,16 @@ ja:
         target: 対象指定
         target_variable: (B)
         message: 技発動時セリフ
+      register/serif_setting: &serif_setting
+        serif_setting: セリフ設定
+        serif_setting_id: セリフ設定
+        message: セリフ
       register/battle:
         equips: 装備
       register/battle/equips: *equip
+      register/battle/item_skill_settings: *item_skill_setting
       register/battle/battle_settings: *battle_setting
+      register/battle/serif_settings: *serif_setting
       
       register/profile: &profile
         age: 年齢
@@ -383,6 +405,7 @@ ja:
         race: 種族
       register/pet/profile: *profile
       register/pet/battle_settings: *battle_setting
+      register/pet/serif_settings: *serif_setting
       
       register/skill_name: &skill_name
         name: 技名

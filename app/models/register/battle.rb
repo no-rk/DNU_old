@@ -2,14 +2,16 @@ class Register::Battle < ActiveRecord::Base
   belongs_to :user
   belongs_to :day
   belongs_to :battle_type, :class_name => "GameData::BattleType"
-  attr_accessible :battle_type_id, :equips_attributes, :battle_settings_attributes, :item_skill_settings_attributes
+  attr_accessible :battle_type_id, :equips_attributes, :battle_settings_attributes, :serif_settings_attributes, :item_skill_settings_attributes
   
   has_many :equips,              :dependent => :destroy, :as => :battlable
   has_many :battle_settings,     :order => "priority ASC", :dependent => :destroy, :as => :battlable
+  has_many :serif_settings,      :dependent => :destroy, :as => :battlable
   has_many :item_skill_settings, :order => "priority ASC", :dependent => :destroy, :as => :battlable
   
-  accepts_nested_attributes_for :equips,              :reject_if => proc { |attributes| attributes.all? {|k,v| k.to_sym==:kind ? true : v.blank?} }
+  accepts_nested_attributes_for :equips,              :reject_if => proc { |attributes| attributes.all? {|k,v| [:kind].include?(k.to_sym) ? true : v.blank?} }
   accepts_nested_attributes_for :battle_settings,     :reject_if => :no_change_from_default
+  accepts_nested_attributes_for :serif_settings,      :reject_if => proc { |attributes| attributes.all? {|k,v| [:serif_setting_id].include?(k.to_sym) ? true : v.blank?} }
   accepts_nested_attributes_for :item_skill_settings, :reject_if => :no_change_from_default
   
   validates :battle_type, :presence => true
@@ -20,6 +22,7 @@ class Register::Battle < ActiveRecord::Base
   
   def build_battle
     (8-self.battle_settings.size).times{self.battle_settings.build}
+    (8-self.serif_settings.size).times{self.serif_settings.build}
     (1-self.item_skill_settings.size).times{self.item_skill_settings.build}
     
     kinds = GameData::EquipType.pluck(:name)

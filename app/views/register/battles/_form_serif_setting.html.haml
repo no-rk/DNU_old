@@ -1,0 +1,4 @@
+= form_battle.simple_fields_for :serif_settings, :defaults => { :as => (:plain if @read_only), :user => current_user, :input_html => { :class => :'span2' } } do |form_serif_setting|
+  = form_serif_setting.input :serif_setting_id, :collection => form_serif_setting.object.collection
+  = form_serif_setting.input :message, :input_html => { :class => :'message-editor span9', :rows => 2 }, :wrapper_html => { :class => :clearfix }
+%br
