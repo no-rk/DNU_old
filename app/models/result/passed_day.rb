@@ -21,6 +21,8 @@ class Result::PassedDay < ActiveRecord::Base
   has_many :result_event_forms,     :dependent => :destroy, :class_name => "Result::EventForm"
   has_many :result_after_moves,     :dependent => :destroy, :class_name => "Result::AfterMove"
   
+  has_many :result_message_users,   :dependent => :destroy, :class_name => "Result::MessageUser"
+  
   has_many :result_battle_values,   :dependent => :destroy, :class_name => "Result::BattleValue"
   has_many :result_points,          :dependent => :destroy, :class_name => "Result::Point"
   has_many :result_statuses,        :dependent => :destroy, :class_name => "Result::Status"

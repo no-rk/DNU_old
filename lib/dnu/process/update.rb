@@ -2,6 +2,7 @@ module DNU
   module Process
     module Update
       extend Before
+      extend Message
       extend Dispose
       extend SendPoint
       extend SendItem
@@ -32,6 +33,9 @@ module DNU
         if (Day.settled? and @new_day) or ((Day.pending? or Day.updating?) and @new_day.nil?)
           # 更新前処理
           before
+          
+          # メッセージ
+          message
           
           # アイテム破棄
           dispose

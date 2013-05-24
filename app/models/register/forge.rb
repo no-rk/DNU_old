@@ -47,15 +47,17 @@ class Register::Forge < ActiveRecord::Base
   
   def forge!(way = self.art, day_i = self.day.day)
     success = false
-    inventory = self.user.result(:inventory, day_i).where(:number => self.number).first if self.user.present?
-    if inventory.try(:material?)
-      result_item = Result::Item.new_item_from_material(inventory.item, self, way, day_i)
-      if result_item.try(:save)
-        unless self.experiment
-          inventory.item = result_item
-          inventory.save!
+    if self.user.permit?(:product, smith.id, day_i)
+      inventory = self.user.result(:inventory, day_i).where(:number => self.number).first if self.user.present?
+      if inventory.try(:material?)
+        result_item = Result::Item.new_item_from_material(inventory.item, self, way, day_i)
+        if result_item.try(:save)
+          unless self.experiment
+            inventory.item = result_item
+            inventory.save!
+          end
+          success = result_item
         end
-        success = result_item
       end
     end
     success

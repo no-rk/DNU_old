@@ -432,6 +432,12 @@ ja:
         pull_down: プルダウン効果
       register/art/art_pull_down: *art_pull_down
       
+      register/message_user: &message_user
+        parent_id: 返信先
+        user_id: ENo.
+        body: メッセージ
+      register/message/message_users: *message_user
+      
       register/icon: &icon
         upload_icon_id: アップロードアイコン
         url: アイコンURL

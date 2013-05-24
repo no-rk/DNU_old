@@ -19,7 +19,7 @@ module DNU
         # キャラ作成済みの各ユーザー
         User.already_make.find_each do |user|
           # 最新宣言に日数の情報を付与する
-          [:main, :trade, :product, :event, :battle, :pet, :skill, :art, :character].each do |form_name|
+          [:main, :trade, :product, :event, :battle, :pet, :skill, :art, :message, :character].each do |form_name|
             user_forms = user.next_forms(form_name)
             if user_forms.present? and @new_day
               user_forms.each do |user_form|

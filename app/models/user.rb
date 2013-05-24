@@ -42,6 +42,8 @@ class User < ActiveRecord::Base
   has_many :result_event_forms,     :through => :result_passed_days, :class_name => "Result::EventForm"
   has_many :result_after_moves,     :through => :result_passed_days, :class_name => "Result::AfterMove"
   
+  has_many :result_message_users,   :through => :result_passed_days, :class_name => "Result::MessageUser"
+  
   has_many :result_points,          :through => :result_passed_days, :class_name => "Result::Point"
   has_many :result_statuses,        :through => :result_passed_days, :class_name => "Result::Status"
   has_many :result_arts,            :through => :result_passed_days, :class_name => "Result::Art", :include => [:art]
@@ -250,6 +252,13 @@ class User < ActiveRecord::Base
     record = new_result(type, data, day_i)
     record.save!
     record
+  end
+  
+  def permit?(type, user_id, day_i = Day.last_day_i)
+    [
+      self.result(:party_member, day_i).where(:character_type => :User, :character_id => user_id).exists?,
+      self.register(:product, day_i).product_permissions.where(:user_id => user_id).exists?
+    ].any?
   end
   
   def dispose!(number, day_i = Day.last_day_i)

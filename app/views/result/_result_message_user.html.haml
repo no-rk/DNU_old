@@ -1,0 +1,6 @@
+%h3 個人メッセ
+
+- @message_users.each do |message_user|
+  #{link_to("ENo.#{message_user.user.id}", result_eno_path(@day_i, message_user.user.id), :target => :_blank)} #{message_user.user.nickname(@day_i)} から
+  %br
+  = message_user.html

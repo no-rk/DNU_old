@@ -33,21 +33,23 @@ class Register::Supplement < ActiveRecord::Base
   
   def supplement!(way = self.art, day_i = self.day.day)
     success = false
-    inventory = self.user.result(:inventory, day_i).where(:number => self.material_number).first if self.user.present?
-    if inventory.try(:material?)
-      result_item = self.user.result(:inventory, day_i).where(:number => self.item_number).first.try(:item)
-      if art_effect.tree[:supplementable_equip_types].include?(result_item.try(:equip_type))
-        item_data = item_data_from_material(inventory.item, result_item, day_i)
-        sup = result_item.update_item_by_data(item_data, self.smith, way, day_i)
-        if sup.present?
-          if self.experiment
-            sup.item = nil
-            sup.save!
-          else
-            inventory.destroy
-            result_item.save!
+    if self.user.permit?(:product, smith.id, day_i)
+      inventory = self.user.result(:inventory, day_i).where(:number => self.material_number).first if self.user.present?
+      if inventory.try(:material?)
+        result_item = self.user.result(:inventory, day_i).where(:number => self.item_number).first.try(:item)
+        if art_effect.tree[:supplementable_equip_types].include?(result_item.try(:equip_type))
+          item_data = item_data_from_material(inventory.item, result_item, day_i)
+          sup = result_item.update_item_by_data(item_data, self.smith, way, day_i)
+          if sup.present?
+            if self.experiment
+              sup.item = nil
+              sup.save!
+            else
+              inventory.destroy
+              result_item.save!
+            end
+            success = sup
           end
-          success = sup
         end
       end
     end

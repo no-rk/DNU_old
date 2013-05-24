@@ -2,7 +2,7 @@
 
 - @send_items.each do |send_item|
   - if send_item.success
-    #{link_to("ENo.#{send_item.to.id}", result_eno_path(@day_i, send_item.to.id), :target => :_blank)} #{send_item.to.result(:character, @day_i).profile.name}
+    #{link_to("ENo.#{send_item.to.id}", result_eno_path(@day_i, send_item.to.id), :target => :_blank)} #{send_item.to.name(@day_i)}
     に [#{send_item.send_item.number}] #{send_item.item.item_name(@day_i).name} ※アイテム#{link_to("ID:#{send_item.item.id}", result_item_path(@day_i, send_item.item.id), :target => :_blank)} を送った。
   - else
     ENo.#{send_item.send_item.user_id}

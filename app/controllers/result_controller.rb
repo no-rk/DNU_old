@@ -30,6 +30,8 @@ class ResultController < ApplicationController
     @creation_day  = this_user.creation_day.to_i
     @passed_day    = @day_i - @creation_day
     @max_inventory = this_user.max_inventory(@day_i)
+    # 個人メッセ
+    @message_users = Result::MessageUser.receives(@id, @day_i).all
     # 日記
     @diary        = this_user.register(:main, @day_i).try(:diary).try(:diary)
     # アイテム破棄

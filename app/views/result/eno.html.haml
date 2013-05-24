@@ -5,6 +5,10 @@
 .row-fluid
   #day.span12.well
     #{@passed_day}日目
+- if @message_users.present?
+  .row-fluid
+    #message_user.span12.well
+      = render 'result_message_user'
 - if @diary.present?
   .row-fluid
     #diary.span12.well
