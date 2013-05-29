@@ -3,49 +3,7 @@ module DNU
   module Fight
     module Scene
       class BaseScene
-        include Enumerable
-        
         attr_reader :active, :passive, :label, :pool, :stack, :data, :parent
-        
-        @@default_tree = {
-          :sequence => [
-            {
-              :pre_phase => {
-                :do => {
-                  :sequence => [
-                    { :prepare_turn => { :set_prepare_effects => nil } },
-                    { :leadoff_turn => { :set_leadoff_effects => nil } },
-                  ]
-                },
-                :after_each => {
-                  :sequence => [
-                    { :cemetery => nil },
-                    { :formation => nil }
-                  ]
-                }
-              }
-            },
-            {
-              :phase => {
-                :do => {
-                  :turn => {
-                    :sequence => [
-                      { :act => { :set_effects => nil } },
-                      { :add_act => { :set_effects => nil } }
-                    ]
-                  }
-                },
-                :after_each => {
-                  :sequence => [
-                    { :cemetery => nil },
-                    { :formation => nil }
-                  ]
-                }
-              }
-            },
-            { :result => nil }
-          ]
-        }
         
         def logger(val)
           history[:debug] ||= []
@@ -69,7 +27,7 @@ module DNU
         def when_initialize
         end
         
-        def initialize(character, tree = @@default_tree, parent = nil)
+        def initialize(character, tree = {}, parent = nil)
           @character = character
           @tree      = tree
           @parent    = parent

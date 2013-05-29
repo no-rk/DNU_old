@@ -79,6 +79,8 @@ parser = (function(){
         "tag_dice": parse_tag_dice,
         "newline": parse_newline,
         "tag_newline": parse_tag_newline,
+        "plain": parse_plain,
+        "tag_plain": parse_tag_plain,
         "message_tags": parse_message_tags,
         "position": parse_position,
         "icon": parse_icon,
@@ -192,31 +194,71 @@ parser = (function(){
       }
       
       function parse_separator() {
-        var result0;
+        var result0, result1, result2;
+        var pos0;
         
-        if (/^[|\uFF5C]/.test(input.charAt(pos))) {
-          result0 = input.charAt(pos);
-          pos++;
+        pos0 = pos;
+        result0 = parse_bra();
+        if (result0 !== null) {
+          if (/^[|\uFF5C]/.test(input.charAt(pos))) {
+            result1 = input.charAt(pos);
+            pos++;
+          } else {
+            result1 = null;
+            if (reportFailures === 0) {
+              matchFailed("[|\\uFF5C]");
+            }
+          }
+          if (result1 !== null) {
+            result2 = parse_ket();
+            if (result2 !== null) {
+              result0 = [result0, result1, result2];
+            } else {
+              result0 = null;
+              pos = pos0;
+            }
+          } else {
+            result0 = null;
+            pos = pos0;
+          }
         } else {
           result0 = null;
-          if (reportFailures === 0) {
-            matchFailed("[|\\uFF5C]");
-          }
+          pos = pos0;
         }
         return result0;
       }
       
       function parse_plus() {
-        var result0;
+        var result0, result1, result2;
+        var pos0;
         
-        if (/^[+\uFF0B]/.test(input.charAt(pos))) {
-          result0 = input.charAt(pos);
-          pos++;
+        pos0 = pos;
+        result0 = parse_bra();
+        if (result0 !== null) {
+          if (/^[+\uFF0B]/.test(input.charAt(pos))) {
+            result1 = input.charAt(pos);
+            pos++;
+          } else {
+            result1 = null;
+            if (reportFailures === 0) {
+              matchFailed("[+\\uFF0B]");
+            }
+          }
+          if (result1 !== null) {
+            result2 = parse_ket();
+            if (result2 !== null) {
+              result0 = [result0, result1, result2];
+            } else {
+              result0 = null;
+              pos = pos0;
+            }
+          } else {
+            result0 = null;
+            pos = pos0;
+          }
         } else {
           result0 = null;
-          if (reportFailures === 0) {
-            matchFailed("[+\\uFF0B]");
-          }
+          pos = pos0;
         }
         return result0;
       }
@@ -3425,6 +3467,137 @@ parser = (function(){
         return result0;
       }
       
+      function parse_plain() {
+        var result0, result1, result2;
+        var pos0;
+        
+        pos0 = pos;
+        result0 = parse_bra();
+        if (result0 !== null) {
+          if (input.charCodeAt(pos) === 32032) {
+            result1 = "\u7D20";
+            pos++;
+          } else {
+            result1 = null;
+            if (reportFailures === 0) {
+              matchFailed("\"\\u7D20\"");
+            }
+          }
+          if (result1 !== null) {
+            result2 = parse_ket();
+            if (result2 !== null) {
+              result0 = [result0, result1, result2];
+            } else {
+              result0 = null;
+              pos = pos0;
+            }
+          } else {
+            result0 = null;
+            pos = pos0;
+          }
+        } else {
+          result0 = null;
+          pos = pos0;
+        }
+        return result0;
+      }
+      
+      function parse_tag_plain() {
+        var result0, result1, result2, result3;
+        var pos0, pos1, pos2, pos3;
+        
+        pos0 = pos;
+        pos1 = pos;
+        result0 = parse_plain();
+        if (result0 !== null) {
+          result1 = [];
+          pos2 = pos;
+          pos3 = pos;
+          reportFailures++;
+          result2 = parse_plain();
+          reportFailures--;
+          if (result2 === null) {
+            result2 = "";
+          } else {
+            result2 = null;
+            pos = pos3;
+          }
+          if (result2 !== null) {
+            result3 = parse_tag_newline();
+            if (result3 === null) {
+              result3 = parse_any();
+            }
+            if (result3 !== null) {
+              result2 = [result2, result3];
+            } else {
+              result2 = null;
+              pos = pos2;
+            }
+          } else {
+            result2 = null;
+            pos = pos2;
+          }
+          while (result2 !== null) {
+            result1.push(result2);
+            pos2 = pos;
+            pos3 = pos;
+            reportFailures++;
+            result2 = parse_plain();
+            reportFailures--;
+            if (result2 === null) {
+              result2 = "";
+            } else {
+              result2 = null;
+              pos = pos3;
+            }
+            if (result2 !== null) {
+              result3 = parse_tag_newline();
+              if (result3 === null) {
+                result3 = parse_any();
+              }
+              if (result3 !== null) {
+                result2 = [result2, result3];
+              } else {
+                result2 = null;
+                pos = pos2;
+              }
+            } else {
+              result2 = null;
+              pos = pos2;
+            }
+          }
+          if (result1 !== null) {
+            result2 = parse_plain();
+            result2 = result2 !== null ? result2 : "";
+            if (result2 !== null) {
+              result0 = [result0, result1, result2];
+            } else {
+              result0 = null;
+              pos = pos1;
+            }
+          } else {
+            result0 = null;
+            pos = pos1;
+          }
+        } else {
+          result0 = null;
+          pos = pos1;
+        }
+        if (result0 !== null) {
+          result0 = (function(offset, inner) {
+        return (function() {
+          return this.return_html('plain', inner.map(function(h, i) {
+            return h[1];
+          }));
+        }).apply(__initializer);
+        })(pos0, result0[1]);
+        }
+        if (result0 === null) {
+          pos = pos0;
+        }
+        return result0;
+      }
+      
       function parse_message_tags() {
         var result0;
         
@@ -3439,6 +3612,9 @@ parser = (function(){
                 result0 = parse_tag_dice();
                 if (result0 === null) {
                   result0 = parse_tag_newline();
+                  if (result0 === null) {
+                    result0 = parse_tag_plain();
+                  }
                 }
               }
             }

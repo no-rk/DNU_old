@@ -481,10 +481,10 @@ class User < ActiveRecord::Base
   def tree(day_i = Day.last_day_i, battle_type = GameData::BattleType.normal.name)
     @tree ||= {}
     @tree[day_i] ||= {
-      :kind  => kind,
-      :name  => nickname(day_i),
-      :user  => self,
-      :day_i => day_i,
+      :kind     => kind,
+      :name     => nickname(day_i),
+      :object   => self,
+      :day_i    => day_i,
       :settings => status_settings(day_i) +
                    art_settings(day_i, battle_type) +
                    equip_settings(day_i, battle_type) +

@@ -16,6 +16,9 @@ body {
   margin: 5px;
   @include box-shadow(5px 5px 10px rgba($shadow-color, 0.3));
 }
+.popover {
+  max-width: 600px;
+}
 pre.prettyprint {
   margin:0;
   padding: 8px;

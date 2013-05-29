@@ -114,3 +114,50 @@ $ ->
     $(".pagination").hide()
     
     $("#chat").find(".chat-comment").first().addWaypoint()
+    
+    # 物理演算エンジンで遊ぶ
+    phys = io.connect("http://dnu.dip.jp:5000/phys")
+    
+    phys.on "socket_id", (data) ->
+      phys.id = data
+    
+    [canvas_w, canvas_h] = [800, 600]
+    $("#new_chat").after("<canvas id=\"canvas\" width=\"#{canvas_w}\" height=\"#{canvas_h}\"></canvas>")
+    $canvas = $("#canvas").css("user-select": "none")
+    
+    phys.on "world", (data)->
+      c =$canvas[0].getContext('2d')
+      c.clearRect(0,0,canvas_w,canvas_h)
+      for bd in data[0]
+        [cx, cy, r, th, hp, id] = bd
+        c.moveTo(0, 0)
+        c.beginPath()
+        c.strokeStyle = "rgba(200, 90, 90, 0.8)"
+        c.fillStyle   = "rgba(200, 90, 90, 0.5)"
+        c.arc(cx, cy, r, 0, Math.PI * 2, true)
+        c.moveTo(cx, cy)
+        th = Math.PI*th/180
+        c.lineTo((cx + r*Math.cos(th)), (cy + r*Math.sin(th)))
+        c.closePath()
+        c.fill()
+        c.stroke()
+        c.fillStyle = "black"
+        c.fillText(hp, cx, cy) if hp?
+        c.fillText("↓自分", cx-10, cy-40) if id == phys.id
+      for bd in data[1]
+        c.beginPath()
+        c.strokeStyle = "rgba(90, 200, 90, 0.8)"
+        c.fillStyle   = "rgba(90, 200, 90, 0.5)"
+        c.moveTo(bd[0], bd[1])
+        c.lineTo(bd[2], bd[3])
+        c.lineTo(bd[4], bd[5])
+        c.lineTo(bd[6], bd[7])
+        c.closePath()
+        c.fill()
+        c.stroke()
+        c.fillStyle = "black"
+        c.fillText(bd[8], (bd[0]+bd[2]+bd[4]+bd[6])/4, (bd[1]+bd[3]+bd[5]+bd[7])/4) if bd[8]?
+        c.fillText("↓自分", (bd[0]+bd[2]+bd[4]+bd[6])/4-10, (bd[1]+bd[3]+bd[5]+bd[7])/4-40) if bd[9] == phys.id
+    
+    $canvas.click (e)->
+      phys.emit "apply_force", [e.pageX-$(this).offset().left, e.pageY-$(this).offset().top]

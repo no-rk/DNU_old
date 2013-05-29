@@ -1,13 +1,12 @@
 - if @words.present?
   .hero-unit
     %h1= @name
-  - tx_map = Tx::Map.open("#{Rails.root}/db/game_data/dnu")
   - @words.try(:each) do |word|
     - data = GameData::Word.find_by_name(word) || GameData::EffectDescription.find_by_name(word) || GameData::EventDescription.find_by_name(word)
     - if data
       .rule
         %p ●#{word}
-        = tx_map.add_link(data.caption, word, :remote)
+        = tx_map.add_link(data.caption_html, word, :remote)
 - else
   .hero-unit
     %h1 ルール

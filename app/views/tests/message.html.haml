@@ -1,6 +1,6 @@
 %label サンプル
 .controls
-  = text_area_tag :text1, "右側にある【エディタ】ボタンを押すとエディタとプレビュー画面が出てくる。\n<右>右側に\n<無>アイコン無し\n<通><自分>「吹き出し無し」\n<右無通>右側にアイコン吹き出し無し", :size => "60x15", :class => "span9 message-editor", :'data-maxlength' => 800
+  = text_area_tag :text1, @sample, :size => "60x15", :class => "span9 message-editor", :'data-maxlength' => 800
 %label メッセージ
 .controls
   = text_area_tag :text2, "", :size => "60x15", :class => "span9 message-editor", :'data-maxlength' => 800

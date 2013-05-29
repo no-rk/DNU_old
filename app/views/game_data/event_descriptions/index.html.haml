@@ -1,7 +1,10 @@
 = link_to("新規#{@event_descriptions.first.class.model_name.human}作成", new_game_data_event_description_path)
 %br
 - @event_descriptions.each do |event_description|
-  [#{@event_descriptions.first.class.model_name.human}]#{event_description.name}
-  = link_to("編集", edit_game_data_event_description_path(event_description.id))
-  %br
+  .rule
+    [#{@event_descriptions.first.class.model_name.human}]#{event_description.name}
+    = link_to("編集", edit_game_data_event_description_path(event_description.id))
+    %br
+    %br
+    = tx_map.add_link(event_description.caption_html, event_description.name, :remote)
 = paginate @event_descriptions

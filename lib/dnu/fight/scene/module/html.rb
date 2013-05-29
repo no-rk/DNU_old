@@ -438,7 +438,7 @@ module DNU
         
         def Serif(tree)
           nested_div(tree[:before])   +
-           %Q|\n#{tree[:children].to_s.gsub(/<target>/,tree[:passive])}| +
+          tree[:children] +
           nested_div(tree[:after])
         end
         

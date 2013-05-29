@@ -32,8 +32,8 @@ root = document
 // names
 bra       = [<＜]
 ket       = [>＞]
-separator = [|｜]
-plus      = [+＋]
+separator = bra [|｜] ket
+plus      = bra [+＋] ket
 
 // number
 n1_9 = number:[1-9１-９] {
@@ -166,7 +166,12 @@ newline = "\r\n" / "\n\r" / [\n\r] / (bra '改行' ket)
 tag_newline = newline {
   @return_html 'br', [@empty]
 }
-message_tags = tag_random / tag_sequence / tag_self / tag_target / tag_dice / tag_newline
+plain = bra '素' ket
+tag_plain = plain inner:(!plain (tag_newline / any))* plain? {
+  @return_html 'plain', inner.map (h,i) ->
+    h[1]
+}
+message_tags = tag_random / tag_sequence / tag_self / tag_target / tag_dice / tag_newline / tag_plain
 
 // tag_serif
 position = '左' { 'left' } / '右'{ 'right' } / ('' !ket) { @default_serif.position }

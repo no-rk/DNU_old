@@ -32,9 +32,9 @@ class HelpController < ApplicationController
     id    = params[:id]
     
     begin
-      model   = "GameData::#{model.camelize}".constantize.find(id)
-      @name   = model.name
-      caption = model.caption
+      model        = "GameData::#{model.camelize}".constantize.find(id)
+      @name        = model.name
+      caption_html = model.caption_html
     rescue
       respond_to do |format|
         format.html{ redirect_to root_path }
@@ -55,7 +55,7 @@ class HelpController < ApplicationController
       
       @captions = [{
         model_name:  model.class.model_name.human,
-        caption:     tx_map.add_link(caption, @name, :remote)
+        caption:     tx_map.add_link(caption_html, @name)
       }]
       
       respond_to do |format|
@@ -83,7 +83,7 @@ class HelpController < ApplicationController
       data.each do |h|
         @captions.push({
           model_name:  h["model"].constantize.model_name.human,
-          caption:     tx_map.add_link(h["model"].constantize.find(h["id"]).caption, @name, :remote)
+          caption:     tx_map.add_link(h["model"].constantize.find(h["id"]).caption_html, @name)
         })
       end
       

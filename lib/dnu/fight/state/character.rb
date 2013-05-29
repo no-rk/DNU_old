@@ -151,6 +151,10 @@ module DNU
           double
         end
         
+        def references
+          [object.class.name, object.id]
+        end
+        
         private
         def add_disease
            GameData::Disease.pluck(:name).each do |name|

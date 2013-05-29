@@ -38,14 +38,15 @@ $ ->
       $color7        = $(this).textEditorButton($('<button>').html("紫").addClass('btn btn-danger'), "文字紫色に。", "紫", "#")
       $default       = $(this).textEditorButton($('<button>').html("元").addClass('btn btn-danger'), "タグ効果を終了させ元の状態に戻す。", "元")
       $ruby          = $(this).textEditorButton($('<button>').html("ルビ").addClass('btn btn-danger'), "ルビを振る。", "<", ">", ">^<")
-      $r_serif       = $(this).textEditorButton($('<button>').html("乱台詞").addClass('btn btn-danger'), "ランダム表示。", "|", "|", "|")
-      $s_serif       = $(this).textEditorButton($('<button>').html("順台詞").addClass('btn btn-danger'), "順番に表示。", "+", "+", "+")
-      $random        = $(this).textEditorButton($('<button>').html("乱").addClass('btn btn-danger'), "ランダム表示。", "<", ">", "|")
-      $sequence      = $(this).textEditorButton($('<button>').html("順").addClass('btn btn-danger'), "順番に表示。", "<", ">", "+")
+      $r_serif       = $(this).textEditorButton($('<button>').html("乱台詞").addClass('btn btn-danger'), "ランダム表示。", "<|>", "<|>", "<|>")
+      $s_serif       = $(this).textEditorButton($('<button>').html("順台詞").addClass('btn btn-danger'), "順番に表示。", "<+>", "<+>", "<+>")
+      $random        = $(this).textEditorButton($('<button>').html("乱").addClass('btn btn-danger'), "ランダム表示。", "<", ">", "<|>")
+      $sequence      = $(this).textEditorButton($('<button>').html("順").addClass('btn btn-danger'), "順番に表示。", "<", ">", "<+>")
       $self_name     = $(this).textEditorButton($('<button>').html("自").addClass('btn btn-danger'), "自分の愛称。", "自分")
       $target_name   = $(this).textEditorButton($('<button>').html("対").addClass('btn btn-danger'), "対象の愛称。", "対象")
       $dice          = $(this).textEditorButton($('<button>').html("賽").addClass('btn btn-danger'), "サイコロを何個か振った合計値。", "2d6")
       $newline       = $(this).textEditorButton($('<button>').html("改").addClass('btn btn-danger'), "改行する。", "改行")
+      $plain         = $(this).textEditorButton($('<button>').html("素").addClass('btn btn-danger'), "改行以外のタグ無効。", "素", "素")
       $colmun_2      = $(this).textEditorButton($('<button>').html("二段").addClass('btn btn-danger'), "2段組にする。", "2段組")
       $colmun_3      = $(this).textEditorButton($('<button>').html("三段").addClass('btn btn-danger'), "3段組にする。", "3段組")
       $align_left    = $(this).textEditorButton($('<button>').html("左寄").addClass('btn btn-danger'), "左寄せにする。", "左寄")
@@ -72,7 +73,7 @@ $ ->
       switch options.type
         when 'message', 'document'
           $editor
-            .append($icons).append($r_serif).append($s_serif).append($sequence).append($random).append($self_name).append($target_name).append($dice).append($newline)
+            .append($icons).append($r_serif).append($s_serif).append($sequence).append($random).append($self_name).append($target_name).append($dice).append($newline).append($plain)
       switch options.type
         when 'document'
           $editor

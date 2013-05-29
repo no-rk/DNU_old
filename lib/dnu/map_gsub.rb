@@ -16,7 +16,6 @@ module DNU
     end
     
     def add_link(str, except=nil, remote = nil)
-      str = DNU::Text.new.document(str)
       gsub(str){ |key, value|
         value = JSON.parse(value).first
         if key.to_s == except.to_s

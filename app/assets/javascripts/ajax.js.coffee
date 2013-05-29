@@ -34,7 +34,12 @@ $ ->
           $(this).data("popover").$tip.find('a[rel*=popover]').popover()
         console.log("a click")
       console.log("no ajax")
-
+  
+  popoverTitle = (data)->
+    $div = $("<div>").html(data.name)
+    $a = $("<a>").addClass("close close-popover icon-remove-sign").attr("href", "#")
+    $div.append($a).html()
+  
   #ローディング表示
   $(document).bind("ajaxSend", ->
     $("*[data-ajax-loading]").show()
@@ -81,11 +86,11 @@ $ ->
         $html.append($("<span>").addClass("label").html(caption.model_name))
         $html.append("<br>#{caption.caption}<br>")
       $(this).attr({
-        "data-original-title": data.name
+        "data-original-title": popoverTitle(data)
         "data-content": $html.html()
       })
       $(this).data({
-        "original-title": data.name
+        "original-title": popoverTitle(data)
         "content": $html.html()
       })
       #もうAjaxしないようにする
@@ -129,11 +134,11 @@ $ ->
         $html.append($("<span>").addClass("label").html(caption.model_name))
         $html.append("<br>#{caption.caption}<br>")
       next.attr({
-        "data-original-title": data.name
+        "data-original-title": popoverTitle(data)
         "data-content": $html.html()
       })
       next.data({
-        "original-title": data.name
+        "original-title": popoverTitle(data)
         "content": $html.html()
       })
       #もうAjaxしないようにする
