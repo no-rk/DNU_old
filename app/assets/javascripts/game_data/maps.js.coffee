@@ -37,7 +37,7 @@ $ ->
         tip_number += 2
       if tip_number==0 && map0!=map2
         tip_number = 4
-      $(this).removeClass().addClass(map4_class).addClass('map4_tip_' + tip_number)
+      $(this).attr("class",map4_class).addClass('map4_tip_' + tip_number)
       if is_recursion
         $map1.changeTip()
         $map2.changeTip()
@@ -46,10 +46,9 @@ $ ->
     $map0 = $(this)
     if $map0.is('div')
       map4_class = $map0.data('map4_class')
-      $(this).removeClass().addClass(map4_class).addClass('map4_tip_0')
+      $(this).attr("class",map4_class).addClass('map4_tip_0')
   $.fn.drawMap = (is_simple = false, is_edit = false, landform = $('#map_tool tr.selected').attr('id'), map_collision = $('#map_tool tr.selected').find(':checkbox').is(':checked'), map_opacity = $('#map_tool tr.selected').find('input[type=number]').val()) ->
-    $(this).removeClass()
-    $(this).addClass(landform)
+    $(this).attr("class",landform)
     unless is_edit
       x = $(this).data('map_x')
       y = $(this).data('map_y')
@@ -211,8 +210,7 @@ $ ->
       for y in [1..map_size]
         para(x, y)
   $('#map_base').change ->
-    $('#map').removeClass()
-    $('#map').addClass($(this).val())
+    $('#map').attr("class",$(this).val())
   $('#map_tool tr').click ->
     $('#map_tool tr').removeClass('selected')
     $(this).addClass('selected')
