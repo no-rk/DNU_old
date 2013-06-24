@@ -17,7 +17,7 @@ module DNU
           @max = self.class.new(self, max_val || max_cal(@current_value))
           @validate = true
           sync_value
-          @ini = @current_value
+          @ini = Marshal.load(Marshal.dump(self))
         end
         
         def change_value(n)
@@ -58,10 +58,12 @@ module DNU
         def sync_value
           if @validate.present?
             validate_value
-            record_history
           end
           __setobj__ @current_value
           @parent.send(:sync_value) if @parent.present?
+          if @validate.present?
+            record_history
+          end
         end
         
         def validate_value
@@ -71,7 +73,12 @@ module DNU
         end
         
         def record_history
-          @history << @current_value
+          @history << Marshal.load(Marshal.dump(self)).send(:clear_history)
+        end
+        
+        def clear_history
+          @history = []
+          self
         end
         
         def larger_of(a,b)

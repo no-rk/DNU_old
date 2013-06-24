@@ -122,6 +122,10 @@ class EffectParser < Parslet::Parser
     spaces?
   }
   
+  rule(:op_not) {
+    str('not')
+  }
+  
   rule(:op_and) {
     spaces? >>
     (
@@ -213,6 +217,10 @@ class EffectParser < Parslet::Parser
     ).as(:battle_value_wrap).as(:battle_value)
   }
   
+  rule(:has_max_before) {
+    str('直前').as(:before) >> has_max
+  }
+  
   rule(:battle_value) {
     (
       (
@@ -238,6 +246,10 @@ class EffectParser < Parslet::Parser
     ).as(:battle_value_wrap).as(:battle_value)
   }
   
+  rule(:battle_value_before) {
+    str('直前').as(:before) >> battle_value
+  }
+  
   rule(:status_name) {
     alternation_from_array(GameData::Status.pluck(:name))
   }
@@ -251,6 +263,10 @@ class EffectParser < Parslet::Parser
   
   rule(:disease_value) {
     disease_name.as(:disease)
+  }
+  
+  rule(:disease_value_before) {
+    str('直前').as(:before) >> disease_value
   }
   
   rule(:element_name) {
@@ -1028,7 +1044,7 @@ class EffectParser < Parslet::Parser
     ).as(:effect)
   }
   
-  # effect_condition
+  # conditional_expression
   
   rule(:attack_boolean) {
     str('命中').as(:hit) | str('空振').as(:miss)
@@ -1143,15 +1159,18 @@ class EffectParser < Parslet::Parser
   
   rule(:state_character) {
     (
-      state_target       >> battle_value >> (str('の') >> non_negative_integer.as(:percent) >> percent | str('割合').as(:ratio)).maybe |
-      state_target_group >> battle_value >> (str('の') >> non_negative_integer.as(:percent) >> percent | str('割合').as(:ratio)).maybe >> group_value
+      state_target       >> (battle_value_before | battle_value) >> (str('の') >> non_negative_integer.as(:percent) >> percent | str('割合').as(:ratio)).maybe |
+      state_target_group >> (battle_value_before | battle_value) >> (
+        group_value >> str('割合').as(:ratio) |
+        (str('の') >> non_negative_integer.as(:percent) >> percent | str('割合').as(:ratio)).maybe >> group_value
+      )
     ).as(:state_character)
   }
   
   rule(:state_disease) {
     (
-      state_target       >> disease_value >> str('深度') |
-      state_target_group >> disease_value >> str('深度') >> group_value
+      state_target       >> (disease_value_before | disease_value) >> str('深度') |
+      state_target_group >> (disease_value_before | disease_value) >> str('深度') >> group_value
     ).as(:state_disease)
   }
   
@@ -1160,43 +1179,71 @@ class EffectParser < Parslet::Parser
       (
         (
           (
-            state_target       >> has_max |
-            state_target_group >> has_max >> group_value
+            state_target       >> (has_max_before | has_max) |
+            state_target_group >> (has_max_before | has_max) >> group_value
           ).as(:state_character).as(:left) |
           (
             state_target_group >>
-            has_max.as(:state_character).as(:do)
+            (has_max_before | has_max).as(:state_character).as(:do)
           ).as(:lefts)
         ) >>
-        calculable.as(:percent).as(:fixnum).as(:right) >>
+        effect_coeff.as(:percent).as(:fixnum).as(:right) >>
         percent >> str('以上')
       ).as(:condition_ge) |
       (
         (
           (
-            state_target       >> has_max |
-            state_target_group >> has_max >> group_value
+            state_target       >> (has_max_before | has_max) |
+            state_target_group >> (has_max_before | has_max) >> group_value
           ).as(:state_character).as(:left) |
           (
             state_target_group >>
-            has_max.as(:state_character).as(:do)
+            (has_max_before | has_max).as(:state_character).as(:do)
           ).as(:lefts)
         ) >>
-        calculable.as(:percent).as(:fixnum).as(:right) >>
+        effect_coeff.as(:percent).as(:fixnum).as(:right) >>
         percent >> str('以下')
       ).as(:condition_le) |
       (
         (
           (
-            state_target       >> has_max |
-            state_target_group >> has_max >> group_value
+            state_target       >> (has_max_before | has_max) |
+            state_target_group >> (has_max_before | has_max) >> group_value
           ).as(:state_character).as(:left) |
           (
             state_target_group >>
-            has_max.as(:state_character).as(:do)
+            (has_max_before | has_max).as(:state_character).as(:do)
           ).as(:lefts)
         ) >>
-        calculable.as(:percent).as(:fixnum).as(:right) >>
+        effect_coeff.as(:percent).as(:fixnum).as(:right) >>
+        percent >> str('超') >> str('過').maybe
+      ).as(:condition_gt) |
+      (
+        (
+          (
+            state_target       >> (has_max_before | has_max) |
+            state_target_group >> (has_max_before | has_max) >> group_value
+          ).as(:state_character).as(:left) |
+          (
+            state_target_group >>
+            (has_max_before | has_max).as(:state_character).as(:do)
+          ).as(:lefts)
+        ) >>
+        effect_coeff.as(:percent).as(:fixnum).as(:right) >>
+        percent >> str('未満')
+      ).as(:condition_lt) |
+      (
+        (
+          (
+            state_target       >> (has_max_before | has_max) |
+            state_target_group >> (has_max_before | has_max) >> group_value
+          ).as(:state_character).as(:left) |
+          (
+            state_target_group >>
+            (has_max_before | has_max).as(:state_character).as(:do)
+          ).as(:lefts)
+        ) >>
+        effect_coeff.as(:percent).as(:fixnum).as(:right) >>
         percent
       ).as(:condition_eq)
     ).as(:has_max_percent)
@@ -1204,10 +1251,7 @@ class EffectParser < Parslet::Parser
   
   rule(:random_percent) {
     (
-      (
-        non_negative_integer.as(:fixnum) |
-        bra >> effect_coeff >> ket
-      ) >> percent >> str('の確率').maybe
+      effect_coeff >> percent >> str('の確率').maybe
     ).as(:random_percent)
   }
   
@@ -1219,7 +1263,7 @@ class EffectParser < Parslet::Parser
   }
   
   rule(:act_count) {
-    str('第') >> calculable.as(:act_count) >> str('行動') >> str('時').maybe
+    str('第') >> effect_coeff.as(:act_count) >> str('行動') >> str('時').maybe
   }
   
   rule(:next_not_change) {
@@ -1273,19 +1317,15 @@ class EffectParser < Parslet::Parser
   }
   
   rule(:condition_boolean) {
-    (
-      (
-        just_before |
-        random_percent |
-        wrap_random_percent |
-        next_not_change |
-        in_pre_phase |
-        in_phase |
-        act_count |
-        present_place |
-        get_flag
-      ) >> str('になった').absent?
-    )
+    just_before |
+    random_percent |
+    wrap_random_percent |
+    next_not_change |
+    in_pre_phase |
+    in_phase |
+    act_count |
+    present_place |
+    get_flag
   }
   
   rule(:state) {
@@ -1307,25 +1347,25 @@ class EffectParser < Parslet::Parser
   }
   
   rule(:comparable_left) {
-    calculable.as(:left) |
+    effect_coeff.as(:left) |
     comparable.as(:lefts)
   }
   
   rule(:comparable_right) {
-    calculable.as(:right) |
+    effect_coeff.as(:right) |
     comparable.as(:rights)
   }
   
   rule(:condition_gt) {
     (
-      comparable_left >> str('が').maybe >> comparable_right >> str('より大きい') |
+      comparable_left >> str('が').maybe >> comparable_right >> str('超') >> str('過').maybe |
       comparable_left >> op_gt >> comparable_right
     ).as(:condition_gt)
   }
   
   rule(:condition_lt) {
     (
-      comparable_left >> str('が').maybe >> comparable_right >> str('より小さい') |
+      comparable_left >> str('が').maybe >> comparable_right >> str('未満') |
       comparable_left >> op_lt >> comparable_right
     ).as(:condition_lt)
   }
@@ -1350,7 +1390,6 @@ class EffectParser < Parslet::Parser
       comparable_left >> op_eq >> comparable_right
     ).as(:condition_eq)
   }
-
   
   rule(:simple_condition) {
     condition_boolean |
@@ -1362,27 +1401,43 @@ class EffectParser < Parslet::Parser
     condition_eq
   }
   
+  rule(:condition_become) {
+    (
+      (
+        has_max_percent |
+        condition_ge |
+        condition_le |
+        condition_gt |
+        condition_lt |
+        condition_eq
+      ) >> str('になった')
+    ).as(:condition_become)
+  }
+  
   rule(:condition) {
-    (simple_condition >> str('になった')).as(:condition_become) |
+    condition_become |
     simple_condition |
     bra >> conditions >> ket
   }
   
   rule(:conditions) {
     condition_or |
-    condition_and
+    condition_and |
+    condition_not
   }
   
   rule(:condition_or) {
     (
       (
         condition_and |
+        condition_not |
         condition
       ) >>
       (
         op_or >>
         (
           condition_and |
+          condition_not |
           condition
         )
       ).repeat(1)
@@ -1391,16 +1446,37 @@ class EffectParser < Parslet::Parser
   
   rule(:condition_and) {
     (
-      condition >>
+      (
+        condition_not |
+        condition
+      ) >>
       (
         op_and >>
-        condition
+        (
+          condition_not |
+          condition
+        )
       ).repeat(1)
     ).as(:condition_and)
   }
   
-  rule(:effect_condition) {
-    bra >> (conditions | condition) >> ket
+  rule(:condition_not) {
+    (
+      (
+        condition
+      ) >> str('で') >> str('は').maybe >> str('ない') |
+      op_not >> (
+        condition
+      )
+    ).as(:condition_not)
+  }
+  
+  rule(:conditional_expression) {
+    conditions | condition
+  }
+  
+  rule(:conditional_expression_wrap) {
+    bra >> conditional_expression >> ket
   }
   
   # root_processes
@@ -1428,7 +1504,7 @@ class EffectParser < Parslet::Parser
   }
   
   rule(:times_wrap) {
-    multiply >> calculable.as(:times)
+    multiply >> effect_coeff.as(:times)
   }
   
   rule(:while_wrap) {
@@ -1444,7 +1520,7 @@ class EffectParser < Parslet::Parser
   
   rule(:if_process) {
     (
-      effect_condition.as(:condition) >> process.as(:then) >> (separator >> process.as(:else)).maybe
+      conditional_expression_wrap.as(:condition) >> process.as(:then) >> (separator >> process.as(:else)).maybe
     ).as(:if)
   }
   
@@ -1457,7 +1533,7 @@ class EffectParser < Parslet::Parser
   rule(:processes) {
     bra >> (
       (
-        process_wrap >> (plus >> process_wrap | arrow.as(:arrow) >> effect_condition.absent? >> process_wrap.as(:arrow_process)).repeat(1)
+        process_wrap >> (plus >> process_wrap | arrow.as(:arrow) >> conditional_expression_wrap.absent? >> process_wrap.as(:arrow_process)).repeat(1)
       ).as(:sequence) |
       process_wrap
     ) >> ket
@@ -1475,10 +1551,10 @@ class EffectParser < Parslet::Parser
   rule(:root_processes) {
     (
       (
-        (effect_condition.maybe >> target).present? >> process_wrap >> newline.maybe
+        (conditional_expression_wrap.maybe >> target).present? >> process_wrap >> newline.maybe
       ).repeat(2)
     ).as(:sequence) |
-    (effect_condition.maybe >> target).present? >> process_wrap >> newline.maybe
+    (conditional_expression_wrap.maybe >> target).present? >> process_wrap >> newline.maybe
   }
   
   # sup_effects
@@ -1859,9 +1935,9 @@ class EffectParser < Parslet::Parser
   }
   
   rule(:skill_target) {
-    (str('上から') >> calculable.as(:number) >> str('番目')).as(:find_by_number) |
-    (calculable.as(:position) >> str('列')).as(:find_by_position) |
-    (eno_name >> calculable.as(:eno)).as(:find_by_eno)
+    (str('上から') >> effect_coeff.as(:number) >> str('番目')).as(:find_by_number) |
+    (effect_coeff.as(:position) >> str('列')).as(:find_by_position) |
+    (eno_name >> effect_coeff.as(:eno)).as(:find_by_eno)
   }
   
   rule(:skill_condition) {
@@ -2009,7 +2085,7 @@ class EffectParser < Parslet::Parser
     (
       character_setting >>
       (
-        multiply >> calculable.as(:number)
+        multiply >> effect_coeff.as(:number)
       ).maybe >>
       (newline | any.absent?)
     ).repeat(1).as(:members)

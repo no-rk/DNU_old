@@ -186,17 +186,27 @@ class EffectTransform < Parslet::Transform
   
   rule(:condition_become => subtree(:condition_become)) {
     right = Marshal.load(Marshal.dump(condition_become))
-    if right.values.first[:left]
-      state = right.values.first[:left].keys.first
-      right.values.first[:left][:"#{state}_old"] = right.values.first[:left].delete(state)
-    else
-      state = right.values.first[:lefts][:do].keys.first
-      right.values.first[:lefts][:do][:"#{state}_old"] = right.values.first[:lefts][:do].delete(state)
+    def state_before(tree)
+      case tree
+      when Hash
+        tree.each do |(k,v)|
+          if [:state_character, :state_disease].include?(k)
+            v.merge!(:before => "直前")
+          end
+          state_before(v)
+        end
+      when Array
+        tree.each do |element|
+          state_before(element)
+        end
+      else
+        tree
+      end
     end
     { :condition_and => [
         condition_become,
         {
-          :condition_not => right
+          :condition_not => state_before(right)
         }
       ]
     }

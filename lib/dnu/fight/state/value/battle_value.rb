@@ -32,6 +32,30 @@ module DNU
         def change_to(n)
           status.change_to(n)
         end
+         
+        def next_value=(n)
+          status.next_value=(n)
+        end
+         
+        def next_value
+          status.next_value
+        end
+         
+        def next_value!
+          status.next_value!
+        end
+        
+        def ratio
+          status.ratio
+        end
+        
+        def history
+          status.history
+        end
+        
+        def ini
+          mix(status.ini, equip.present? ? equip.ini : 0)
+        end
         
         def max
           mix(status.max, equip.present? ? equip.max : 0)

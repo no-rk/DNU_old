@@ -52,37 +52,15 @@ module DNU
             lambda do
               state_target_group(tree[:group]).send(type) do |c|
                 r = c.send(tree[:battle_value])
-                r = r.send(ratio)*percent
-                r
+                r = r.history[-2] if tree[:before].present?
+                r.nil? ? 0 : r.send(ratio)*percent
               end
             end
           else
             lambda do
               r = (tree[:group_target] || send(tree[:state_target] || '対象')).send(tree[:battle_value])
-              r = r.send(ratio)*percent
-              r
-            end
-          end
-        end
-        
-        # 1つ前の戦闘値
-        def state_character_old(tree)
-          status_or_equip = tree[:equip].nil? ? :status : :equip
-          percent = (tree[:percent] || 100).to_f/100
-          if tree[:group]
-            type = tree[:group_value].keys.first
-            lambda do
-              state_target_group(tree[:group]).send(type) do |c|
-                r = c.send(tree[:status_name]).send(status_or_equip)
-                r = r.history[-2].try(:*, percent).try("/", ((tree[:ratio] and r.max!=0) ? r.max : 1).to_f)
-                r
-              end
-            end
-          else
-            lambda do
-              r = (tree[:group_target] || send(tree[:state_target] || '対象')).send(tree[:status_name]).send(status_or_equip)
-              r = r.history[-2].try(:*, percent).try("/", ((tree[:ratio] and r.max!=0) ? r.max : 1).to_f)
-              r
+              r = r.history[-2] if tree[:before].present?
+              r.nil? ? 0 : r.send(ratio)*percent
             end
           end
         end
@@ -93,31 +71,15 @@ module DNU
             lambda do
               state_target_group(tree[:group]).send(type) do |c|
                 r = c.try(tree[:disease])
-                r
+                r = r.history[-2] if tree[:before].present?
+                r || 0
               end
             end
           else
             lambda do
               r = (tree[:group_target] || send(tree[:state_target] || '対象')).try(tree[:disease])
-              r
-            end
-          end
-        end
-        
-        def state_disease_old(tree)
-          if tree[:group]
-            type = tree[:group_value].keys.first
-            lambda do
-              state_target_group(tree[:group]).send(type) do |c|
-                r = c.try(tree[:disease])
-                r
-              end
-            end
-          else
-            lambda do
-              r = (tree[:group_target] || send(tree[:state_target] || '対象')).try(tree[:disease])
-              r = r.history[-2]
-              r
+              r = r.history[-2] if tree[:before].present?
+              r || 0
             end
           end
         end

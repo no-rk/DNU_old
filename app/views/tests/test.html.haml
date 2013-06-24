@@ -3,7 +3,7 @@
     %a{:href => helps_path(word), :target=>"_blank"}= word
 - if @words.present?
   - @words.each do |word|
-    - data = GameData::Word.find_by_name(word)
+    - data = GameData::Word.find_by_name(word) || GameData::EffectDescription.find_by_name(word) || GameData::EventDescription.find_by_name(word)
     - if data
       .rule
         %p ◆#{word}

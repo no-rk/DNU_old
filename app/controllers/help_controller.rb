@@ -8,10 +8,11 @@ class HelpController < ApplicationController
       "技能効果定義"     => ["技能効果定義"],
       "付加定義"         => ["付加定義"],
       "技定義"           => ["技定義"],
-      "特殊効果内容"     => ["特殊効果内容", "効果", "対象", "発動条件", "効果種", "停止条件", "効果条件"],
+      "特殊効果内容"     => ["特殊効果内容", "効果", "対象", "発動条件", "効果種", "停止条件", "条件式"],
       "戦闘設定"         => ["戦闘設定", "戦闘設定例"],
       "戦闘構造"         => ["戦闘構造"],
-      "イベント定義"     => ["イベント定義", "イベント種類", "イベント名", "イベント説明", "イベントステップ", "イベントタイミング", "イベントコンディション", "イベントコンテンツ", "イベント定義例"]
+      "イベント定義"     => ["イベント定義", "イベント種類", "イベント名", "イベント説明", "イベントステップ", "イベントタイミング", "イベントコンディション", "イベントコンテンツ", "イベント定義例"],
+      "条件式"           => ["条件式", "真偽条件", "比較条件", "最大値条件", "戦闘値列", "論理演算"]
     }
     @link = {
       "PT編成定義"       => tests_battle_path,
@@ -20,7 +21,8 @@ class HelpController < ApplicationController
       "付加定義"         => tests_sup_path,
       "技定義"           => tests_skill_path,
       "特殊効果内容"     => tests_effects_path,
-      "イベント定義"     => tests_parse_path(:event_definition)
+      "イベント定義"     => tests_parse_path(:event_definition),
+      "条件式"           => tests_parse_path(:conditional_expression)
     }
     @keys  = keywords.keys
     @name  = params[:name]

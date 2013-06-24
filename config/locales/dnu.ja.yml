@@ -570,6 +570,7 @@ ja:
         Effect: 効果種
         Root: 対象決定
         Target: 対象
+        ConditionalExpression: 条件式
         Cemetery: 墓地埋葬
         HitVal: ダメージ決定
         HitValAnt: 被ダメージ決定
